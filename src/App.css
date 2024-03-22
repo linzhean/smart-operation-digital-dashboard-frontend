@@ -1,38 +1,113 @@
+/* App.css */
+
+/* App容器样式 */
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  width: 100vw;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: #000000;
+  font-family: "Neucha", cursive;
+  position: relative; /* 相对定位 */
 }
 
-.App-link {
-  color: #61dafb;
+/* 内容区域样式 */
+.content {
+  position: absolute;
+  top: 60px;
+  left: 10px; /* 调整内容区域的左侧偏移，确保不被抽屉导航覆盖 */
+  right: 10px;
+  bottom: 10px;
+  background-color: #343541;
+  padding: 20px;
+  overflow: auto;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.tab {
+  background-color: #ffffff;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  margin-right: 35px;
+  border-radius: 5px;
+  font-size: 12px;
+  position: relative; /* 让删除按钮相对于选项卡定位 */
+}
+
+.delete-button {
+  position: absolute; /* 将删除按钮定位到选项卡上 */
+  top: 5px; /* 调整按钮位置 */
+  right: 5px; /* 调整按钮位置 */
+  width: 20px; /* 设置按钮宽度 */
+  height: 20px; /* 设置按钮高度 */
+  /* 其他样式 */
+}
+
+.fields {
+  display: flex; /* 使用 Flex 布局 */
+  margin-top: 40px;
+}
+
+.field {
+  font-family: "Inter", sans-serif;
+  font-size: 25px;
+  margin-right: auto;
+  color: #ffffff;
+  font-weight: bold;
+  text-align: left; /* 将字段文本左对齐 */
+}
+
+.username {
+  font-weight: bold;
+}
+
+.department {
+  font-style: italic;
+}
+
+/* 最后一个字段不需要右边距 */
+.field:last-child {
+  margin-right: 0;
+}
+
+.title {
+  font-family: "Inter", sans-serif;
+  font-size: 25px;
+  margin-right: auto;
+  color: #ffffff;
+  font-weight: bold;
+  width: 100px;
+  text-align: right;
+}
+
+.titles {
+  display: flex;
+  align-items: center;
+}
+
+.add-user-button {
+  padding: 10px 20px;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 1350px;
+}
+
+
+.toggle-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 101; /* 确保 toggle-button 在抽屉导航之上 */
 }
