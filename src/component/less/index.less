@@ -1,0 +1,47 @@
+//out:../css/index.css
+
+@import url(./base.less);
+@import url(./common.less);
+
+.content {
+  color: @mainfontcolor !important;
+  display: flex;
+  background-color: black;
+  font-size: 28px;
+  font-weight: bold;
+  height: 90vh;
+}
+
+.left-content {
+  display: flex;
+  justify-content: center;
+  padding-top: 5px;
+  // margin: 10px;
+  width: 15%;
+}
+
+.left-content ul li {
+  margin-bottom: 5px;
+}
+
+.left-content ul li a {
+  color: @mainfontcolor !important;
+}
+
+.right-content {
+  flex-grow: 1;
+  margin: 10px;
+  border-radius: 15px;
+  background-color: @maincolor;
+}
+
+@media screen and (max-width: 768px) {
+  .content {
+    flex-direction: column;
+    // 改成疊在上下
+  }
+
+  .left-content {
+    width: 100%;
+  }
+}

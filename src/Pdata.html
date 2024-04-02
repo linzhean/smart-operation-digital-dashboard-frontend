@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./component/Bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./component/css/Pdata.css">
+  <title>Pdata</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="brand" href="#">
+        <img src="./assets/icon/burgerMenu-icon.svg" alt="">
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="#">
+              <img src="./assets/icon/dashBoard-icon.svg" alt="">
+              <span class="nav-text">儀表板</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link " href="#">
+              <img src="./assets/icon/group-icon.svg" alt="">
+              <span class="nav-text">群組</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="#">
+              <img src="./assets/icon/graphManage-icon.svg" alt="">
+              <span class="nav-text">管理圖表</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link e" href="#">
+              <img src="./assets/icon/email-icon.svg" alt="">
+              <span class="nav-text">信件</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">
+              <img src="./assets/icon/userData-icon.svg" alt="">
+              <span class="nav-text">查看儀表板</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- section占用88% -->
+  <!-- header有改成12% -->
+  <main class="section">
+    <div class="container">
+      <form class="well form-horizontal" action=" " method="post" id="contact_form">
+        <fieldset>
+          <!-- Form Name -->
+          <legend>您的個人資料</legend>
+          <hr class="separator">
+          <!-- 姓名 Text input-->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">姓名</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input name="first_name" placeholder="林哲安" class="form-control" type="text" disabled>
+              </div>
+            </div>
+          </div>
+          <hr class="separator">
+          <!-- 工號 Text input-->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">工號</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+                <input name="phone" placeholder="11046048" class="form-control" type="text" disabled>
+              </div>
+            </div>
+          </div>
+          <hr class="separator">
+
+          <!-- 信箱 Text input-->
+          <div class="form-group">
+            <label class="col-md-4 control-label">信箱(Gmail)
+            </label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                <input name="email" placeholder="11046048@gmail.com" class="form-control" type="text" disabled>
+              </div>
+            </div>
+          </div>
+          <hr class="separator">
+
+
+          <!-- 所屬部門select -->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">所屬部門</label>
+            <div class="col-md-4 selectContainer">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                <select name="state" class="form-control selectpicker" disabled>
+                  <option>銷售</option>
+                  <option selected>生產</option>
+                  <option>營運</option>
+                  <option>財務</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <hr class="separator">
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">職稱</label>
+            <div class="col-md-4 selectContainer">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                <select name="state" class="form-control selectpicker" disabled>
+                  <option>一般員工</option>
+                  <option selected>副理</option>
+                  <option>經理</option>
+                  <option>總經理</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <hr class="separator">
+
+          <!-- radio checks -->
+          <div class="form-group hidden">
+            <label class="col-md-4 control-label">是否在職</label>
+            <div class="col-md-4">
+              <div class="radio">
+                <label>
+                  <input type="radio" name="hosting" value="yes" /> Yes
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="hosting" value="no" /> No
+                </label>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- 修改成功的訊息 目前已經先hidden-->
+          <div class="alert alert-success" role="alert" id="success_message">Success <i
+              class="glyphicon glyphicon-thumbs-up"></i> 已經修改</div>
+
+          <!-- 修改確認的按鈕在這裡 -->
+          <div class="form-group hidden">
+            <label class="col-md-4 control-label"></label>
+            <div class="col-md-4">
+              <button type="submit" class="btn btn-warning">確定 <span class="glyphicon glyphicon-send"></span></button>
+            </div>
+          </div>
+
+        </fieldset>
+      </form>
+    </div>
+    <div class="edit-btn" id="edit-btn" onclick="toggleForm(this)">
+      <i class="fa fa-pencil" aria-hidden="true"><img src="./assets/icon/edit-icon.svg" alt="修改按鈕"></i>
+    </div>
+
+  </main>
+  <script src="./component/Bootstrap/js/bootstrap.min.js"></script>
+  <script src="/src/component/Bootstrap/js/Pdata.js"></script>
+</body>
+
+</html>
