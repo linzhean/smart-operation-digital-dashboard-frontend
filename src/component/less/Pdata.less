@@ -1,0 +1,95 @@
+//out:../css/Pdata.css
+
+@import url(./common.less);
+
+#success_message {
+  display: none;
+}
+
+.hidden {
+  display: none;
+}
+
+body,
+html {
+  height: 100%;
+}
+
+.section {
+  height: 88%;
+  // overflow-y: auto;
+  background-color: @maincolor;
+  border-radius: 15px;
+  margin: 15px;
+  margin-top: 0px;
+  position: relative;
+}
+
+.main-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+legend {
+  font-size: x-large;
+}
+
+.container {
+  margin: 0px !important;
+  width: 100%;
+  background-color: @maincolor;
+  color: @mainfontcolor;
+  padding: 25px;
+  border-radius: 15px;
+  font-weight: 900;
+}
+
+input {
+  background-color: @maincolor !important;
+  border: none !important;
+}
+
+input::placeholder {
+  color: @mainfontcolor !important;
+  font-size: x-large;
+  font-weight: 500;
+}
+
+.control-label {
+  font-weight: 700;
+  font-size: x-large !important;
+  margin: 5px 0px;
+}
+
+select {
+  font-size: x-large !important;
+  background-color: @maincolor !important;
+  color: @mainfontcolor !important;
+  border: none !important;
+}
+
+.separator {
+  border: none;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
+  margin: 1px 0;
+}
+
+
+.btn.btn-warning:active {
+  background-color: red;
+  color: black;
+  border: none;
+  font-weight: 500;
+}
+
+.edit-btn {
+  position: absolute;
+  top: 85%;
+  right: 10%;
+}
+
+.edit-btn img {
+  width: 60px;
+  height: 60px;
+}
