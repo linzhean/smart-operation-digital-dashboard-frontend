@@ -68,7 +68,7 @@
         </div>
         <div class="col-md-6">
           <label for="validationName" class="form-label">姓名</label>
-          <input type="text" class="form-control" id="validationName" value="林哲安" required disabled>
+          <input type="text" class="form-control" id="validationName" value="林哲安" required>
           <!-- <div class="valid-feedback">
             已填寫
           </div> -->
@@ -79,7 +79,7 @@
         <div class="col-md-6"><!-- 佔位的 --></div>
         <div class="col-md-6">
           <label for="validationNum" class="form-label">工號</label>
-          <input type="text" class="form-control" id="validationNum" value="11046048" required disabled>
+          <input type="text" class="form-control" id="validationNum" value="11046048" required>
           <div class="invalid-feedback">
             請輸入您的工號
           </div>
@@ -89,7 +89,7 @@
           <label for="validationEmail" class="form-label">信箱<span id="gmail">(Gmail)</span></label>
           <div class="input-group has-validation">
             <input type="text" class="form-control" id="validationEmail" aria-describedby="inputGroupAppend"
-              value="11046048" disabled><span class="input-group-text" id="inputGroupAppend">@gmail.com</span>
+              value="11046048"><span class="input-group-text" id="inputGroupAppend">@gmail.com</span>
             <div class="invalid-feedback">
               請輸入信箱Gmail
             </div>
@@ -99,8 +99,8 @@
 
         <div class="col-md-6">
           <label for="validationUnit" class="form-label">所屬部門</label>
-          <select class="form-select" id="validationUnit" required disabled>
-            <option selected disabled value="">...</option>
+          <select class="form-select" id="validationUnit" required>
+            <option selected value="">...</option>
             <option>銷售</option>
             <option>生產</option>
             <option selected>財務</option>
@@ -113,8 +113,8 @@
 
         <div class="col-md-6">
           <label for="validationRole" class="form-label">職稱</label>
-          <select class="form-select" id="validationRole" required disabled>
-            <option selected disabled value="">...</option>
+          <select class="form-select" id="validationRole" required>
+            <option selected value="">...</option>
             <option>員工</option>
             <option selected>副理</option>
             <option>經理</option>
@@ -125,18 +125,39 @@
           </div>
         </div>
 
-        <a id="editBtn" href="./PdataEdit.html">
-          <img src="./assets/icon/edit-icon.svg" alt="編輯">
-        </a>
+        <!-- 提交按鈕 -->
+        <button type="submit" id="submitBtn"><img src="./assets/icon/save-icon.svg" alt="提交"></button>
+
       </form>
 
     </div>
+
+
 
   </main>
 
   <!-- 引入bootstrap -->
   <script src="./component/Bootstrap/js/bootstrap.min.js"></script>
+  <script>
+    // 阻止提交
+    (() => {
+      'use strict'
 
+      const forms = document.querySelectorAll('.needs-validation')
+
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+
+  </script>
 
 </body>
 

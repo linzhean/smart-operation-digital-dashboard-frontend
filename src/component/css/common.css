@@ -46,37 +46,20 @@ html {
 body {
   font-family: 'Helvetica', 'Arial', 'Noto Sans TC', '黑體-繁', '微軟正黑體', sans-serif !important;
 }
-header {
-  height: 12%;
-  width: 100%;
-  overflow: hidden;
-  position: sticky;
-  padding-top: 1.5vh;
-  z-index: 1000;
-}
-.container-fluid {
-  height: 8vh;
-  width: 100%;
-  background-color: black;
-  z-index: 3000;
-}
 .navbar-toggler {
   background-color: #ACACBE;
   margin-bottom: 2px;
   margin-top: 10px;
-  z-index: 1000;
-  position: sticky;
 }
 .brand img {
-  width: 5vh;
+  width: 2.5em;
   aspect-ratio: 1 / 1;
-  z-index: 1000;
+  margin-top: 2px;
 }
 .nav-link {
   position: relative;
   display: inline-block;
   margin-bottom: 5px;
-  z-index: 1000;
 }
 .nav-link.active::after {
   content: "";
@@ -98,10 +81,6 @@ header {
 .navbar-nav .nav-item {
   margin-left: 0.5vw;
 }
-.container-fluid {
-  height: 100% !important;
-  width: 100vw !important;
-}
 .navbar-nav .nav-item img {
   width: 3vw;
   height: 3vw;
@@ -116,11 +95,8 @@ header {
   padding-top: 3px;
 }
 .bg-body-tertiary {
-  margin-top: -10px;
+  margin-top: -5px;
   background-color: black !important;
-}
-.navbar-collapse.show header {
-  height: 35%;
 }
 @media (max-width: 988px) {
   .navbar-nav .nav-item img {

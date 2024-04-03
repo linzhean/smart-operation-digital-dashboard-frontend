@@ -2,10 +2,6 @@
 
 @import url(./common.less);
 
-#success_message {
-  display: none;
-}
-
 .hidden {
   display: none;
 }
@@ -15,81 +11,122 @@ html {
   height: 100%;
 }
 
+// section占用100% 才會推開灰色 不然會以表單數量的底為主 下面會空一塊無底色
 .section {
-  height: 88%;
-  // overflow-y: auto;
+  height: 100%;
+  overflow-y: auto;
   background-color: @maincolor;
   border-radius: 15px;
-  margin: 15px;
-  margin-top: 0px;
+  margin: 0 13px 13px 13px;
+}
+
+.novalidate {
   position: relative;
 }
 
-.main-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-
-legend {
-  font-size: x-large;
-}
-
+// 包整個表單不含修改按鈕
 .container {
+  max-width: 100vw !important;
+  font-size: x-large;
+  font-weight: 550;
+  color: @mainfontcolor;
+  letter-spacing: 0.2em;
+
   margin: 0px !important;
   width: 100%;
+
   background-color: @maincolor;
-  color: @mainfontcolor;
-  padding: 25px;
+  padding: 20px;
   border-radius: 15px;
-  font-weight: 900;
 }
 
-input {
-  background-color: @maincolor !important;
-  border: none !important;
+// 各個標題:姓名/工號/信箱/所屬部門/職稱
+.form-label {
+  // border-bottom: 2.5px solid @mainorangeOP50;
+  color: @mainorange;
 }
 
-input::placeholder {
+// 控制value(那個placeholder但不是placeholder
+#validationName,
+#validationNum,
+#validationUnit,
+#validationRole {
   color: @mainfontcolor !important;
   font-size: x-large;
-  font-weight: 500;
 }
 
-.control-label {
-  font-weight: 700;
-  font-size: x-large !important;
-  margin: 5px 0px;
+// 輸入信箱放了一個框框
+// border順序不能改
+#validationEmail {
+  font-size: x-large;
+  margin-top: 5px;
+  color: @mainfontcolor !important;
+  border: 2px solid @mainorangeOP50 !important;
+  border-right: none !important;
 }
 
+// 修改那個先放好的@gmail.com格子
+#inputGroupAppend {
+  font-size: x-large;
+  font-weight: 550;
+  margin-top: 5px;
+  letter-spacing: 0.1em;
+  border-top-left-radius: .375rem !important;
+  border-bottom-left-radius: .375rem !important;
+  border: 1px solid @mainorangeOP50 ;
+  background-color: @mainorangeOP80 ;
+
+}
+
+// 修改(Gmail)的字母間距
+#gmail {
+  font-size: x-large;
+  letter-spacing: 0.05em;
+  font-weight: 550;
+}
+
+// 您的個人資料>那行字
+.listTitle {
+  font-weight: 900;
+  color: @mainfontcolor;
+  font-size: xx-large;
+  margin-top: -10px;
+}
+
+// 輸入框框
+input {
+  background-color: @maincolor !important;
+  border: 2px solid @mainorangeOP50 !important;
+}
+
+// 下拉選單
 select {
   font-size: x-large !important;
   background-color: @maincolor !important;
-  color: @mainfontcolor !important;
-  border: none !important;
+  border: 2px solid @mainorangeOP50 !important;
 }
 
-.separator {
-  border: none;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
-  margin: 1px 0;
-}
-
-
-.btn.btn-warning:active {
-  background-color: red;
-  color: black;
-  border: none;
-  font-weight: 500;
-}
-
-.edit-btn {
-  position: absolute;
-  top: 85%;
-  right: 10%;
-}
-
-.edit-btn img {
+// 修改按鈕的樣式
+#submitBtn,
+#editBtn {
+  position: fixed;
+  right: 8%;
+  bottom: 10%;
   width: 60px;
   height: 60px;
+  background: none;
+  border: none;
+}
+
+
+#submitBtn img,
+#editBtn img {
+  width: 60px;
+  height: 60px;
+  transition: transform 0.3s ease;
+}
+
+#submitBtn img:hover,
+#editBtn img:hover {
+  transform: scale(1.2);
 }
