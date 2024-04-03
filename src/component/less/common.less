@@ -7,6 +7,9 @@
 @iconcolor: #ACACBE;
 @maincolor :#343541;
 @mainfontcolor: #CCCCCC;
+@mainorange: #FF6600;
+@mainorangeOP50: rgba(255, 102, 0, 0.5);
+@mainorangeOP80: rgba(255, 102, 0, 0.8);
 
 body,
 html {
@@ -25,44 +28,27 @@ body {
   font-family: 'Helvetica', 'Arial', 'Noto Sans TC', '黑體-繁', '微軟正黑體', sans-serif !important;
 }
 
-// 頭部
-// 改有關頭上導航的代碼都在這裡
-header {
-  height: 12%;
-  width: 100%;
-  overflow: hidden;
-  position: sticky;
-  padding-top: 1.5vh;
-  z-index: 1000;
-}
-
-.container-fluid {
-  height: 8vh;
-  width: 100%;
-  background-color: black;
-  z-index: 3000;
-}
+// 改有關導航的代碼都在這裡
 
 .navbar-toggler {
   background-color: @iconcolor;
   margin-bottom: 2px;
   margin-top: 10px;
-  z-index: 1000;
-  position: sticky;
 }
 
 // 修改bugermenu
 .brand img {
-  width: 5vh;
+  width: 2.5em;
   aspect-ratio: 1 / 1;
-  z-index: 1000;
+  margin-top: 2px;
 }
 
+// 設定relative是為了要把底線放下面
 .nav-link {
   position: relative;
   display: inline-block;
   margin-bottom: 5px;
-  z-index: 1000;
+  // z-index: 1000;
 }
 
 // 底線樣式 
@@ -93,11 +79,6 @@ header {
   margin-left: 0.5vw;
 }
 
-.container-fluid {
-  height: 100% !important;
-  width: 100vw !important;
-}
-
 // li裡圖片大小
 .navbar-nav .nav-item img {
   width: 3vw;
@@ -113,21 +94,13 @@ header {
 
 // 圖片大小有點不一樣稍微微調位置
 .navbar-nav .nav-item:nth-child(4) img {
-  // margin-top: 1px;
   padding-top: 3px;
 }
 
-// 不知道
+// mt控制與頁面頂端距離
 .bg-body-tertiary {
-  margin-top: -10px;
+  margin-top: -5px;
   background-color: black !important;
-}
-
-
-.navbar-collapse.show {
-  header {
-    height: 35%;
-  }
 }
 
 @media (max-width: 988px) {
