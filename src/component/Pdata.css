@@ -20,9 +20,6 @@ body {
   font-size: 14px;
   color: #333;
 }
-img {
-  vertical-align: bottom;
-}
 ul {
   list-style-type: none;
 }
@@ -42,14 +39,6 @@ html {
   overflow: hidden;
   display: flex;
   min-width: 300px;
-}
-body {
-  font-family: 'Helvetica', 'Arial', 'Noto Sans TC', '黑體-繁', '微軟正黑體', sans-serif !important;
-}
-.navbar-toggler {
-  background-color: #ACACBE;
-  margin-bottom: 2px;
-  margin-top: 10px;
 }
 .brand img {
   width: 2.5em;
@@ -71,41 +60,6 @@ body {
   background-color: #ACACBE;
   border-radius: 5px;
   z-index: 1000;
-}
-.brand {
-  margin-right: auto;
-}
-.navbar-nav {
-  margin-left: auto;
-}
-.navbar-nav .nav-item {
-  margin-left: 10px
-}
-.navbar-nav .nav-item img {
-  width: 3vw;
-  height: 3vw;
-  display: inline-block;
-}
-.nav-text {
-  font-size: 3vh;
-  font-weight: 600;
-  display: none;
-}
-.navbar-nav .nav-item:nth-child(4) img {
-  padding-top: 3px;
-}
-.bg-body-tertiary {
-  margin-top: -5px;
-  background-color: black !important;
-}
-@media (max-width: 988px) {
-  .navbar-nav .nav-item img {
-    display: none;
-  }
-  .navbar-nav .nav-item .nav-text {
-    display: inline-block;
-    color: #CCCCCC;
-  }
 }
 .hidden {
   display: none;
@@ -136,6 +90,12 @@ html {
   padding: 20px;
   border-radius: 15px;
 }
+
+input, select {
+  color: #CCCCCC !important;
+  font-weight: 550;
+}
+
 .form-label {
   color: #FF6600;
 }

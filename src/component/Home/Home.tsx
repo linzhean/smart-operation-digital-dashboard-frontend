@@ -3,8 +3,8 @@ import { defaults } from "chart.js/auto";
 import { Bar, Doughnut, Line, } from "react-chartjs-2";
 import "./Home.css";
 
-import revenueData from "./data/revenueData.json";
-import sourceData from "./data/sourceData.json";
+import revenueData from "../data/revenueData.json";
+import sourceData from "../data/sourceData.json";
 
 
 

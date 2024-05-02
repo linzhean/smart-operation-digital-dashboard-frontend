@@ -12,6 +12,7 @@
     "@types/react-dom": "^18.2.19",
     "@types/react-icons": "^3.0.0",
     "axios": "^1.6.7",
+    "bootstrap": "^5.3.3",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
@@ -26,7 +27,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:override": "react-scripts start --scripts-version react-scripts-overrides",
+    "build:override": "react-scripts build --scripts-version react-scripts-overrides"
   },
   "eslintConfig": {
     "extends": [
@@ -45,5 +48,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "file-loader": "^6.2.0",
+    "svg-inline-loader": "^0.8.2",
+    "svg-url-loader": "^8.0.0"
   }
 }
