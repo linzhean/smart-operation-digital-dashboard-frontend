@@ -52,7 +52,7 @@ body {
   margin-top: 10px;
 }
 .brand img {
-  width: 1.5em;
+  width: 35px;
   aspect-ratio: 1 / 1;
   margin-top: 2px;
 }
@@ -78,9 +78,13 @@ body {
 .navbar-nav {
   margin-left: auto;
   align-items: center;
+  transition: transform 0.2s ease;
 }
 .navbar-nav .nav-item {
   margin-left: 0.5vw;
+}
+.navbar-nav .nav-item :hover {
+  transform: scale(1.1);
 }
 .navbar-nav .nav-item img {
   width: 3vw;
@@ -152,6 +156,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
+  overflow: auto;
 }
 .KPI img {
   width: 300px;
@@ -206,6 +211,18 @@ body {
   font-size: 25px;
   cursor: pointer;
   margin-right: 20px;
+}
+#myForm {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
 }
 @media (max-width: 1024px) {
   .sidebar_inner {

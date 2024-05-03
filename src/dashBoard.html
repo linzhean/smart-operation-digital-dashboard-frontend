@@ -34,7 +34,7 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="./dashBoard.html">
               <img src="./assets/icon/group-icon.svg" alt="">
               <span class="nav-text">群組</span>
             </a>
@@ -46,13 +46,13 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="./mail.html">
               <img src="./assets/icon/email-icon.svg" alt="">
               <span class="nav-text">信件</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="./Pdata.html">
               <img src="./assets/icon/userData-icon.svg" alt="">
               <span class="nav-text">個人資料</span>
             </a>
@@ -72,7 +72,7 @@
           </div>
           <ul class="siderbar_menu mostly-customized-scrollbar">
             <li>
-              <a href="#">
+              <a href="#" onclick="toggleForm()">
                 <div class="title">新儀錶板</div>
               </a>
             </li>
@@ -121,7 +121,20 @@
         </div>
       </div>
       <div class="main_container">
+
+        <div id="myForm">
+          <h2>表單示意</h2>
+          <form>
+            <label for="fname">名字:</label><br>
+            <input type="text" id="fname" name="fname"><br>
+            <label for="lname">姓氏:</label><br>
+            <input type="text" id="lname" name="lname"><br><br>
+            <input type="submit" value="提交">
+          </form>
+        </div>
+
         <div class="dashboardContent">
+
           <!-- 圖表在這裡在這裡在這裡 -->
           <div class="KPI">
             <img src="./assets/icon/testKPI.svg" alt="">
@@ -181,7 +194,15 @@
         }
       });
     });
-
+    // 控制表單彈出(不順有問題)
+    function toggleForm() {
+      var form = document.getElementById("myForm");
+      if (form.style.display === "none") {
+        form.style.display = "block";
+      } else {
+        form.style.display = "none";
+      }
+    }
   </script>
 
 </body>

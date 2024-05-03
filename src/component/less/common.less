@@ -38,7 +38,7 @@ body {
 
 // 修改bugermenu
 .brand img {
-  width: 1.5em;
+  width: 35px;
   aspect-ratio: 1 / 1;
   margin-top: 2px;
 }
@@ -73,11 +73,16 @@ body {
 .navbar-nav {
   margin-left: auto;
   align-items: center;
+  transition: transform 0.2s ease;
 }
 
 // li中間距離
 .navbar-nav .nav-item {
   margin-left: 0.5vw;
+}
+
+.navbar-nav .nav-item :hover {
+  transform: scale(1.1);
 }
 
 // li裡圖片大小
@@ -103,6 +108,8 @@ body {
   margin-top: -5px;
   background-color: black !important;
 }
+
+
 
 @media (max-width: 988px) {
   .navbar-nav .nav-item img {
