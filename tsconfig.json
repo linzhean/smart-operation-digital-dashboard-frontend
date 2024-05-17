@@ -18,6 +18,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "types": ["react", "react-dom", "react-router-dom"],
     "jsx": "react-jsx"
   },
   "include": [
