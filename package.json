@@ -13,11 +13,14 @@
     "@types/react-icons": "^3.0.0",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-google-login": "^5.2.2",
     "react-icons": "^5.0.1",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^6.23.0",
     "react-scripts": "^5.0.1",
     "recharts": "^2.12.3",
@@ -51,6 +54,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-infinite-scroll-component": "^5.0.0",
     "@types/react-router": "^5.1.20",
     "file-loader": "^6.2.0",
     "svg-inline-loader": "^0.8.2",

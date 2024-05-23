@@ -1,22 +1,24 @@
+.Home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+}
+
+
+.staticContent {
+  margin-bottom: 2em; /* 保持与无限滚动内容的间距 */
+}
+
 .dataCard {
-    background-color: #efefef;
-    border-radius: 0.5em;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    padding: 1em;
-  }
-  
-  .revenueCard {
-    width: 92%;
-    height: 20rem;
-  }
-  
-  .customerCard {
-    width: 50%;
-    height: 20rem;
-  }
-  
-  .categoryCard {
-    width: 40%;
-    height: 20rem;
-  }
-  
+  background-color: #efefef;
+  border-radius: 0.5em;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+.chart {
+  margin: 20px auto;
+}

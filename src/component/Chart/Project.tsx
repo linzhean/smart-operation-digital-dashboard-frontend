@@ -5,7 +5,7 @@ const Project: React.FC = () => {
   return (
     <div className="project">
       <h1>Project 页面</h1>
-      <ChartComponent />
+      <ChartComponent apiEndpoint={''} />
     </div>
   );
 };

@@ -19,11 +19,11 @@ function Login() {
 
   return (
     <div className='wrapper'>
-      <h2>欢迎回来！</h2>
+      <h2>歡迎回來！</h2>
       <div id='signInButton'>
         <GoogleLogin 
           clientId={clientId}
-          buttonText={"使用 Google 登录"}
+          buttonText={"使用 Google 登錄"}
           onSuccess={onSuccess}
           onFailure={onFailure}
           cookiePolicy={'single_host_origin'}
