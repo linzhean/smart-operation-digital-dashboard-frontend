@@ -72,11 +72,17 @@ body {
 // ul推到右邊
 .navbar-nav {
   margin-left: auto;
+  align-items: center;
+  transition: transform 0.2s ease;
 }
 
 // li中間距離
 .navbar-nav .nav-item {
   margin-left: 0.5vw;
+}
+
+.navbar-nav .nav-item :hover {
+  transform: scale(1.1);
 }
 
 // li裡圖片大小
@@ -102,6 +108,8 @@ body {
   margin-top: -5px;
   background-color: black !important;
 }
+
+
 
 @media (max-width: 988px) {
   .navbar-nav .nav-item img {

@@ -80,6 +80,14 @@ body {
 }
 .navbar-nav .nav-item {
   margin-left: 10px
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+.navbar-nav .nav-item {
+  margin-left: 0.5vw;
+}
+.navbar-nav .nav-item :hover {
+  transform: scale(1.1);
 }
 .navbar-nav .nav-item img {
   width: 3vw;

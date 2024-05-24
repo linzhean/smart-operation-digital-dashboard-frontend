@@ -32,8 +32,6 @@ export const Home = () => {
     <div className="Home">
       <div className="content">
         <div className="staticContent">
-          <h2>Original Content</h2>
-          <p>This is the original content that should not be affected by the infinite scroll.</p>
         </div>
 
         <InfiniteScroll
