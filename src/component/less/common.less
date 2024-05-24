@@ -1,0 +1,123 @@
+//out:../css/common.css
+
+@import "./base.less";
+
+// 常用顏色
+// 其他顏色為全白/全黑
+@iconcolor: #ACACBE;
+@maincolor :#343541;
+@mainfontcolor: #CCCCCC;
+@mainorange: #FF6600;
+@mainorangeOP50: rgba(255, 102, 0, 0.5);
+@mainorangeOP80: rgba(255, 102, 0, 0.8);
+
+body,
+html {
+  background-color: black;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  min-width: 300px;
+}
+
+body {
+  font-family: 'Helvetica', 'Arial', 'Noto Sans TC', '黑體-繁', '微軟正黑體', sans-serif !important;
+}
+
+// 改有關導航的代碼都在這裡
+
+.navbar-toggler {
+  background-color: @iconcolor;
+  margin-bottom: 2px;
+  margin-top: 10px;
+}
+
+// 修改bugermenu
+.brand img {
+  width: 35px;
+  aspect-ratio: 1 / 1;
+  margin-top: 2px;
+}
+
+// 設定relative是為了要把底線放下面
+.nav-link {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 5px;
+  // z-index: 1000;
+}
+
+// 底線樣式 
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  height: 3.5px;
+  background-color: @iconcolor;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+// 漢堡推到左邊
+.brand {
+  margin-right: auto;
+}
+
+// ul推到右邊
+.navbar-nav {
+  margin-left: auto;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+// li中間距離
+.navbar-nav .nav-item {
+  margin-left: 0.5vw;
+}
+
+.navbar-nav .nav-item :hover {
+  transform: scale(1.1);
+}
+
+// li裡圖片大小
+.navbar-nav .nav-item img {
+  width: 3vw;
+  height: 3vw;
+  display: inline-block;
+}
+
+.nav-text {
+  font-size: 3vh;
+  font-weight: 600;
+  display: none;
+}
+
+// 圖片大小有點不一樣稍微微調位置
+.navbar-nav .nav-item:nth-child(4) img {
+  padding-top: 3px;
+}
+
+// mt控制與頁面頂端距離
+.bg-body-tertiary {
+  margin-top: -5px;
+  background-color: black !important;
+}
+
+
+
+@media (max-width: 988px) {
+  .navbar-nav .nav-item img {
+    display: none;
+  }
+
+  .navbar-nav .nav-item .nav-text {
+    display: inline-block;
+    color: @mainfontcolor;
+  }
+}

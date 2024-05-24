@@ -1,0 +1,135 @@
+//out:../css/Pdata.css
+
+@import url(./common.less);
+
+.hidden {
+  display: none;
+}
+
+body,
+html {
+  height: 100%;
+}
+
+// section占用100% 才會推開灰色 不然會以表單數量的底為主 下面會空一塊無底色
+.mainPdata {
+  height: 100%;
+  overflow-y: auto;
+  background-color: @maincolor;
+  border-radius: 15px;
+  margin: 0 13px 13px 13px;
+}
+
+.novalidate {
+  position: relative;
+}
+
+// 包整個表單不含修改按鈕
+.container {
+  max-width: 100vw !important;
+  font-size: 1.5rem;
+  font-weight: 550;
+  color: @mainfontcolor;
+  letter-spacing: 0.2em;
+
+  margin: 0px !important;
+  width: 100%;
+
+  background-color: @maincolor;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+// 各個標題:姓名/工號/信箱/所屬部門/職稱
+.form-label {
+  // border-bottom: 2.5px solid @mainorangeOP50;
+  color: @mainorange;
+}
+
+// 控制value(那個placeholder但不是placeholder
+#validationName,
+#validationNum,
+#validationUnit,
+#validationRole {
+  color: @mainfontcolor !important;
+  font-size: 1.5rem;
+}
+
+// 輸入信箱放了一個框框
+// border順序不能改
+#validationEmail {
+  font-size: 1.5rem;
+  color: @mainfontcolor !important;
+  border: 2px solid @mainorangeOP50 !important;
+  border-right: none !important;
+}
+
+// 修改那個先放好的@gmail.com格子
+#inputGroupAppend {
+  font-size: 1rem;
+  font-weight: 550;
+  letter-spacing: 0.05em;
+  border-top-left-radius: .375rem !important;
+  border-bottom-left-radius: .375rem !important;
+  border: 1px solid @mainorangeOP50 ;
+  background-color: @mainorangeOP80 ;
+
+}
+
+// 修改標題的(Gmail)的字母間距
+#gmail {
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  font-weight: 550;
+}
+
+// 您的個人資料>那行字
+.listTitle {
+  font-weight: 900;
+  color: @mainfontcolor;
+  font-size: 1.8rem;
+  margin-top: -10px;
+}
+
+// 輸入框框
+input {
+  background-color: @maincolor !important;
+  border: 2px solid @mainorangeOP50 !important;
+}
+
+// 下拉選單
+select {
+  font-size: 1.5rem !important;
+  background-color: @maincolor !important;
+  border: 2px solid @mainorangeOP50 !important;
+}
+
+// 修改按鈕的樣式
+#submitBtn,
+#editBtn {
+  position: fixed;
+  right: 8%;
+  bottom: 10%;
+  width: 60px;
+  height: 60px;
+  background: none;
+  border: none;
+}
+
+
+#submitBtn img,
+#editBtn img {
+  width: 60px;
+  height: 60px;
+  transition: transform 0.3s ease;
+}
+
+#submitBtn img:hover,
+#editBtn img:hover {
+  transform: scale(1.2);
+}
+
+// 佔位的那個取消邊框 不然縮小看的出來
+#occupy {
+  margin-top: 0px !important;
+}
