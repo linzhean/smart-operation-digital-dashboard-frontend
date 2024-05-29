@@ -167,7 +167,7 @@ input[type="checkbox"]:hover + label {
   transform: scale(1.1);
 }
 input[type="checkbox"]:checked {
-  border: 13px solid #FF6600;
+  border: 15px solid #FF6600;
 }
 input[type="checkbox"]:checked + label {
   color: #FF6600;
@@ -263,6 +263,21 @@ input[type="checkbox"]:checked + label {
   height: 150px;
 }
 ::-webkit-scrollbar {
-  width: 0;
-  background: transparent;
+  width: 1.5em;
+}
+::-webkit-scrollbar-track {
+  background: #343541;
+  border-radius: 100vw;
+  margin-block: 0.5em;
+}
+::-webkit-scrollbar-thumb {
+  background: #000;
+  border: 0.25em solid #343541;
+  border-radius: 100vw;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+::-webkit-scrollbar-button {
+  display: none;
 }

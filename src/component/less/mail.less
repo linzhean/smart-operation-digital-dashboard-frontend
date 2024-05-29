@@ -68,7 +68,7 @@ input[type="checkbox"]:hover+label {
 }
 
 input[type="checkbox"]:checked {
-  border: 13px solid @mainorange;
+  border: 15px solid @mainorange;
 }
 
 input[type="checkbox"]:checked+label {
@@ -181,8 +181,33 @@ input[type="checkbox"]:checked+label {
   height: 150px;
 }
 
-// 滾動條取消醜醜的 但新的沒有放上去
+// 滾動條取消醜醜的
+// ::-webkit-scrollbar {
+//   width: 0;
+//   background: transparent;
+// }
+
+// Chrome和Safari
 ::-webkit-scrollbar {
-  width: 0;
-  background: transparent;
+  width: 1.5em
+}
+
+::-webkit-scrollbar-track {
+  background: @maincolor;
+  border-radius: 100vw;
+  margin-block: .5em;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #000;
+  border: .25em solid @maincolor;
+  border-radius: 100vw;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-button {
+  display: none;
 }
