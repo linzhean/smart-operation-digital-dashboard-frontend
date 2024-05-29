@@ -1,17 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './index.css';
+import { BrowserRouter } from 'react-router-dom';
+import Login from './component/GoogleLogin/Login'; // Import the Login component
 import App from './App';
-import Login from './component/GoogleLogin/Login';
+import './index.css'; // Import the global CSS
 
 ReactDOM.render(
-  <Router>
-    <React.StrictMode>
-      <Routes>
-        <Route path="/*" element={<App />} />
-      </Routes>
-    </React.StrictMode>
-  </Router>,
+  <BrowserRouter>
+    <Login />
+  </BrowserRouter>,
   document.getElementById('root')
 );

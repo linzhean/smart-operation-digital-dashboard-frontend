@@ -1,23 +1,21 @@
-/* DrawerNavigation.css */
-
 .drawer-navigation {
   position: fixed;
   top: 0;
-  left: -400px; /* 初始状态抽屉导航关闭 */
+  left: -400px; /* Initial state when drawer is closed */
   width: auto;
   height: 100%;
   background-color: #000000;
   border-right: 1px solid #000000;
   transition: left 0.3s ease-out;
-  z-index: 100; /* 确保抽屉导航位于内容之上 */
+  z-index: 100; /* Ensure drawer is above content */
 }
 
 .drawer-navigation.open {
-  left: 0; /* 展开时将 left 设置为 0 */
+  left: 0; /* When drawer is open */
 }
 
 .drawer-navigation.closed {
-  left: -300px; /* 关闭时将 left 设置为 -400px */
+  left: -300px; /* When drawer is closed */
 }
 
 .drawer-header {

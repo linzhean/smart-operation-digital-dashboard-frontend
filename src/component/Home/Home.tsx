@@ -1,3 +1,4 @@
+// src/component/Home/Home.tsx
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ChartComponent from "../Chart/ChartComponent";
@@ -12,7 +13,7 @@ const generateApiEndpoint = (index: number) => {
   return endpoints[index % endpoints.length];
 };
 
-export const Home = () => {
+export const Home: React.FC = () => {
   const [chartItems, setChartItems] = useState(
     Array.from({ length: 3 }, (_, index) => generateApiEndpoint(index))
   );
@@ -32,6 +33,7 @@ export const Home = () => {
     <div className="Home">
       <div className="content">
         <div className="staticContent">
+          {/* 这里可以放一些静态内容 */}
         </div>
 
         <InfiniteScroll

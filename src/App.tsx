@@ -5,14 +5,14 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import './App.css';
 import Home from './component/Home/Home';
 import Group from './component/Group/Group';
-import Pdata from './component/Pdata';
+import Pdata from './Pdata/Pdata';
+import Mail from './component/Mail/Mail';
 import Menu from './assets/icon/burgerMenu-icon.svg';
 import Dashboard from './assets/icon/dashBoard-icon.svg';
 import group from './assets/icon/group-icon.svg';
 import Manage from './assets/icon/graphManage-icon.svg';
 import Email from './assets/icon/email-icon.svg';
 import Profile from './assets/icon/userData-icon.svg';
-
 
 const App: React.FC = () => {
   const [tabs, setTabs] = useState(["群組 1"]);
@@ -81,7 +81,7 @@ const App: React.FC = () => {
                 href="#"
                 onClick={() => selectPage("group")}
               >
-                <img src= {group} alt="群組" />
+                <img src={group} alt="群組" />
                 <span className="nav-text">群組</span>
               </a>
               <a
@@ -114,13 +114,12 @@ const App: React.FC = () => {
       </nav>
 
       <div className="content">
-        {/* 根据 selectedPage 的值来显示不同的页面内容 */}
         {selectedPage === "home" && <Home />}
         {selectedPage === "group" && <Group users={users} addUser={addUser} deleteUser={deleteUser} />}
         {selectedPage === "profile" && <Pdata />}
+        {selectedPage === "email" && <Mail />}
       </div>
 
-      {/* 添加 DrawerNavigation 组件，根据 isDrawerOpen 的值来决定是否显示 */}
       {isDrawerOpen && (
         <DrawerNavigation
           tabs={tabs}
