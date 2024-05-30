@@ -68,11 +68,11 @@ input[type="checkbox"]:hover+label {
 }
 
 input[type="checkbox"]:checked {
-  border: 15px solid @mainorange;
+  border: 15px solid @logocolor;
 }
 
 input[type="checkbox"]:checked+label {
-  color: @mainorange;
+  color: @logocolor;
 }
 
 // 下方訊息mailBreif
@@ -205,9 +205,80 @@ input[type="checkbox"]:checked+label {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(204, 204, 204, 0.5);
 }
 
 ::-webkit-scrollbar-button {
+  display: none;
+}
+
+.rightside {
+  overflow: hidden;
+}
+
+//輸入框
+
+.input-container {
+  margin: 15px 20px;
+  display: flex;
+  align-items: center;
+  background-color: #343541;
+  border: #000 solid 0.5em;
+  border-radius: 15px;
+  padding: 0px 50px 0px 10px;
+  width: 96.5%;
+  height: 12vh;
+  position: relative;
+}
+
+.input-container textarea {
+  flex-grow: 1;
+  border: none;
+  background: none;
+  color: @mainfontcolor;
+  font-size: 24px;
+  outline: none;
+  padding: 10px;
+  resize: none;
+  overflow-y: auto;
+  max-height: 20vh;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.input-container textarea::placeholder {
+  color: #aaa;
+}
+
+
+.input-container .arrow-icon {
+  position: absolute;
+  right: 20px;
+  font-size: 24px;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 1em
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: @maincolor;
+  border-radius: 100vw;
+  margin-block: .5em;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: black;
+  border: .25em solid @maincolor;
+  border-radius: 100vw;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(204, 204, 204, 0.5)
+}
+
+.custom-scrollbar::-webkit-scrollbar-button {
   display: none;
 }
