@@ -52,7 +52,7 @@ body {
   margin-top: 10px;
 }
 .brand img {
-  width: 35px;
+  width: 2.5em;
   aspect-ratio: 1 / 1;
   margin-top: 2px;
 }
@@ -77,14 +77,9 @@ body {
 }
 .navbar-nav {
   margin-left: auto;
-  align-items: center;
-  transition: transform 0.2s ease;
 }
 .navbar-nav .nav-item {
   margin-left: 0.5vw;
-}
-.navbar-nav .nav-item :hover {
-  transform: scale(1.1);
 }
 .navbar-nav .nav-item img {
   width: 3vw;

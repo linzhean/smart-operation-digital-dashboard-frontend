@@ -42,24 +42,42 @@ html {
   overflow: hidden;
   display: flex;
   min-width: 300px;
+  min-height: fit-content;
 }
 body {
   font-family: 'Helvetica', 'Arial', 'Noto Sans TC', '黑體-繁', '微軟正黑體', sans-serif !important;
+}
+header {
+  height: 9vh;
+  width: 100%;
+  overflow: hidden;
+  position: sticky;
+  padding-top: 1vh;
+  z-index: 1000;
+}
+.container-fluid {
+  height: 8vh;
+  width: 100%;
+  background-color: black;
+  z-index: 1000;
 }
 .navbar-toggler {
   background-color: #ACACBE;
   margin-bottom: 2px;
   margin-top: 10px;
+  z-index: 1000;
+  position: sticky;
 }
 .brand img {
-  width: 35px;
+  width: 5vh;
   aspect-ratio: 1 / 1;
-  margin-top: 2px;
+  z-index: 1000;
 }
 .nav-link {
   position: relative;
   display: inline-block;
   margin-bottom: 5px;
+  z-index: 1000;
 }
 .nav-link.active::after {
   content: "";
@@ -77,40 +95,20 @@ body {
 }
 .navbar-nav {
   margin-left: auto;
-  align-items: center;
-  transition: transform 0.2s ease;
 }
 .navbar-nav .nav-item {
   margin-left: 0.5vw;
 }
-.navbar-nav .nav-item :hover {
-  transform: scale(1.1);
-}
 .navbar-nav .nav-item img {
   width: 3vw;
   height: 3vw;
-  display: inline-block;
-}
-.nav-text {
-  font-size: 3vh;
-  font-weight: 600;
-  display: none;
 }
 .navbar-nav .nav-item:nth-child(4) img {
   padding-top: 3px;
 }
 .bg-body-tertiary {
-  margin-top: -5px;
+  margin-top: -10px;
   background-color: black !important;
-}
-@media (max-width: 988px) {
-  .navbar-nav .nav-item img {
-    display: none;
-  }
-  .navbar-nav .nav-item .nav-text {
-    display: inline-block;
-    color: #CCCCCC;
-  }
 }
 .content {
   color: #CCCCCC !important;

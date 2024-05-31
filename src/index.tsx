@@ -1,17 +1,13 @@
-// index.tsx
-
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
-import './index.css';
+import { BrowserRouter } from 'react-router-dom';
+import Login from './component/GoogleLogin/Login'; // Import the Login component
 import App from './App';
-
+import './index.css'; // Import the global CSS
 
 ReactDOM.render(
-  <Router>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </Router>,
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
   document.getElementById('root')
 );

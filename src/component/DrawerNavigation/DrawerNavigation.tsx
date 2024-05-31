@@ -1,5 +1,5 @@
 import React from 'react';
-import { GrMenu, GrClose } from 'react-icons/gr'; //
+import { GrMenu, GrClose } from 'react-icons/gr';
 import './DrawerNavigation.css';
 
 interface DrawerNavigationProps {
@@ -21,7 +21,7 @@ const DrawerNavigation: React.FC<DrawerNavigationProps> = ({
     <div className={`drawer-navigation ${isOpen ? 'open' : 'closed'}`}>
       <div className="drawer-header">
         <div className="toggle-button" onClick={toggleDrawer}>
-          {isOpen ? <GrClose /> : <GrMenu />} {/* 使用 BurgerMenu 图标 */}
+          {isOpen ? <GrClose /> : <GrMenu />}
         </div>
       </div>
       <div className="tabs">
@@ -31,8 +31,10 @@ const DrawerNavigation: React.FC<DrawerNavigationProps> = ({
             <button onClick={() => onDeleteTab(index)}>删除</button>
           </div>
         ))}
+        <div className="add-group-button-container"> {/* 新的容器 */}
+          <button className="add-tab-button" onClick={onAddTab}>新增群組</button>
+        </div>
       </div>
-      <button className="add-tab-button" onClick={onAddTab}>新增群組</button>
     </div>
   );
 };

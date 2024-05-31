@@ -1,22 +1,31 @@
 import React, { useState } from 'react';
-import DrawerNavigation from './component/DrawerNavigation';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import DrawerNavigation from './component/DrawerNavigation/DrawerNavigation';
+import './component/Bootstrap/css/bootstrap.min.css';
 import './App.css';
-import Home from './component/Home';
-import Group from './component/Group';
-// import Services from './component/Services';
-// import Email from './component/Email';
-// import Profile from './component/Profile';
+import Home from './component/Home/Home';
+import Group from './component/Group/Group';
+import Pdata from './Pdata/Pdata';
+import Mail from './component/Mail/Mail';
+import Menu from './assets/icon/burgerMenu-icon.svg';
+import Dashboard from './assets/icon/dashBoard-icon.svg';
+import group from './assets/icon/group-icon.svg';
+import Manage from './assets/icon/graphManage-icon.svg';
+import Email from './assets/icon/email-icon.svg';
+import Profile from './assets/icon/userData-icon.svg';
 
 const App: React.FC = () => {
-  const [tabs, setTabs] = useState([" 群組 1"]);
+  const [tabs, setTabs] = useState(["群組 1"]);
   const [users, setUsers] = useState<any[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedPage, setSelectedPage] = useState("home"); // 新增狀態來跟踪当前选中的页面，默认为"home"
+  const [selectedPage, setSelectedPage] = useState("home");
 
   const addTab = () => {
     const newTab = `群組 ${tabs.length + 1}`;
     setTabs([...tabs, newTab]);
+  };
+
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
   };
 
   const deleteTab = (index: number) => {
@@ -44,40 +53,81 @@ const App: React.FC = () => {
     setUsers(newUsers);
   };
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
-
   const selectPage = (page: string) => {
     setSelectedPage(page);
   };
 
   return (
     <div className='App'>
-      <div className="top-navigation">
-        <button className={`top-nav-item ${selectedPage === "home" ? "active" : ""}`} onClick={() => selectPage("home")}>首頁</button>
-        <button className={`top-nav-item ${selectedPage === "group" ? "active" : ""}`} onClick={() => selectPage("group")}>群組</button>
-        <button className={`top-nav-item ${selectedPage === "services" ? "active" : ""}`} onClick={() => selectPage("services")}>服務</button>
-        <button className={`top-nav-item ${selectedPage === "email" ? "active" : ""}`} onClick={() => selectPage("email")}>郵件</button>
-        <button className={`top-nav-item ${selectedPage === "profile" ? "active" : ""}`} onClick={() => selectPage("profile")}>個人資料</button>
-      </div>
-      <button className="toggle-button" onClick={toggleDrawer}>
-        {isDrawerOpen ? <FaAngleLeft /> : <FaAngleRight />}
-      </button>
-      <DrawerNavigation
-        tabs={tabs}
-        onAddTab={addTab}
-        onDeleteTab={deleteTab}
-        isOpen={isDrawerOpen}
-        toggleDrawer={toggleDrawer}
-      />
-      <div className={`content ${isDrawerOpen ? 'drawer-open' : 'drawer-closed'}`}>
+      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+        <div className="container-fluid">
+          <a className="brand" href="#">
+            <img src={Menu} alt="Menu" onClick={toggleDrawer} />
+          </a>
+
+          <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div className="navbar-nav">
+              <a
+                className={`nav-item nav-link ${selectedPage === "home" ? "active" : ""}`}
+                href="#"
+                onClick={() => selectPage("home")}
+              >
+                <img src={Dashboard} alt="儀表板" />
+                <span className="nav-text">儀表板</span>
+              </a>
+              <a
+                className={`nav-item nav-link ${selectedPage === "group" ? "active" : ""}`}
+                href="#"
+                onClick={() => selectPage("group")}
+              >
+                <img src={group} alt="群組" />
+                <span className="nav-text">群組</span>
+              </a>
+              <a
+                className={`nav-item nav-link ${selectedPage === "services" ? "active" : ""}`}
+                href="#"
+                onClick={() => selectPage("services")}
+              >
+                <img src={Manage} alt="" />
+                <span className="nav-text">管理圖表</span>
+              </a>
+              <a
+                className={`nav-item nav-link ${selectedPage === "email" ? "active" : ""}`}
+                href="#"
+                onClick={() => selectPage("email")}
+              >
+                <img src={Email} alt="" />
+                <span className="nav-text">信件</span>
+              </a>
+              <a
+                className={`nav-item nav-link ${selectedPage === "profile" ? "active" : ""}`}
+                href="#"
+                onClick={() => selectPage("profile")}
+              >
+                <img src={Profile} alt="" />
+                <span className="nav-text">個人資料</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div className="content">
         {selectedPage === "home" && <Home />}
         {selectedPage === "group" && <Group users={users} addUser={addUser} deleteUser={deleteUser} />}
-        {/* {selectedPage === "services" && <Services />}
-        {selectedPage === "email" && <Email />}
-        {selectedPage === "profile" && <Profile />} */}
+        {selectedPage === "profile" && <Pdata />}
+        {selectedPage === "email" && <Mail />}
       </div>
+
+      {isDrawerOpen && (
+        <DrawerNavigation
+          tabs={tabs}
+          onAddTab={addTab}
+          onDeleteTab={deleteTab}
+          isOpen={isDrawerOpen}
+          toggleDrawer={toggleDrawer}
+        />
+      )}
     </div>
   );
 };
