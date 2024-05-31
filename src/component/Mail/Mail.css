@@ -64,14 +64,14 @@ body {
 .leftside {
   display: flex;
   flex-direction: column;
-  width: 30%;
-  margin-right: 3px;
+  flex: 1;
+  margin-right: 5px;
 }
 .rightside {
   display: flex;
   flex-direction: column;
-  width: 70%;
-  margin-left: 3px;
+  flex: 2;
+  margin-left: 5px;
 }
 .filter {
   display: flex;
@@ -181,6 +181,7 @@ input[type="checkbox"]:checked + label {
   color: #FFF;
   border: none;
   resize: none;
+  width: 100%; /* 修改宽度为100% */
 }
 .chatBox {
   flex: 2;
@@ -193,6 +194,7 @@ input[type="checkbox"]:checked + label {
   color: #FFF;
   border: none;
   overflow-y: auto;
+  width: 100%; /* 修改宽度为100% */
 }
 @media (max-width: 768px) {
   .mainEmail {

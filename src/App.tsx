@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import DrawerNavigation from './component/DrawerNavigation/DrawerNavigation';
 import './component/Bootstrap/css/bootstrap.min.css';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import './App.css';
 import Home from './component/Home/Home';
 import Group from './component/Group/Group';

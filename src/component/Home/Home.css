@@ -6,9 +6,9 @@
   padding: 20px;
 }
 
-
 .staticContent {
-  margin-bottom: 2em; /* 保持与无限滚动内容的间距 */
+  margin-bottom: 2em;
+  
 }
 
 .dataCard {
@@ -17,8 +17,35 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 1em;
   margin-bottom: 1em;
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
 }
 
 .chart {
   margin: 20px auto;
+  
+}
+
+/* Media Queries for RWD */
+@media (max-width: 768px) {
+  .Home {
+    padding: 10px;
+  }
+
+  .dataCard {
+    padding: 0.5em;
+  }
+
+  .staticContent {
+    margin-bottom: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .dataCard {
+    padding: 0.5em;
+  }
 }

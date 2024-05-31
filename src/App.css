@@ -1,5 +1,4 @@
-/* App.css */
-
+/* General Reset */
 ::after,
 ::before {
   box-sizing: border-box;
@@ -17,52 +16,135 @@ h6 {
   margin: 0;
 }
 
-.App {
-  /* width: 100vw;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #000000;
-  font-family: "Neucha", cursive;
-  position: relative; 相对定位 */
-  background-color: black;
-  flex-direction: column;
-  min-height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  display: flex;
-  min-width: 300px;
+body,
+html {
+  height: 100%;
 }
 
+body {
+  font-family: -apple-system, BlinkMacSystemFont, PingFangSC-Regular, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+img {
+  vertical-align: bottom;
+}
+
+ul {
+  list-style-type: none;
+}
+
+a {
+  color: #333;
+  text-decoration: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* App Container */
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  background-color: black;
+  overflow: hidden;
+}
+
+/* Navbar */
+.navbar {
+  background-color: black !important;
+}
+
+.navbar-toggler {
+  background-color: #ACACBE;
+}
+
+.brand img {
+  width: 2.5em;
+}
+
+.nav-link {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  height: 3.5px;
+  background-color: #ACACBE;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+.brand {
+  margin-right: auto;
+  flex-grow: 1;
+}
+
+.collapse.navbar-collapse {
+  flex-grow: 1;
+  margin-left: 20px;
+}
+
+.navbar-nav {
+  display: flex;
+  margin-left: auto; 
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.navbar-nav .nav-item {
+  margin-left: 10px;
+}
+
+.navbar-nav .nav-item img {
+  width: 3vw;
+  height: 3vw;
+}
+
+.nav-text {
+  font-size: 3vh;
+  font-weight: 600;
+  display: none;
+}
+
+@media (max-width: 988px) {
+  .navbar-nav .nav-item img {
+    display: none;
+  }
+  .navbar-nav .nav-item .nav-text {
+    display: inline-block;
+    color: #CCCCCC;
+  }
+}
+
+/* Content */
 .content {
-  /* position: absolute;
-  top: 60px;
-  left: 10px; /* 调整内容区域的左侧偏移，确保不被抽屉导航覆盖 */
-  /* right: 10px;
-  bottom: 10px;
-  background-color: #343541;
-  padding: 20px;
-  overflow: auto;  */
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: calc(100% - 90px); /* 留出导航栏的高度，根据你的设计进行调整 */
+  height: calc(100% - 90px);
   overflow-y: auto;
   background-color: #343541;
   border-radius: 15px;
   padding: 20px;
 }
 
-
 .tabs {
   display: flex;
   flex-direction: column;
 }
- 
+
 .tab {
   background-color: #ffffff;
   padding: 10px 20px;
@@ -70,21 +152,21 @@ h6 {
   margin-right: 35px;
   border-radius: 5px;
   font-size: 12px;
-  position: relative; 
+  position: relative;
 }
 
 .delete-button {
-  position: absolute; /* 将删除按钮定位到选项卡上 */
-  top: 5px; /* 调整按钮位置 */
-  right: 5px; /* 调整按钮位置 */
-  width: 20px; /* 设置按钮宽度 */
-  height: 20px; /* 设置按钮高度 */
-  /* 其他样式 */
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
 }
 
 .fields {
-  display: flex; /* 使用 Flex 布局 */
+  display: flex;
   margin-top: 40px;
+  flex-wrap: wrap;
 }
 
 .field {
@@ -93,7 +175,7 @@ h6 {
   margin-right: auto;
   color: #ffffff;
   font-weight: bold;
-  text-align: left; 
+  text-align: left;
 }
 
 .username {
@@ -104,7 +186,6 @@ h6 {
   font-style: italic;
 }
 
-/* 最后一个字段不需要右边距 */
 .field:last-child {
   margin-right: 0;
 }
@@ -131,9 +212,8 @@ h6 {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-left: 1350px;
+  margin-left: auto;
 }
-
 
 .toggle-button {
   position: fixed;
@@ -142,118 +222,9 @@ h6 {
   background: none;
   border: none;
   cursor: pointer;
-  z-index: 101; /* 确保 toggle-button 在抽屉导航之上 */
+  z-index: 101;
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, PingFangSC-Regular, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  color: #333;
-}
-img {
-  vertical-align: bottom;
-}
-ul {
-  list-style-type: none;
-}
-a {
-  color: #333;
-  text-decoration: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-body,
-
-body {
-  font-family: 'Helvetica', 'Arial', 'Noto Sans TC', '黑體-繁', '微軟正黑體', sans-serif !important;
-}
-.navbar-toggler {
-  background-color: #ACACBE;
-  margin-bottom: 2px;
-  margin-top: 10
-}
-.brand img {
-  width: 2.5em;
-  aspect-ratio: 1 / 1;
-  margin-top: 2px;
-}
-.nav-link {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 5px;
-}
-.nav-link.active::after {
-  content: "";
-  position: absolute;
-  bottom: 0px;
-  left: 0;
-  width: 100%;
-  height: 3.5px;
-  background-color: #ACACBE;
-  border-radius: 5px;
-  z-index: 1000;
-}
-.brand {
-  margin-right: auto;
-  flex-grow: 1;
-}
-
-.collapse.navbar-collapse {
-  flex-grow: 1; /* 將 navbar-collapse 填滿剩餘的空間 */
-  margin-left: 20px; /* 添加一些左邊距，與品牌 (brand) 有間距 */
-}
-
-.navbar-nav {
-  display: flex;
-  margin-left: auto; 
-  justify-content: flex-end;
-  align-items: center;
-}
-.navbar-nav .nav-item {
-  margin-left: 10px;
-}
-.navbar-nav .nav-item img {
-  width: 3vw;
-  height: 3vw;
-  display: inline-block;
-}
-.nav-text {
-  font-size: 3vh;
-  font-weight: 600;
-  display: none;
-}
-.navbar-nav .nav-item:nth-child(4) img {
-  padding-top: 3px;
-}
-.bg-body-tertiary {
-  margin-top: -5px;
-  background-color: black !important;
-}
-@media (max-width: 988px) {
-  .navbar-nav .nav-item img {
-    display: none;
-  }
-  .navbar-nav .nav-item .nav-text {
-    display: inline-block;
-    color: #CCCCCC;
-  }
-}
-.hidden {
-  display: none;
-}
-body,
-html {
-  height: 100%;
-}
-/* .section {
-  height: 100%;
-  overflow-y: auto;
-  background-color: #343541;
-  border-radius: 15px;
-  margin: 0 13px 13px 13px;
-} */
-.novalidate {
-  position: relative;
-}
 .container {
   max-width: 100vw !important;
   font-size: x-large;
@@ -266,9 +237,11 @@ html {
   padding: 20px;
   border-radius: 15px;
 }
+
 .form-label {
   color: #FF6600;
 }
+
 #validationName,
 #validationNum,
 #validationUnit,
@@ -276,6 +249,7 @@ html {
   color: #CCCCCC !important;
   font-size: x-large;
 }
+
 #validationEmail {
   font-size: x-large;
   margin-top: 5px;
@@ -283,6 +257,7 @@ html {
   border: 2px solid rgba(255, 102, 0, 0.5) !important;
   border-right: none !important;
 }
+
 #inputGroupAppend {
   font-size: x-large;
   font-weight: 550;
@@ -293,26 +268,31 @@ html {
   border: 1px solid rgba(255, 102, 0, 0.5);
   background-color: rgba(255, 102, 0, 0.8);
 }
+
 #gmail {
   font-size: x-large;
   letter-spacing: 0.05em;
   font-weight: 550;
 }
+
 .listTitle {
   font-weight: 900;
   color: #CCCCCC;
   font-size: xx-large;
   margin-top: -10px;
 }
+
 input {
   background-color: #343541 !important;
   border: 2px solid rgba(255, 102, 0, 0.5) !important;
 }
+
 select {
   font-size: x-large !important;
   background-color: #343541 !important;
   border: 2px solid rgba(255, 102, 0, 0.5) !important;
 }
+
 #submitBtn,
 #editBtn {
   position: fixed;
@@ -323,13 +303,34 @@ select {
   background: none;
   border: none;
 }
+
 #submitBtn img,
 #editBtn img {
   width: 60px;
   height: 60px;
   transition: transform 0.3s ease;
 }
+
 #submitBtn img:hover,
 #editBtn img:hover {
   transform: scale(1.2);
+}
+
+/* Media Queries for RWD */
+@media (max-width: 768px) {
+  .navbar-nav .nav-item {
+    font-size: 2vh;
+  }
+
+  .tabs {
+    flex-direction: column;
+  }
+
+  .field, .title, .add-user-button {
+    font-size: 18px;
+  }
+
+  .content {
+    padding: 10px;
+  }
 }

@@ -7,7 +7,7 @@ import './index.css'; // Import the global CSS
 
 ReactDOM.render(
   <BrowserRouter>
-    <Login />
+    <App />
   </BrowserRouter>,
   document.getElementById('root')
 );
