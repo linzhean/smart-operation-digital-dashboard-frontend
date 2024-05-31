@@ -69,5 +69,26 @@
   margin-top: 10px; /* 顶部间距 */
 }
 
+.logout-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px; /* 调整顶部间距 */
+}
+
+.add-tab-button, .logout-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ACACBE;
+  color: black;
+  border: none;
+  cursor: pointer;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 10px;
+}
+
+
+
 
 
