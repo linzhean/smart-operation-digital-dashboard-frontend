@@ -1,6 +1,6 @@
 import React from 'react';
 import './Mail.css';
-import KPI from '../../assets/icon/testKPI.svg'
+import KPI from '../../assets/icon/testKPI.svg';
 
 const Mail: React.FC = () => {
   return (
@@ -22,14 +22,14 @@ const Mail: React.FC = () => {
           <div className="options">
             <input type="checkbox" name="taskStatus" id="unfinished" value="unfinished" />
             <label htmlFor="unfinished">未完成</label>
-            </div>
+          </div>
         </div>
 
-        <div className="mailBrief">
+        <div className="mailBreif">
           {Array(6).fill(0).map((_, index) => (
             <div className="leftmail" key={index}>
               <div className="kpi">
-              <img src={KPI} alt="" />
+                <img src={KPI} alt="KPI" />
                 <div className="kpiname">廢品率</div>
                 <h5 className="caption">廢品率高於20%</h5>
                 <h6 className="assignor">發起人:林哲安</h6>
@@ -47,10 +47,13 @@ const Mail: React.FC = () => {
           <i className="fa-solid fa-circle-chevron-down"></i>
         </div>
         <div className="chatContainer">
-          <div className="chatBox">
+          <div className="chatBox custom-scrollbar">
             {/* Future chat messages will go here */}
           </div>
-          <textarea className="mailContent" placeholder="邮件内容..."></textarea>
+          <div className="input-container">
+            <textarea className="mailContent" placeholder="請輸入訊息"></textarea>
+            <i className="fa-solid fa-paper-plane arrow-icon"></i>
+          </div>
         </div>
       </div>
     </main>
@@ -58,4 +61,3 @@ const Mail: React.FC = () => {
 };
 
 export default Mail;
-
