@@ -1,3 +1,5 @@
+// App.tsx
+
 import React, { useState } from 'react';
 import DrawerNavigation from './component/DrawerNavigation/DrawerNavigation';
 import './component/Bootstrap/css/bootstrap.min.css';
@@ -18,6 +20,7 @@ const App: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedPage, setSelectedPage] = useState("home");
+  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(true);
 
   const addTab = () => {
     const newTab = `群組 ${tabs.length + 1}`;
@@ -55,59 +58,68 @@ const App: React.FC = () => {
 
   const selectPage = (page: string) => {
     setSelectedPage(page);
+    setIsDrawerOpen(false); // Close the drawer when selecting a page from the menu
+    setIsNavbarCollapsed(true); // Close the navbar when selecting a page from the menu
+  };
+
+  const toggleNavbar = () => {
+    setIsNavbarCollapsed(!isNavbarCollapsed);
   };
 
   return (
     <div className='App'>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
-          <a className="brand" href="#">
+          <a className="brand hamburger" href="#">
             <img src={Menu} alt="Menu" onClick={toggleDrawer} />
           </a>
 
-          <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div className="navbar-nav">
-              <a
-                className={`nav-item nav-link ${selectedPage === "home" ? "active" : ""}`}
-                href="#"
-                onClick={() => selectPage("home")}
-              >
-                <img src={Dashboard} alt="儀表板" />
-                <span className="nav-text">儀表板</span>
-              </a>
-              <a
-                className={`nav-item nav-link ${selectedPage === "group" ? "active" : ""}`}
-                href="#"
-                onClick={() => selectPage("group")}
-              >
-                <img src={group} alt="群組" />
-                <span className="nav-text">群組</span>
-              </a>
-              <a
-                className={`nav-item nav-link ${selectedPage === "services" ? "active" : ""}`}
-                href="#"
-                onClick={() => selectPage("services")}
-              >
-                <img src={Manage} alt="" />
-                <span className="nav-text">管理圖表</span>
-              </a>
-              <a
-                className={`nav-item nav-link ${selectedPage === "email" ? "active" : ""}`}
-                href="#"
-                onClick={() => selectPage("email")}
-              >
-                <img src={Email} alt="" />
-                <span className="nav-text">信件</span>
-              </a>
-              <a
-                className={`nav-item nav-link ${selectedPage === "profile" ? "active" : ""}`}
-                href="#"
-                onClick={() => selectPage("profile")}
-              >
-                <img src={Profile} alt="" />
-                <span className="nav-text">個人資料</span>
-              </a>
-            </div>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded={!isNavbarCollapsed ? "true" : "false"} aria-label="Toggle navigation"
+            onClick={toggleNavbar}
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+
+          <div className={`collapse navbar-collapse ${isNavbarCollapsed ? '' : 'show'}`} id="navbarNavAltMarkup">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <a className={`nav-link ${selectedPage === "home" ? "active" : ""}`} href="#"
+                  onClick={() => selectPage("home")}>
+                  <img src={Dashboard} alt="儀表板" />
+                  <span className="nav-text">儀表板</span>
+                </a>
+              </li>
+
+              <li className="nav-item">
+                <a className={`nav-link ${selectedPage === "group" ? "active" : ""}`} href="#"
+                  onClick={() => selectPage("group")}>
+                  <img src={group} alt="群組" />
+                  <span className="nav-text">群組</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className={`nav-link ${selectedPage === "services" ? "active" : ""}`} href="#"
+                  onClick={() => selectPage("services")}>
+                  <img src={Manage} alt="" />
+                  <span className="nav-text">管理圖表</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className={`nav-link ${selectedPage === "email" ? "active" : ""}`} href="#"
+                  onClick={() => selectPage("email")}>
+                  <img src={Email} alt="" />
+                  <span className="nav-text">信件</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className={`nav-link ${selectedPage === "profile" ? "active" : ""}`} href="#"
+                  onClick={() => selectPage("profile")}>
+                  <img src={Profile} alt="" />
+                  <span className="nav-text">個人資料</span>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </nav>
@@ -133,3 +145,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+

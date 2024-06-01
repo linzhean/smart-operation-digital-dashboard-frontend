@@ -1,14 +1,11 @@
 .Home {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
   padding: 20px;
 }
 
+
 .staticContent {
-  margin-bottom: 2em;
-  
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .dataCard {
@@ -16,36 +13,38 @@
   border-radius: 0.5em;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 1em;
-  margin-bottom: 1em;
-  width: 100%;
-  max-width: 800px;
-  box-sizing: border-box;
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
+}
+
+.revenueCard {
+  width: 92%;
+  height: 20rem;
+}
+
+.customerCard {
+  width: 50%;
+  height: 20rem;
+}
+
+.categoryCard {
+  width: 40%;
+  height: 20rem;
 }
 
 .chart {
-  margin: 20px auto;
-  
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
 /* Media Queries for RWD */
 @media (max-width: 768px) {
-  .Home {
-    padding: 10px;
-  }
-
-  .dataCard {
-    padding: 0.5em;
-  }
-
-  .staticContent {
-    margin-bottom: 1em;
+  .customerCard, .categoryCard {
+    width: 80%;
   }
 }
 
 @media (max-width: 480px) {
-  .dataCard {
-    padding: 0.5em;
+  .revenueCard, .customerCard, .categoryCard {
+    width: 100%;
   }
 }
