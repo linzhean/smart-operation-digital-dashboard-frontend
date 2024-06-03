@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
-import {jwtDecode} from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
+import { jwtDecode }from 'jwt-decode';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Login.module.css'; // 使用 CSS Modules
 
 const backendApiUrl = "http://140.131.115.153:8080";
@@ -14,8 +14,10 @@ interface DecodedToken {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [clientToken, setClientToken] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [logoutMessage, setLogoutMessage] = useState<string>("");
 
   useEffect(() => {
     const fetchClientToken = async () => {
@@ -34,6 +36,12 @@ const Login: React.FC = () => {
     };
     fetchClientToken();
   }, []);
+
+  useEffect(() => {
+    if (location.state && location.state.message) {
+      setLogoutMessage(location.state.message);
+    }
+  }, [location.state]);
 
   const onSuccess = async (credentialResponse: any) => {
     try {
@@ -68,7 +76,7 @@ const Login: React.FC = () => {
       const authToken = res.headers.get('x-auth-token');
       if (authToken) {
         localStorage.setItem('authToken', authToken);
-        navigate('/app'); // 登录成功后导航到主页
+        navigate('/pdata'); // 登录成功后导航到Pdata页面
       } else {
         console.error('No auth token received from backend');
         setError('No auth token received from backend');
@@ -89,7 +97,8 @@ const Login: React.FC = () => {
       <div className={styles.wrapper}>
         <h2>歡迎回來！</h2>
         {error && <p>{error}</p>}
-        <div id='signInButton'>
+        {logoutMessage && <p>{logoutMessage}</p>}
+        <div id='signInButton' className={styles.loginbtn}>
           <GoogleLogin
             onSuccess={onSuccess}
             onError={onFailure}
@@ -98,12 +107,13 @@ const Login: React.FC = () => {
         <div className={styles.star}>
           <div className={styles.box}>
             <div className={styles["out-div"]}></div>
-            <div className={styles["out-div out-front"]}></div>
-            <div className={styles["out-div out-back"]}></div>
-            <div className={styles["out-div out-left"]}></div>
-            <div className={styles["out-div out-right"]}></div>
-            <div className={styles["out-div out-top"]}></div>
-            <div className={styles["out-div out-bottom"]}></div>
+            <div className={styles["out-div"]}></div>
+            <div className={`${styles["out-div"]} ${styles["out-front"]}`}></div>
+            <div className={`${styles["out-div"]} ${styles["out-back"]}`}></div>
+            <div className={`${styles["out-div"]} ${styles["out-left"]}`}></div>
+            <div className={`${styles["out-div"]} ${styles["out-right"]}`}></div>
+            <div className={`${styles["out-div"]} ${styles["out-top"]}`}></div>
+            <div className={`${styles["out-div"]} ${styles["out-bottom"]}`}></div>
           </div>
         </div>
       </div>
