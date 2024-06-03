@@ -1,26 +1,26 @@
-// App.tsx
-
 import React, { useState } from 'react';
-import DrawerNavigation from './component/DrawerNavigation/DrawerNavigation';
-import './component/Bootstrap/css/bootstrap.min.css';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './component/Home/Home';
 import Group from './component/Group/Group';
 import Pdata from './Pdata/Pdata';
 import Mail from './component/Mail/Mail';
+import DrawerNavigation from './component/DrawerNavigation/DrawerNavigation';
+import Login from './component/GoogleLogin/Login';
+import './component/Bootstrap/css/bootstrap.min.css';
+import './App.css';
 import Menu from './assets/icon/burgerMenu-icon.svg';
 import Dashboard from './assets/icon/dashBoard-icon.svg';
-import group from './assets/icon/group-icon.svg';
+import groupIcon from './assets/icon/group-icon.svg';
 import Manage from './assets/icon/graphManage-icon.svg';
 import Email from './assets/icon/email-icon.svg';
 import Profile from './assets/icon/userData-icon.svg';
 
 const App: React.FC = () => {
-  const [tabs, setTabs] = useState(["群組 1"]);
+  const [tabs, setTabs] = useState<string[]>(["群組 1"]);
   const [users, setUsers] = useState<any[]>([]);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedPage, setSelectedPage] = useState("home");
-  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [selectedPage, setSelectedPage] = useState<string>("home");
+  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState<boolean>(true);
 
   const addTab = () => {
     const newTab = `群組 ${tabs.length + 1}`;
@@ -58,14 +58,72 @@ const App: React.FC = () => {
 
   const selectPage = (page: string) => {
     setSelectedPage(page);
-    setIsDrawerOpen(false); // Close the drawer when selecting a page from the menu
-    setIsNavbarCollapsed(true); // Close the navbar when selecting a page from the menu
+    setIsDrawerOpen(false);
+    setIsNavbarCollapsed(true);
   };
 
   const toggleNavbar = () => {
     setIsNavbarCollapsed(!isNavbarCollapsed);
   };
 
+  const authToken = localStorage.getItem('authToken');
+
+  return (
+    <Router>
+      <Routes>
+        {!authToken ? (
+          <Route path="/login" element={<Login />} />
+        ) : (
+          <Route path="/app" element={<AuthenticatedApp
+            tabs={tabs}
+            addTab={addTab}
+            deleteTab={deleteTab}
+            isDrawerOpen={isDrawerOpen}
+            toggleDrawer={toggleDrawer}
+            users={users}
+            addUser={addUser}
+            deleteUser={deleteUser}
+            selectedPage={selectedPage}
+            selectPage={selectPage}
+            isNavbarCollapsed={isNavbarCollapsed}
+            toggleNavbar={toggleNavbar}
+          />} />
+        )}
+        <Route path="/" element={<Navigate to={authToken ? "/app" : "/login"} />} />
+      </Routes>
+    </Router>
+  );
+};
+
+interface AuthenticatedAppProps {
+  tabs: string[];
+  addTab: () => void;
+  deleteTab: (index: number) => void;
+  isDrawerOpen: boolean;
+  toggleDrawer: () => void;
+  users: any[];
+  addUser: () => void;
+  deleteUser: (index: number) => void;
+  selectedPage: string;
+  selectPage: (page: string) => void;
+  isNavbarCollapsed: boolean;
+  toggleNavbar: () => void;
+}
+
+const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({
+  tabs,
+  addTab,
+  deleteTab,
+  isDrawerOpen,
+  toggleDrawer,
+  users,
+  addUser,
+  deleteUser,
+  selectedPage,
+  selectPage,
+  isNavbarCollapsed,
+  toggleNavbar,
+}) => {
   return (
     <div className='App'>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -94,28 +152,28 @@ const App: React.FC = () => {
               <li className="nav-item">
                 <a className={`nav-link ${selectedPage === "group" ? "active" : ""}`} href="#"
                   onClick={() => selectPage("group")}>
-                  <img src={group} alt="群組" />
+                  <img src={groupIcon} alt="群組" />
                   <span className="nav-text">群組</span>
                 </a>
               </li>
               <li className="nav-item">
                 <a className={`nav-link ${selectedPage === "services" ? "active" : ""}`} href="#"
                   onClick={() => selectPage("services")}>
-                  <img src={Manage} alt="" />
+                  <img src={Manage} alt="管理圖表" />
                   <span className="nav-text">管理圖表</span>
                 </a>
               </li>
               <li className="nav-item">
                 <a className={`nav-link ${selectedPage === "email" ? "active" : ""}`} href="#"
                   onClick={() => selectPage("email")}>
-                  <img src={Email} alt="" />
+                  <img src={Email} alt="信件" />
                   <span className="nav-text">信件</span>
                 </a>
               </li>
               <li className="nav-item">
                 <a className={`nav-link ${selectedPage === "profile" ? "active" : ""}`} href="#"
                   onClick={() => selectPage("profile")}>
-                  <img src={Profile} alt="" />
+                  <img src={Profile} alt="個人資料" />
                   <span className="nav-text">個人資料</span>
                 </a>
               </li>
@@ -131,18 +189,15 @@ const App: React.FC = () => {
         {selectedPage === "email" && <Mail />}
       </div>
 
-      {isDrawerOpen && (
-        <DrawerNavigation
-          tabs={tabs}
-          onAddTab={addTab}
-          onDeleteTab={deleteTab}
-          isOpen={isDrawerOpen}
-          toggleDrawer={toggleDrawer}
-        />
-      )}
+      <DrawerNavigation
+        tabs={tabs}
+        onAddTab={addTab}
+        onDeleteTab={deleteTab}
+        isOpen={isDrawerOpen}
+        toggleDrawer={toggleDrawer}
+      />
     </div>
   );
 };
 
 export default App;
-

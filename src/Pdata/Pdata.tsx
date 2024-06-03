@@ -1,9 +1,12 @@
-// Pdata.tsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Pdata.css';
 import Edit from '../assets/icon/edit-icon.svg';
 
+const backendApiUrl = "http://140.131.115.153:8080";
+
 const Pdata: React.FC = () => {
+  const navigate = useNavigate();
   const [editable, setEditable] = useState(false);
   const [formData, setFormData] = useState({
     name: '林哲安',
@@ -12,6 +15,7 @@ const Pdata: React.FC = () => {
     unit: '財務',
     role: '副理',
   });
+  const [error, setError] = useState<string>("");
 
   const handleEditClick = () => {
     setEditable(!editable);
@@ -22,10 +26,35 @@ const Pdata: React.FC = () => {
     setFormData({ ...formData, [id]: value });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('保存的数据:', formData);
-    setEditable(false);
+    try {
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+        throw new Error('No auth token found');
+      }
+
+      const response = await fetch(`${backendApiUrl}/validate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to validate data: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log('Data validated successfully:', data);
+
+      navigate('/home'); // 验证成功后导航到主页
+    } catch (error) {
+      console.error('An error occurred during the validation request:', error);
+      setError('An error occurred during the validation request. Please try again.');
+    }
   };
 
   return (
@@ -110,6 +139,7 @@ const Pdata: React.FC = () => {
               <option>總經理</option>
             </select>
           </div>
+          {error && <div className="col-md-12"><p className="text-danger">{error}</p></div>}
           {/* 编辑按钮 */}
           <button type="button" id="editBtn" onClick={handleEditClick}>
             <img src={Edit} alt="編輯" />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { GrMenu, GrClose } from 'react-icons/gr';
+import { useNavigate } from 'react-router-dom';
 import './DrawerNavigation.css';
-import { useNavigate } from 'react-router-dom'; // 导入 useNavigate 钩子
 
 interface DrawerNavigationProps {
   tabs: string[];
@@ -18,12 +18,13 @@ const DrawerNavigation: React.FC<DrawerNavigationProps> = ({
   isOpen,
   toggleDrawer,
 }) => {
-  const navigate = useNavigate(); // 创建 navigate 函数
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    // 执行登出操作
-    // 导航到登录页面
-    navigate('/login');
+    // 清除本地存储的身份验证令牌
+    localStorage.removeItem('authToken');
+    // 导航到登录页面并传递状态
+    navigate('/login', { state: { message: '登出成功' } });
   };
 
   return (

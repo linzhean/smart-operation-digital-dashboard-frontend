@@ -12,9 +12,147 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--maincolor);
+  color: var(--mainfontcolor);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Ensure your main container is responsive */
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.navbar {
+  background-color: var(--maincolor);
+  color: var(--mainfontcolor);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+
+.navbar .navbar-toggler {
+  border: none;
+  background: transparent;
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav .nav-item {
+  margin: 0 0.5rem;
+}
+
+.navbar-nav .nav-link {
+  color: var(--mainfontcolor);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.navbar-nav .nav-link img {
+  margin-right: 0.5rem;
+}
+
+.navbar-nav .nav-link.active {
+  color: var(--mainorange);
+}
+
+.content {
+  flex: 1;
+  padding: 1rem;
+}
+
+/* Drawer Navigation styles */
+.drawer-navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px;
+  background-color: var(--maincolor);
+  color: var(--mainfontcolor);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.drawer-navigation.open {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tabs {
+  flex: 1;
+  margin-top: 1rem;
+}
+
+.tab {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.tab button {
+  background: none;
+  border: none;
+  color: var(--iconcolor);
+  cursor: pointer;
+}
+
+.add-tab-button,
+.logout-button {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: var(--mainorange);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+/* Media Queries for responsive design */
+@media (max-width: 768px) {
+  .navbar-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-nav .nav-item {
+    margin: 0.5rem 0;
+  }
+
+  .content {
+    padding: 0.5rem;
+  }
+
+  .drawer-navigation {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-nav .nav-link {
+    font-size: 0.875rem;
+  }
+
+  .drawer-navigation {
+    width: 150px;
+  }
 }
