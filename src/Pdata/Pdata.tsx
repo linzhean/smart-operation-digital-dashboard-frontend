@@ -133,22 +133,19 @@ const Pdata: React.FC = () => {
               onChange={handleInputChange}
             >
               <option value="">...</option>
-              <option>員工</option>
+              <option>一般員工</option>
               <option>副理</option>
               <option>經理</option>
-              <option>總經理</option>
             </select>
           </div>
-          {error && <div className="col-md-12"><p className="text-danger">{error}</p></div>}
-          {/* 编辑按钮 */}
-          <button type="button" id="editBtn" onClick={handleEditClick}>
-            <img src={Edit} alt="編輯" />
-          </button>
-          {editable && (
-            <button type="submit" className="btn btn-primary">
-              保存
+          {error && <p className="error">{error}</p>}
+          <div className="col-12">
+            <button className="btn btn-primary" type="submit">提交</button>
+            <button type="button" className="btn btn-secondary" onClick={handleEditClick}>
+              <img src={Edit} alt="Edit" />
+              {editable ? '取消編輯' : '編輯'}
             </button>
-          )}
+          </div>
         </form>
       </div>
     </main>
