@@ -1,8 +1,12 @@
+General Reset
 *,
 ::after,
 ::before {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
+
 body,
 ul,
 p,
@@ -15,41 +19,35 @@ h6 {
   padding: 0;
   margin: 0;
 }
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, PingFangSC-Regular, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   color: #333;
 }
+
 ul {
   list-style-type: none;
 }
+
 a {
   color: #333;
   text-decoration: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
-body,
-html {
-  background-color: black;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  display: flex;
-  min-width: 300px;
-}
+
 .brand img {
   width: 2.5em;
   aspect-ratio: 1 / 1;
   margin-top: 2px;
 }
+
 .nav-link {
   position: relative;
   display: inline-block;
   margin-bottom: 5px;
 }
+
 .nav-link.active::after {
   content: "";
   position: absolute;
@@ -61,13 +59,16 @@ html {
   border-radius: 5px;
   z-index: 1000;
 }
+
 .hidden {
   display: none;
 }
+
 body,
 html {
   height: 100%;
 }
+
 .section {
   height: 100%;
   overflow-y: auto;
@@ -75,9 +76,11 @@ html {
   border-radius: 15px;
   margin: 0 13px 13px 13px;
 }
+
 .novalidate {
   position: relative;
 }
+
 .container {
   max-width: 100vw !important;
   font-size: x-large;
@@ -91,14 +94,16 @@ html {
   border-radius: 15px;
 }
 
-input, select {
+input,
+select {
   color: #CCCCCC !important;
   font-weight: 550;
 }
 
 .form-label {
-  color: #FF6600;
+  color: #f0f0f0;
 }
+
 #validationName,
 #validationNum,
 #validationUnit,
@@ -106,6 +111,7 @@ input, select {
   color: #CCCCCC !important;
   font-size: x-large;
 }
+
 #validationEmail {
   font-size: x-large;
   margin-top: 5px;
@@ -113,6 +119,7 @@ input, select {
   border: 2px solid rgba(255, 102, 0, 0.5) !important;
   border-right: none !important;
 }
+
 #inputGroupAppend {
   font-size: x-large;
   font-weight: 550;
@@ -123,26 +130,31 @@ input, select {
   border: 1px solid rgba(255, 102, 0, 0.5);
   background-color: rgba(255, 102, 0, 0.8);
 }
+
 #gmail {
   font-size: x-large;
   letter-spacing: 0.05em;
   font-weight: 550;
 }
+
 .listTitle {
   font-weight: 900;
   color: #CCCCCC;
   font-size: xx-large;
   margin-top: -10px;
 }
+
 input {
   background-color: #343541 !important;
   border: 2px solid rgba(255, 102, 0, 0.5) !important;
 }
+
 select {
   font-size: x-large !important;
   background-color: #343541 !important;
   border: 2px solid rgba(255, 102, 0, 0.5) !important;
 }
+
 #submitBtn,
 #editBtn {
   position: fixed;
@@ -153,12 +165,14 @@ select {
   background: none;
   border: none;
 }
+
 #submitBtn img,
 #editBtn img {
   width: 60px;
   height: 60px;
   transition: transform 0.3s ease;
 }
+
 #submitBtn img:hover,
 #editBtn img:hover {
   transform: scale(1.2);
