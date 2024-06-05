@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode'; // 确保正确导入
+import {jwtDecode} from 'jwt-decode';
 import { useNavigate, useLocation } from 'react-router-dom';
-import styles from './Login.module.css'; // 使用 CSS Modules
+import styles from './Login.module.css';
 
 const backendApiUrl = "http://140.131.115.153:8080";
 const clientId = "629445899576-8mdmcg0etm5r7i28dk088fas2o3tjpm0.apps.googleusercontent.com";
-// 629445899576-8mdmcg0etm5r7i28dk088fas2o3tjpm0.apps.googleusercontent.com
 
 interface DecodedToken {
   sub: string;
@@ -63,7 +62,7 @@ const Login: React.FC = () => {
       const authToken = res.headers.get('x-auth-token');
       if (authToken) {
         localStorage.setItem('authToken', authToken);
-        navigate('/pdata'); // 登录成功后导航到 Pdata 页面
+        navigate('/app/pdata'); // 登录成功后导航到 App 页面
       } else {
         console.error('No auth token received from backend');
         setError('No auth token received from backend');

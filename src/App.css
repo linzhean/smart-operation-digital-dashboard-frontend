@@ -1,110 +1,18 @@
-/* General Reset */
-*,
-::after,
-::before {
-  box-sizing: border-box;
+/* Reset and Base Styles */
+body, html {
   margin: 0;
   padding: 0;
-}
-
-body,
-ul,
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  padding: 0;
-  margin: 0;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, PingFangSC-Regular, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  color: #333;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-img {
-  vertical-align: bottom;
-}
-
-ul {
-  list-style-type: none;
-}
-
-a {
-  color: #333;
-  text-decoration: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-/* App Container */
-.App {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  width:  100%;
-  background-color: black;
-  overflow: hidden;
-}
-
-.navbar {
-  background-color: black !important;
-}
-
-.navbar-toggler {
-  background-color: #ACACBE;
-  margin-bottom: 2px;
-  margin-top: 10px;
-}
-
-.brand img {
-  width: 35px;
-  aspect-ratio: 1 / 1;
-  margin-top: 2px;
-}
-
-.nav-link {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 5px;
-}
-
-.nav-link.active::after {
-  content: "";
-  position: absolute;
-  bottom: 0px;
-  left: 0;
+  height: 100%;
   width: 100%;
-  height: 3.5px;
-  background-color: #ACACBE;
-  border-radius: 5px;
-  z-index: 1000;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
 }
 
-.brand {
-  margin-right: auto;
+* {
+  box-sizing: border-box;
 }
 
-.navbar-nav {
-  margin-left: auto;
-  align-items: center;
-  transition: transform 0.2s ease;
-}
-
-.navbar-nav .nav-item {
-  margin-left: 0.5vw;
-}
-
-.navbar-nav .nav-item :hover {
-  transform: scale(1.1);
-}
-
+/* Navbar */
 .navbar-nav .nav-item img {
   width: 3vw;
   height: 3vw;
@@ -250,15 +158,14 @@ a {
 #validationName,
 #validationNum,
 #validationUnit,
-#validationRole {
+#validationRole,
+#validationEmail {
   color: #CCCCCC !important;
   font-size: x-large;
 }
 
 #validationEmail {
-  font-size: x-large;
   margin-top: 5px;
-  color: #CCCCCC !important;
   border: 2px solid rgba(255, 102, 0, 0.5) !important;
   border-right: none !important;
 }
@@ -338,4 +245,3 @@ select {
     padding: 10px;
   }
 }
-
