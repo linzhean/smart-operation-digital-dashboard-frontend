@@ -1,0 +1,27 @@
+/* src/styles/mainEmail.css */
+.mainEmail {
+    display: flex;
+  }
+  .leftside,
+  .rightside {
+    overflow: auto;
+    width: 50vw;
+    height: 87.5vh;
+    background-color: #343541;
+    color: #CCCCCC;
+    border-radius: 15px;
+    margin: 5px;
+    margin-top: 0px;
+  }
+  .leftside {
+    display: flex;
+    margin-right: 3px;
+    flex-direction: column;
+  }
+  .rightside {
+    margin-left: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
