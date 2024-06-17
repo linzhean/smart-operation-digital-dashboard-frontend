@@ -1,0 +1,68 @@
+/* src/styles/global.css */
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+body,
+ul,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding: 0;
+  margin: 0;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, PingFangSC-Regular, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+img {
+  vertical-align: bottom;
+}
+ul {
+  list-style-type: none;
+}
+a {
+  color: #333;
+  text-decoration: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+body,
+html {
+  background-color: black;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  min-width: 300px;
+}
+body {
+  font-family: 'Helvetica', 'Arial', 'Noto Sans TC', '黑體-繁', '微軟正黑體', sans-serif !important;
+}
+::-webkit-scrollbar {
+  width: 1.5em;
+}
+::-webkit-scrollbar-track {
+  background: #343541;
+  border-radius: 100vw;
+  margin-block: 0.5em;
+}
+::-webkit-scrollbar-thumb {
+  background: #000;
+  border: 0.25em solid #343541;
+  border-radius: 100vw;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(204, 204, 204, 0.5);
+}
+::-webkit-scrollbar-button {
+  display: none;
+}

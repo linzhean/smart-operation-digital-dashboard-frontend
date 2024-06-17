@@ -1,0 +1,44 @@
+/* src/styles/mailItem.css */
+.kpi {
+    display: flex;
+    position: relative;
+    padding-top: 4px;
+    max-width: 100%;
+    padding-bottom: 12px;
+    border-bottom: 1.5px solid #CCCCCC;
+  }
+  .kpi img {
+    max-width: 30%;
+    border-radius: 10px;
+    border: 3px solid black;
+  }
+  .kpiname {
+    position: absolute;
+    top: 13px;
+    left: 12px;
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 8px;
+    border-radius: 4px;
+  }
+  .kpi .caption {
+    position: absolute;
+    top: 50%;
+    right: 35%;
+    font-size: xx-large;
+    font-weight: bolder;
+  }
+  .kpi .assignor {
+    position: absolute;
+    bottom: 10%;
+    right: 35%;
+    font-size: large;
+    font-weight: bold;
+  }
+  .kpi .time {
+    position: absolute;
+    right: 0%;
+  }
+  
