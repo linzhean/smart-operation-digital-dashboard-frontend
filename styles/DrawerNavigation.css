@@ -1,0 +1,90 @@
+/* src/styles/DrawerNavigation.css */
+.drawer-navigation {
+    position: fixed;
+    top: 0;
+    left: 0; /* 修改left值为0，使导航栏从屏幕左侧显示 */
+    width: 200px; /* 调整宽度为150px，与侧边栏样式相匹配 */
+    height: 100%;
+    background-color: black; /* 使用黑色背景 */
+    transition: left 0.3s ease-out;
+    z-index: 100; /* 确保导航栏位于内容之上 */
+    overflow-y: auto; /* 允许垂直滚动溢出内容 */
+  }
+  
+  .drawer-navigation.closed {
+    left: -150px; /* 将closed状态的left值调整为-150px */
+  }
+  
+  .drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 调整标题在中心对齐 */
+    padding: 10px;
+    border-bottom: 1px solid #CCCCCC; /* 使用灰色边框 */
+  }
+  
+  .toggle-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #CCCCCC; /* 使用灰色图标颜色 */
+  }
+  
+  .tabs {
+    padding: 10px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 水平居中 */
+  }
+  
+  .tab {
+    display: flex;
+    align-items: center;
+    padding: 10px 0; /* 调整tab之间的垂直间距 */
+  }
+  
+  .tab button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #CCCCCC; /* 使用灰色按钮颜色 */
+  }
+  
+  .add-tab-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ACACBE; /* 使用灰色背景 */
+    color: black; /* 使用黑色文字 */
+    border: none;
+    cursor: pointer;
+    margin: 0 auto; /* 使用 margin 属性将按钮水平居中 */
+    text-align: center; /* 确保按钮内部文本水平居中 */
+    margin-top: 10px; /* 调整按钮的顶部间距 */
+  }
+  
+  .add-group-button-container {
+    display: flex;
+    align-items: center; /* 水平居中 */
+    margin-top: 10px; /* 顶部间距 */
+  }
+  
+  .logout-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px; /* 调整顶部间距 */
+  }
+  
+  .add-tab-button, .logout-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ACACBE;
+    color: black;
+    border: none;
+    cursor: pointer;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
