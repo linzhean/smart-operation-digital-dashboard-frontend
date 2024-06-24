@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-import styles from './Login.module.css';
+import styles from '../../styles/Login.module.css';
+import "../../styles/content.css"
 
 const backendApiUrl = "http://140.131.115.153:8080";
 const clientId = "629445899576-8mdmcg0etm5r7i28dk088fas2o3tjpm0.apps.googleusercontent.com";
@@ -55,7 +56,7 @@ const Login: React.FC = () => {
       const authToken = res.headers.get('x-auth-token');
       if (authToken) {
         localStorage.setItem('authToken', authToken);
-        navigate('/main'); // Navigate to main page after successful login
+        navigate('/main'); // 导航到主页面
       } else {
         console.error('No auth token received from backend');
         setError('No auth token received from backend');
@@ -68,13 +69,13 @@ const Login: React.FC = () => {
 
   const onFailure = () => {
     console.error("LOGIN FAILED!");
-    alert("登入失敗，請稍後再試。");
+    alert("登录失败，请稍后再试。");
   };
 
   return (
     <GoogleOAuthProvider clientId={clientId}>
       <div className={styles.wrapper}>
-        <h2>歡迎回來！</h2>
+        <h2>欢迎回来！</h2>
         {error && <p>{error}</p>}
         <div id='signInButton' className={styles.loginbtn}>
           <GoogleLogin

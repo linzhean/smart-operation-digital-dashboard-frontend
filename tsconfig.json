@@ -21,7 +21,9 @@
     "types": ["react", "react-dom", "react-router-dom"],
     "jsx": "react-jsx"
   },
-  "include": [
-    "src"
-, "component", "pages/Home/Home.tsx", "component/Group/Group.tsx", "pages/Login/Login.tsx", "component/Pdata/Pdata.tsx", "Main.tsx", "App.tsx", "utils", "index.tsx", "react-app-env.d.ts"  ]
+ "include": [
+  "src/**/*",
+  "component/**/*",
+  "react-app-env.d.ts"
+]
 }

@@ -1,6 +1,6 @@
 // src/components/MailItem/MailItem.js
 import React from 'react';
-import '../../styles/mailitem.css';
+import "../../styles/mailItem.css";
 import KPI from '../../assets/icon/testKPI.svg';
 
 const MailItem: React.FC = () => {

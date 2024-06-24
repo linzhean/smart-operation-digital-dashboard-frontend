@@ -1,7 +1,7 @@
 // src/components/MailBreif/MailBreif.js
 import React from 'react';
 import '../../styles/mailBreif.css';
-import MailItem from '../MailItem/MailItem';
+import MailItem from "../MailItem/MailItem";
 
 const MailBreif: React.FC = () => {
   return (

@@ -4,6 +4,7 @@ import '../../styles/mainEmail.css';
 import Filter from '../../component/Filter/Filter';
 import MailBreif from '../../component/MailBreif/MailBreif';
 import ChatBox from '../../component/ChatBox/ChatBox';
+import "../../styles/content.css"
 
 const Mail: React.FC = () => {
   return (

@@ -17,7 +17,7 @@ const UserTabs: React.FC<UserTabsProps> = ({ tabs, addTab, deleteTab }) => {
           <button className="delete-button" onClick={() => deleteTab(index)}>X</button>
         </div>
       ))}
-      <button className="add-user-button" onClick={addTab}>Add Tab</button>
+      <button className="add-user-button" onClick={addTab}>新增</button>
     </div>
   );
 };
