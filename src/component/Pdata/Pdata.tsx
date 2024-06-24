@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import styles from '../styles/Pdata.module.css';
-import Edit from '../assets/icon/edit-icon.svg';
+import styles from '../../styles/Pdata.module.css';
+import Edit from '../../assets/icon/edit-icon.svg';
 
 const Pdata: React.FC = () => {
   const [editable, setEditable] = useState(false);

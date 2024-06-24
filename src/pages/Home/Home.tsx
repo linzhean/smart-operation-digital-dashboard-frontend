@@ -6,6 +6,7 @@ import LineChart from "../../component/Chart/LineChart";
 import BarChart from "../../component/Chart/BarChart";
 import DoughnutChart from "../../component/Chart/DoughnutChart";
 import "../../styles/Home.css"; // 更新引用位置
+import "../../styles/content.css"
 
 // 设置 Chart.js 默认参数
 defaults.maintainAspectRatio = false;

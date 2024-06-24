@@ -1,0 +1,76 @@
+.drawer-navigation {
+  position: fixed;
+  top: 0;
+  left: -300px; /* 初始情況下側邊欄隱藏在左邊 */
+  width: 300px;
+  height: 100%;
+  background-color: #fff; /* 背景色可以根據需求調整 */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加陰影效果 */
+  transition: left 0.3s ease; /* 使用過渡效果使側邊欄平滑顯示/隱藏 */
+  z-index: 1000;
+}
+
+.drawer-navigation.open {
+  left: 0; /* 打開側邊欄時顯示 */
+}
+
+.drawer-content {
+  padding: 20px;
+}
+
+.tabs {
+  margin-bottom: 20px;
+}
+
+.tabs h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.tabs ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.tabs li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.tabs li span {
+  font-size: 16px;
+}
+
+.tabs li button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.tabs li button:hover {
+  background-color: #c82333;
+}
+
+.drawer-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.drawer-toggle span {
+  display: block;
+  width: 30px;
+  height: 4px;
+  background-color: #333;
+  margin-bottom: 5px;
+}
+
+.drawer-toggle span:last-child {
+  margin-bottom: 0;
+}
