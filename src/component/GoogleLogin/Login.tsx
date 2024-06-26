@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import {jwtDecode} from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
-import styles from './Login.module.css'; // 使用 CSS Modules
+import { useNavigate, useLocation } from 'react-router-dom';
+import styles from './Login.module.css';
 
 const backendApiUrl = "http://140.131.115.153:8080";
 const clientId = "629445899576-8mdmcg0etm5r7i28dk088fas2o3tjpm0.apps.googleusercontent.com";
@@ -14,35 +14,29 @@ interface DecodedToken {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [clientToken, setClientToken] = useState<string>("");
+  const location = useLocation();
   const [error, setError] = useState<string>("");
+  const [logoutMessage, setLogoutMessage] = useState<string>("");
 
   useEffect(() => {
-    const fetchClientToken = async () => {
-      try {
-        const response = await fetch(`${backendApiUrl}/get-client-token`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch client token');
-        }
-        const data = await response.json();
-        console.log("Fetched client token:", data.clientToken);
-        setClientToken(data.clientToken);
-      } catch (error) {
-        console.error('Error fetching client token:', error);
-        setError('Failed to fetch client token');
-      }
-    };
-    fetchClientToken();
-  }, []);
+    if (location.state && location.state.message) {
+      setLogoutMessage(location.state.message);
+    }
+  }, [location.state]);
 
   const onSuccess = async (credentialResponse: any) => {
     try {
       console.log("LOGIN SUCCESS! Current user:", credentialResponse);
 
       const idToken = credentialResponse.credential;
+      console.log("Google ID Token:", idToken);
+
+      if (!idToken) {
+        throw new Error('No ID token received from Google');
+      }
+
       const decodedToken: DecodedToken = jwtDecode(idToken);
       console.log("Decoded Token:", decodedToken);
-      console.log("Google ID Token:", idToken);
 
       const userId = decodedToken.sub;
 
@@ -68,7 +62,7 @@ const Login: React.FC = () => {
       const authToken = res.headers.get('x-auth-token');
       if (authToken) {
         localStorage.setItem('authToken', authToken);
-        navigate('/app'); // 登录成功后导航到主页
+        navigate('/app/pdata'); // 登录成功后导航到 App 页面
       } else {
         console.error('No auth token received from backend');
         setError('No auth token received from backend');
@@ -89,7 +83,8 @@ const Login: React.FC = () => {
       <div className={styles.wrapper}>
         <h2>歡迎回來！</h2>
         {error && <p>{error}</p>}
-        <div id='signInButton'>
+        {logoutMessage && <p>{logoutMessage}</p>}
+        <div id='signInButton' className={styles.loginbtn}>
           <GoogleLogin
             onSuccess={onSuccess}
             onError={onFailure}
@@ -98,12 +93,13 @@ const Login: React.FC = () => {
         <div className={styles.star}>
           <div className={styles.box}>
             <div className={styles["out-div"]}></div>
-            <div className={styles["out-div out-front"]}></div>
-            <div className={styles["out-div out-back"]}></div>
-            <div className={styles["out-div out-left"]}></div>
-            <div className={styles["out-div out-right"]}></div>
-            <div className={styles["out-div out-top"]}></div>
-            <div className={styles["out-div out-bottom"]}></div>
+            <div className={styles["out-div"]}></div>
+            <div className={`${styles["out-div"]} ${styles["out-front"]}`}></div>
+            <div className={`${styles["out-div"]} ${styles["out-back"]}`}></div>
+            <div className={`${styles["out-div"]} ${styles["out-left"]}`}></div>
+            <div className={`${styles["out-div"]} ${styles["out-right"]}`}></div>
+            <div className={`${styles["out-div"]} ${styles["out-top"]}`}></div>
+            <div className={`${styles["out-div"]} ${styles["out-bottom"]}`}></div>
           </div>
         </div>
       </div>

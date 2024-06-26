@@ -198,3 +198,44 @@ body {
     transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
   }
 }
+
+/* Media Queries for responsive design */
+@media (max-width: 768px) {
+  .wrapper {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .wrapper h2 {
+    font-size: large;
+  }
+
+  .wrapper .loginbtn span {
+    font-size: medium;
+  }
+
+  .wrapper .loginbtn img {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .wrapper h2 {
+    font-size: medium;
+  }
+
+  .wrapper .loginbtn span {
+    font-size: small;
+  }
+
+  .wrapper .loginbtn img {
+    width: 35px;
+    height: 35px;
+  }
+}
