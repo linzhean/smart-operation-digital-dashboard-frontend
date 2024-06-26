@@ -1,12 +1,24 @@
-/* src/styles/mailBreif.css */
 .mailBreif {
-    margin: 10px;
-    margin-top: 2px;
-    border-top: 1.5px solid #ACACBE;
-    padding: 5px;
+  margin: 10px;
+  margin-top: 2px;
+  border-top: 1.5px solid #ACACBE;
+  padding: 5px;
+}
+
+.leftmail,
+.rightmail {
+  margin: 5px;
+}
+
+@media (max-width: 768px) {
+  .mailBreif {
+    margin: 5px 0;
+    border-top: none;
+    padding: 2px;
   }
+
   .leftmail,
   .rightmail {
-    margin: 5px;
+    margin: 2px 0;
   }
-  
+}

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-import styles from '../../styles/Login.module.css';
-import "../../styles/content.css"
+import styles from "../../styles/Login.module.css";
+import "../../styles/global.css"
 
 const backendApiUrl = "http://140.131.115.153:8080";
 const clientId = "629445899576-8mdmcg0etm5r7i28dk088fas2o3tjpm0.apps.googleusercontent.com";

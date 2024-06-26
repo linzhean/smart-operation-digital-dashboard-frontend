@@ -1,6 +1,6 @@
 // src/components/UserTabs/UserTabs.tsx
 import React from 'react';
-import '../../styles/UserTabs.css';
+import '../styles/UserTabs.css';
 
 interface UserTabsProps {
   tabs: string[];

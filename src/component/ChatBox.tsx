@@ -1,6 +1,5 @@
-// src/components/ChatBox/ChatBox.js
 import React from 'react';
-import "../../styles/chatBox.css";
+import "../styles/chatBox.css";
 
 const ChatBox: React.FC = () => {
   return (
@@ -11,7 +10,12 @@ const ChatBox: React.FC = () => {
         <i className="fa-solid fa-circle-chevron-down"></i>
       </div>
       <div className="chatBox custom-scrollbar">
-        {/* Future chat messages will go here */}
+        {/* Placeholder for future chat messages */}
+        <div className="chatMessage">
+          <p>這裡是聊天內容示例。</p>
+          <p>這裡是另一條聊天信息。</p>
+          <p>還有一條聊天信息。</p>
+        </div>
       </div>
       <div className="input-container">
         <textarea className="mailContent" placeholder="請輸入訊息"></textarea>

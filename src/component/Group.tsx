@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface User {
   username: string;
@@ -9,16 +9,12 @@ interface User {
 }
 
 interface GroupProps {
-  users: User[]; // Defined earlier (interface User)
+  users: User[];
   addUser: () => void;
   deleteUser: (index: number) => void;
 }
 
-const Group: React.FC<GroupProps> = ({
-  users,
-  addUser,
-  deleteUser,
-}) => {
+const Group: React.FC<GroupProps> = ({ users, addUser, deleteUser }) => {
   return (
     <div className="group">
       <button className="add-user-button" onClick={addUser}>新增用户</button>

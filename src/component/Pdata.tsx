@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import styles from '../../styles/Pdata.module.css';
-import Edit from '../../assets/icon/edit-icon.svg';
+import styles from '../styles/Pdata.module.css';
+import Edit from '../assets/icon/edit-icon.svg';
 
 const Pdata: React.FC = () => {
   const [editable, setEditable] = useState(false);
@@ -66,7 +66,6 @@ const Pdata: React.FC = () => {
                 disabled={!editable}
                 onChange={handleInputChange}
               />
-              <span className="input-group-text" id="inputGroupAppend">@gmail.com</span>
             </div>
           </div>
           <div className="col-md-6">

@@ -1,44 +1,91 @@
-/* src/styles/mailItem.css */
 .kpi {
-    display: flex;
-    position: relative;
-    padding-top: 4px;
-    max-width: 100%;
-    padding-bottom: 12px;
-    border-bottom: 1.5px solid #CCCCCC;
+  display: flex;
+  position: relative;
+  padding-top: 4px;
+  max-width: 100%;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid #CCCCCC;
+}
+
+.kpi img {
+  max-width: 30%;
+  border-radius: 10px;
+  border: 3px solid black;
+}
+
+.kpiname {
+  position: absolute;
+  top: 13px;
+  left: 12px;
+  color: #fff;
+  font-size: 1.5em;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.kpi .caption {
+  position: absolute;
+  top: 50%;
+  right: 35%;
+  font-size: xx-large;
+  font-weight: bolder;
+}
+
+.kpi .assignor {
+  position: absolute;
+  bottom: 10%;
+  right: 35%;
+  font-size: large;
+  font-weight: bold;
+}
+
+.kpi .time {
+  position: absolute;
+  right: 0%;
+}
+
+@media (max-width: 768px) {
+  .kpi {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
   }
+
   .kpi img {
-    max-width: 30%;
-    border-radius: 10px;
-    border: 3px solid black;
+    max-width: 50%;
+    margin-bottom: 5px;
   }
+
   .kpiname {
-    position: absolute;
-    top: 13px;
-    left: 12px;
-    color: #fff;
-    font-size: 1.5em;
-    font-weight: bold;
-    background-color: rgba(0, 0, 0, 0.3);
-    padding: 8px;
-    border-radius: 4px;
+    font-size: 1em;
+    position: relative;
+    top: auto;
+    left: auto;
+    margin-bottom: 5px;
   }
+
   .kpi .caption {
-    position: absolute;
-    top: 50%;
-    right: 35%;
-    font-size: xx-large;
-    font-weight: bolder;
-  }
-  .kpi .assignor {
-    position: absolute;
-    bottom: 10%;
-    right: 35%;
     font-size: large;
-    font-weight: bold;
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-bottom: 5px;
   }
+
+  .kpi .assignor {
+    font-size: medium;
+    position: relative;
+    bottom: auto;
+    right: auto;
+    margin-bottom: 5px;
+  }
+
   .kpi .time {
-    position: absolute;
-    right: 0%;
+    position: relative;
+    right: auto;
+    font-size: small;
+    margin-bottom: 5px;
   }
-  
+}

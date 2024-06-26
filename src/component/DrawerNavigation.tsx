@@ -1,7 +1,7 @@
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import '../../styles/DrawerNavigation.css';
-import "../../styles/content.css"
+import '../styles/DrawerNavigation.css';
+import "../styles/content.css"
 
 interface DrawerNavigationProps {
   tabs: string[];
@@ -38,7 +38,7 @@ const DrawerNavigation: React.FC<DrawerNavigationProps> = ({
           scrollThreshold={0.9} // 触发加载更多的滚动阈值
           className="tabs" // 自定义类名
         >
-          <h3>標籤</h3>
+          <h3>指標</h3>
           <ul>
             {tabs.map((tab, index) => (
               <li key={index}>
@@ -47,7 +47,7 @@ const DrawerNavigation: React.FC<DrawerNavigationProps> = ({
               </li>
             ))}
           </ul>
-          <button onClick={onAddTab}>新增標籤</button>
+          <button onClick={onAddTab}>新增群組</button>
         </InfiniteScroll>
       </div>
       <div className="drawer-toggle" onClick={toggleDrawer}>

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
-import Group from './component/Group/Group';
-import Pdata from './component/Pdata/Pdata';
+import Group from './component/Group';
+import Pdata from './component/Pdata';
 import Mail from './pages/Mail/Mail';
 import Navbar from './component/Navbar/Navbar';
-import DrawerNavigation from './component/DrawerNavigation/DrawerNavigation';
+import DrawerNavigation from './component/DrawerNavigation';
 import './component/Bootstrap/css/bootstrap.min.css';
 import './styles/Main.css';
-import './styles/global.css';
 
 const Main: React.FC = () => {
   const [tabs, setTabs] = useState<string[]>(['群組 1']);
@@ -63,11 +62,13 @@ const Main: React.FC = () => {
 
   return (
     <div className="App">
-      <Navbar selectedPage={selectedPage} toggleDrawer={toggleDrawer} selectPage={function (page: string): void {
-        throw new Error('Function not implemented.');
-      } } isNavbarCollapsed={false} toggleNavbar={function (): void {
-        throw new Error('Function not implemented.');
-      } } />
+      <Navbar
+        selectedPage={selectedPage}
+        selectPage={selectPage}
+        toggleDrawer={toggleDrawer}
+        isNavbarCollapsed={isNavbarCollapsed}
+        toggleNavbar={toggleNavbar}
+      />
       
       <DrawerNavigation
         tabs={tabs}
@@ -86,7 +87,6 @@ const Main: React.FC = () => {
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
       </div>
-
     </div>
   );
 };

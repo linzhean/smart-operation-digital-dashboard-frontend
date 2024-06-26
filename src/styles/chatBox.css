@@ -1,57 +1,59 @@
-/* src/styles/chatBox.css */
-
 .chatContainer {
   background-color: #343541;
   border-radius: 15px;
   padding: 20px;
-  margin: 20px; /* 调整整体边距 */
+  margin: 20px;
 }
 
 .mailTitle {
-  margin-top: 10px; /* 调整标题顶部间距 */
-  margin-bottom: 15px; /* 调整标题底部间距 */
+  margin-top: 10px;
+  margin-bottom: 15px;
   position: relative;
   border-bottom: 1px solid #acacbe;
 }
 
 .mailTitle .caption {
   font-weight: bold;
-  font-size: 1.5em; /* 调整标题字体大小 */
+  font-size: 1.5em;
   position: absolute;
-  top: 5px; /* 调整标题垂直位置 */
-  left: 10px; /* 调整标题水平位置 */
+  top: 5px;
+  left: 10px;
 }
 
 .mailTitle .assignor {
   position: absolute;
-  bottom: 5px; /* 调整发起人文本底部间距 */
-  font-size: 1em; /* 调整发起人文本字体大小 */
+  bottom: 5px;
+  font-size: 1em;
   font-weight: bold;
-  opacity: 0.7; /* 调整发起人文本透明度 */
+  opacity: 0.7;
 }
 
 .mailTitle .fa-solid {
-  font-size: 2em; /* 调整图标大小 */
+  font-size: 2em;
   position: absolute;
-  top: 5px; /* 调整图标垂直位置 */
-  right: 10px; /* 调整图标水平位置 */
+  top: 5px;
+  right: 10px;
 }
 
 .chatBox {
-  padding: 15px; /* 调整聊天框内边距 */
-  margin-bottom: 20px; /* 调整聊天框与输入框之间的间距 */
-  height: 300px; /* 临时设置聊天框高度，根据需要调整 */
-  overflow-y: auto; /* 添加滚动条 */
+  padding: 15px;
+  margin-bottom: 20px;
+  height: auto; /* 自适应高度 */
+  overflow-y: auto;
+}
+
+.chatMessage {
+  margin-top: 10px;
 }
 
 .input-container {
-  margin-top: 20px; /* 调整输入框顶部间距 */
+  margin-top: 20px;
   display: flex;
   align-items: center;
   background-color: #343541;
   border: 2px solid #000;
   border-radius: 15px;
-  padding: 10px; /* 调整输入框内边距 */
+  padding: 10px;
 }
 
 .input-container textarea {
@@ -59,12 +61,12 @@
   border: none;
   background: none;
   color: #cccccc;
-  font-size: 16px; /* 调整输入框文字大小 */
+  font-size: 16px;
   outline: none;
   padding: 10px;
   resize: none;
   overflow-y: auto;
-  max-height: 150px; /* 调整输入框最大高度 */
+  max-height: 150px;
 }
 
 .input-container textarea::placeholder {
@@ -72,18 +74,18 @@
 }
 
 .input-container .arrow-icon {
-  font-size: 20px; /* 调整发送按钮图标大小 */
+  font-size: 20px;
   color: #aaa;
   cursor: pointer;
-  margin-left: 10px; /* 调整发送按钮与输入框之间的间距 */
+  margin-left: 10px;
 }
 
 .custom-scrollbar {
-  height: 300px; /* 与.chatBox的高度保持一致 */
+  height: auto; /* 自适应高度 */
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 10px; /* 调整滚动条宽度 */
+  width: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
