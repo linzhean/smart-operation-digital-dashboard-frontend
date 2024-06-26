@@ -1,11 +1,14 @@
-// src/components/MailItem/MailItem.js
 import React from 'react';
 import "../../styles/mailItem.css";
 import KPI from '../../assets/icon/testKPI.svg';
 
-const MailItem: React.FC = () => {
+interface MailItemProps {
+  onClick?: () => void;
+}
+
+const MailItem: React.FC<MailItemProps> = ({ onClick }) => {
   return (
-    <div className="leftmail">
+    <div className="leftmail" onClick={onClick}>
       <div className="kpi">
         <img src={KPI} alt="KPI" />
         <div className="kpiname">廢品率</div>

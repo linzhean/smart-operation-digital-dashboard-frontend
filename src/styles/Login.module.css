@@ -5,28 +5,12 @@
   box-sizing: border-box;
 }
 
-body,
-ul,
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  padding: 0;
-  margin: 0;
-}
-
 body {
   margin: 0;
   padding: 0;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, PingFangSC-Regular, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
   color: black;
-  font-size: large;
-  font-family: 'Helvetica', 'Arial', 'Noto Sans TC', '黑體-繁', '微軟正黑體', sans-serif ;
   background: linear-gradient(200deg, rgba(52, 53, 65), rgba(0, 0, 0));
   position: relative;
   display: flex;
