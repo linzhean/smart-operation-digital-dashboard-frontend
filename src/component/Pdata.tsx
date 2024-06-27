@@ -1,16 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../styles/Pdata.module.css';
 import Edit from '../assets/icon/edit-icon.svg';
+import { fetchUserData, updateUserData } from '../services/api/Pdata';
 
 const Pdata: React.FC = () => {
   const [editable, setEditable] = useState(false);
   const [formData, setFormData] = useState({
-    name: '林哲安',
-    num: '11046048',
-    email: '11046048@gmail.com',
-    unit: '財務',
-    role: '副理',
+    name: '',
+    num: '',
+    email: '',
+    unit: '',
+    role: '',
   });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const data = await fetchUserData();
+        setFormData(data);
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
+  }, []);
 
   const handleEditClick = () => {
     setEditable(!editable);
@@ -20,6 +37,22 @@ const Pdata: React.FC = () => {
     const { id, value } = event.target;
     setFormData({ ...formData, [id]: value });
   };
+
+  const handleSaveClick = async () => {
+    setLoading(true);
+    try {
+      await updateUserData(formData);
+      setEditable(false);
+    } catch (error) {
+      console.error('Error updating user data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <main className={styles.section}>
@@ -102,9 +135,13 @@ const Pdata: React.FC = () => {
             </select>
           </div>
           <div className="col-12">
-            <button type="button" className="btn btn-secondary" onClick={handleEditClick}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={editable ? handleSaveClick : handleEditClick}
+            >
               <img src={Edit} alt="Edit" />
-              {editable ? '取消編輯' : '編輯'}
+              {editable ? '保存' : '編輯'}
             </button>
           </div>
         </form>

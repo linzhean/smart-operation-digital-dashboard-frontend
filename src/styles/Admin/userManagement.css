@@ -1,0 +1,57 @@
+.admin-user-management {
+    padding: 20px;
+  }
+  
+  .admin-add-user-button {
+    background-color: #008cba;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #ffffff;
+  }
+  
+  .admin-th,
+  .admin-td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: #000000;
+  }
+  
+  .admin-delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .admin-Modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    width: 300px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    color: #000000;
+  }
+  
+  .admin-Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  

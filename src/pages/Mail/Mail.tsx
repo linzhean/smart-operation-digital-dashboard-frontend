@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import '../../styles/mainEmail.css';
-import Filter from '../../component/Filter';
-import MailBreif from '../../component/MailBreif/MailBreif';
-import ChatBox from '../../component/ChatBox';
+import Filter from '../../component/Mail/Leftside/Filter';
+import MailBreif from '../../component/Mail/Leftside/MailBreif';
+import ChatBox from '../../component/Mail/Rightside/ChatBox';
 import "../../styles/content.css";
 
 const Mail: React.FC = () => {

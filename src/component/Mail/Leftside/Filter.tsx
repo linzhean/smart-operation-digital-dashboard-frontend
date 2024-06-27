@@ -1,5 +1,5 @@
 import React from 'react';
-import "../styles/filter.css";
+import "../../../styles/filter.css";
 
 const Filter: React.FC = () => {
   return (
