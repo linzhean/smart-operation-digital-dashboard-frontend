@@ -1,0 +1,64 @@
+/* src\styles\Admin\userTable.css */
+/* 设置整个表格的字体颜色 */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #ffffff; /* 默认字体颜色 */
+}
+
+.user-table th, .user-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    color: #ffffff; /* 表头和单元格的字体颜色 */
+}
+
+.user-table th {
+    background-color: #f2f2f2;
+    color: #333333; /* 表头的字体颜色 */
+}
+
+/* 设置按钮的样式 */
+button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #d32f2f;
+}
+
+/* 设置新增用户按钮的样式 */
+.add-user-button {
+    background-color: #008cba;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+/* 设置模态框的样式 */
+.Modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    width: 300px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    color: #000000; /* 设置模态框中文本的字体颜色 */
+}
+
+.Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}

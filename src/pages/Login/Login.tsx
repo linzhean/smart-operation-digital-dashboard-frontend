@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
-import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-import styles from "../../styles/Login.module.css";
-import "../../styles/global.css"
-
-const backendApiUrl = "http://140.131.115.153:8080";
-const clientId = "629445899576-8mdmcg0etm5r7i28dk088fas2o3tjpm0.apps.googleusercontent.com";
-
-interface DecodedToken {
-  sub: string;
-  [key: string]: any;
-}
+import LoginForm from '../../component/Login/LoginForm';
+import { backendApiUrl, clientId } from '../../services/api';
+import { fetchUserData, updateUserData } from '../../services/api';
+import '../../styles/global.css';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -29,7 +23,7 @@ const Login: React.FC = () => {
         throw new Error('No ID token received from Google');
       }
 
-      const decodedToken: DecodedToken = jwtDecode(idToken) as DecodedToken;
+      const decodedToken = jwtDecode(idToken);
       console.log("Decoded Token:", decodedToken);
 
       const userId = decodedToken.sub;
@@ -74,28 +68,7 @@ const Login: React.FC = () => {
 
   return (
     <GoogleOAuthProvider clientId={clientId}>
-      <div className={styles.wrapper}>
-        <h2>欢迎回来！</h2>
-        {error && <p>{error}</p>}
-        <div id='signInButton' className={styles.loginbtn}>
-          <GoogleLogin
-            onSuccess={onSuccess}
-            onError={onFailure}
-          />
-        </div>
-        <div className={styles.star}>
-          <div className={styles.box}>
-            <div className={styles["out-div"]}></div>
-            <div className={styles["out-div"]}></div>
-            <div className={`${styles["out-div"]} ${styles["out-front"]}`}></div>
-            <div className={`${styles["out-div"]} ${styles["out-back"]}`}></div>
-            <div className={`${styles["out-div"]} ${styles["out-left"]}`}></div>
-            <div className={`${styles["out-div"]} ${styles["out-right"]}`}></div>
-            <div className={`${styles["out-div"]} ${styles["out-top"]}`}></div>
-            <div className={`${styles["out-div"]} ${styles["out-bottom"]}`}></div>
-          </div>
-        </div>
-      </div>
+      <LoginForm error={error} onSuccess={onSuccess} onFailure={onFailure} />
     </GoogleOAuthProvider>
   );
 };

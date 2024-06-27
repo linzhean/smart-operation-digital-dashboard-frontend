@@ -1,9 +1,8 @@
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import '../styles/DrawerNavigation.css';
-import "../styles/content.css"
+import '../../styles/Admin/adminDrawerNavigation.css';
 
-interface DrawerNavigationProps {
+interface AdminDrawerNavigationProps {
   tabs: string[];
   onAddTab: () => void;
   onDeleteTab: (index: number) => void;
@@ -11,7 +10,7 @@ interface DrawerNavigationProps {
   toggleDrawer: () => void;
 }
 
-const DrawerNavigation: React.FC<DrawerNavigationProps> = ({
+const AdminDrawerNavigation: React.FC<AdminDrawerNavigationProps> = ({
   tabs,
   onAddTab,
   onDeleteTab,
@@ -22,7 +21,7 @@ const DrawerNavigation: React.FC<DrawerNavigationProps> = ({
     // 模拟异步加载更多数据
     setTimeout(() => {
       // 示例：添加更多菜单项
-      const newTabs = [...tabs, `標籤 ${tabs.length + 1}`];
+      const newTabs = [...tabs, `群組 ${tabs.length + 1}`];
       onAddTab(); // 更新父组件中的 tabs
     }, 1500);
   };
@@ -38,7 +37,7 @@ const DrawerNavigation: React.FC<DrawerNavigationProps> = ({
           scrollThreshold={0.9} // 触发加载更多的滚动阈值
           className="tabs" // 自定义类名
         >
-          <h3>指標</h3>
+          <h3>管理</h3>
           <ul>
             {tabs.map((tab, index) => (
               <li key={index}>
@@ -59,4 +58,4 @@ const DrawerNavigation: React.FC<DrawerNavigationProps> = ({
   );
 };
 
-export default DrawerNavigation;
+export default AdminDrawerNavigation;
