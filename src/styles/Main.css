@@ -1,0 +1,11 @@
+/* src/styles/App.css */
+
+/* 保持原有的样式，可以添加一些响应式的调整 */
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* 使用视口高度，确保填满整个屏幕 */
+  width: 100vw; /* 使用视口宽度，确保填满整个屏幕 */
+  overflow: hidden;
+  background-color: #343541;
+}
