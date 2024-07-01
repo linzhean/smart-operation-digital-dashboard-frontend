@@ -4,8 +4,8 @@ import Home from './pages/Home/Home';
 import Group from './component/Group';
 import Pdata from './component/Pdata';
 import Mail from './pages/Mail/Mail';
-import Navbar from './component/Navbar/Navbar';
-import DrawerNavigation from './component/DrawerNavigation';
+import Navbar from './component/Common/Navbar';
+import DrawerNavigation from './component/Common/DrawerNavigation';
 import './component/Bootstrap/css/bootstrap.min.css';
 import './styles/Main.css';
 

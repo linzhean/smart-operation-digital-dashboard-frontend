@@ -1,6 +1,6 @@
 import React from 'react';
-import "../../styles/mailItem.css";
-import KPI from '../../assets/icon/testKPI.svg';
+import "../../../styles/mailItem.css";
+import KPI from '../../../assets/icon/testKPI.svg';
 
 interface MailItemProps {
   onClick?: () => void;

@@ -1,6 +1,6 @@
 import React from 'react';
-import '../../styles/mailBreif.css';
-import MailItem from "../MailItem/MailItem";
+import '../../../styles/mailBreif.css';
+import MailItem from "./MailItem";
 
 interface MailBreifProps {
   onMailClick?: () => void;
