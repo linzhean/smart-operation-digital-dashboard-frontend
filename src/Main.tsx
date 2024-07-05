@@ -42,7 +42,7 @@ const Main: React.FC = () => {
         <Route path="/email" element={<Mail />} />
         <Route path="*" element={<Navigate to="/home" />} />
         <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
-        <Route path="/AssignExportControl" element={<AssignExportControl />} />
+        <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
       </Routes>
     </div>
   );

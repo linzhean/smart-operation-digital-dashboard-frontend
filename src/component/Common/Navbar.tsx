@@ -9,7 +9,7 @@ import emailIcon from '../../assets/icon/email-icon.svg';
 import userDataIcon from '../../assets/icon/userData-icon.svg';
 import AssignExportControlIcon from '../../assets/icon/AssignExportControl.svg';
 import InterimKPIControl from '../../assets/icon/InterimKPIControl.svg';
-// 高亮邏輯：location地址對比
+
 const NavBar: React.FC = () => {
   const location = useLocation();
   const activeLink = location.pathname;
@@ -36,31 +36,31 @@ const NavBar: React.FC = () => {
           <ul className={`navbar-nav ${styles.navbarNav}`}>
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
-                className={`nav-link ${styles.navLink} ${activeLink === '/AssignExportControl' ? styles.activeNavLink : ''}`}
+                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/AssignExportControl') ? styles.activeNavLink : ''}`}
                 to="/AssignExportControl"
               >
                 <img className={styles.navbarNavItemImg} src={AssignExportControlIcon} alt="graphManage" />
-                <span className={`${styles.navbarText} ${activeLink === '/AssignExportControl' ? styles.activeNavLinkText : ''}`}>權限管理</span>
+                <span className={`${styles.navbarText} ${activeLink.startsWith('/AssignExportControl') ? styles.activeNavLinkText : ''}`}>權限管理</span>
               </Link>
             </li>
 
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
-                className={`nav-link ${styles.navLink} ${activeLink === '/InterimKPIControl' ? styles.activeNavLink : ''}`}
+                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/InterimKPIControl') ? styles.activeNavLink : ''}`}
                 to="/InterimKPIControl"
               >
                 <img className={styles.navbarNavItemImg} src={InterimKPIControl} alt="graphManage" />
-                <span className={`${styles.navbarText} ${activeLink === '/InterimKPIControl' ? styles.activeNavLinkText : ''}`}>臨時KPI審核</span>
+                <span className={`${styles.navbarText} ${activeLink.startsWith('/InterimKPIControl') ? styles.activeNavLinkText : ''}`}>臨時KPI審核</span>
               </Link>
             </li>
 
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
-                className={`nav-link ${styles.navLink} ${activeLink === '/group' ? styles.activeNavLink : ''}`}
+                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/group') ? styles.activeNavLink : ''}`}
                 to="/group"
               >
                 <img className={styles.navbarNavItemImg} src={groupIcon} alt="group" />
-                <span className={`${styles.navbarText} ${activeLink === '/group' ? styles.activeNavLinkText : ''}`}>群組</span>
+                <span className={`${styles.navbarText} ${activeLink.startsWith('/group') ? styles.activeNavLinkText : ''}`}>群組</span>
               </Link>
             </li>
             <li className={`nav-item ${styles.navbarNavItem}`}>
@@ -75,20 +75,20 @@ const NavBar: React.FC = () => {
             </li>
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
-                className={`nav-link ${styles.navLink} ${activeLink === '/mail' ? styles.activeNavLink : ''}`}
+                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/mail') ? styles.activeNavLink : ''}`}
                 to="/mail"
               >
                 <img className={`${styles.navbarNavItemImg} ${styles.navbarNavItemMail}`} src={emailIcon} alt="mail" />
-                <span className={`${styles.navbarText} ${activeLink === '/mail' ? styles.activeNavLinkText : ''}`}>信件</span>
+                <span className={`${styles.navbarText} ${activeLink.startsWith('/mail') ? styles.activeNavLinkText : ''}`}>信件</span>
               </Link>
             </li>
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
-                className={`nav-link ${styles.navLink} ${activeLink === '/profile' ? styles.activeNavLink : ''}`}
+                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/profile') ? styles.activeNavLink : ''}`}
                 to="/profile"
               >
                 <img className={styles.navbarNavItemImg} src={userDataIcon} alt="profile" />
-                <span className={`${styles.navbarText} ${activeLink === '/profile' ? styles.activeNavLinkText : ''}`}>個人資料</span>
+                <span className={`${styles.navbarText} ${activeLink.startsWith('/profile') ? styles.activeNavLinkText : ''}`}>個人資料</span>
               </Link>
             </li>
           </ul>

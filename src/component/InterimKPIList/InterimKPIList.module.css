@@ -93,7 +93,7 @@ h2 {
 .checkFormContent {
   height: 75%;
   overflow: auto;
-  width: 50%;
+  width: 80%;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -108,8 +108,8 @@ h2 {
 
 .checkFormContent h2 {
   font-weight: bold;
-  margin: 0px;
-  margin-bottom: 1rem;
+  margin: 0px !important;
+  margin-bottom: 1rem !important;
 }
 
 .checkFormContent input {
@@ -150,6 +150,7 @@ h2 {
   border-radius: 10px;
   font-weight: bold;
   background-color: white;
+
   color: black;
 }
 
@@ -160,6 +161,7 @@ h2 {
   font-weight: bold;
   background-color: black;
   color: gray;
+  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
 }
 
 .checkFormContent input:disabled {
