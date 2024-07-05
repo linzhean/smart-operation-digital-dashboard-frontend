@@ -8,6 +8,7 @@ import './component/Bootstrap/css/bootstrap.min.css';
 import NavBar from './component/Common/Navbar';
 import InterimKPIControl from './pages/InterimKPIControl/InterimKPIControl';
 import AssignExportControl from './pages/AssignExportControl/AssignExportControl'
+import UserControl from './pages/UserControl/UserControl';
 
 const Main: React.FC = () => {
 
@@ -43,6 +44,7 @@ const Main: React.FC = () => {
         <Route path="*" element={<Navigate to="/home" />} />
         <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
         <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
+        <Route path="/UserControl/*" element={<UserControl />} />
       </Routes>
     </div>
   );

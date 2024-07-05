@@ -9,6 +9,7 @@ import emailIcon from '../../assets/icon/email-icon.svg';
 import userDataIcon from '../../assets/icon/userData-icon.svg';
 import AssignExportControlIcon from '../../assets/icon/AssignExportControl.svg';
 import InterimKPIControl from '../../assets/icon/InterimKPIControl.svg';
+import UserControl from '../../assets/icon/UserControl.svg';
 
 const NavBar: React.FC = () => {
   const location = useLocation();
@@ -34,6 +35,8 @@ const NavBar: React.FC = () => {
         </button>
         <div className={`collapse navbar-collapse`} id="navbarNavAltMarkup">
           <ul className={`navbar-nav ${styles.navbarNav}`}>
+
+            {/* 權限管理 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
                 className={`nav-link ${styles.navLink} ${activeLink.startsWith('/AssignExportControl') ? styles.activeNavLink : ''}`}
@@ -44,6 +47,20 @@ const NavBar: React.FC = () => {
               </Link>
             </li>
 
+
+            {/* 使用者管理 */}
+            <li className={`nav-item ${styles.navbarNavItem}`}>
+              <Link
+                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/UserControl') ? styles.activeNavLink : ''}`}
+                to="/UserControl/userApply"
+              >
+                <img className={styles.navbarNavItemImg} src={UserControl} alt="UserControl" />
+                <span className={`${styles.navbarText} ${activeLink.startsWith('/UserControl') ? styles.activeNavLinkText : ''}`}>使用者管理</span>
+              </Link>
+            </li>
+
+
+            {/* ＫＰＩ審核 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
                 className={`nav-link ${styles.navLink} ${activeLink.startsWith('/InterimKPIControl') ? styles.activeNavLink : ''}`}
@@ -54,6 +71,10 @@ const NavBar: React.FC = () => {
               </Link>
             </li>
 
+
+
+
+            {/* 群組管理 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
                 className={`nav-link ${styles.navLink} ${activeLink.startsWith('/group') ? styles.activeNavLink : ''}`}
@@ -63,6 +84,7 @@ const NavBar: React.FC = () => {
                 <span className={`${styles.navbarText} ${activeLink.startsWith('/group') ? styles.activeNavLinkText : ''}`}>群組</span>
               </Link>
             </li>
+            {/* 首頁－儀表板 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
                 className={`nav-link ${styles.navLink} ${activeLink === '/' ? styles.activeNavLink : ''}`}
@@ -73,6 +95,7 @@ const NavBar: React.FC = () => {
                 <span className={`${styles.navbarText} ${activeLink === '/' ? styles.activeNavLinkText : ''}`}>儀表板</span>
               </Link>
             </li>
+            {/* 信件 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
                 className={`nav-link ${styles.navLink} ${activeLink.startsWith('/mail') ? styles.activeNavLink : ''}`}
@@ -82,6 +105,7 @@ const NavBar: React.FC = () => {
                 <span className={`${styles.navbarText} ${activeLink.startsWith('/mail') ? styles.activeNavLinkText : ''}`}>信件</span>
               </Link>
             </li>
+            {/* 個人資料 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
                 className={`nav-link ${styles.navLink} ${activeLink.startsWith('/profile') ? styles.activeNavLink : ''}`}
