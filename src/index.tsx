@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Main from './Main';
 import Login from './pages/Login/Login';
-import InterimKPIControl from './pages/InterimKPIControl/InterimKPIControl';
 
 import UserManagement from './pages/Admin/UserManagement'; // 新增
 

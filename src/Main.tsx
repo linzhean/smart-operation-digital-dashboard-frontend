@@ -7,6 +7,7 @@ import Mail from './pages/Mail/Mail';
 import './component/Bootstrap/css/bootstrap.min.css';
 import NavBar from './component/Common/Navbar';
 import InterimKPIControl from './pages/InterimKPIControl/InterimKPIControl';
+import AssignExportControl from './pages/AssignExportControl/AssignExportControl'
 
 const Main: React.FC = () => {
 
@@ -41,6 +42,7 @@ const Main: React.FC = () => {
         <Route path="/email" element={<Mail />} />
         <Route path="*" element={<Navigate to="/home" />} />
         <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
+        <Route path="/AssignExportControl" element={<AssignExportControl />} />
       </Routes>
     </div>
   );
