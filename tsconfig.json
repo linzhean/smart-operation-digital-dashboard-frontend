@@ -18,12 +18,17 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "types": ["react", "react-dom", "react-router-dom"],
+    "types": [
+      "react",
+      "react-dom",
+      "react-router-dom",
+      "redux"
+    ],
     "jsx": "react-jsx"
   },
- "include": [
-  "src/**/*",
-  "component/**/*",
-  "react-app-env.d.ts"
-]
+  "include": [
+    "src/**/*",
+    "component/**/*",
+    "react-app-env.d.ts"
+  ]
 }
