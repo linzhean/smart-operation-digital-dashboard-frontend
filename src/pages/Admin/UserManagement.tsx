@@ -7,7 +7,6 @@ import UserChart from '../../component/Admin/Chart/UserChart';
 import Modal from 'react-modal';
 import '../../styles/Admin/userManagement.css';
 import useUserManagement from '../../Hook/useUserManagement';
-import { User } from '../../services/types/userManagement';
 
 Modal.setAppElement('#root');
 

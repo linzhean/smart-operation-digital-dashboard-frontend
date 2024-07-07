@@ -1,5 +1,5 @@
 /* src/styles/Login.module.css */
-*,
+ *,
 ::after,
 ::before {
   box-sizing: border-box;
@@ -182,7 +182,7 @@ body {
   100% {
     transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
   }
-}
+} 
 
 /* Media Queries for responsive design */
 @media (max-width: 768px) {
@@ -223,4 +223,4 @@ body {
     width: 35px;
     height: 35px;
   }
-}
+} 

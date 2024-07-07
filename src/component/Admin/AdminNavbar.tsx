@@ -7,7 +7,6 @@ import groupIcon from '../../assets/icon/group-icon.svg';
 import Manage from '../../assets/icon/graphManage-icon.svg';
 import Email from '../../assets/icon/email-icon.svg';
 import Profile from '../../assets/icon/userData-icon.svg';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import '../../styles/Admin/adminNavbar.css';

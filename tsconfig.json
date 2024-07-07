@@ -21,9 +21,9 @@
     "types": ["react", "react-dom", "react-router-dom","react-grid-layout"],
     "jsx": "react-jsx"
   },
- "include": [
-  "src/**/*",
-  "component/**/*",
-  "react-app-env.d.ts"
-]
+  "include": [
+    "src/**/*",
+    "component/**/*",
+    "react-app-env.d.ts"
+  ]
 }
