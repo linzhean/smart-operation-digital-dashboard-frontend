@@ -3,6 +3,8 @@ import styles from '../styles/Pdata.module.css';
 import Edit from '../assets/icon/edit-icon.svg';
 import { fetchUserData, updateUserData } from '../services/api/Pdata';
 
+const backendApiUrl = "https://smart-operation-digital-dashboard.kuohao.wtf/backend";
+
 const Pdata: React.FC = () => {
   const [editable, setEditable] = useState(false);
   const [formData, setFormData] = useState({
@@ -55,6 +57,12 @@ const Pdata: React.FC = () => {
   }
 
   return (
+    <main className="section">
+      <div className="container">
+          <form className="form-div" noValidate onSubmit={handleSubmit}>
+            <h2>您的個人資料</h2>
+            <div className="column-div">
+              <label htmlFor="validationName" className="form-label">姓名</label>
     <main className={styles.section}>
       <div className={styles.container}>
         <form className="row g-3 needs-validation" noValidate>
@@ -93,13 +101,81 @@ const Pdata: React.FC = () => {
               <input
                 type="text"
                 className="form-control"
-                id="email"
-                aria-describedby="inputGroupAppend"
-                value={formData.email}
+                id="name"
+                value={formData.name}
+                required
                 disabled={!editable}
                 onChange={handleInputChange}
               />
             </div>
+            <div className="column-div">
+              <label htmlFor="validationNum" className="form-label">工號</label>
+              <input
+                type="text"
+                className="form-control"
+                id="num"
+                value={formData.num}
+                required
+                disabled={!editable}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="column-div">
+              <label htmlFor="validationEmail" className="form-label">信箱</label>
+              <div className="input-group has-validation">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="email"
+                  aria-describedby="inputGroupAppend"
+                  value={formData.email}
+                  disabled={!editable}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            <div className="column-div">
+              <label htmlFor="validationUnit" className="form-label">所屬部門</label>
+              <select
+                className="form-select"
+                id="unit"
+                required
+                disabled={!editable}
+                value={formData.unit}
+                onChange={handleInputChange}
+              >
+                <option value="">...</option>
+                <option>銷售</option>
+                <option>生產</option>
+                <option>財務</option>
+                <option>審計</option>
+              </select>
+            </div>
+            <div className="column-div">
+              <label htmlFor="validationRole" className="form-label">職稱</label>
+              <select
+                className="form-select"
+                id="role"
+                required
+                disabled={!editable}
+                value={formData.role}
+                onChange={handleInputChange}
+              >
+                <option value="">...</option>
+                <option>一般員工</option>
+                <option>副理</option>
+                <option>經理</option>
+              </select>
+            </div>
+            {error && <p className="error">{error}</p>}
+            <div className="raw-div">
+              <button className="submit-button" type="submit">提交</button>
+              <button type="button" className="edit-button" onClick={handleEditClick}>
+                {editable ? '取消編輯' : '編輯'}
+                <img src={Edit} alt="Edit" className='img'/>
+              </button>
+            </div>
+          </form>
           </div>
           <div className="col-md-6">
             <label htmlFor="validationUnit" className="form-label">所屬部門</label>
