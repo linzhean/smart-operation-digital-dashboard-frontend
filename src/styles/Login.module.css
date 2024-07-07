@@ -23,7 +23,7 @@ body {
   outline: none;
 }
 
-.wrapper {
+.login-wrapper {
   width: 500px;
   background-color: #F8F8F8;
   padding: 25px 30px 28px 30px;
@@ -34,7 +34,7 @@ body {
   justify-content: flex-start;
 }
 
-.wrapper .loginbtn {
+.login-wrapper__loginbtn {
   width: 100%;
   height: 50px;
   display: flex;
@@ -42,7 +42,7 @@ body {
   align-items: center;
 }
 
-.wrapper .loginbtn button {
+.login-wrapper__loginbtn button {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -52,21 +52,21 @@ body {
   border-radius: 25px;
 }
 
-.wrapper h2 {
+.login-wrapper h2 {
   color: black;
   font-size: xx-large;
   font-weight: 600;
   margin-bottom: 15px;
 }
 
-.wrapper .loginbtn span {
+.login-wrapper__loginbtn span {
   color: black;
   font-size: x-large;
   font-weight: bold;
   margin-left: 20px;
 }
 
-.wrapper .loginbtn img {
+.login-wrapper__loginbtn img {
   width: 55px;
   height: 55px;
   padding: 8px;
@@ -186,40 +186,40 @@ body {
 
 /* Media Queries for responsive design */
 @media (max-width: 768px) {
-  .wrapper {
+  .login-wrapper {
     width: 90%;
     padding: 20px;
   }
 
-  .wrapper h2 {
+  .login-wrapper h2 {
     font-size: large;
   }
 
-  .wrapper .loginbtn span {
+  .login-wrapper__loginbtn span {
     font-size: medium;
   }
 
-  .wrapper .loginbtn img {
+  .login-wrapper__loginbtn img {
     width: 45px;
     height: 45px;
   }
 }
 
 @media (max-width: 480px) {
-  .wrapper {
+  .login-wrapper {
     width: 100%;
     padding: 15px;
   }
 
-  .wrapper h2 {
+  .login-wrapper h2 {
     font-size: medium;
   }
 
-  .wrapper .loginbtn span {
+  .login-wrapper__loginbtn span {
     font-size: small;
   }
 
-  .wrapper .loginbtn img {
+  .login-wrapper__loginbtn img {
     width: 35px;
     height: 35px;
   }

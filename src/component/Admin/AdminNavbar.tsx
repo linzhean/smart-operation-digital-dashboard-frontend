@@ -10,7 +10,7 @@ import Profile from '../../assets/icon/userData-icon.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import '../../styles/navbar.css';
+import '../../styles/Admin/adminNavbar.css';
 
 interface AdminNavbarProps {
   selectedPage: string;
@@ -47,7 +47,7 @@ const AdminNavbar: React.FC<AdminNavbarProps> = ({
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light admin-navbar">
       <div className="container-fluid">
-        <Link className="navbar-brand hamburger" to="/" onClick={toggleDrawer}>
+        <Link className="navbar-brand hamburger" to="/admin/user-management" onClick={toggleDrawer}>
           <img src={Menu} alt="Menu" />
         </Link>
         <div className="d-lg-none position-absolute top-0 end-0">

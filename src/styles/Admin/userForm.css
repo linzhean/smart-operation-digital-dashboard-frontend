@@ -1,26 +1,26 @@
-/* src\styles\Admin\userForm.css */
 .user-form {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
-}
-
-.user-form input {
+  }
+  
+  .user-form input {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-}
-
-.user-form button {
+  }
+  
+  .user-form button {
     padding: 10px;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-}
-
-.user-form button1:hover {
+  }
+  
+  .user-form button:hover {
     background-color: #45a049;
-}
+  }
+  

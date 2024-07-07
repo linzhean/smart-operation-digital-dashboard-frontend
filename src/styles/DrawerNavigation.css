@@ -1,42 +1,52 @@
-/* Drawer Navigation */
 .drawer-navigation {
   position: fixed;
   top: 0;
   left: -300px;
   width: 300px;
   height: 100%;
-  background-color: #fff;
+  background-color: #ffffff; /* 与 AdminDrawerNavigation 保持一致的背景色 */
+  color: #000000; /* 文字颜色 */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   transition: left 0.3s ease;
   z-index: 1000;
 }
+
 .drawer-navigation.open {
   left: 0;
 }
+
 .drawer-content {
   padding: 20px;
 }
+
 .tabs {
   margin-bottom: 20px;
 }
+
 .tabs h3 {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
+  color: #000000; /* 标题颜色 */
 }
+
 .tabs ul {
   list-style-type: none;
   padding: 0;
 }
+
 .tabs li {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
 }
+
 .tabs li span {
   font-size: 16px;
+  color: #000000; /* 文字颜色 */
 }
+
 .tabs li button {
   background-color: #dc3545;
   color: #fff;
@@ -44,22 +54,26 @@
   padding: 5px 10px;
   cursor: pointer;
 }
+
 .tabs li button:hover {
   background-color: #c82333;
 }
+
 .drawer-toggle {
   position: absolute;
   top: 20px;
   right: 20px;
   cursor: pointer;
 }
+
 .drawer-toggle span {
   display: block;
   width: 30px;
   height: 4px;
-  background-color: #333;
+  background-color: #000000; /* 切换按钮颜色 */
   margin-bottom: 5px;
 }
+
 .drawer-toggle span:last-child {
   margin-bottom: 0;
 }

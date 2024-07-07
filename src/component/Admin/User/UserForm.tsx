@@ -1,33 +1,43 @@
 import React, { useState } from 'react';
+import { User } from '../../../services/types/userManagement';
+import '../../../styles/Admin/userForm.css';
 
 interface UserFormProps {
-    addUser: (user: any) => void;
+  addUser: (user: User) => void;
 }
 
 const UserForm: React.FC<UserFormProps> = ({ addUser }) => {
-    const [user, setUser] = useState({ id: '', department: '', name: '', email: '', position: '' });
+  const [user, setUser] = useState<User>({ id: '', department: '', name: '', position: '' });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setUser(prevUser => ({ ...prevUser, [name]: value }));
-    };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    addUser(user);
+    setUser({ id: '', department: '', name: '', position: '' });
+  };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        addUser(user);
-        setUser({ id: '', department: '', name: '', email: '', position: '' });
-    };
-
-    return (
-        <form onSubmit={handleSubmit}>
-            <input type="text" name="id" value={user.id} onChange={handleChange} placeholder="帳號(工號)" required />
-            <input type="text" name="department" value={user.department} onChange={handleChange} placeholder="所屬部門" required />
-            <input type="text" name="name" value={user.name} onChange={handleChange} placeholder="姓名" required />
-            <input type="email" name="email" value={user.email} onChange={handleChange} placeholder="gmail" required />
-            <input type="text" name="position" value={user.position} onChange={handleChange} placeholder="職務" required />
-            <button type="submit">新增使用者</button>
-        </form>
-    );
+  return (
+    <form className="user-form" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="部門"
+        value={user.department}
+        onChange={(e) => setUser({ ...user, department: e.target.value })}
+      />
+      <input
+        type="text"
+        placeholder="姓名"
+        value={user.name}
+        onChange={(e) => setUser({ ...user, name: e.target.value })}
+      />
+      <input
+        type="text"
+        placeholder="職位"
+        value={user.position}
+        onChange={(e) => setUser({ ...user, position: e.target.value })}
+      />
+      <button type="submit">新增使用者</button>
+    </form>
+  );
 };
 
 export default UserForm;

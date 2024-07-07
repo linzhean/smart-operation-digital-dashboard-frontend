@@ -1,8 +1,9 @@
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import '../../styles/Admin/adminDrawerNavigation.css';
+import '../../styles/DrawerNavigation.css';
+import '../../styles/content.css';
 
-interface AdminDrawerNavigationProps {
+interface DrawerNavigationProps {
   tabs: string[];
   onAddTab: () => void;
   onDeleteTab: (index: number) => void;
@@ -10,7 +11,7 @@ interface AdminDrawerNavigationProps {
   toggleDrawer: () => void;
 }
 
-const AdminDrawerNavigation: React.FC<AdminDrawerNavigationProps> = ({
+const DrawerNavigation: React.FC<DrawerNavigationProps> = ({
   tabs,
   onAddTab,
   onDeleteTab,
@@ -21,13 +22,13 @@ const AdminDrawerNavigation: React.FC<AdminDrawerNavigationProps> = ({
     // 模拟异步加载更多数据
     setTimeout(() => {
       // 示例：添加更多菜单项
-      const newTabs = [...tabs, `群組 ${tabs.length + 1}`];
+      const newTabs = [...tabs, `標籤 ${tabs.length + 1}`];
       onAddTab(); // 更新父组件中的 tabs
     }, 1500);
   };
 
   return (
-    <div className={`drawer-navigation ${isOpen ? 'open' : ''}`}>
+    <div className={`drawer-navigation ${isOpen ? 'open' : 'closed'}`}>
       <div className="drawer-content">
         <InfiniteScroll
           dataLength={tabs.length}
@@ -37,7 +38,7 @@ const AdminDrawerNavigation: React.FC<AdminDrawerNavigationProps> = ({
           scrollThreshold={0.9} // 触发加载更多的滚动阈值
           className="tabs" // 自定义类名
         >
-          <h3>管理</h3>
+          <h3>標籤</h3>
           <ul>
             {tabs.map((tab, index) => (
               <li key={index}>
@@ -46,7 +47,7 @@ const AdminDrawerNavigation: React.FC<AdminDrawerNavigationProps> = ({
               </li>
             ))}
           </ul>
-          <button onClick={onAddTab}>新增群組</button>
+          <button onClick={onAddTab}>新增標籤</button>
         </InfiniteScroll>
       </div>
       <div className="drawer-toggle" onClick={toggleDrawer}>
@@ -58,4 +59,4 @@ const AdminDrawerNavigation: React.FC<AdminDrawerNavigationProps> = ({
   );
 };
 
-export default AdminDrawerNavigation;
+export default DrawerNavigation;

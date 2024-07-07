@@ -1,10 +1,11 @@
 .admin-navbar {
-  background-color: #000000; /* Black background */
-  color: #ffffff; /* White text */
-  position: fixed; /* Fixed position */
-  width: 100%; /* Full width */
-  z-index: 1000; /* Ensure it's above other content */
-  top: 0; /* Positioned at the top */
+  background-color: #000000; /* 黑色背景 */
+  color: #ffffff; /* 白色文字 */
+  position: fixed; /* 固定位置 */
+  width: 100%; /* 全宽 */
+  z-index: 1000; /* 确保在其他内容之上 */
+  top: 0; /* 定位于顶部 */
+  left: 0; /* 确保在页面左侧 */
 }
 
 .admin-navbar .container-fluid {
@@ -36,7 +37,7 @@
   left: 0;
   width: 100%;
   height: 3.5px;
-  background-color: #acacbe; /* Light gray */
+  background-color: #acacbe; /* 淡灰色 */
   border-radius: 5px;
   z-index: 1000;
 }
@@ -60,7 +61,7 @@
   margin-right: 5px;
 }
 
-/* Responsive adjustments for smaller screens */
+/* 针对小屏幕的响应式调整 */
 @media (max-width: 768px) {
   .admin-navbar .d-lg-none {
     position: absolute;

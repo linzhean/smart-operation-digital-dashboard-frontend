@@ -1,64 +1,103 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AdminDrawerNavigation from '../../component/Admin/AdminDrawerNavigation';
 import AdminNavbar from '../../component/Admin/AdminNavbar';
 import UserTable from '../../component/Admin/User/UserTable';
 import UserForm from '../../component/Admin/User/UserForm';
+import UserChart from '../../component/Admin/Chart/UserChart';
 import Modal from 'react-modal';
 import '../../styles/Admin/userManagement.css';
+import useUserManagement from '../../Hook/useUserManagement';
+import { User } from '../../services/types/userManagement';
 
 Modal.setAppElement('#root');
 
 const UserManagement: React.FC = () => {
-  const [users, setUsers] = useState([
-    { id: '11046050', department: '生產部門', name: '梁承恩', email: '123@gmail.com', position: '經理' },
-    { id: '11046051', department: '銷售部門', name: '高婕', email: '456@gmail.com', position: '經理' },
-    { id: '11046052', department: '物料部門', name: '林哲安', email: '789@gmail.com', position: '經理' }
-  ]);
+  const {
+    users,
+    groups,
+    modalIsOpen,
+    activeTab,
+    isDrawerOpen,
+    selectedPage,
+    isNavbarCollapsed,
+    addUserHandler,
+    deleteUserHandler,
+    admitUserHandler,
+    openModal,
+    closeModal,
+    handleAddGroup,
+    handleDeleteGroup,
+    handleSelectGroup,
+    toggleDrawer,
+    setActiveTab,
+    setSelectedPage,
+    setIsNavbarCollapsed,
+  } = useUserManagement();
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  const addUser = (user: any) => {
-    setUsers([...users, user]);
-    setModalIsOpen(false);
+  const renderContent = () => {
+    switch (selectedPage) {
+      case 'home':
+        return (
+          <div className="user-management-content">
+            <h2>User Management</h2>
+            <AdminNavbar
+              selectedPage={selectedPage}
+              selectPage={setSelectedPage}
+              isNavbarCollapsed={isNavbarCollapsed}
+              toggleNavbar={() => setIsNavbarCollapsed(!isNavbarCollapsed)}
+              toggleDrawer={toggleDrawer}
+            />
+            <AdminDrawerNavigation
+              groups={groups}
+              onAddGroup={handleAddGroup}
+              onDeleteGroup={handleDeleteGroup}
+              isOpen={isDrawerOpen}
+              toggleDrawer={toggleDrawer}
+              onSelectGroup={handleSelectGroup}
+            />
+            <div className="content">
+              <div className="tabs">
+                <button
+                  className={activeTab === 'users' ? 'active' : ''}
+                  onClick={() => setActiveTab('users')}
+                >
+                  Users
+                </button>
+                <button
+                  className={activeTab === 'charts' ? 'active' : ''}
+                  onClick={() => setActiveTab('charts')}
+                >
+                  Charts
+                </button>
+              </div>
+              {activeTab === 'users' && (
+                <div className="tab-content">
+                  <button onClick={openModal}>Add User</button>
+                  <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
+                    <UserForm addUser={addUserHandler} />
+                  </Modal>
+                  <UserTable
+                    users={users}
+                    deleteUser={deleteUserHandler}
+                    admitUser={admitUserHandler}
+                    onAddUserToGroup={() => {}} // 根据需要传递添加用户到群组的逻辑
+                  />
+                </div>
+              )}
+              {activeTab === 'charts' && (
+                <div className="tab-content">
+                  <UserChart />
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      default:
+        return <div>Page not found</div>;
+    }
   };
 
-  const deleteUser = (id: string) => {
-    setUsers(users.filter(user => user.id !== id));
-  };
-
-  return (
-    <div className="admin-container">
-      <AdminDrawerNavigation
-        tabs={['生產團隊', '銷售團隊', '物料團隊']}
-        onAddTab={() => {}}
-        onDeleteTab={(index) => {}}
-        isOpen={true}
-        toggleDrawer={() => {}}
-      />
-      <div className="content">
-        <AdminNavbar
-            selectedPage="home"
-            selectPage={() => {}}
-            isNavbarCollapsed={true} // 根据实际情况传递
-            toggleNavbar={() => {}} // 根据实际情况传递
-            toggleDrawer={() => {}}
-        />
-        <div className="user-management">
-          <button onClick={() => setModalIsOpen(true)} className="add-user-button">新增使用者</button>
-          <Modal
-            isOpen={modalIsOpen}
-            onRequestClose={() => setModalIsOpen(false)}
-            contentLabel="新增使用者"
-            className="Modal"
-            overlayClassName="Overlay"
-          >
-            <UserForm addUser={addUser} />
-          </Modal>
-          <UserTable users={users} deleteUser={deleteUser} />
-        </div>
-      </div>
-    </div>
-  );
+  return <div>{renderContent()}</div>;
 };
 
 export default UserManagement;

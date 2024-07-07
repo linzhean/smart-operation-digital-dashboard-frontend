@@ -1,57 +1,125 @@
-.admin-user-management {
-    padding: 20px;
+.admin-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #2e2e2e; /* 修改背景颜色 */
+  color: white; /* 修改字体颜色 */
+}
+
+.user-management {
+  padding: 20px;
+  background-color: #2e2e2e; /* 修改背景颜色 */
+}
+
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.tabs button.active {
+  background-color: #008cba;
+}
+
+.search {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.search input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+  color: black;
+}
+
+.search button {
+  padding: 10px;
+  background-color: #008cba;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-user-button {
+  background-color: #008cba;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  color: white; /* 修改表格字体颜色 */
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.Modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  width: 300px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  color: black; /* 修改模态框字体颜色 */
+}
+
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .tabs {
+      flex-direction: column;
   }
-  
-  .admin-add-user-button {
-    background-color: #008cba;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-bottom: 20px;
+
+  .search {
+      flex-direction: column;
   }
-  
-  .admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    color: #ffffff;
+
+  .search input, .search button {
+      width: 100%;
+      margin-bottom: 10px;
   }
-  
-  .admin-th,
-  .admin-td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-    color: #000000;
-  }
-  
-  .admin-delete-button {
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
-  .admin-Modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border: 1px solid #ccc;
-    width: 300px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-    color: #000000;
-  }
-  
-  .admin-Overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-  
+}
