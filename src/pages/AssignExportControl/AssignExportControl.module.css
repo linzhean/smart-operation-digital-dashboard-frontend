@@ -1,0 +1,69 @@
+.filterButton {
+  display: flex;
+  width: 100%;
+  height: fit-content;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.filterButton button {
+  margin-right: 0.5rem;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  min-width: 50px;
+  background: #FFFFFF;
+  border: 2px solid #1E90FF;
+  border-radius: 4px;
+  color: black;
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  overflow: hidden;
+  transition: 0.5s;
+  padding: 7px 17px;
+}
+
+.filterButton button span {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+  background-color: #1E90FF;
+  transform: translateY(150%);
+  border-radius: 50%;
+  left: calc((var(--n) - 1) * 25%);
+  transition: 0.5s;
+  transition-delay: calc((var(--n) - 1) * 0.07s);
+  z-index: -1;
+}
+
+.filterButton button:hover,
+.filterButton button:focus {
+  color: black;
+}
+
+.filterButton button:hover span {
+  transform: translateY(0) scale(2);
+}
+
+.filterButton button span:nth-child(1) {
+  --n: 1;
+}
+
+.filterButton button span:nth-child(2) {
+  --n: 2;
+}
+
+.filterButton button span:nth-child(3) {
+  --n: 3;
+}
+
+.filterButton button span:nth-child(4) {
+  --n: 4;
+}
+
+.filterActive {
+  background: #1E90FF !important;
+}
