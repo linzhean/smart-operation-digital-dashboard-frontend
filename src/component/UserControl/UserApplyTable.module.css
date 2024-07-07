@@ -1,0 +1,114 @@
+.theContent {
+  background-color: #343541;
+  height: 87vh;
+  margin-right: 5px;
+  border-radius: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  overflow: auto;
+}
+
+.tableTitle h2 {
+  font-size: 1.5rem;
+  margin: 10px !important;
+  margin-bottom: 15px !important;
+  font-weight: bolder;
+}
+
+.thePermissionList {
+  font-size: 1rem;
+  font-weight: bold;
+  height: 77vh;
+  width: 100%;
+  border-radius: 10px;
+  overflow: auto;
+}
+
+.thePermissionList table {
+  overflow: auto;
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  line-height: 1.5 !important;
+}
+
+.thePermissionList th,
+.thePermissionList td {
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px solid #444;
+  /* 分隔線顏色控制在這 */
+}
+
+.thePermissionList th {
+  background-color: #444;
+}
+
+.thePermissionList tr:nth-child(even) {
+  background-color: #444;
+}
+
+.thePermissionList tr:last-child td {
+  border-bottom: none;
+}
+
+.thePermissionList .disapproveButton {
+  margin-left: 5px;
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.thePermissionList .disapproveButton:hover {
+  background-color: #A52824;
+}
+
+.thePermissionList .approveButton {
+  margin-left: 5px;
+  background-color: #94C546;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.thePermissionList .approveButton:hover {
+  background-color: #6E8B30;
+}
+
+.loaderMsg,
+.endMsg {
+  text-align: center;
+  margin: 20px;
+}
+
+@media (max-width: 528px) {
+  .content .item {
+    width: 100%;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 0.8em;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ACACBE;
+  border: 0.1em solid #343541;
+  border-radius: 100vw;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(204, 204, 204, 0.5);
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}

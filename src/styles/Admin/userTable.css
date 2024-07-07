@@ -3,32 +3,36 @@
 .user-table {
     width: 100%;
     border-collapse: collapse;
-    color: #ffffff; /* 默认字体颜色 */
+    color: #ffffff;
+    /* 默认字体颜色 */
 }
 
-.user-table th, .user-table td {
+.user-table th,
+.user-table td {
     border: 1px solid #ddd;
     padding: 8px;
-    color: #ffffff; /* 表头和单元格的字体颜色 */
+    color: #ffffff;
+    /* 表头和单元格的字体颜色 */
 }
 
 .user-table th {
     background-color: #f2f2f2;
-    color: #333333; /* 表头的字体颜色 */
+    color: #333333;
+    /* 表头的字体颜色 */
 }
 
 /* 设置按钮的样式 */
-button {
+/* button {
     background-color: #f44336;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
-}
+} */
 
-button:hover {
+/* button:hover {
     background-color: #d32f2f;
-}
+} */
 
 /* 设置新增用户按钮的样式 */
 .add-user-button {
@@ -51,7 +55,8 @@ button:hover {
     border: 1px solid #ccc;
     width: 300px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-    color: #000000; /* 设置模态框中文本的字体颜色 */
+    color: #000000;
+    /* 设置模态框中文本的字体颜色 */
 }
 
 .Overlay {
