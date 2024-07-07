@@ -6,6 +6,9 @@ import Pdata from './component/Pdata';
 import Mail from './pages/Mail/Mail';
 import Navbar from './component/Common/Navbar';
 import DrawerNavigation from './component/Common/DrawerNavigation';
+import InterimKPIControl from './pages/InterimKPIControl/InterimKPIControl';
+import AssignExportControl from './pages/AssignExportControl/AssignExportControl'
+import UserControl from './pages/UserControl/UserControl';
 import { UserProvider } from './context/UserContext';
 import './component/Bootstrap/css/bootstrap.min.css';
 import './styles/Main.css';
@@ -34,9 +37,8 @@ const Main: React.FC = () => {
           selectedPage={selectedPage}
           selectPage={selectPage}
           toggleDrawer={toggleDrawer}
-          isNavbarCollapsed={isNavbarCollapsed}
-          toggleNavbar={toggleNavbar}
-        />
+          toggleNavbar={toggleNavbar} // 確保所有需要的屬性都在這裡
+       />
         
         <DrawerNavigation
           tabs={tabs}
@@ -51,8 +53,11 @@ const Main: React.FC = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/group" element={<Group users={users} addUser={addUser} deleteUser={deleteUser} />} />
             <Route path="/profile" element={<Pdata />} />
-            <Route path="/email" element={<Mail />} />
+            <Route path="/mail" element={<Mail />} />
             <Route path="*" element={<Navigate to="/home" />} />
+            <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
+            <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
+            <Route path="/UserControl/*" element={<UserControl />} />
           </Routes>
         </div>
       </div>

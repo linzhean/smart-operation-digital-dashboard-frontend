@@ -7,7 +7,6 @@ import BarChart from '../../component/Chart/BarChart';
 import DoughnutChart from '../../component/Chart/DoughnutChart';
 import ChartService from '../../services/ChartService';
 import '../../styles/Home.css';
-import '../../styles/content.css';
 
 interface Layout {
   i: string;
