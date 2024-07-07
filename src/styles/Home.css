@@ -1,51 +1,56 @@
 /* src/styles/Home.css */
 .Home {
-    padding: 20px;
-  }
-  
-  .staticContent {
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
+  padding: 20px;
+}
+
+.staticContent {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.dataCard {
+  background-color: #efefef;
+  border-radius: 0.5em;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  padding: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.revenueCard {
+  width: 100%;
+  height: 100%;
+}
+
+.customerCard {
+  width: 100%;
+  height: 100%;
+}
+
+.categoryCard {
+  width: 100%;
+  height: 100%;
+}
+
+.chart {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+/* Media Queries for RWD */
+@media (max-width: 768px) {
   .dataCard {
-    background-color: #efefef;
-    border-radius: 0.5em;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    padding: 1em;
-  }
-  
-  .revenueCard {
-    width: 92%;
-    height: 20rem;
-  }
-  
-  .customerCard {
-    width: 50%;
-    height: 20rem;
-  }
-  
-  .categoryCard {
-    width: 40%;
-    height: 20rem;
-  }
-  
-  .chart {
-    position: relative;
-    height: 100%;
     width: 100%;
+    height: auto;
   }
-  
-  /* Media Queries for RWD */
-  @media (max-width: 768px) {
-    .customerCard, .categoryCard {
-      width: 80%;
-    }
+}
+
+@media (max-width: 480px) {
+  .dataCard {
+    width: 100%;
+    height: auto;
   }
-  
-  @media (max-width: 480px) {
-    .revenueCard, .customerCard, .categoryCard {
-      width: 100%;
-    }
-  }
-  
+}

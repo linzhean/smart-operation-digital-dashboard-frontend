@@ -1,56 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styles from '../styles/Pdata.module.css';
-import Edit from '../assets/icon/edit-icon.svg';
-import { fetchUserData, updateUserData } from '../services/api/Pdata';
+import EditIcon from '../assets/icon/edit-icon.svg';
+import { useUserContext } from '../context/UserContext';
+import { fetchUserData, updateUserData } from '../services/Pdata'; // 更新为新的API服务路径
 
 const Pdata: React.FC = () => {
-  const [editable, setEditable] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    num: '',
-    email: '',
-    unit: '',
-    role: '',
-  });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        const data = await fetchUserData();
-        setFormData(data);
-      } catch (error) {
-        console.error('Error loading user data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUserData();
-  }, []);
+  const { state, dispatch } = useUserContext();
 
   const handleEditClick = () => {
-    setEditable(!editable);
+    dispatch({ type: 'SET_EDITABLE', payload: !state.editable });
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { id, value } = event.target;
-    setFormData({ ...formData, [id]: value });
+  const handleInputChange = (id: string, value: string) => {
+    dispatch({ type: 'UPDATE_FORM_DATA', payload: { id, value } });
   };
 
   const handleSaveClick = async () => {
-    setLoading(true);
+    dispatch({ type: 'SET_LOADING', payload: true });
     try {
-      await updateUserData(formData);
-      setEditable(false);
+      await updateUserData(state.formData);
+      dispatch({ type: 'SET_EDITABLE', payload: false });
     } catch (error) {
       console.error('Error updating user data:', error);
     } finally {
-      setLoading(false);
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
   };
 
-  if (loading) {
+  if (state.loading) {
     return <div>Loading...</div>;
   }
 
@@ -58,90 +35,84 @@ const Pdata: React.FC = () => {
     <main className={styles.section}>
       <div className={styles.container}>
         <form className="row g-3 needs-validation" noValidate>
-          <legend></legend>
-          <div className="col-md-12 listTitle">
-            您的個人資料
-          </div>
+          <legend>您的個人資料</legend>
           <div className="col-md-6">
-            <label htmlFor="validationName" className="form-label">姓名</label>
+            <label htmlFor="userName" className="form-label">姓名</label>
             <input
               type="text"
               className="form-control"
-              id="name"
-              value={formData.name}
+              id="userName"
+              value={state.formData.userName}
               required
-              disabled={!editable}
-              onChange={handleInputChange}
+              disabled={!state.editable}
+              onChange={(e) => handleInputChange(e.target.id, e.target.value)}
             />
           </div>
-          <div className="col-md-6"></div>
           <div className="col-md-6">
-            <label htmlFor="validationNum" className="form-label">工號</label>
+            <label htmlFor="userId" className="form-label">工號</label>
             <input
               type="text"
               className="form-control"
-              id="num"
-              value={formData.num}
+              id="userId"
+              value={state.formData.userId}
               required
-              disabled={!editable}
-              onChange={handleInputChange}
+              disabled={!state.editable}
+              onChange={(e) => handleInputChange(e.target.id, e.target.value)}
             />
           </div>
           <div className="col-md-6">
-            <label htmlFor="validationEmail" className="form-label">信箱<span id="gmail">(Gmail)</span></label>
-            <div className="input-group has-validation">
-              <input
-                type="text"
-                className="form-control"
-                id="email"
-                aria-describedby="inputGroupAppend"
-                value={formData.email}
-                disabled={!editable}
-                onChange={handleInputChange}
-              />
-            </div>
+            <label htmlFor="gmail" className="form-label">信箱 (Gmail)</label>
+            <input
+              type="text"
+              className="form-control"
+              id="gmail"
+              value={state.formData.gmail}
+              required
+              disabled={!state.editable}
+              onChange={(e) => handleInputChange(e.target.id, e.target.value)}
+            />
           </div>
           <div className="col-md-6">
-            <label htmlFor="validationUnit" className="form-label">所屬部門</label>
+            <label htmlFor="departmentName" className="form-label">所屬部門</label>
             <select
               className="form-select"
-              id="unit"
+              id="departmentName"
               required
-              disabled={!editable}
-              value={formData.unit}
-              onChange={handleInputChange}
+              disabled={!state.editable}
+              value={state.formData.departmentName}
+              onChange={(e) => handleInputChange(e.target.id, e.target.value)}
             >
               <option value="">...</option>
-              <option>銷售</option>
-              <option>生產</option>
-              <option>財務</option>
-              <option>審計</option>
+              <option value="sales">銷售</option>
+              <option value="production">生產</option>
+              <option value="finance">財務</option>
+              <option value="audit">審計</option>
             </select>
           </div>
           <div className="col-md-6">
-            <label htmlFor="validationRole" className="form-label">職稱</label>
+            <label htmlFor="position" className="form-label">職稱</label>
             <select
               className="form-select"
-              id="role"
+              id="position"
               required
-              disabled={!editable}
-              value={formData.role}
-              onChange={handleInputChange}
+              disabled={!state.editable}
+              value={state.formData.position}
+              onChange={(e) => handleInputChange(e.target.id, e.target.value)}
             >
               <option value="">...</option>
-              <option>一般員工</option>
-              <option>副理</option>
-              <option>經理</option>
+              <option value="employee">一般員工</option>
+              <option value="assistant-manager">副理</option>
+              <option value="manager">經理</option>
             </select>
           </div>
           <div className="col-12">
             <button
               type="button"
               className="btn btn-secondary"
-              onClick={editable ? handleSaveClick : handleEditClick}
+              onClick={state.editable ? handleSaveClick : handleEditClick}
             >
-              <img src={Edit} alt="Edit" />
-              {editable ? '保存' : '編輯'}
+              <img src={EditIcon} alt="Edit" />
+              {state.editable ? '保存' : '編輯'}
             </button>
           </div>
         </form>

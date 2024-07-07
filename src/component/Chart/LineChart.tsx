@@ -1,43 +1,76 @@
-// src/components/Charts/LineChart.tsx
-import React from "react";
-import { Line } from "react-chartjs-2";
-import revenueData from "../../data/revenueData.json";
+import React, { useEffect, useState } from 'react';
+import { Line } from 'react-chartjs-2';
+import ChartService from '../../services/ChartService';
+import '../../config/chartConfig';  // Import chart configuration
 
 const LineChart: React.FC = () => {
-  return (
-    <div className="revenueCard">
-      <Line
-        data={{
-          labels: revenueData.map((data) => data.label),
+  const [chartData, setChartData] = useState<any>({
+    labels: [],
+    datasets: [
+      {
+        label: 'Revenue',
+        data: [],
+        backgroundColor: '#064FF0',
+        borderColor: '#064FF0',
+        pointRadius: 5,
+      },
+      {
+        label: 'Cost',
+        data: [],
+        backgroundColor: '#FF3030',
+        borderColor: '#FF3030',
+      },
+    ],
+  });
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try {
+        const data = await ChartService.getAllCharts(); // Use the correct service method
+
+        setChartData({
+          ...chartData,
+          labels: data.map((item: any) => item.label),
           datasets: [
             {
-              label: "Revenue",
-              data: revenueData.map((data) => data.revenue),
-              backgroundColor: "#064FF0",
-              borderColor: "#064FF0",
-              pointRadius: 5, // Set point size for Line Chart
+              ...chartData.datasets[0],
+              data: data.map((item: any) => item.revenue),
             },
             {
-              label: "Cost",
-              data: revenueData.map((data) => data.cost),
-              backgroundColor: "#FF3030",
-              borderColor: "#FF3030",
+              ...chartData.datasets[1],
+              data: data.map((item: any) => item.cost),
             },
           ],
-        }}
-        options={{
-          elements: {
-            line: {
-              tension: 0.5,
-            },
-          },
-          plugins: {
-            title: {
-              text: "Monthly Revenue & Cost",
-            },
-          },
-        }}
-      />
+        });
+      } catch (error) {
+        console.error('Error fetching chart data:', error);
+      }
+    };
+
+    fetchChartData();
+  }, []);
+
+  const options = {
+    elements: {
+      line: {
+        tension: 0.5,
+      },
+    },
+    plugins: {
+      title: {
+        text: 'Monthly Revenue & Cost',
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
+  return (
+    <div className="revenueCard">
+      <Line data={chartData} options={options} />
     </div>
   );
 };

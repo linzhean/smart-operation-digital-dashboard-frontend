@@ -1,12 +1,12 @@
-.mainEmail {
+.mainEmailUnique {
   display: flex;
 }
 
-.leftside,
-.rightside {
+.leftsideUnique,
+.rightsideUnique {
   overflow: auto;
-  width: 50vw;
-  height: 87.5vh;
+  width: 100%;
+  height: 100%;
   background-color: #343541;
   color: #CCCCCC;
   border-radius: 15px;
@@ -14,24 +14,28 @@
   margin-top: 0px;
 }
 
-.leftside {
+.leftsideUnique {
   display: flex;
   margin-right: 3px;
   flex-direction: column;
 }
 
-.rightside {
+.rightsideUnique {
   margin-left: 3px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.hidden {
+.hiddenUnique {
   display: none;
 }
 
-.toggle-button {
+.toggle-buttonUnique,
+.create-buttonUnique,
+.update-buttonUnique,
+.delete-buttonUnique,
+.send-buttonUnique {
   background-color: #1E90FF;
   color: #fff;
   border: none;
@@ -43,39 +47,31 @@
 
 /* Media query for smaller screens */
 @media (max-width: 768px) {
-  .mainEmail {
+  .mainEmailUnique {
     flex-direction: column;
   }
 
-  .leftside,
-  .rightside {
+  .leftsideUnique,
+  .rightsideUnique {
     width: 100%;
     height: auto;
     margin: 5px 0;
   }
 
-  .leftside.hidden {
+  .leftsideUnique.hiddenUnique {
     display: none;
   }
 
-  .rightside.hidden {
+  .rightsideUnique.hiddenUnique {
     display: none;
   }
-}
 
-.toggle-button {
-  background-color: #1E90FF;
-  color: #fff;
-  border: none;
-  padding: 10px 10px; /* 调整按钮的内边距 */
-  cursor: pointer;
-  border-radius: 5px;
-  margin: 60px auto; /* 默认的 margin */
-
-  /* 响应式调整 */
-  @media (max-width: 768px) {
-    margin: 40px auto; /* 在小屏幕设备上调整 margin */
-    padding: 8px 8px; /* 在小屏幕设备上调整 padding */
+  .toggle-buttonUnique,
+  .create-buttonUnique,
+  .update-buttonUnique,
+  .delete-buttonUnique,
+  .send-buttonUnique {
+    margin: 40px auto;
+    padding: 8px;
   }
 }
-

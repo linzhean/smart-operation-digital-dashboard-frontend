@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../../styles/mainEmail.css';
 import Filter from '../../component/Mail/Leftside/Filter';
 import MailBreif from '../../component/Mail/Leftside/MailBreif';
 import ChatBox from '../../component/Mail/Rightside/ChatBox';
 import "../../styles/content.css";
+import { useEmails } from '../../Hook/useEmails';
 
 const Mail: React.FC = () => {
-  const [showRightSide, setShowRightSide] = useState(false);
+  const {
+    emails,
+    selectedEmail,
+    loading,
+    error,
+    selectEmail,
+    createNewEmail,
+    updateExistingEmail,
+    deleteExistingEmail,
+    sendSelectedEmail,
+  } = useEmails();
 
-  const handleMailItemClick = () => {
+  const [showRightSide, setShowRightSide] = React.useState(false);
+
+  const handleMailItemClick = async (id: string) => {
+    await selectEmail(id);
     setShowRightSide(true);
   };
 
@@ -17,16 +31,25 @@ const Mail: React.FC = () => {
   };
 
   return (
-    <main className="mainEmail">
-      <div className={`leftside ${showRightSide ? 'hidden' : ''}`}>
+    <main className="mainEmailUnique">
+      <div className={`leftsideUnique ${showRightSide ? 'hiddenUnique' : ''}`}>
+        {loading && <p>加载中...</p>}
+        {error && <p className="error">{error}</p>}
         <Filter />
-        <MailBreif onMailClick={handleMailItemClick} />
+        <MailBreif onMailClick={handleMailItemClick} emails={emails} />
+        <button className="create-buttonUnique" onClick={createNewEmail}>创建邮件</button>
       </div>
-      <div className={`rightside ${showRightSide ? '' : 'hidden'}`}>
-        <button className="toggle-button" onClick={handleBackClick}>
+      <div className={`rightsideUnique ${showRightSide ? '' : 'hiddenUnique'}`}>
+        <button className="toggle-buttonUnique" onClick={handleBackClick}>
           返回
         </button>
-        <ChatBox />
+        {selectedEmail && (
+          <div>
+            <ChatBox email={selectedEmail} />
+            <button className="delete-buttonUnique" onClick={() => deleteExistingEmail(selectedEmail.id)}>删除邮件</button>
+            <button className="send-buttonUnique" onClick={sendSelectedEmail}>发送邮件</button>
+          </div>
+        )}
       </div>
     </main>
   );

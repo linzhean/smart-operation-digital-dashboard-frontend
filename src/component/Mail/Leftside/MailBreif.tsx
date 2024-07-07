@@ -3,14 +3,15 @@ import '../../../styles/mailBreif.css';
 import MailItem from "./MailItem";
 
 interface MailBreifProps {
-  onMailClick?: () => void;
+  onMailClick?: (id: string) => void;
+  emails: any[];
 }
 
-const MailBreif: React.FC<MailBreifProps> = ({ onMailClick }) => {
+const MailBreif: React.FC<MailBreifProps> = ({ onMailClick, emails }) => {
   return (
     <div className="mailBreif">
-      {Array(6).fill(0).map((_, index) => (
-        <MailItem key={index} onClick={onMailClick} />
+      {emails.map((email) => (
+        <MailItem key={email.id} email={email} onClick={() => onMailClick && onMailClick(email.id)} />
       ))}
     </div>
   );
