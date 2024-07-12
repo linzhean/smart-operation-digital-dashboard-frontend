@@ -155,7 +155,6 @@ const NavBar: React.FC = () => {
               </Link>
             </li>
 
-
             {/* ＫＰＩ審核 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
@@ -166,9 +165,6 @@ const NavBar: React.FC = () => {
                 <span className={`${styles.navbarText} ${activeLink.startsWith('/InterimKPIControl') ? styles.activeNavLinkText : ''}`}>臨時KPI審核</span>
               </Link>
             </li>
-
-
-
 
             {/* 群組管理 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>

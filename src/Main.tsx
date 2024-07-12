@@ -13,6 +13,12 @@ import './component/Bootstrap/css/bootstrap.min.css';
 import './styles/Main.css';
 import useMain from './Hook/useMain';
 
+// 需要sideBar的頁面－套wrapper包裹sideBar以及內容
+// 用main_container包裹，控制內容顯示在右側
+// 所有不管如何都需套theContent
+// 無SideBar : theContent直接包
+// 有SideBar : main_container > theContent
+
 const Main: React.FC = () => {
   const {
     tabs,
@@ -31,7 +37,7 @@ const Main: React.FC = () => {
 
   return (
     <div className="App">
-      <Navbar
+      {/* <Navbar
         selectedPage={selectedPage}
         selectPage={selectPage}
         toggleDrawer={toggleDrawer}
@@ -43,19 +49,18 @@ const Main: React.FC = () => {
         onDeleteTab={deleteTab}
         isOpen={isDrawerOpen}
         toggleDrawer={toggleDrawer}
-      />
-      <div className="theContent">
-        <Routes>
-          <Route path="/home" element={<Home />} />
-          <Route path="/group" element={<Group users={users} addUser={addUser} deleteUser={deleteUser} />} />
-          <Route path="/profile" element={<Pdata />} />
-          <Route path="/mail" element={<Mail />} />
-          <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
-          <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
-          <Route path="/UserControl/*" element={<UserControl />} />
-          <Route path="*" element={<Navigate to="/home" />} />
-        </Routes>
-      </div>
+      /> */}
+      <Navbar />
+      <Routes>
+        <Route path="/home" element={<Home />} />
+        <Route path="/group" element={<Group users={users} addUser={addUser} deleteUser={deleteUser} />} />
+        <Route path="/profile" element={<Pdata />} />
+        <Route path="/mail" element={<Mail />} />
+        <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
+        <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
+        <Route path="/UserControl/*" element={<UserControl />} />
+        <Route path="*" element={<Navigate to="/home" />} />
+      </Routes>
     </div>
   );
 };
