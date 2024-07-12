@@ -122,6 +122,11 @@ const GroupList: React.FC = () => {
     }
   };
 
+  const handleDeleteGroup = () => {
+    if (window.confirm(`你確定要刪除此群組嗎？`)) {
+      // setMemberData(prevData => prevData.filter(member => member.id !== id));
+    }
+  };
   const handleAddMember = (newMembers: User[]) => {
     setMemberData(prevData => [...prevData, ...newMembers]);
     setAvailableMembers(prevData => prevData.filter(member => !newMembers.some(newMember => newMember.id === member.id)));
@@ -168,9 +173,11 @@ const GroupList: React.FC = () => {
                 onSubmit={handleAddMember}
               />
             )}
-            <Button variant="contained" color="primary" onClick={() => setShowMemberPicker(true)} >
-              刪除表單
+
+            <Button variant="contained" color="primary" className={styles.deleteGroupButton} onClick={() => handleDeleteGroup()}>
+              刪除群組
             </Button>
+
             <div className={styles.theList}>
               <table className="custom-scrollbar">
                 <thead>

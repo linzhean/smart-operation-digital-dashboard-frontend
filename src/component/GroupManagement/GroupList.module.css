@@ -14,9 +14,21 @@
 
 .addButton {
   position: absolute !important;
-  top: 10px;
+  top: -60px;
   right: 10px;
   z-index: 10;
+}
+
+.deleteGroupButton {
+  position: absolute !important;
+  top: -60px;
+  right: 105px;
+  z-index: 10;
+
+}
+
+.deleteGroupButton:hover {
+  background-color: #c9302c !important;
 }
 
 .theTable .addButton .theTable table {
