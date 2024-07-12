@@ -65,7 +65,7 @@ const UserStatusControl: React.FC = () => {
     try {
       const user = users[index];
       await toggleUserStatus(user.id);
-      const updatedUser = { ...user, status: user.status === '启用中' ? '停用' : '启用中' };
+      const updatedUser = { ...user, status: user.status === '啟用中' ? '停用' : '啟用中' };
       const updatedUsers = [...users];
       updatedUsers[index] = updatedUser;
       setUsers(updatedUsers);
@@ -107,34 +107,34 @@ const UserStatusControl: React.FC = () => {
     <div id="scrollableDiv" className={styles.tableContainer}>
       <div className={styles.tableFilters}>
         <select>
-          <option value="latest">排序：最新</option>
-          <option value="oldest">排序：最旧</option>
+          <option value="latest">工號：從大到小</option>
+          <option value="oldest">工號：從小到大</option>
         </select>
         <select>
-          <option value="all">部门：全部</option>
-          <option value="production">生产</option>
-          <option value="sales">销售</option>
-          <option value="materials">物料</option>
+          <option value="all">部門：全部</option>
+          <option value="production">生產部門</option>
+          <option value="sales">銷售部門</option>
+          <option value="materials">物料部門</option>
         </select>
-        <input type="search" placeholder="搜索..." />
+        <input type="search" placeholder="搜尋..." />
       </div>
       <InfiniteScroll
         dataLength={sortedUsers.length}
         next={fetchMoreData}
         hasMore={hasMore}
-        loader={<h4 className={styles.loaderMsg}>Loading...</h4>}
+        loader={<h4 className={styles.loaderMsg}>載入中</h4>}
         endMessage={<p className={styles.endMsg}>No more users</p>}
         scrollableTarget="scrollableDiv"
       >
         <table className={styles.userTable}>
           <thead>
             <tr>
-              <th>名称</th>
-              <th>工号</th>
-              <th>所属部门</th>
-              <th>电子邮箱</th>
-              <th>职称</th>
-              <th>状态</th>
+              <th>姓名</th>
+              <th>工號</th>
+              <th>所屬部門</th>
+              <th>電子郵箱</th>
+              <th>職稱</th>
+              <th>狀態</th>
             </tr>
           </thead>
           <tbody>
@@ -151,7 +151,7 @@ const UserStatusControl: React.FC = () => {
                       type="checkbox"
                       id={`dn-${index}`}
                       className={styles.dn}
-                      checked={user.status === '启用中'}
+                      checked={user.status === '啟用中'}
                       onChange={() => toggleStatus(index)}
                     />
                     <label htmlFor={`dn-${index}`} className={styles.toggle}>

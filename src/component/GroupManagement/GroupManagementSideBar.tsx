@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './GroupManagementSideBar.module.css';
-import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar: React.FC = () => {
   const [isActive, setIsActive] = useState(false);
   const [isDisabled, setIsDisabled] = useState(window.innerWidth > 1024);
-  const location = useLocation();
+  const [activeGroup, setActiveGroup] = useState<number | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,15 +36,19 @@ const Sidebar: React.FC = () => {
   return (
     <div className={`${styles.wrapper} ${isActive ? styles.active : ''}`}>
       <div className={styles.sidebar}>
+        {/* sideBar的遮罩 */}
         <div
           className={styles.bg_shadow}
           onClick={() => setIsActive(false)}
         ></div>
+
+        {/* 內部 */}
         <div className={styles.sidebar_inner}>
+
+          {/* 開關按鈕 */}
           <button
             className={styles.openbutton}
             onClick={() => {
-              console.log('我被點擊了');
               handleSidebarToggle();
             }}
             disabled={isDisabled}
@@ -55,22 +58,20 @@ const Sidebar: React.FC = () => {
             <img src={closearrow} alt="Click to close sidebar" />
           </div>
           <ul className={`${styles.siderbar_menu} mostly-customized-scrollbar`}>
+
             {/* 新增群組的按鈕 */}
-            <li className={location.pathname === "/UserControl/userApply" ? styles.active : ''}>
-              <Link to="/UserControl/userApply">
-                <div className={styles.title}>新增群組</div>
-              </Link>
+            <li>
+              <button className={styles.addButton}>新增群組</button>
             </li>
 
-            {/* 邏輯：遍歷總共有幾個群組 */}
-            {fakeGroups.map((group, index) => (
+            {/* 遍歷總共有幾個群組 */}
+            {fakeGroups.map((group) => (
               <li
                 key={group.id}
-                className={location.pathname === `/UserControl/group/${group.id}` ? styles.active : ''}
+                className={activeGroup === group.id ? styles.active : ''}
+                onClick={() => setActiveGroup(group.id)}
               >
-                <Link to={`/UserControl/group/${group.id}`}>
-                  <div className={styles.title}>{group.name}</div>
-                </Link>
+                <div className={styles.sidebartitle}>{group.name}</div>
               </li>
             ))}
           </ul>

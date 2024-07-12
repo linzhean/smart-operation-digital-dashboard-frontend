@@ -55,7 +55,7 @@ const Main: React.FC = () => {
         <Route path="/home" element={<Home />} />
         {/* <Route path="/group" element={<Group users={users} addUser={addUser} deleteUser={deleteUser} />} /> */}
         <Route path="/profile" element={<Pdata />} />
-        <Route path="/GroupManagement" element={<GroupManagement />} />
+        <Route path="/GroupManagement/*" element={<GroupManagement />} />
         <Route path="/mail" element={<Mail />} />
         <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
         <Route path="/AssignExportControl/*" element={<AssignExportControl />} />

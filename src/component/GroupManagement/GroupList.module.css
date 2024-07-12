@@ -1,0 +1,163 @@
+.theList {
+  color: #CCCCCC;
+  font-size: 1rem;
+  font-weight: 600;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.theTable {
+  position: relative;
+}
+
+.addButton {
+  position: absolute !important;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+.theTable .addButton .theTable table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: auto;
+  line-height: 2.5 !important;
+}
+
+.theTable th,
+.theTable td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+}
+
+.theTable th {
+  background-color: #444;
+  color: white;
+}
+
+.theTable tr:nth-child(even) {
+  background-color: #444;
+}
+
+/* 這邊可以控制 userPicker 按鈕 */
+.theTable button {
+  font-size: 1rem;
+  color: #CCCCCC;
+  background-color: rgba(255, 255, 255, 0);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+  padding: 0.5rem;
+  font-weight: bolder;
+}
+
+@media (max-width: 575px) {
+  .theList tr {
+    font-size: 1rem;
+  }
+
+  .theList button {
+    font-size: 1rem;
+    padding: 0 5px 0 5px;
+  }
+
+  .theList td {
+    font-size: 1rem;
+  }
+
+  .theTable td {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+
+.filterButton {
+  display: flex;
+  width: 100%;
+  height: fit-content;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.filterButton button {
+  margin-right: 0.5rem;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  min-width: 50px;
+  background: #FFFFFF;
+  border: 2px solid #1E90FF;
+  border-radius: 4px;
+  color: black;
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  overflow: hidden;
+  transition: 0.5s;
+  padding: 7px 17px;
+}
+
+.filterButton button span {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+  background-color: #1E90FF;
+  transform: translateY(150%);
+  border-radius: 50%;
+  left: calc((var(--n) - 1) * 25%);
+  transition: 0.5s;
+  transition-delay: calc((var(--n) - 1) * 0.07s);
+  z-index: -1;
+}
+
+.filterButton button:hover,
+.filterButton button:focus {
+  color: black;
+}
+
+.filterButton button:hover span {
+  transform: translateY(0) scale(2);
+}
+
+.filterButton button span:nth-child(1) {
+  --n: 1;
+}
+
+.filterButton button span:nth-child(2) {
+  --n: 2;
+}
+
+.filterButton button span:nth-child(3) {
+  --n: 3;
+}
+
+.filterButton button span:nth-child(4) {
+  --n: 4;
+}
+
+.filterActive {
+  background: #1E90FF !important;
+}
+
+.theTable .removeButton {
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  padding: 2px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.theTable .removeButton:hover {
+  background-color: #c9302c;
+}
