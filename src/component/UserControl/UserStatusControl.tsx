@@ -3,6 +3,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import styles from './UserStatusControl.module.css';
 import { fetchUsers, toggleUserStatus } from '../../services/UserAccountService';
 
+// 定義user資料
 interface User {
   name: string;
   id: string;
@@ -15,6 +16,8 @@ interface User {
 const UserStatusControl: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [departmentFilter, setDepartmentFilter] = useState<string>('all');
+  const [sortOrder, setSortOrder] = useState<string>('latest');
 
   useEffect(() => {
     loadInitialData();
@@ -54,6 +57,7 @@ const UserStatusControl: React.FC = () => {
       status: '停用',
     }));
 
+
     setUsers([...users, ...moreUsers]);
   };
 
@@ -69,6 +73,35 @@ const UserStatusControl: React.FC = () => {
       console.error('Error updating user status:', error);
     }
   };
+
+  const handleDepartmentFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setDepartmentFilter(e.target.value);
+  };
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortOrder(e.target.value);
+  };
+
+  const sortUsers = (users: User[]) => {
+    return users.sort((a, b) => {
+      const idA = parseInt(a.id, 10);
+      const idB = parseInt(b.id, 10);
+      if (sortOrder === 'latest') {
+        return idA - idB;
+      } else {
+        return idB - idA;
+      }
+    });
+  };
+
+  const filteredUsers = users.filter(user => {
+    if (departmentFilter === 'all') {
+      return true;
+    }
+    return user.department === departmentFilter;
+  });
+
+  const sortedUsers = sortUsers(filteredUsers);
 
   return (
     <div id="scrollableDiv" className={styles.tableContainer}>
@@ -86,7 +119,7 @@ const UserStatusControl: React.FC = () => {
         <input type="search" placeholder="搜索..." />
       </div>
       <InfiniteScroll
-        dataLength={users.length}
+        dataLength={sortedUsers.length}
         next={fetchMoreData}
         hasMore={hasMore}
         loader={<h4 className={styles.loaderMsg}>Loading...</h4>}

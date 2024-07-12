@@ -99,7 +99,7 @@ h2 {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 300010;
-  background: rgb(10, 10, 10);
+  background: #212121;
   color: #CCCCCC;
   padding: 20px;
   border-radius: 15px;
@@ -130,7 +130,7 @@ h2 {
   color: white;
   margin-bottom: 1.5rem;
   font-weight: bold;
-  background-color: black;
+  background-color: #212121;
   border: 1px solid #ccc;
   font-size: 1.1rem;
   border-radius: 5px;
