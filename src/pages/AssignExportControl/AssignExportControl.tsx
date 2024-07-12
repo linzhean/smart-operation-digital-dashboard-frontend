@@ -36,7 +36,7 @@ const AssignExportControl: React.FC = () => {
             className={activeButton === 'ExportPermission' ? styles.filterActive : ''}
           >
             匯出權限管理
-            {/* 裝飾不要刪 */}
+            {/* 裝飾不要刪!!!!! */}
             <span></span><span></span><span></span><span></span>
           </button>
 
@@ -47,7 +47,7 @@ const AssignExportControl: React.FC = () => {
             className={activeButton === 'AssignPermission' ? styles.filterActive : ''}
           >
             交辦權限管理
-            {/* 裝飾別刪 */}
+            {/* 裝飾別刪!!!!!!! */}
             <span></span><span></span><span></span><span></span>
           </button>
         </div>

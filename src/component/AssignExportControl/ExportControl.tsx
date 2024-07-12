@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './ExportControl.module.css';
+import UserPicker from './UserPicker';
 
 const AssignExportControl: React.FC = () => {
   return (
@@ -23,7 +24,8 @@ const AssignExportControl: React.FC = () => {
                 <tr key={index}>
                   <td>{item}</td>
                   <td>
-                    <button>擁有權限者：林哲安與其他???人</button>
+                    {/* <button>擁有權限者：林哲安與其他???人</button> */}
+                    <UserPicker />
                   </td>
                 </tr>
               ))}

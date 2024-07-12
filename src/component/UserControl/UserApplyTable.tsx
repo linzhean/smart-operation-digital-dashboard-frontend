@@ -45,6 +45,13 @@ const UserApplyTable: React.FC = () => {
     setEmployees([...employees, ...moreEmployees]);
   };
 
+  const handleDisapprove = (employeeId: string, name: string) => {
+    const confirmDisapprove = window.confirm(`確定要拒絕 ${name} 的申請嗎？`);
+    if (confirmDisapprove) {
+      setEmployees(employees.filter(employee => employee.employeeId !== employeeId));
+    }
+  };
+
   return (
     <>
       <div className={styles.tableTitle}><h2>待審核帳號列表</h2></div>
@@ -78,7 +85,12 @@ const UserApplyTable: React.FC = () => {
                   <td>{app.title}</td>
                   <td>
                     <button className={styles.approveButton}>開通</button>
-                    <button className={styles.disapproveButton}>刪除</button>
+                    <button
+                      className={styles.disapproveButton}
+                      onClick={() => handleDisapprove(app.employeeId, app.name)}
+                    >
+                      拒絕
+                    </button>
                   </td>
                 </tr>
               ))}
