@@ -44,7 +44,7 @@
   padding-bottom: 30px;
 }
 
-.sidebar_menu > li > a {
+.sidebar_menu>li>a {
   padding: 12px 20px;
   display: flex;
   align-items: center;
@@ -56,8 +56,8 @@
   font-size: 1.2rem;
 }
 
-.sidebar_menu > li.active > a,
-.sidebar_menu > li > a:hover {
+.sidebar_menu>li.active>a,
+.sidebar_menu>li>a:hover {
   color: white;
   font-weight: bold;
   border-left: 7px solid #acacbe;

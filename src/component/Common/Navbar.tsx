@@ -106,6 +106,7 @@ import userDataIcon from '../../assets/icon/userData-icon.svg';
 import AssignExportControlIcon from '../../assets/icon/AssignExportControl.svg';
 import InterimKPIControl from '../../assets/icon/InterimKPIControl.svg';
 import UserControl from '../../assets/icon/UserControl.svg';
+import { Dashboard } from '@mui/icons-material';
 
 const NavBar: React.FC = () => {
   const location = useLocation();
@@ -143,7 +144,6 @@ const NavBar: React.FC = () => {
               </Link>
             </li>
 
-
             {/* 使用者管理 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
@@ -167,7 +167,7 @@ const NavBar: React.FC = () => {
             </li>
 
             {/* 群組管理 */}
-            <li className={`nav-item ${styles.navbarNavItem}`}>
+            {/* <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
                 className={`nav-link ${styles.navLink} ${activeLink.startsWith('/group') ? styles.activeNavLink : ''}`}
                 to="/group"
@@ -175,18 +175,31 @@ const NavBar: React.FC = () => {
                 <img className={styles.navbarNavItemImg} src={groupIcon} alt="group" />
                 <span className={`${styles.navbarText} ${activeLink.startsWith('/group') ? styles.activeNavLinkText : ''}`}>群組</span>
               </Link>
+            </li> */}
+
+            {/* 群組管理2 */}
+            <li className={`nav-item ${styles.navbarNavItem}`}>
+              <Link
+                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/GroupManagement') ? styles.activeNavLink : ''}`}
+                to="/GroupManagement"
+              >
+                <img className={styles.navbarNavItemImg} src={groupIcon} alt="GroupManagement" />
+                <span className={`${styles.navbarText} ${activeLink.startsWith('/GroupManagement') ? styles.activeNavLinkText : ''}`}>群組</span>
+              </Link>
             </li>
+
             {/* 首頁－儀表板 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
-                className={`nav-link ${styles.navLink} ${activeLink === '/' ? styles.activeNavLink : ''}`}
-                aria-current="page"
-                to="/"
+                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/home') ? styles.activeNavLink : ''}`}
+                to="/home"
               >
-                <img className={styles.navbarNavItemImg} src={dashBoardIcon} alt="dashboard" />
-                <span className={`${styles.navbarText} ${activeLink === '/' ? styles.activeNavLinkText : ''}`}>儀表板</span>
+                <img className={styles.navbarNavItemImg} src={dashBoardIcon} alt="home" />
+                <span className={`${styles.navbarText} ${activeLink.startsWith('/home') ? styles.activeNavLinkText : ''}`}>儀表板</span>
               </Link>
             </li>
+
+
             {/* 信件 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link

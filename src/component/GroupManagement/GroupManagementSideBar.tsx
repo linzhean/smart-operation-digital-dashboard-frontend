@@ -27,7 +27,7 @@ const Sidebar: React.FC = () => {
     }
   };
 
-  // 假数据数组
+  // 假的數據
   const fakeGroups = [
     { id: 0, name: '生產群組' },
     { id: 1, name: '製造群組' },

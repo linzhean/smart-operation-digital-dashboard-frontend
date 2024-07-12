@@ -12,7 +12,7 @@ import UserControl from './pages/UserControl/UserControl';
 import './component/Bootstrap/css/bootstrap.min.css';
 import './styles/Main.css';
 import useMain from './Hook/useMain';
-
+import GroupManagement from './pages/GroupManagement/GroupManagement';
 // 需要sideBar的頁面－套wrapper包裹sideBar以及內容
 // 用main_container包裹，控制內容顯示在右側
 // 所有不管如何都需套theContent
@@ -53,8 +53,9 @@ const Main: React.FC = () => {
       <Navbar />
       <Routes>
         <Route path="/home" element={<Home />} />
-        <Route path="/group" element={<Group users={users} addUser={addUser} deleteUser={deleteUser} />} />
+        {/* <Route path="/group" element={<Group users={users} addUser={addUser} deleteUser={deleteUser} />} /> */}
         <Route path="/profile" element={<Pdata />} />
+        <Route path="/GroupManagement" element={<GroupManagement />} />
         <Route path="/mail" element={<Mail />} />
         <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
         <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
