@@ -44,7 +44,7 @@ const Main: React.FC = () => {
         isOpen={isDrawerOpen}
         toggleDrawer={toggleDrawer}
       />
-      <div className="content">
+      <div className="theContent">
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/group" element={<Group users={users} addUser={addUser} deleteUser={deleteUser} />} />

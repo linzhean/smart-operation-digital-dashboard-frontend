@@ -39,32 +39,34 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <div className="Home">
-      <ResponsiveGridLayout
-        className="layout"
-        layouts={{ lg: layout }}
-        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-        rowHeight={30}
-        onLayoutChange={(layout: Layout[]) => setLayout(layout)}
-      >
-        <div key="lineChart" className="dataCard">
-          <div className="revenueCard">
-            <LineChart />
+    <div className='theContent'>
+      <div className="Home">
+        <ResponsiveGridLayout
+          className="layout"
+          layouts={{ lg: layout }}
+          breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+          rowHeight={30}
+          onLayoutChange={(layout: Layout[]) => setLayout(layout)}
+        >
+          <div key="lineChart" className="dataCard">
+            <div className="revenueCard">
+              <LineChart />
+            </div>
           </div>
-        </div>
-        <div key="barChart" className="dataCard">
-          <div className="customerCard">
-            <BarChart />
+          <div key="barChart" className="dataCard">
+            <div className="customerCard">
+              <BarChart />
+            </div>
           </div>
-        </div>
-        <div key="doughnutChart" className="dataCard">
-          <div className="categoryCard">
-            <DoughnutChart />
+          <div key="doughnutChart" className="dataCard">
+            <div className="categoryCard">
+              <DoughnutChart />
+            </div>
           </div>
-        </div>
-      </ResponsiveGridLayout>
-    </div>
+        </ResponsiveGridLayout>
+      </div>
+      </div>
   );
 };
 
