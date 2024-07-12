@@ -32,11 +32,11 @@
   position: fixed;
   left: 0;
   height: 100vh;
-  z-index: 99999;
+  z-index: 9999;
   transition: all 0.3s ease;
 }
 
-.siderbar_menu {
+.sidebar_menu {
   background-color: black;
   height: 100%;
   overflow: auto;
@@ -44,23 +44,23 @@
   padding-bottom: 30px;
 }
 
-.siderbar_menu>li>a {
+.sidebar_menu > li > a {
   padding: 12px 20px;
   display: flex;
   align-items: center;
   position: relative;
   margin-bottom: 1px;
   color: rgba(172, 172, 190, 0.7);
-  font-weight: bolder;
+  font-weight: bold;
   justify-content: center;
   font-size: 1.2rem;
 }
 
-.siderbar_menu>li.active>a,
-.siderbar_menu>li>a:hover {
+.sidebar_menu > li.active > a,
+.sidebar_menu > li > a:hover {
   color: white;
-  font-weight: bolder;
-  border-left: 7px solid #ACACBE;
+  font-weight: bold;
+  border-left: 7px solid #acacbe;
   border-radius: 5px;
   padding-left: 3px;
 }

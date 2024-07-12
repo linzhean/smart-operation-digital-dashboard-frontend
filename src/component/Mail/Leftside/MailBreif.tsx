@@ -1,10 +1,11 @@
 import React from 'react';
 import '../../../styles/mailBreif.css';
 import MailItem from "./MailItem";
+import { Email } from '../../../services/mailService';
 
 interface MailBreifProps {
-  onMailClick?: (id: string) => void;
-  emails: any[];
+  onMailClick?: (id: number) => void;
+  emails: Email[];
 }
 
 const MailBreif: React.FC<MailBreifProps> = ({ onMailClick, emails }) => {

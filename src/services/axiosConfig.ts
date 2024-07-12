@@ -1,42 +1,39 @@
+// src/services/apiClient.ts
 import axios from 'axios';
 
+const API_BASE_URL = 'http://140.131.115.153:8080'; // 後端 API 基本 URL
+
 const apiClient = axios.create({
-  baseURL: 'http://140.131.115.153:8080',
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
-// 添加请求拦截器
+// 添加請求攔截器
 apiClient.interceptors.request.use(
   (config) => {
-    // 从localStorage中获取token
     const authToken = localStorage.getItem('authToken');
-    
     if (authToken) {
-      // 如果存在token，则将其添加到请求头中
       config.headers['Authorization'] = `Bearer ${authToken}`;
     }
-    
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error) // 直接返回 Promise 拒絕的錯誤
 );
 
-// 添加响应拦截器
+// 添加響應攔截器
 apiClient.interceptors.response.use(
-  (response) => {
-    // 对响应数据做点什么
-    return response;
-  },
+  (response) => response,
   (error) => {
     if (error.response) {
       const { errorCode, message } = error.response.data;
-      if (errorCode === "User - AccessDenied") {
-        // 如果是权限不足错误，提示用户重新登录
+      if (errorCode === 'User - AccessDenied') {
         alert(message);
-        // 这里可以添加逻辑，例如跳转到登录页面或登出用户
         localStorage.removeItem('authToken');
-        window.location.href = '/login'; // 假设有一个登录页面
+        window.location.href = '/login'; // 導向登錄頁面
+      } else {
+        alert(message || '發生錯誤，請稍後再試');
       }
     }
     return Promise.reject(error);

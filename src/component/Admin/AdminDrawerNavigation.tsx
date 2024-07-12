@@ -4,7 +4,7 @@ import '../../styles/Admin/adminDrawerNavigation.css';
 
 interface AdminDrawerNavigationProps {
   groups: Group[];
-  onAddGroup: (newGroup: Omit<Group, 'id'>) => void; // 更新這裡的類型
+  onAddGroup: (newGroup: Omit<Group, 'id'>) => void;
   onDeleteGroup: (groupId: number) => void;
   isOpen: boolean;
   toggleDrawer: () => void;
@@ -21,10 +21,29 @@ const AdminDrawerNavigation: React.FC<AdminDrawerNavigationProps> = ({
 }) => {
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
 
+  const handleGroupSelection = (groupId: number) => {
+    onSelectGroup(groupId);
+    setSelectedGroupId(groupId);
+  };
+
   if (!Array.isArray(groups)) {
     console.error('Expected groups to be an array, but got:', groups);
     return null; // Or handle the error in another way
   }
+
+  const handleAddGroup = () => {
+    const groupName = prompt('请输入群组名称:');
+    if (groupName) {
+      onAddGroup({
+        name: groupName,
+        available: true,
+        createId: 'admin',
+        createDate: new Date().toISOString(),
+        modifyId: 'admin',
+        modifyDate: null,
+      });
+    }
+  };
 
   return (
     <div className={`admin-drawer-navigation ${isOpen ? 'open' : 'closed'}`}>
@@ -34,10 +53,7 @@ const AdminDrawerNavigation: React.FC<AdminDrawerNavigationProps> = ({
           {groups.map((group) => (
             <li
               key={group.id}
-              onClick={() => {
-                onSelectGroup(group.id);
-                setSelectedGroupId(group.id); // Set the selected group id
-              }}
+              onClick={() => handleGroupSelection(group.id)}
               className={group.id === selectedGroupId ? 'active' : ''}
             >
               <span>{group.name}</span>
@@ -47,19 +63,12 @@ const AdminDrawerNavigation: React.FC<AdminDrawerNavigationProps> = ({
                   onDeleteGroup(group.id);
                 }}
               >
-                刪除
+                Delete
               </button>
             </li>
           ))}
         </ul>
-        <button onClick={(e) => onAddGroup({
-          name: '',
-          available: false,
-          createId: '',
-          createDate: '',
-          modifyId: '',
-          modifyDate: null
-        })}>添加群組</button>
+        <button onClick={handleAddGroup}>添加群组</button>
       </div>
       <div className="admin-drawer-toggle" onClick={toggleDrawer}>
         <span></span>

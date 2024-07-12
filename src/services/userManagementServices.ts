@@ -1,74 +1,48 @@
-import axios from 'axios';
-import { User } from './types/userManagement';
+import { User, Group } from './types/userManagement';
 import { Response } from './types/Request.type';
-import { getHeaders } from './apiHelper';
+import apiClient from './axiosConfig';
 
-const API_BASE_URL = 'http://140.131.115.153:8080';
+export const getGroups = async (): Promise<Group[]> => {
+  try {
+    const response = await apiClient.get<Response<Group[]>>('/group');
+    return response.data.data || [];
+  } catch (error: any) {
+    throw new Error('Failed to fetch groups: ' + error.message);
+  }
+};
 
 export const getUsers = async (): Promise<User[]> => {
   try {
-    const response = await axios.get<Response<User[]>>(`${API_BASE_URL}/user-account`, { headers: getHeaders() });
-    if (response.data.result) {
-      return response.data.data || [];
-    } else {
-      throw new Error(response.data.message || '獲取使用者失敗');
-    }
+    const response = await apiClient.get<Response<User[]>>('/user-account');
+    return response.data.data || [];
   } catch (error: any) {
-    throw new Error('獲取使用者失敗：' + error.message);
+    throw new Error('無法獲取用戶: ' + error.message);
   }
 };
 
-export const addUser = async (user: User): Promise<string> => {
+export const addUser = async (user: User): Promise<void> => {
   try {
-    const response = await axios.post<Response<null>>(`${API_BASE_URL}/user-account`, user, { headers: getHeaders() });
-    if (response.data.result) {
-      return response.data.message || '使用者添加成功';
-    } else {
-      throw new Error(response.data.message || '添加使用者失敗');
-    }
+    await apiClient.post<Response<void>>('/user-account', user);
   } catch (error: any) {
-    throw new Error('添加使用者失敗：' + error.message);
+    throw new Error('Failed to add user: ' + error.message);
   }
 };
 
-export const deleteUser = async (userId: string): Promise<string> => {
+export const deleteUser = async (userId: string): Promise<void> => {
   try {
-    const response = await axios.delete<Response<null>>(`${API_BASE_URL}/user-account/${userId}`, { headers: getHeaders() });
-    if (response.data.result) {
-      return response.data.message || '使用者刪除成功';
-    } else {
-      throw new Error(response.data.message || '刪除使用者失敗');
-    }
+    await apiClient.delete<Response<void>>(`/user-account/${userId}`);
   } catch (error: any) {
-    throw new Error('刪除使用者失敗：' + error.message);
+    throw new Error('Failed to delete user: ' + error.message);
   }
 };
 
-export const admitUser = async (userId: string): Promise<string> => {
+export const admitUser = async (userId: string): Promise<void> => {
   try {
-    const response = await axios.patch<Response<null>>(`${API_BASE_URL}/user-account/admit`, { userId }, { headers: getHeaders() });
-    if (response.data.result) {
-      return response.data.message || '使用者審核成功';
-    } else {
-      throw new Error(response.data.message || '審核使用者失敗');
-    }
+    await apiClient.patch<Response<void>>(`/user-account/${userId}`);
   } catch (error: any) {
-    throw new Error('審核使用者失敗：' + error.message);
+    throw new Error('Failed to admit user: ' + error.message);
   }
 };
 
-export const getUsersByDepartmentAndName = async (department: string, name: string, page: number): Promise<User[]> => {
-  try {
-    const response = await axios.get<Response<User[]>>(`${API_BASE_URL}/user-account/require/list`, {
-      params: { departmentId: department, name, nowPage: page },
-      headers: getHeaders()
-    });
-    if (response.data.result) {
-      return response.data.data || [];
-    } else {
-      throw new Error(response.data.message || '查詢使用者失敗');
-    }
-  } catch (error: any) {
-    throw new Error('查詢使用者失敗：' + error.message);
-  }
-};
+export type { User };
+   

@@ -1,5 +1,5 @@
 /* src\styles\Admin\userForm.css */
-/* .user-form {
+.user-form {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -23,4 +23,4 @@
   
   .user-form button:hover {
     background-color: #45a049;
-} */
+} 

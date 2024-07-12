@@ -1,62 +1,58 @@
 import { useState, useEffect } from 'react';
-import { Group } from '../services/types/userManagement';
-import { getGroups, addGroup as apiAddGroup, deleteGroup as apiDeleteGroup, editGroup as apiEditGroup, addGroup } from '../services/GroupApi';
+import { Group, User } from '../services/types/userManagement';
+import { 
+  fetchGroups, 
+  addGroup, 
+  deleteGroup, 
+  addUserToGroup,
+  fetchUsersByGroupId 
+} from '../services/GroupApi';
 
 const useGroupManagement = () => {
   const [groups, setGroups] = useState<Group[]>([]);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    fetchGroups();
+    const fetchGroupsData = async () => {
+      try {
+        const fetchedGroups = await fetchGroups();
+        setGroups(fetchedGroups);
+      } catch (error) {
+        console.error('無法獲取群組:', error);
+      }
+    };
+
+    fetchGroupsData();
   }, []);
 
-  const fetchGroups = async () => {
+  const handleAddGroup = async (group: Omit<Group, 'id'>) => {
     try {
-      const fetchedGroups = await getGroups();
-      setGroups(fetchedGroups);
+      const newGroup = await addGroup(group);
+      setGroups([...groups, newGroup]);
     } catch (error) {
-      console.error('Error fetching groups:', error);
-      // Handle error state or feedback
-    }
-  };
-
-  const handleAddGroup = async (newGroup: Omit<Group, 'id'>) => {
-    try {
-      const message = await addGroup(newGroup);
-      console.log(message);
-      const updatedGroups = await getGroups();
-      setGroups(updatedGroups);
-    } catch (error) {
-      console.error('添加群組失敗:', error);
-      // 如果需要，處理錯誤狀態或反饋信息
+      console.error('無法新增群組:', error);
     }
   };
 
   const handleDeleteGroup = async (groupId: number) => {
     try {
-      const message = await apiDeleteGroup(groupId);
-      console.log(message); // Optional: Log success message
-      fetchGroups(); // Refresh groups after deleting
+      await deleteGroup(groupId);
+      setGroups(groups.filter(group => group.id !== groupId));
     } catch (error) {
-      console.error('Error deleting group:', error);
-      // Handle error state or feedback
+      console.error('無法刪除群組:', error);
     }
   };
 
-  const handleEditGroup = async (editedGroup: Group) => {
+  const handleSelectGroup = async (groupId: number) => {
+    setSelectedGroupId(groupId);
     try {
-      const message = await apiEditGroup(editedGroup);
-      console.log(message); // Optional: Log success message
-      fetchGroups(); // Refresh groups after editing
+      const fetchedUsers = await fetchUsersByGroupId(groupId);
+      setUsers(fetchedUsers);
     } catch (error) {
-      console.error('Error editing group:', error);
-      // Handle error state or feedback
+      console.error('無法獲取所選群組的用戶:', error);
     }
-  };
-
-  const handleSelectGroup = (groupId: number) => {
-    // Implement your logic for selecting a group
-    console.log('Selected group:', groupId);
   };
 
   const toggleDrawer = () => {
@@ -66,11 +62,13 @@ const useGroupManagement = () => {
   return {
     groups,
     isDrawerOpen,
-    handleAddGroup,
-    handleDeleteGroup,
-    handleEditGroup,
-    handleSelectGroup,
+    addGroup: handleAddGroup,
+    deleteGroup: handleDeleteGroup,
+    selectGroup: handleSelectGroup,
     toggleDrawer,
+    addUserToGroup,
+    users,
+    selectedGroupId,
   };
 };
 

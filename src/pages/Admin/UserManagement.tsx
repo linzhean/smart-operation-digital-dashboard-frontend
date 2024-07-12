@@ -2,11 +2,12 @@ import React from 'react';
 import AdminDrawerNavigation from '../../component/Admin/AdminDrawerNavigation';
 import AdminNavbar from '../../component/Admin/AdminNavbar';
 import UserTable from '../../component/Admin/User/UserTable';
-import UserForm from '../../component/Admin/User/UserForm';
+import UserList from '../../component/Admin/User/UserList';
 import UserChart from '../../component/Admin/Chart/UserChart';
 import Modal from 'react-modal';
 import '../../styles/Admin/userManagement.css';
 import useUserManagement from '../../Hook/useUserManagement';
+import { addUserToGroup } from '../../services/GroupApi';
 
 Modal.setAppElement('#root');
 
@@ -31,14 +32,19 @@ const UserManagement: React.FC = () => {
     setActiveTab,
     setSelectedPage,
     setIsNavbarCollapsed,
+    selectedGroupId, // 確保 selectedGroupId 被正確解構
   } = useUserManagement();
+
+  const handleDeleteUserFromGroup = (userId: string) => {
+    console.log(`Deleting user ${userId} from group`);
+  };
 
   const renderContent = () => {
     switch (selectedPage) {
       case 'home':
         return (
           <div className="user-management-content">
-            <h2>User Management</h2>
+            <h2>用戶管理</h2>
             <AdminNavbar
               selectedPage={selectedPage}
               selectPage={setSelectedPage}
@@ -50,9 +56,9 @@ const UserManagement: React.FC = () => {
               groups={groups}
               onAddGroup={handleAddGroup}
               onDeleteGroup={handleDeleteGroup}
+              onSelectGroup={handleSelectGroup}
               isOpen={isDrawerOpen}
               toggleDrawer={toggleDrawer}
-              onSelectGroup={handleSelectGroup}
             />
             <div className="content">
               <div className="tabs">
@@ -60,26 +66,26 @@ const UserManagement: React.FC = () => {
                   className={activeTab === 'users' ? 'active' : ''}
                   onClick={() => setActiveTab('users')}
                 >
-                  Users
+                  用戶
                 </button>
                 <button
                   className={activeTab === 'charts' ? 'active' : ''}
                   onClick={() => setActiveTab('charts')}
                 >
-                  Charts
+                  圖表
                 </button>
               </div>
               {activeTab === 'users' && (
                 <div className="tab-content">
-                  <button onClick={openModal}>Add User</button>
+                  <button onClick={openModal}>添加用戶</button>
                   <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
-                    <UserForm addUser={addUserHandler} />
+                    <UserList addUserToGroup={addUserToGroup} selectedGroupId={selectedGroupId} /> {/* 確認使用 */}
                   </Modal>
                   <UserTable
                     users={users}
                     deleteUser={deleteUserHandler}
                     admitUser={admitUserHandler}
-                    onAddUserToGroup={() => {}} // 根据需要传递添加用户到群组的逻辑
+                    onDeleteUserFromGroup={handleDeleteUserFromGroup}
                   />
                 </div>
               )}
@@ -92,7 +98,7 @@ const UserManagement: React.FC = () => {
           </div>
         );
       default:
-        return <div>Page not found</div>;
+        return <div>頁面未找到</div>;
     }
   };
 

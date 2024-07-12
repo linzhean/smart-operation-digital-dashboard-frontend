@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styles from './UserApplyTable.module.css';
+import { fetchUsers, admitUser } from '../../services/UserAccountService';
 
 interface EmployeeData {
   name: string;
@@ -10,39 +11,55 @@ interface EmployeeData {
   title: string;
 }
 
-const initialEmployees: EmployeeData[] = [
-  { name: 'Amy', employeeId: 'E001', department: 'Finance', email: 'amy@gmail.com', title: 'Analyst' },
-  { name: 'Bob', employeeId: 'E002', department: 'HR', email: 'bob@gmail.com', title: 'HR Manager' },
-  { name: 'Cathy', employeeId: 'E003', department: 'IT', email: 'cathy@gmail.com', title: 'Developer' },
-  { name: 'David', employeeId: 'E004', department: 'Sales', email: 'david@gmail.com', title: 'Sales Representative' },
-  { name: 'Eva', employeeId: 'E005', department: 'Marketing', email: 'eva@gmail.com', title: 'Marketing Specialist' },
-  { name: 'Frank', employeeId: 'E006', department: 'Support', email: 'frank@gmail.com', title: 'Support Engineer' },
-  { name: 'Grace', employeeId: 'E007', department: 'Legal', email: 'grace@gmail.com', title: 'Legal Advisor' },
-  { name: 'Henry', employeeId: 'E008', department: 'Operations', email: 'henry@gmail.com', title: 'Operations Manager' },
-  { name: 'Ivy', employeeId: 'E009', department: 'Admin', email: 'ivy@gmail.com', title: 'Administrative Assistant' },
-  { name: 'Jack', employeeId: 'E010', department: 'R&D', email: 'jack@gmail.com', title: 'Research Scientist' }
-];
-
 const UserApplyTable: React.FC = () => {
-  const [employees, setEmployees] = useState<EmployeeData[]>(initialEmployees);
+  const [employees, setEmployees] = useState<EmployeeData[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
 
-  const fetchMoreData = () => {
-    if (employees.length >= 200) { // 假設總共只有 200 個用戶，下面自動產生假的用戶
+  useEffect(() => {
+    loadInitialData();
+  }, []);
+
+  const loadInitialData = async () => {
+    try {
+      const data = await fetchUsers();
+      if (Array.isArray(data)) {
+        setEmployees(data);
+        setHasMore(false); // 假设初始加载不需要分页
+      } else {
+        console.error('Error: fetchUsers returned data that is not an array.');
+      }
+    } catch (error) {
+      console.error('Error loading initial data:', error);
+    }
+  };
+
+  const fetchMoreData = async () => {
+    // 模拟加载更多数据的逻辑
+    if (employees.length >= 200) {
       setHasMore(false);
       return;
     }
 
-    // 模擬獲取更多數據
     const moreEmployees: EmployeeData[] = Array.from({ length: 20 }).map((_, index) => ({
-      name: `新用戶 ${employees.length + index + 1}`,
+      name: `New User ${employees.length + index + 1}`,
       employeeId: `E${employees.length + index + 11}`,
-      department: '部門',
-      email: `newuser${employees.length + index + 1}@gmail.com`,
-      title: '職稱',
+      department: 'Department',
+      email: `newuser${employees.length + index + 1}@example.com`,
+      title: 'Title',
     }));
 
     setEmployees([...employees, ...moreEmployees]);
+  };
+
+  const admitEmployee = async (index: number) => {
+    try {
+      const employee = employees[index];
+      await admitUser(employee.employeeId);
+      const updatedEmployees = employees.filter((_, i) => i !== index);
+      setEmployees(updatedEmployees);
+    } catch (error) {
+      console.error('Error admitting user:', error);
+    }
   };
 
   return (
@@ -57,7 +74,7 @@ const UserApplyTable: React.FC = () => {
           endMessage={<p className={styles.endMsg}>沒有更多囉</p>}
           scrollableTarget="scrollableDiv"
         >
-          <table className={styles.customScrollbar}>
+          <table className={styles.thePermissionList}>
             <thead>
               <tr>
                 <th>申請人</th>
@@ -69,15 +86,15 @@ const UserApplyTable: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {employees.map((app, index) => (
+              {Array.isArray(employees) && employees.map((employee, index) => (
                 <tr key={index}>
-                  <td>{app.name}</td>
-                  <td>{app.employeeId}</td>
-                  <td>{app.department}</td>
-                  <td>{app.email}</td>
-                  <td>{app.title}</td>
+                  <td>{employee.name}</td>
+                  <td>{employee.employeeId}</td>
+                  <td>{employee.department}</td>
+                  <td>{employee.email}</td>
+                  <td>{employee.title}</td>
                   <td>
-                    <button className={styles.approveButton}>開通</button>
+                    <button className={styles.approveButton} onClick={() => admitEmployee(index)}>開通</button>
                     <button className={styles.disapproveButton}>刪除</button>
                   </td>
                 </tr>

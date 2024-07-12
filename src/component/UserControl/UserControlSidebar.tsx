@@ -30,10 +30,7 @@ const Sidebar: React.FC = () => {
   return (
     <div className={`${styles.wrapper} ${isActive ? styles.active : ''}`}>
       <div className={styles.sidebar}>
-        <div
-          className={styles.bg_shadow}
-          onClick={() => setIsActive(false)}
-        ></div>
+        <div className={styles.bg_shadow} onClick={() => setIsActive(false)}></div>
         <div className={styles.sidebar_inner}>
           <button
             className={styles.openbutton}
@@ -47,7 +44,7 @@ const Sidebar: React.FC = () => {
           <div className={styles.close} onClick={() => setIsActive(false)}>
             <img src={closearrow} alt="Click to close sidebar" />
           </div>
-          <ul className={`${styles.siderbar_menu} mostly-customized-scrollbar`}>
+          <ul className={`${styles.sidebar_menu} mostly-customized-scrollbar`}>
             <li className={location.pathname === "/UserControl/userApply" ? styles.active : ''}>
               <Link to="/UserControl/userApply">
                 <div className={styles.title}>待審核清單</div>

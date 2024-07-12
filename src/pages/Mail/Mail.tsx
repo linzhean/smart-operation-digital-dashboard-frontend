@@ -14,20 +14,23 @@ const Mail: React.FC = () => {
     error,
     selectEmail,
     createNewEmail,
-    updateExistingEmail,
     deleteExistingEmail,
     sendSelectedEmail,
   } = useEmails();
 
   const [showRightSide, setShowRightSide] = React.useState(false);
 
-  const handleMailItemClick = async (id: string) => {
+  const handleMailItemClick = async (id: number) => {
     await selectEmail(id);
     setShowRightSide(true);
   };
 
   const handleBackClick = () => {
     setShowRightSide(false);
+  };
+
+  const handleCreateEmailClick = async () => {
+    await createNewEmail({});
   };
 
   return (
@@ -37,7 +40,7 @@ const Mail: React.FC = () => {
         {error && <p className="error">{error}</p>}
         <Filter />
         <MailBreif onMailClick={handleMailItemClick} emails={emails} />
-        <button className="create-buttonUnique" onClick={createNewEmail}>创建邮件</button>
+        <button className="create-buttonUnique" onClick={handleCreateEmailClick}>创建邮件</button>
       </div>
       <div className={`rightsideUnique ${showRightSide ? '' : 'hiddenUnique'}`}>
         <button className="toggle-buttonUnique" onClick={handleBackClick}>

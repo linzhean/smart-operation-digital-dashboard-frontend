@@ -1,9 +1,10 @@
 import React from 'react';
 import '../../../styles/mailItem.css';
 import KPI from '../../../assets/icon/testKPI.svg';
+import { Email } from '../../../services/mailService';
 
 interface MailItemProps {
-  email: any;
+  email: Email;
   onClick?: () => void;
 }
 
@@ -12,10 +13,10 @@ const MailItem: React.FC<MailItemProps> = ({ email, onClick }) => {
     <div className="leftmail" onClick={onClick}>
       <div className="kpi">
         <img src={KPI} alt="KPI" />
-        <div className="kpiname">{email.subject}</div>
+        <div className="kpiname">{email.name}</div>
         <h5 className="caption">{email.content}</h5>
-        <h6 className="assignor">发起人: {email.sender}</h6>
-        <h6 className="time">{email.date}</h6>
+        <h6 className="assignor">发起人: {email.publisher}</h6>
+        <h6 className="time">{email.createDate}</h6>
       </div>
     </div>
   );
