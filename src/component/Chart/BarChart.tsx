@@ -1,10 +1,22 @@
+// src/component/Chart/BarChart.tsx
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import ChartService from '../../services/ChartService';
-import '../../config/chartConfig';  // Import chart configuration
+import '../../config/chartConfig';
+
+interface ChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor: string[];
+    borderRadius: number;
+    barThickness: number;
+  }[];
+}
 
 const BarChart: React.FC = () => {
-  const [chartData, setChartData] = useState<any>({
+  const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [
       {
@@ -27,7 +39,6 @@ const BarChart: React.FC = () => {
         const data = await ChartService.getAllCharts();
 
         setChartData({
-          ...chartData,
           labels: data.map((item: any) => item.label),
           datasets: [
             {

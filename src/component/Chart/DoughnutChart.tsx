@@ -1,10 +1,21 @@
+// src/component/Chart/DoughnutChart.tsx
 import React, { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import ChartService from '../../services/ChartService';
-import '../../config/chartConfig';  // Import chart configuration
+import '../../config/chartConfig';
+
+interface ChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor: string[];
+    borderColor: string[];
+  }[];
+}
 
 const DoughnutChart: React.FC = () => {
-  const [chartData, setChartData] = useState<any>({
+  const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [
       {
@@ -30,7 +41,6 @@ const DoughnutChart: React.FC = () => {
         const data = await ChartService.getAvailableCharts();
 
         setChartData({
-          ...chartData,
           labels: data.map((item: any) => item.label),
           datasets: [
             {

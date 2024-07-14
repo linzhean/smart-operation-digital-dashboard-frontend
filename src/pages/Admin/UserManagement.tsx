@@ -8,6 +8,7 @@ import Modal from 'react-modal';
 import '../../styles/Admin/userManagement.css';
 import useUserManagement from '../../Hook/useUserManagement';
 import { addUserToGroup } from '../../services/GroupApi';
+import { User } from '../../services/types/userManagement'; // Assuming User interface exists
 
 Modal.setAppElement('#root');
 
@@ -32,7 +33,7 @@ const UserManagement: React.FC = () => {
     setActiveTab,
     setSelectedPage,
     setIsNavbarCollapsed,
-    selectedGroupId, // 確保 selectedGroupId 被正確解構
+    selectedGroupId, // Ensure selectedGroupId is correctly destructured
   } = useUserManagement();
 
   const handleDeleteUserFromGroup = (userId: string) => {
@@ -79,7 +80,7 @@ const UserManagement: React.FC = () => {
                 <div className="tab-content">
                   <button onClick={openModal}>添加用戶</button>
                   <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
-                    <UserList addUserToGroup={addUserToGroup} selectedGroupId={selectedGroupId} /> {/* 確認使用 */}
+                    <UserList addUserToGroup={addUserToGroup} selectedGroupId={selectedGroupId} />
                   </Modal>
                   <UserTable
                     users={users}

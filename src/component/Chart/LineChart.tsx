@@ -1,10 +1,22 @@
+// src/component/Chart/LineChart.tsx
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import ChartService from '../../services/ChartService';
-import '../../config/chartConfig';  // Import chart configuration
+import '../../config/chartConfig';
+
+interface ChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor: string;
+    borderColor: string;
+    pointRadius?: number;
+  }[];
+}
 
 const LineChart: React.FC = () => {
-  const [chartData, setChartData] = useState<any>({
+  const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [
       {
@@ -26,10 +38,9 @@ const LineChart: React.FC = () => {
   useEffect(() => {
     const fetchChartData = async () => {
       try {
-        const data = await ChartService.getAllCharts(); // Use the correct service method
+        const data = await ChartService.getAllCharts();
 
         setChartData({
-          ...chartData,
           labels: data.map((item: any) => item.label),
           datasets: [
             {

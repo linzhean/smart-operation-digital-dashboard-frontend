@@ -10,11 +10,12 @@
 
 .theTable {
   position: relative;
+  padding-top: 2.5rem; /* Adjust padding to make room for the button */
 }
 
 .addButton {
   position: absolute !important;
-  top: 10px;
+  top: -2.5rem; /* Move button to the top of the table */
   right: 10px;
   z-index: 10;
 }

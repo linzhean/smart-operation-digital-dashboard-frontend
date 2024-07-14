@@ -2,7 +2,6 @@
   position: relative;
 }
 
-/* 新增群組按鈕的樣式 */
 .addButton {
   background: none;
   padding: 8px 31px;
@@ -10,9 +9,8 @@
   align-items: center;
   margin-bottom: 1px;
   color: rgba(172, 172, 190, 0.7);
-  font-weight: bolder;
+  font-weight: bold;
   justify-content: center;
-  align-items: center;
   font-size: 1.2rem;
   border: none;
   transition: transform 0.2s, color 0.2s;
@@ -20,7 +18,7 @@
 
 .addButton:hover {
   color: white;
-  font-weight: bolder;
+  font-weight: bold;
   transform: scale(1.2);
 }
 
@@ -58,7 +56,7 @@
   transition: all 0.3s ease;
 }
 
-.siderbar_menu {
+.sidebar_menu {
   background-color: black;
   height: 100%;
   overflow: auto;
@@ -72,27 +70,27 @@
   align-items: center;
   position: relative;
   margin-bottom: 1px;
-  color: rgba(172, 172, 190, 0.7);
-  font-weight: bolder;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
   justify-content: center;
   font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.sidebartitle:hover {
+  color: white;
+  font-weight: bold;
+  border-left: 7px solid #ACACBE;
+  border-radius: 5px;
+  padding-left: 10px;
 }
 
 .active .sidebartitle {
   color: white;
-  font-weight: bolder;
+  font-weight: bold;
   border-left: 7px solid #ACACBE;
   border-radius: 5px;
-  padding-left: 3px;
-}
-
-
-.sidebartitle:hover {
-  color: white;
-  font-weight: bolder;
-  border-left: 7px solid #ACACBE;
-  border-radius: 5px;
-  padding-left: 3px;
+  padding-left: 10px;
 }
 
 .close {

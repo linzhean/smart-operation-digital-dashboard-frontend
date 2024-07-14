@@ -1,39 +1,39 @@
-import axios from 'axios';
+// src/services/ChartService.ts
 
-const API_BASE_URL = 'http://140.131.115.153:8080';
+import axiosInstance from './axiosConfig';
 
 const ChartService = {
   getAllCharts: async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/chart/all`);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching all charts:', error);
-      throw error;
-    }
+    const response = await axiosInstance.get('/chart/all');
+    return response.data;
   },
 
   getAvailableCharts: async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/chart/available`);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching available charts:', error);
-      throw error;
-    }
+    const response = await axiosInstance.get('/chart/available');
+    return response.data;
   },
 
   getDashboardCharts: async (dashboardId: number) => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/chart`, {
-        params: { dashboardId }
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching dashboard charts:', error);
-      throw error;
-    }
-  }
+    const response = await axiosInstance.get('/chart', {
+      params: { dashboardId }
+    });
+    return response.data;
+  },
+
+  createChart: async (chart: any) => {
+    const response = await axiosInstance.post('/chart', chart);
+    return response.data;
+  },
+
+  updateChart: async (id: string, chart: any) => {
+    const response = await axiosInstance.put(`/chart/${id}`, chart);
+    return response.data;
+  },
+
+  deleteChart: async (id: string) => {
+    const response = await axiosInstance.delete(`/chart/${id}`);
+    return response.data;
+  },
 };
 
 export default ChartService;

@@ -12,14 +12,14 @@ export interface Group {
 }
 
 export interface User {
-  [x: string]: ReactNode;
-  id: string;
+  id: string; // 假設這是用戶的唯一 ID
   name: string;
   department: string;
   position: string;
-  available: boolean; // 添加属性
-  email: string; // 添加属性
+  available: boolean;
+  email: string;
 }
+
 
 export interface EmployeeData {
   name: string;

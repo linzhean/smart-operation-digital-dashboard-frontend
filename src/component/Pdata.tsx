@@ -2,10 +2,12 @@ import React from 'react';
 import styles from '../styles/Pdata.module.css';
 import EditIcon from '../assets/icon/edit-icon.svg';
 import { useUserContext } from '../context/UserContext';
-import { fetchUserData, updateUserData } from '../services/Pdata'; // 更新为新的API服务路径
+import { updateUserData } from '../services/Pdata'; // Updated API service path
+import { useNavigate } from 'react-router-dom';
 
 const Pdata: React.FC = () => {
   const { state, dispatch } = useUserContext();
+  const navigate = useNavigate();
 
   const handleEditClick = () => {
     dispatch({ type: 'SET_EDITABLE', payload: !state.editable });
@@ -18,18 +20,20 @@ const Pdata: React.FC = () => {
   const handleSaveClick = async () => {
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
-      await updateUserData(state.formData);
-      dispatch({ type: 'SET_EDITABLE', payload: false });
+      await updateUserData(state.formData); // Call the updated API function
+      dispatch({ type: 'SET_EDITABLE', payload: true }); // Set editable to true after successful save
     } catch (error) {
       console.error('Error updating user data:', error);
+      alert('Failed to update user data. Please try again.');
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
   };
 
-  if (state.loading) {
-    return <div>Loading...</div>;
-  }
+  const handleLogoutClick = () => {
+    localStorage.removeItem('authToken'); // 清除本地存儲的 authToken
+    navigate('/login'); // 導航到登錄頁面
+  };
 
   return (
     <main className={styles.section}>
@@ -108,7 +112,7 @@ const Pdata: React.FC = () => {
           <div className="col-12">
             <button
               type="button"
-              className="btn btn-secondary"
+              className={`btn ${state.editable ? 'btn-secondary' : 'btn-danger'}`}
               onClick={state.editable ? handleSaveClick : handleEditClick}
             >
               <img src={EditIcon} alt="Edit" />
@@ -116,6 +120,17 @@ const Pdata: React.FC = () => {
             </button>
           </div>
         </form>
+        <div className={styles.logoutContainer}>
+          {!state.editable && (
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={handleLogoutClick}
+            >
+              登出
+            </button>
+          )}
+        </div>
       </div>
     </main>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -7,6 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { makeStyles } from '@mui/styles';
+import { User } from '../../services/types/userManagement';
 
 const useStyles = makeStyles({
   dialogPaper: {
@@ -17,20 +18,14 @@ const useStyles = makeStyles({
   },
 });
 
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  department: string;
-  position: string;
-};
-
-const UserPickerDialog: React.FC<{
+interface UserPickerDialogProps {
   open: boolean;
   users: User[];
   onClose: () => void;
   onSubmit: (selectedUsers: User[]) => void;
-}> = ({ open, users, onClose, onSubmit }) => {
+}
+
+const UserPickerDialog: React.FC<UserPickerDialogProps> = ({ open, users, onClose, onSubmit }) => {
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
 
   const handleSubmit = () => {
