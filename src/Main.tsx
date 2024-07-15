@@ -14,6 +14,7 @@ import './styles/Main.css';
 import useMain from './Hook/useMain';
 import GroupManagement from './pages/GroupManagement/GroupManagement';
 import PrivateRoute from './component/PrivateRoute';
+import ProfileSetup from './pages/ProfileSetup/ProfileSetup';
 // import PrivateRoute from './component/PrivateRoute';
 // 需要sideBar的頁面－套wrapper包裹sideBar以及內容
 // 用main_container包裹，控制內容顯示在右側
@@ -54,21 +55,21 @@ const Main: React.FC = () => {
       /> */}
       <Navbar />
       <Routes>
-        <Route path="/home" element={<PrivateRoute element={<Home />} />} />
+        {/* <Route path="/home" element={<PrivateRoute element={<Home />} />} />
         <Route path="/profile" element={<PrivateRoute element={<Pdata />} />} />
         <Route path="/GroupManagement/*" element={<PrivateRoute element={<GroupManagement />} />} />
         <Route path="/mail" element={<PrivateRoute element={<Mail />} />} />
         <Route path="/InterimKPIControl" element={<PrivateRoute element={<InterimKPIControl />}/>} />
         <Route path="/AssignExportControl/*" element={<PrivateRoute element={<AssignExportControl />} />} />
-        <Route path="/UserControl/*" element={<PrivateRoute element={<UserControl />} />} />
-        {/* <Route path="/home" element={<Home />} />
+        <Route path="/UserControl/*" element={<PrivateRoute element={<UserControl />} />} /> */}
+        <Route path="/home" element={<Home />} />
         <Route path="/profile" element={<Pdata />} />
-        <Route path="/GroupManagement/*" element={<GroupManagement />}/>
+        <Route path="/GroupManagement/*" element={<GroupManagement />} />
         <Route path="/mail" element={<Mail />} />
-        <Route path="/InterimKPIControl" element={<InterimKPIControl />}/>
+        <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
         <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
         <Route path="/UserControl/*" element={<UserControl />} />
-        <Route path="*" element={<Navigate to="/home" />} /> */}
+        <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </div>
   );

@@ -4,10 +4,10 @@ import UserControlSidebar from '../../component/UserControl/UserControlSidebar'
 import UserApplyTable from '../../component/UserControl/UserApplyTable';
 import { Route, Routes, Navigate } from 'react-router';
 import NewForm from '../../component/UserControl/NewForm';
+
 const UserControl: React.FC = () => {
 
   return (
-
     <div className='wrapper'>
       <UserControlSidebar />
       <div className="main_container">

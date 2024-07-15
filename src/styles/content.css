@@ -4,7 +4,8 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: calc(100% - 90px); /* 适应底部导航栏 */
+  height: calc(100% - 90px);
+  /* 适应底部导航栏 */
   overflow-y: auto;
   background-color: #343541;
   border-radius: 15px;
@@ -105,11 +106,6 @@
   background-color: rgba(255, 102, 0, 0.8);
 }
 
-#gmail {
-  font-size: x-large;
-  letter-spacing: 0.05em;
-  font-weight: 550;
-}
 
 .listTitle {
   font-weight: 900;
@@ -170,6 +166,7 @@ select {
 
   .content {
     padding: 10px;
-    height: calc(100% - 80px); /* 调整高度以适应底部导航栏高度变化 */
+    height: calc(100% - 80px);
+    /* 调整高度以适应底部导航栏高度变化 */
   }
 }

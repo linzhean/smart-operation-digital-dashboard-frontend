@@ -1,0 +1,108 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: black;
+}
+
+.container {
+  background-color: #FFF;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  max-width: 400px;
+  width: 400px;
+}
+
+.formHeader {
+  text-align: center;
+}
+
+.logo {
+  max-width: 100px;
+}
+
+.formHeader h1 {
+  margin-top: 10px;
+  font-weight: 900;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.setupForm label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.setupForm [type="text"],
+.setupForm [type="email"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+
+}
+
+.setupSubmit {
+  width: 100%;
+  padding: 10px;
+  font-weight: 900;
+  border: none;
+  border-radius: 4px;
+  background-color: #333;
+  color: #FFF;
+}
+
+.setupSubmit:hover {
+  color: black;
+  background-color: #ACACBE;
+  border-radius: 8px;
+}
+
+.theForms {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.theForms select,
+.theForm input {
+  font-size: 1rem !important;
+  padding: 5px;
+  border-radius: 8px;
+  border: 2px solid #555 !important;
+  color: black;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+    width: 100%;
+  }
+
+  .formHeader h1 {
+    font-size: 1.2em;
+  }
+
+  .theForms {
+    gap: 20px;
+  }
+
+  .theForm select,
+  .theForm input {
+    font-size: 1rem;
+  }
+}

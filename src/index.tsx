@@ -9,6 +9,7 @@ import Main from './Main';
 import Login from './pages/Login/Login';
 import UserManagement from './pages/Admin/UserManagement';
 import PrivateRoute from './component/PrivateRoute';
+import ProfileSetup from './pages/ProfileSetup/ProfileSetup';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -16,11 +17,12 @@ ReactDOM.render(
       <UserProvider>
         <Router>
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/admin/user-management" element={<PrivateRoute element={<UserManagement />} />} />
-            {/* <Route path="/admin/user-management" element={<UserManagement />} /> */}
-            <Route path="/*" element={<PrivateRoute element={<Main />} />} />
+            {/* <Route path="/login" element={<Login />} /> */}
+            {/* <Route path="/admin/user-management" element={<PrivateRoute element={<UserManagement />} />} /> */}
+            <Route path="/admin/user-management" element={<UserManagement />} />
+            {/* <Route path="/*" element={<PrivateRoute element={<Main />} />} /> */}
             {/* <Route path="/*" element={<Main />} /> */}
+            <Route path="/*" element={<ProfileSetup />} />
           </Routes>
         </Router>
       </UserProvider>

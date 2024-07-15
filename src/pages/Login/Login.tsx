@@ -47,7 +47,7 @@ const Login: React.FC = () => {
   };
 
   const onFailure = () => {
-    alert("登录失败，请稍后再试。");
+    alert("登錄失敗，請稍後再嘗試。");
   };
 
   return (

@@ -4,6 +4,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Table
 import NumberOfPages from './NumberOfPages';
 import Box from '@mui/material';
 
+// 這是待審核列表－分頁模式
+
 //分頁加載或分步加載（pagination or incremental loading）
 //如何知道總共有多少頁??
 //請求數據時>後端返回total count
