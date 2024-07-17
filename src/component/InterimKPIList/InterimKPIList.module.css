@@ -95,7 +95,7 @@ h2 {
 .checkFormContent {
   height: 75%;
   overflow: auto;
-  width: 80%;
+  width: clamp(45%, 20%, 80%);
   position: fixed;
   top: 50%;
   left: 50%;
@@ -105,8 +105,22 @@ h2 {
   color: #CCCCCC;
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+  box-shadow: 2.5px 2.5px 2.5px rgba(255, 255, 255, 0.3);
 }
+
+/* @media (max-width: 768px) {
+  .checkFormContent {
+    width: 80%;
+  }
+
+} */
+
+@media (max-width: 768px) {
+  .checkFormContent {
+    width: clamp(60%, 75vw, 80%);
+  }
+}
+
 
 .checkFormContent h2 {
   font-weight: bold;
@@ -152,7 +166,6 @@ h2 {
   border-radius: 10px;
   font-weight: bold;
   background-color: white;
-
   color: black;
 }
 

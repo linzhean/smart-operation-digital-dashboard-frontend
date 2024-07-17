@@ -16,9 +16,11 @@ import GroupManagement from './pages/GroupManagement/GroupManagement';
 import PrivateRoute from './component/PrivateRoute';
 import ProfileSetup from './pages/ProfileSetup/ProfileSetup';
 // import PrivateRoute from './component/PrivateRoute';
+
 // 需要sideBar的頁面－套wrapper包裹sideBar以及內容
-// 用main_container包裹，控制內容顯示在右側
-// 所有不管如何都需套theContent
+// 用main_container包裹目的:控制內容顯示在右側
+
+// 所有不管如何都需套theContent目的:用於確認那塊大灰底的高度及寬度
 // 無SideBar : theContent直接包
 // 有SideBar : main_container > theContent
 

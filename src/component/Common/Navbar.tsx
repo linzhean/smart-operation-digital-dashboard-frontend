@@ -114,7 +114,7 @@ const NavBar: React.FC = () => {
 
   return (
     <nav className={`navbar navbar-expand-md ${styles.bgBodyTertiary}`}>
-      <div className="container-fluid">
+      <div className={`container-fluid ${styles.containerfluid}`}>
         <a className={`brand ${styles.navbarHamburger}`} id='hamburger' href="#">
           <img className={`brandImg ${styles.brandImg}`} src={burgerMenuIcon} alt="menu" />
         </a>

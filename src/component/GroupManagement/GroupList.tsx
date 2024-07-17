@@ -58,8 +58,8 @@ const UserPickerDialog: React.FC<{
             <TextField
               {...params}
               variant="outlined"
-              label="选择用户"
-              placeholder="或输入文字以查找..."
+              label="選擇用戶"
+              placeholder="關鍵字搜尋..."
             />
           )}
         />
@@ -67,7 +67,7 @@ const UserPickerDialog: React.FC<{
       <DialogActions>
         <Button onClick={onClose}>取消</Button>
         <Button onClick={handleSubmit} color="primary">
-          确认
+          確認
         </Button>
       </DialogActions>
     </Dialog>

@@ -110,10 +110,13 @@
     visibility: visible;
     opacity: 0.7;
   }
+
 }
 
 @media (min-width: 1025px) {
   .openbutton {
+
+    
     display: none;
   }
 }

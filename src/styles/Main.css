@@ -77,7 +77,7 @@ body {
 
 .theContent {
   background-color: #343541;
-  height: 87vh;
+  height: 87.5vh;
   margin-right: 5px;
   border-radius: 15px;
   flex-wrap: wrap;
@@ -109,7 +109,7 @@ body {
     display: block;
   }
 
-  /* .wrapper.active .sidebar_inner {
+  .wrapper.active .sidebar_inner {
     left: 0;
     transition: all 0.5s ease;
   }
@@ -117,7 +117,14 @@ body {
   .wrapper.active .sidebar .bg_shadow {
     visibility: visible;
     opacity: 0.7;
-  } */
+  }
+}
+
+
+@media (max-width: 768px) {
+  .theContent {
+    height: 90vh;
+  }
 }
 
 /* 控制滑動滾輪樣式 */

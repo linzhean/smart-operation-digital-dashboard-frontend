@@ -45,7 +45,7 @@ const Pdata: React.FC = () => {
               <div className={styles.theEditButton}>
                 <button
                   type="button"
-                  className="btn"
+                  className={`btn ${styles.btn}`}
                   onClick={state.editable ? handleSaveClick : handleEditClick}
                 >
                   {state.editable ? "保存變更" : "修改資料"}
@@ -58,7 +58,7 @@ const Pdata: React.FC = () => {
                     className="btn btn-outline-secondary"
                     onClick={handleLogoutClick}
                   >
-                    登出
+                    <span className={styles.letter}>登出</span>
                   </button>
                 </div>
               )}
@@ -82,7 +82,7 @@ const Pdata: React.FC = () => {
 
           <div className="row">
             <div className="col-12">
-              <label htmlFor="userId" className={styles.formLabel}>工號</label>
+              <label htmlFor="userId" className={styles.formLabel}>員工編號</label>
               <input
                 type="text"
                 className="form-control"
