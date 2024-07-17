@@ -80,6 +80,13 @@ const GroupList: React.FC<{ groupId: number }> = ({ groupId }) => {
   const [availableMembers, setAvailableMembers] = useState<User[]>([]);
   const [showMemberPicker, setShowMemberPicker] = useState(false);
 
+  //圖表權限設定
+  const [graphToggleStates, setGraphToggleStates] = useState<{ [key: string]: 'allow' | 'deny' }>({
+    生產率: 'deny',
+    廢品率: 'deny',
+    產能利用率: 'deny',
+  });
+
   useEffect(() => {
     const fetchGroupUsers = async () => {
       try {
@@ -100,7 +107,7 @@ const GroupList: React.FC<{ groupId: number }> = ({ groupId }) => {
   };
 
   const handleRemove = async (id: any, name: string) => {
-    if (window.confirm(`你确定要将成员 ${name} 移除群组吗？`)) {
+    if (window.confirm(`您確定要將【${name}】從群組中移除嗎？`)) {
       try {
         await removeUserFromGroup(groupId, id); // API 調用刪除用戶
         setMemberData(prevData => prevData.filter(member => member.id !== id));
@@ -120,6 +127,32 @@ const GroupList: React.FC<{ groupId: number }> = ({ groupId }) => {
     }
   };
 
+  // 點擊修改狀態必須跳確認框
+  // const toggleGraphState = (graphName: string) => {
+  //   const newState = graphToggleStates[graphName] === 'allow' ? 'deny' : 'allow';
+  //   if (window.confirm(`您確定要將【${graphName}】權限設置為${newState === 'allow' ? '允許' : '禁用'}嗎？`)) {
+  //     setGraphToggleStates((prevStates) => ({
+  //       ...prevStates,
+  //       [graphName]: newState,
+  //     }));
+  //   }
+  // };
+
+  // 上面才是正確的
+  const toggleGraphState = (graphName: string) => {
+    const newState: 'allow' | 'deny' = graphToggleStates[graphName] === 'allow' ? 'deny' : 'allow';
+    if (window.confirm(`您確定要將【${graphName}】權限設置為${newState === 'allow' ? '允許' : '禁用'}嗎？`)) {
+      setGraphToggleStates((prevStates) => {
+        const updatedStates: { [key: string]: 'allow' | 'deny' } = {
+          ...prevStates,
+          [graphName]: newState,
+        };
+        console.log('Updated graphToggleStates:', updatedStates);
+        return updatedStates;
+      });
+    }
+  };
+
   return (
     <>
       <div className={styles.filterButton}>
@@ -128,7 +161,7 @@ const GroupList: React.FC<{ groupId: number }> = ({ groupId }) => {
           onClick={() => handleButtonClick('memberControl')}
           className={activeButton === 'memberControl' ? styles.filterActive : ''}
         >
-          群组内成员
+          群組成員
           <span></span><span></span><span></span><span></span>
         </button>
         <button
@@ -136,16 +169,17 @@ const GroupList: React.FC<{ groupId: number }> = ({ groupId }) => {
           onClick={() => handleButtonClick('graphControl')}
           className={activeButton === 'graphControl' ? styles.filterActive : ''}
         >
-          群组可视图表
+          群組可視圖表
           <span></span><span></span><span></span><span></span>
         </button>
       </div>
 
       <div className={styles.theTable}>
+        {/* 顯示的是成員列表 */}
         {activeButton === 'memberControl' && (
           <>
             <Button variant="contained" color="primary" onClick={() => setShowMemberPicker(true)} className={styles.addButton}>
-              新增成员
+              新增成員
             </Button>
             {showMemberPicker && (
               <UserPickerDialog
@@ -159,11 +193,11 @@ const GroupList: React.FC<{ groupId: number }> = ({ groupId }) => {
               <table className="custom-scrollbar">
                 <thead>
                   <tr>
-                    <th>工号</th>
+                    <th>員編</th>
                     <th>姓名</th>
-                    <th>邮箱</th>
-                    <th>所属部门</th>
-                    <th>职务</th>
+                    <th>信箱</th>
+                    <th>部門</th>
+                    <th>職稱</th>
                     <th>操作</th>
                   </tr>
                 </thead>
@@ -190,21 +224,29 @@ const GroupList: React.FC<{ groupId: number }> = ({ groupId }) => {
             </div>
           </>
         )}
+
+        {/* 顯示群組可視圖表 */}
         {activeButton === 'graphControl' && (
           <div className={styles.theList}>
             <table className="custom-scrollbar">
               <thead>
                 <tr>
-                  <th>图表名称</th>
+                  <th>圖表名稱</th>
                   <th>操作</th>
                 </tr>
               </thead>
               <tbody>
-                {['图表A', '图表B', '图表C'].map((item, index) => (
+                {/* 渲染【所有】可以用的圖表，在右側選擇個別圖表是否允許或禁用 */}
+                {['生產率', '廢品率', '產能利用率'].map((item, index) => (
                   <tr key={index}>
                     <td>{item}</td>
                     <td>
-                      移除
+                      <button
+                        className={`${styles.toggleButton} ${graphToggleStates[item] === 'allow' ? styles.allow : styles.deny}`}
+                        onClick={() => toggleGraphState(item)}
+                      >
+                        {graphToggleStates[item] === 'allow' ? '目前狀態：允許' : '目前狀態：禁用'}
+                      </button>
                     </td>
                   </tr>
                 ))}

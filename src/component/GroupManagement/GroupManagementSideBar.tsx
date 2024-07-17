@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import closearrow from '../../assets/icon/close-arrow.svg';
-import styles from './GroupManagementSideBar.module.css';
+import styles from '../GroupManagement/GroupManagementSideBar.module.css';
 import { fetchGroups, addGroup } from '../../services/GroupApi';
 import { Group } from '../../services/types/userManagement';
 
