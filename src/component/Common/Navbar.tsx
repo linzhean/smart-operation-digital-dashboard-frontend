@@ -113,7 +113,7 @@ const NavBar: React.FC = () => {
   const activeLink = location.pathname;
 
   return (
-    <nav className={`navbar navbar-expand-lg ${styles.bgBodyTertiary}`}>
+    <nav className={`navbar navbar-expand-md ${styles.bgBodyTertiary}`}>
       <div className="container-fluid">
         <a className={`brand ${styles.navbarHamburger}`} id='hamburger' href="#">
           <img className={`brandImg ${styles.brandImg}`} src={burgerMenuIcon} alt="menu" />
@@ -184,7 +184,7 @@ const NavBar: React.FC = () => {
                 to="/GroupManagement"
               >
                 <img className={styles.navbarNavItemImg} src={groupIcon} alt="GroupManagement" />
-                <span className={`${styles.navbarText} ${activeLink.startsWith('/GroupManagement') ? styles.activeNavLinkText : ''}`}>群組</span>
+                <span className={`${styles.navbarText} ${activeLink.startsWith('/GroupManagement') ? styles.activeNavLinkText : ''}`}>群組管理</span>
               </Link>
             </li>
 

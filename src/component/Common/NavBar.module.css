@@ -17,7 +17,7 @@
 }
 
 .activeNavLink img {
-  border-bottom: 0.4vw solid #ACACBE;
+  border-bottom: 0.3rem solid #ACACBE;
   border-radius: 5px;
   padding-bottom: 3px;
 }
@@ -52,7 +52,7 @@
 }
 
 .navbarText {
-  font-size: 3vh;
+  font-size: 1rem;
   font-weight: 600;
   display: none;
 }
@@ -66,7 +66,7 @@
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 
-/* 手機版輪播圖的響應式樣式 */
+/* 768px 是根據 navbar-expand-md 設定的 */
 @media (max-width: 768px) {
   .navbarNavItemImg {
     display: none;
@@ -77,45 +77,8 @@
     color: #CCCCCC;
   }
 
-  .navbar-collapse {
-    display: none !important;
-  }
-
-  .d-lg-none {
-    position: absolute;   /* 將元素設置為固定位置，即使頁面滾動也不會改變其位置 */
-    left: 0;           /* 元素距離視窗左側的距離為0，即貼在視窗最左邊 */
-    right: 0;  
-    top: 100px;        /* 元素距離視窗右側的距離為0，即貼在視窗最右邊 */
-    background: rgb(0, 0, 0); /* 背景顏色設置為黑色 */
-    padding: 10px 0;   /* 上下內邊距為10像素，左右內邊距為0 */
-    z-index: 1000;     /* 設置元素的層級為1000，確保在其他元素上方顯示 */
-  }
-  
-
-  .slider {
-    width: 100%;
-  }
-
-  .nav-item-slider {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
   .nav-link {
     text-align: center;
-    font-size: 12px;
-  }
-
-  .sliderImg {
-    width: 30px; /* 調整圖標的大小 */
-    height: 30px;
-    margin: 0 1px; /* 添加 margin 以調整圖標之間的間距 */
-  }
-
-  .sliderText {
-    display: block;
-    font-size: 12px; /* 調整文字的大小 */
-    color: #CCCCCC;
+    font-size: 1.2rem;
   }
 }

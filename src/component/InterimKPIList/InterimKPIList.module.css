@@ -16,7 +16,7 @@ h2 {
 }
 
 .thePermissionList {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: bold;
   height: 100%;
   width: 100%;
@@ -33,7 +33,7 @@ h2 {
 
 .thePermissionList th,
 .thePermissionList td {
-  padding: 15px;
+  padding: 10px;
   text-align: center;
   border-bottom: 1px solid #444;
   /* 分隔線顏色控制在這 */
@@ -52,25 +52,27 @@ h2 {
 }
 
 .thePermissionList .deleteButton {
-  background-color: #d9534f;
+  background-color: #ee3933;
   color: #fff;
   border: none;
-  padding: 8px 16px;
+  padding: 4px 8px;
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s;
+  font-weight: 600;
 }
 
 .thePermissionList .deleteButton:hover {
-  background-color: #c9302c;
+  background-color: #ea8784;
 }
 
 .thePermissionList .emailIcon {
   background-color: #777;
   color: #fff;
   border-radius: 50%;
-  padding: 10px;
+  padding: 7px;
   display: inline-block;
+  font-size: 1.2rem;
 }
 
 @media (max-width: 528px) {
@@ -103,7 +105,7 @@ h2 {
   color: #CCCCCC;
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
 
 .checkFormContent h2 {
