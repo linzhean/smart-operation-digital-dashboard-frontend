@@ -44,7 +44,7 @@ const Sidebar: React.FC<{ onSelectGroup: (groupId: number) => void }> = ({ onSel
   };
 
   const handleAddGroup = async () => {
-    const newGroupName = prompt('请输入新群组名称：');
+    const newGroupName = prompt('請輸入新群組名稱：');
     if (newGroupName) {
       try {
         const newGroup = await addGroup({

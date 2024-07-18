@@ -12,6 +12,8 @@
 .tableTitle h2 {
   font-size: 1.5rem;
   font-weight: bolder;
+  margin: 5px;
+  margin-bottom: 10px;
 }
 
 .thePermissionList {

@@ -15,7 +15,7 @@ const ProfileSetup: React.FC = () => {
           <input type="text" id="name" name="name" required />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="employee-id">工號</label>
+          <label htmlFor="employee-id">員工編號</label>
           <input type="text" id="employee-id" name="employee-id" required />
         </div>
         <div className={styles.formGroup}>

@@ -36,7 +36,7 @@ const Table: React.FC = () => {
   ];
 
   return (
-    <><h2>申請記錄</h2>
+    <><h2 className={styles.h2}>申請記錄</h2>
       <div className={styles.thePermissionList}>
         <table className={styles.customScrollbar}>
           <thead>
@@ -70,7 +70,7 @@ const Table: React.FC = () => {
             <div className={styles.formOverlay} onClick={handleCloseForm}></div>
             <div className={styles.checkFormContent}>
               <div id="appliedForm">
-                <h2>申請表單</h2>
+                <h2 className={styles.h2}>申請表單</h2>
                 <form>
                   <label htmlFor="applicant">申請人:</label>
                   <br />

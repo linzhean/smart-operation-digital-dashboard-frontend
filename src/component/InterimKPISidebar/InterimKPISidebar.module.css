@@ -52,7 +52,7 @@
   margin-bottom: 1px;
   color: #CCCCCC;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 700;
 }
 
@@ -116,7 +116,7 @@
 @media (min-width: 1025px) {
   .openbutton {
 
-    
+
     display: none;
   }
 }

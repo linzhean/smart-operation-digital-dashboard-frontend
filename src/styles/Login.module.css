@@ -1,22 +1,32 @@
-/* src/styles/Login.module.css */
- *,
+*,
 ::after,
 ::before {
   box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, PingFangSC-Regular, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: black;
-  background: linear-gradient(200deg, rgba(52, 53, 65), rgba(0, 0, 0));
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  font-size: 30px;
+  height: 100vh;
+  background-image: linear-gradient(125deg, #1E90FF, #00008B, #191970, #4B0082, #000033);
+  background-size: 400%;
+  animation: lineargradientMove 10s infinite;
+}
+
+@keyframes lineargradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 * {
@@ -24,7 +34,6 @@ body {
 }
 
 .login-wrapper {
-  width: 500px;
   background-color: #F8F8F8;
   padding: 25px 30px 28px 30px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -179,10 +188,11 @@ body {
   0% {
     transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
   }
+
   100% {
     transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
   }
-} 
+}
 
 /* Media Queries for responsive design */
 @media (max-width: 768px) {
@@ -223,4 +233,4 @@ body {
     width: 35px;
     height: 35px;
   }
-} 
+}

@@ -4,8 +4,7 @@
 }
 
 .brandImg {
-  width: 45px;
-  margin-top: 2px;
+  width: 40px;
 }
 
 .navLink {
@@ -63,7 +62,7 @@
 }
 
 /* 768px 是根據 navbar-expand-md 設定的 */
-@media (max-width: 768px) {
+@media (max-width: 769px) {
   .navbarNavItemImg {
     display: none;
   }

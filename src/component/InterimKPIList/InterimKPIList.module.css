@@ -9,14 +9,15 @@
   overflow: auto;
 }
 
-h2 {
-  margin: 10px !important;
-  margin-bottom: 15px !important;
+.h2 {
+  margin: 5px !important;
+  margin-bottom: 10px !important;
   font-weight: bolder;
+  font-size: 1.5rem;
 }
 
 .thePermissionList {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
   height: 100%;
   width: 100%;
@@ -36,6 +37,7 @@ h2 {
   padding: 10px;
   text-align: center;
   border-bottom: 1px solid #444;
+  color: #e1e1e1db;
   /* 分隔線顏色控制在這 */
 }
 
@@ -121,7 +123,6 @@ h2 {
   }
 }
 
-
 .checkFormContent h2 {
   font-weight: bold;
   margin: 0px !important;
@@ -137,7 +138,7 @@ h2 {
 .checkFormContent form label {
   margin-bottom: 0.5rem;
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 .reason {
@@ -148,7 +149,7 @@ h2 {
   font-weight: bold;
   background-color: #212121;
   border: 1px solid #ccc;
-  font-size: 1.1rem;
+  font-size: 1rem;
   border-radius: 5px;
   padding: 10px;
 }
@@ -162,7 +163,7 @@ h2 {
 
 .checkFormContent .submit {
   margin-left: 10px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   border-radius: 10px;
   font-weight: bold;
   background-color: white;
@@ -171,16 +172,16 @@ h2 {
 
 .checkFormContent .cancel {
   margin-left: 10px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   border-radius: 10px;
   font-weight: bold;
   background-color: black;
   color: gray;
-  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+  box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
 }
 
 .checkFormContent input:disabled {
-  font-size: 1.2rem;
+  font-size: 1rem;
   background-color: transparent;
   color: white;
   pointer-events: none;

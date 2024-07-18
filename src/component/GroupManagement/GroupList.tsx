@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { makeStyles } from '@mui/styles';
 import styles from './GroupList.module.css';
-import { fetchUsersByGroupId, addUserToGroup, removeUserFromGroup } from '../../services/GroupApi';
+import { fetchUsersByGroupId, addUserToGroup, removeUserFromGroup, deleteGroup } from '../../services/GroupApi'; // 添加 deleteGroup 引入
 import { User } from '../../services/types/userManagement';
 import { getUsers } from '../../services/userManagementServices';
 
@@ -37,7 +37,7 @@ const UserPickerDialog: React.FC<{
   const classes = useStyles();
   return (
     <Dialog open={open} onClose={onClose} style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }} classes={{ paper: classes.dialogPaper }}>
-      <DialogTitle style={{ color: 'black', fontSize: '1.5rem', fontWeight: 'bold', width: 'auto', padding: '10px 24px 0px 24px' }}>
+      <DialogTitle style={{ color: 'black', fontSize: '1.5rem', fontWeight: 'bold', width: 'auto', padding: '15px 24px 0px' }}>
         新增使用者
       </DialogTitle>
       <DialogContent style={{ paddingTop: '15px' }}>
@@ -138,7 +138,7 @@ const GroupList: React.FC<{ groupId: number }> = ({ groupId }) => {
   //   }
   // };
 
-  // 上面才是正確的
+  // 上面才是真的 這個是為了看一下consolelog
   const toggleGraphState = (graphName: string) => {
     const newState: 'allow' | 'deny' = graphToggleStates[graphName] === 'allow' ? 'deny' : 'allow';
     if (window.confirm(`您確定要將【${graphName}】權限設置為${newState === 'allow' ? '允許' : '禁用'}嗎？`)) {
@@ -150,6 +150,17 @@ const GroupList: React.FC<{ groupId: number }> = ({ groupId }) => {
         console.log('Updated graphToggleStates:', updatedStates);
         return updatedStates;
       });
+    }
+  };
+
+  const handleDeleteGroup = async () => {
+    if (window.confirm('您確定要刪除這個群組嗎？')) {
+      try {
+        await deleteGroup(groupId);
+        // 放這裡
+      } catch (error) {
+        console.error('Failed to delete group:', error);
+      }
     }
   };
 
@@ -180,6 +191,9 @@ const GroupList: React.FC<{ groupId: number }> = ({ groupId }) => {
           <>
             <Button variant="contained" color="primary" onClick={() => setShowMemberPicker(true)} className={styles.addButton}>
               新增成員
+            </Button>
+            <Button variant="contained" color="secondary" onClick={handleDeleteGroup} className={styles.deleteGroupButton}>
+              刪除群組
             </Button>
             {showMemberPicker && (
               <UserPickerDialog
@@ -232,7 +246,7 @@ const GroupList: React.FC<{ groupId: number }> = ({ groupId }) => {
               <thead>
                 <tr>
                   <th>圖表名稱</th>
-                  <th>操作</th>
+                  <th>狀態</th>
                 </tr>
               </thead>
               <tbody>
