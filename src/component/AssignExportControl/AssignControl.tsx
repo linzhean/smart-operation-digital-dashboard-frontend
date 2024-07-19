@@ -1,7 +1,8 @@
 // Assign.tsx
 import React from 'react';
 import styles from './AssignControl.module.css'
-const Assign: React.FC = () => {
+
+const AssignControl: React.FC = () => {
   return (
     <>
       {/* 表格部分 */}
@@ -35,4 +36,4 @@ const Assign: React.FC = () => {
   );
 };
 
-export default Assign;
+export default AssignControl;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import closearrow from '../../assets/icon/close-arrow.svg';
-import styles from '../../styles/GroupManagementSideBar.module.css';
+import styles from './DashBoardSidebar.module.css';
 import DashboardService from '../../services/DashboardService';
 import { Dashboard } from '../../services/types/dashboard';
 
@@ -83,7 +83,7 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
           <ul className={`${styles.sidebar_menu} mostly-customized-scrollbar`}>
             <li>
               <button className={styles.addButton} onClick={handleAddDashboard}>
-                新增仪表板
+                新儀表板
               </button>
             </li>
             {dashboards.map(dashboard => (

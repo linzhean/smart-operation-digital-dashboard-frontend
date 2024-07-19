@@ -15,14 +15,14 @@ import useMain from './Hook/useMain';
 import GroupManagement from './pages/GroupManagement/GroupManagement';
 import PrivateRoute from './component/PrivateRoute';
 import ProfileSetup from './pages/ProfileSetup/ProfileSetup';
-// import PrivateRoute from './component/PrivateRoute';
+import TaskKpiSetting from './pages/TaskKpiPage/TaskKpiSetting';
 
 // 需要sideBar的頁面－套wrapper包裹sideBar以及內容
 // 用main_container包裹目的:控制內容顯示在右側
 
-// 所有不管如何都需套theContent目的:用於確認那塊大灰底的高度及寬度
+// 套theContent目的:用於確認那塊大灰底的高度及寬度
 // 無SideBar : theContent直接包
-// 有SideBar : main_container > theContent
+// 有SideBar : wrapper > main_container > theContent
 
 const Main: React.FC = () => {
   const {
@@ -71,6 +71,7 @@ const Main: React.FC = () => {
         <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
         <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
         <Route path="/UserControl/*" element={<UserControl />} />
+        <Route path="/TaskKpiSetting/*" element={<TaskKpiSetting />} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </div>

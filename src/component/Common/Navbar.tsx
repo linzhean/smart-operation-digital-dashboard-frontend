@@ -106,7 +106,7 @@ import userDataIcon from '../../assets/icon/userData-icon.svg';
 import AssignExportControlIcon from '../../assets/icon/AssignExportControl.svg';
 import InterimKPIControl from '../../assets/icon/InterimKPIControl.svg';
 import UserControl from '../../assets/icon/UserControl.svg';
-import { Dashboard } from '@mui/icons-material';
+import TaskKpiManagementIcon from '../../assets/icon/targetIcon.svg'
 
 const NavBar: React.FC = () => {
   const location = useLocation();
@@ -132,6 +132,17 @@ const NavBar: React.FC = () => {
         </button>
         <div className={`collapse navbar-collapse`} id="navbarNavAltMarkup">
           <ul className={`navbar-nav ${styles.navbarNav}`}>
+
+            {/* KPI上下限及交辦事項管理 */}
+            <li className={`nav-item ${styles.navbarNavItem}`}>
+              <Link
+                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/TaskKpiSetting') ? styles.activeNavLink : ''}`}
+                to="/TaskKpiSetting"
+              >
+                <img className={styles.navbarNavItemImg} src={TaskKpiManagementIcon} alt="TaskKpiSetting" />
+                <span className={`${styles.navbarText} ${activeLink.startsWith('/TaskKpiSettingt') ? styles.activeNavLinkText : ''}`}>任務設定</span>
+              </Link>
+            </li>
 
             {/* 權限管理 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>

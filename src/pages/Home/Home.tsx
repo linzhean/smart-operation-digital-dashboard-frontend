@@ -57,36 +57,38 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className='theContent'>
+    <div className='wrapper'>
       <div className="Home">
         <DashboardSidebar onSelectDashboard={setSelectedDashboard} />
-        <button onClick={handleExport} className="exportButton">导出数据</button>
-        <ResponsiveGridLayout
-          className="layout"
-          layouts={{ lg: layout }}
-          breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-          rowHeight={30}
-          onLayoutChange={(layout: React.SetStateAction<{ i: string; x: number; y: number; w: number; h: number; }[]>) => setLayout(layout)}
-        >
-          <div key="lineChart" className="dataCard">
-            <div className="revenueCard">
-              <LineChart />
-            </div>
+        <div className='main_container'>
+          <div className='theContent'>
+            <button onClick={handleExport} className="exportButton">匯出</button>
+            <ResponsiveGridLayout
+              className="layout"
+              layouts={{ lg: layout }}
+              breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+              cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+              rowHeight={30}
+              onLayoutChange={(layout: React.SetStateAction<{ i: string; x: number; y: number; w: number; h: number; }[]>) => setLayout(layout)}
+            >
+              <div key="lineChart" className="dataCard">
+                <div className="revenueCard">
+                  <LineChart />
+                </div>
+              </div>
+              <div key="barChart" className="dataCard">
+                <div className="customerCard">
+                  <BarChart />
+                </div>
+              </div>
+              <div key="doughnutChart" className="dataCard">
+                <div className="categoryCard">
+                  <DoughnutChart />
+                </div>
+              </div>
+            </ResponsiveGridLayout>
           </div>
-          <div key="barChart" className="dataCard">
-            <div className="customerCard">
-              <BarChart />
-            </div>
-          </div>
-          <div key="doughnutChart" className="dataCard">
-            <div className="categoryCard">
-              <DoughnutChart />
-            </div>
-          </div>
-        </ResponsiveGridLayout>
-      </div>
-    </div>
+        </div></div></div>
   );
 };
 

@@ -79,7 +79,7 @@ const UserPickerDialog: React.FC<{
   );
 };
 
-const AssignExportControl: React.FC = () => {
+const ExportControl: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentChart, setCurrentChart] = useState('');
   const [users, setUsers] = useState<User[]>([]);
@@ -98,7 +98,7 @@ const AssignExportControl: React.FC = () => {
         console.error('获取用户数据失败', error);
       });
   }, []);
-  
+
 
   const handleOpenDialog = (chartName: string) => {
     setCurrentChart(chartName);
@@ -114,12 +114,12 @@ const AssignExportControl: React.FC = () => {
       ...selectedUsersMap,
       [currentChart]: selectedUsers,
     });
-  
+
     const chartId = parseInt(currentChart, 10); // Parse currentChart to integer
-  
+
     // Assuming setExportPermission expects an array of user IDs or names
     const userIds = selectedUsers.map(user => user.id); // Adjust this according to your actual data structure
-  
+
     setExportPermission(chartId, userIds) // Pass array of strings (user IDs or names)
       .then((response) => {
         console.log('成功提交:', response.message);
@@ -127,7 +127,7 @@ const AssignExportControl: React.FC = () => {
       .catch((error) => {
         console.error('提交失败', error);
       });
-  
+
     setDialogOpen(false);
   };
 
@@ -167,4 +167,4 @@ const AssignExportControl: React.FC = () => {
   );
 };
 
-export default AssignExportControl;
+export default ExportControl;
