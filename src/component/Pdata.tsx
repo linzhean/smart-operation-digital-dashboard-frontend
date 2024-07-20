@@ -20,7 +20,6 @@ const Pdata: React.FC = () => {
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
       await updateUserData(state.formData);
-      // 承恩設定true 暫時改false
       dispatch({ type: 'SET_EDITABLE', payload: false });
     } catch (error) {
       console.error('Error updating user data:', error);
@@ -31,8 +30,8 @@ const Pdata: React.FC = () => {
   };
 
   const handleLogoutClick = () => {
-    localStorage.removeItem('authToken'); // 清除本地存儲的 authToken
-    navigate('/login');  // 導航到登錄頁面
+    localStorage.removeItem('authToken');
+    navigate('/login');
   };
 
   return (
@@ -145,6 +144,25 @@ const Pdata: React.FC = () => {
                 <option value="employee">一般員工</option>
                 <option value="assistant-manager">副理</option>
                 <option value="manager">經理</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-12">
+              <label htmlFor="identity" className={styles.formLabel}>身份</label>
+              <select
+                className="form-select"
+                id="identity"
+                required
+                disabled={!state.editable}
+                value={state.formData.identity}
+                onChange={(e) => handleInputChange(e.target.id, e.target.value)}
+              >
+                <option value="NO_PERMISSION">無權限</option>
+                <option value="EMPLOYEE">員工</option>
+                <option value="MANAGER">經理</option>
+                <option value="ADMIN">管理員</option>
               </select>
             </div>
           </div>

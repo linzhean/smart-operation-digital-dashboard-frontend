@@ -1,20 +1,31 @@
-import React, { useState } from 'react'; // 引入 useState 函數
-
+import React, { useState } from 'react';
 import { Route, Routes, Navigate } from 'react-router';
 import GroupManagementSidebar from '../../component/GroupManagement/GroupManagementSideBar';
 import GroupList from '../../component/GroupManagement/GroupList';
 
 const GroupManagement: React.FC = () => {
-  const [selectedGroupId, setSelectedGroupId] = useState<number>(0); // 使用 useState 定義狀態變量
+  const [selectedGroupId, setSelectedGroupId] = useState<number>(0);
+  const [activeButton, setActiveButton] = useState<string>(''); // Manage activeButton state here
+
+  const handleButtonClick = (buttonId: string) => {
+    setActiveButton(buttonId);
+  };
 
   return (
-    <div className='wrapper'>
-      <GroupManagementSidebar onSelectGroup={setSelectedGroupId} />
+    <div className="wrapper">
       <div className="main_container">
         <div className="theContent">
           <Routes>
-            {/* <Route path="userApply" element={<UserApplyTable />} /> */}
-            <Route path="/GroupList" element={<GroupList groupId={selectedGroupId} />} />
+            <Route
+              path="/GroupList"
+              element={
+                <GroupList
+                  groupId={selectedGroupId}
+                  activeButton={activeButton}
+                  handleButtonClick={handleButtonClick}
+                />
+              }
+            />
             <Route path="/" element={<Navigate to="GroupList" />} />
             {/* <Route path="userStatus" element={<UserStatusControl />} /> */}
             {/* <Route path="userStatus" element={<NewForm />} /> */}

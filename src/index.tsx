@@ -7,7 +7,7 @@ import { ChartProvider } from './context/ChartContext';
 import { UserProvider } from './context/UserContext';
 import Main from './Main';
 import Login from './pages/Login/Login';
-import UserManagement from './pages/Admin/UserManagement';
+// import UserManagement from './pages/Admin/UserManagement';
 import PrivateRoute from './component/PrivateRoute';
 import ProfileSetup from './pages/ProfileSetup/ProfileSetup';
 
@@ -17,9 +17,9 @@ ReactDOM.render(
       <UserProvider>
         <Router>
           <Routes>
-            {/* <Route path="/login" element={<Login />} /> */}
+            <Route path="/login" element={<Login />} />
             {/* <Route path="/admin/user-management" element={<PrivateRoute element={<UserManagement />} />} /> */}
-            <Route path="/admin/user-management" element={<UserManagement />} />
+            {/* <Route path="/admin/user-management" element={<UserManagement />} /> */}
             {/* <Route path="/*" element={<PrivateRoute element={<Main />} />} /> */}
             <Route path="/*" element={<Main />} />
             {/* <Route path="/*" element={<ProfileSetup />} /> */}
