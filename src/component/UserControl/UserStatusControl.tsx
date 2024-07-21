@@ -27,11 +27,11 @@ const UserStatusControl: React.FC = () => {
     try {
       const data = await fetchUsers();
       const formattedData: User[] = data.map((employee) => ({
-        name: employee.name,
-        id: employee.employeeId,
-        department: employee.department,
-        email: employee.email,
-        position: employee.title,
+        name: employee.userName,
+        id: employee.userId,
+        department: employee.departmentName,
+        email: employee.gmail,
+        position: employee.position,
         status: '停用' // 假设初始状态为停用
       }));
       setUsers(formattedData);

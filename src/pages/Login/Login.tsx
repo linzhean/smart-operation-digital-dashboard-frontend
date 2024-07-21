@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import LoginForm from '../../component/Login/LoginForm';
 import { backendApiUrl, clientId } from '../../services/LoginApi';
 
-
-
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
@@ -35,9 +33,15 @@ const Login: React.FC = () => {
       }
 
       const authToken = res.headers.get('x-auth-token');
+      const userHasProfile = res.headers.get('x-user-has-profile') === 'true';
+
       if (authToken) {
         localStorage.setItem('authToken', authToken);
-        navigate('/main');
+        if (userHasProfile) {
+          navigate('/awaiting-approval');
+        } else {
+          navigate('/profile-setup');
+        }
       } else {
         setError('No auth token received from backend');
       }

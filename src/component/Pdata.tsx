@@ -1,12 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../styles/Pdata.module.css';
 import { useUserContext } from '../context/UserContext';
-import { updateUserData } from '../services/Pdata';
+import { fetchUserData, updateUserData } from '../services/Pdata';
 import { useNavigate } from 'react-router-dom';
+import { UpdateUserData } from '../services/types/userManagement';
+import apiClient from '../services/axiosConfig';
 
 const Pdata: React.FC = () => {
   const { state, dispatch } = useUserContext();
   const navigate = useNavigate();
+  const [initialData, setInitialData] = useState<UpdateUserData | null>(null);
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      try {
+        // Fetch user data from /user-account
+        const userData = await fetchUserData();
+
+        // Update context with fetched data
+        const formattedData: UpdateUserData = {
+          userId: userData.user_id || '',
+          userName: userData.user_name || '',
+          departmentId: userData.department_id || '',
+          departmentName: userData.department_name || '',
+          googleId: userData.google_id || '',
+          gmail: userData.gmail || '',
+          identity: userData.identity || '',
+          position: userData.position || '',
+          available: userData.available === '1',
+          createId: userData.create_id || '',
+          createDate: userData.create_date || '',
+          modifyId: userData.modify_id || '',
+          modifyDate: userData.modify_date || ''
+        };
+
+        dispatch({ type: 'SET_FORM_DATA', payload: formattedData });
+        setInitialData(formattedData);
+
+        // Fetch full user list from /user-account/list
+        const response = await apiClient.get('/user-account/list');
+        console.log('User list:', response.data); // Assuming you want to log the user list
+        // You can further process the user list if needed
+      } catch (error) {
+        console.error('加载用户数据时出错:', error);
+      } finally {
+        dispatch({ type: 'SET_LOADING', payload: false });
+      }
+    };
+
+    loadUserData();
+  }, [dispatch]);
 
   const handleEditClick = () => {
     dispatch({ type: 'SET_EDITABLE', payload: !state.editable });
@@ -19,11 +63,12 @@ const Pdata: React.FC = () => {
   const handleSaveClick = async () => {
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
-      await updateUserData(state.formData);
+      await updateUserData(state.formData as UpdateUserData);
       dispatch({ type: 'SET_EDITABLE', payload: false });
+      alert('用户数据更新成功！');
     } catch (error) {
-      console.error('Error updating user data:', error);
-      alert('Failed to update user data. Please try again.');
+      console.error('更新用户数据时出错:', error);
+      alert('无法更新用户数据，请重试。');
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
@@ -39,7 +84,7 @@ const Pdata: React.FC = () => {
       <div className={styles.container}>
         <form className={`needs-validation ${styles.profileSide}`} noValidate>
           <div className={styles.legendContainer}>
-            <legend className={styles.legend}>您的個人資料</legend>
+            <legend className={styles.legend}>您的个人资料</legend>
             <div className={styles.theButtonGroup}>
               <div className={styles.theEditButton}>
                 <button
@@ -47,7 +92,7 @@ const Pdata: React.FC = () => {
                   className={`btn ${styles.btn}`}
                   onClick={state.editable ? handleSaveClick : handleEditClick}
                 >
-                  {state.editable ? "保存變更" : "修改資料"}
+                  {state.editable ? '保存变更' : '修改资料'}
                 </button>
               </div>
               {!state.editable && (
@@ -66,7 +111,9 @@ const Pdata: React.FC = () => {
 
           <div className="row">
             <div className="col-12">
-              <label htmlFor="userName" className={styles.formLabel}>姓名</label>
+              <label htmlFor="userName" className={styles.formLabel}>
+                姓名
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -81,7 +128,9 @@ const Pdata: React.FC = () => {
 
           <div className="row">
             <div className="col-12">
-              <label htmlFor="userId" className={styles.formLabel}>員工編號</label>
+              <label htmlFor="userId" className={styles.formLabel}>
+                工号
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -96,7 +145,9 @@ const Pdata: React.FC = () => {
 
           <div className="row">
             <div className="col-12">
-              <label htmlFor="gmail" className={styles.formLabel}>信箱 (Gmail)</label>
+              <label htmlFor="gmail" className={styles.formLabel}>
+                信箱 (Gmail)
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -111,7 +162,9 @@ const Pdata: React.FC = () => {
 
           <div className="row">
             <div className="col-12">
-              <label htmlFor="departmentName" className={styles.formLabel}>所屬部門</label>
+              <label htmlFor="departmentName" className={styles.formLabel}>
+                所属部门
+              </label>
               <select
                 className="form-select"
                 id="departmentName"
@@ -121,17 +174,19 @@ const Pdata: React.FC = () => {
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
               >
                 <option value="">...</option>
-                <option value="sales">銷售</option>
-                <option value="production">生產</option>
-                <option value="finance">財務</option>
-                <option value="audit">審計</option>
+                <option value="sales">销售</option>
+                <option value="production">生产</option>
+                <option value="finance">财务</option>
+                <option value="audit">审计</option>
               </select>
             </div>
           </div>
 
           <div className="row">
             <div className="col-12">
-              <label htmlFor="position" className={styles.formLabel}>職稱</label>
+              <label htmlFor="position" className={styles.formLabel}>
+                职称
+              </label>
               <select
                 className="form-select"
                 id="position"
@@ -141,9 +196,9 @@ const Pdata: React.FC = () => {
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
               >
                 <option value="">...</option>
-                <option value="employee">一般員工</option>
+                <option value="employee">一般员工</option>
                 <option value="assistant-manager">副理</option>
-                <option value="manager">經理</option>
+                <option value="manager">经理</option>
               </select>
             </div>
           </div>

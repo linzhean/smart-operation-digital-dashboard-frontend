@@ -19,7 +19,7 @@ body {
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   max-width: 400px;
-  width: 400px;
+  width: 100%;
 }
 
 .formHeader {
@@ -47,12 +47,20 @@ body {
   font-weight: bold;
 }
 
-.setupForm [type="text"],
-.setupForm [type="email"] {
+.setupForm input[type="text"],
+.setupForm input[type="email"] {
   width: 100%;
   padding: 5px;
   border-radius: 8px;
+  border: 2px solid #555;
+}
 
+.setupForm select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  border: 2px solid #555;
 }
 
 .setupSubmit {
@@ -77,19 +85,9 @@ body {
   margin-bottom: 10px;
 }
 
-.theForms select,
-.theForm input {
-  font-size: 1rem !important;
-  padding: 5px;
-  border-radius: 8px;
-  border: 2px solid #555 !important;
-  color: black;
-}
-
 @media (max-width: 600px) {
   .container {
     padding: 15px;
-    width: 100%;
   }
 
   .formHeader h1 {
@@ -97,11 +95,12 @@ body {
   }
 
   .theForms {
-    gap: 20px;
+    flex-direction: column;
+    gap: 10px;
   }
 
-  .theForm select,
-  .theForm input {
+  .theForms select,
+  .theForms input {
     font-size: 1rem;
   }
 }

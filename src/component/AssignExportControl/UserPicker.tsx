@@ -42,14 +42,14 @@ const UserPicker: React.FC<UserPickerProps> = ({ open, users, onClose, onSubmit 
         <Autocomplete
           multiple
           options={users || []} // Ensure `users` is an array
-          getOptionLabel={(option) => `${option.id} ${option.name}`}
+          getOptionLabel={(option) => `${option.id} ${option.userName}`}
           onChange={(event, newValue) => {
             setSelectedUsers(newValue as User[]);
           }}
           value={selectedUsers}
           renderOption={(props, option) => (
             <li {...props} key={option.id}>
-              {option.id} {option.name}
+              {option.id} {option.userName}
             </li>
           )}
           renderInput={(params) => (

@@ -1,4 +1,3 @@
-// src/index.tsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -10,6 +9,7 @@ import Login from './pages/Login/Login';
 // import UserManagement from './pages/Admin/UserManagement';
 import PrivateRoute from './component/PrivateRoute';
 import ProfileSetup from './pages/ProfileSetup/ProfileSetup';
+import AwaitingApproval from './pages/ProfileSetup/AwaitingApproval';
 
 ReactDOM.render(
   <React.StrictMode>

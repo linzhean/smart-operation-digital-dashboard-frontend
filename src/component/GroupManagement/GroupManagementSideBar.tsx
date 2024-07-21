@@ -8,12 +8,12 @@ interface SidebarProps {
   onSelectGroup: (groupId: number) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ onSelectGroup }) => {
+const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup }) => {
   const [isActive, setIsActive] = useState(false);
   const [isDisabled, setIsDisabled] = useState(window.innerWidth > 1024);
   const [activeGroup, setActiveGroup] = useState<number | null>(null);
   const [groups, setGroups] = useState<Group[]>([]);
-  const [newGroupName, setNewGroupName] = useState<string | null>(null); // 新增状态
+  const [newGroupName, setNewGroupName] = useState<string | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -21,13 +21,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onSelectGroup }) => {
     };
 
     window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
-  useEffect(() => {
-    const fetchAllGroups = async () => {
+    const fetchGroupData = async () => {
       try {
         const fetchedGroups = await fetchGroups();
         setGroups(fetchedGroups);
@@ -36,12 +31,12 @@ const Sidebar: React.FC<SidebarProps> = ({ onSelectGroup }) => {
       }
     };
 
-    fetchAllGroups();
-  }, []);
+    fetchGroupData();
 
-  const toggleActiveState = () => {
-    setIsActive(!isActive);
-  };
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const handleGroupClick = (groupId: number) => {
     setActiveGroup(groupId);
@@ -49,24 +44,20 @@ const Sidebar: React.FC<SidebarProps> = ({ onSelectGroup }) => {
   };
 
   const handleAddGroup = async () => {
-    const newGroupName = prompt('请输入新群组名称：');
-    if (newGroupName) {
-      try {
-        const newGroup = await addGroup({
-          name: newGroupName,
-          available: true,
-          createId: '',
-          createDate: '',
-          modifyId: '',
-          modifyDate: '', // Use an empty string instead of null
-        });
-        
-        setGroups(prevGroups => [...prevGroups, newGroup]);
-        setNewGroupName(newGroup.name); // 更新新群组名称状态
-        
-      } catch (error) {
-        console.error('新增群组失败:', error);
-      }
+    try {
+      const newGroup = await addGroup({
+        name: newGroupName || '',
+        available: true,
+        createId: '',
+        createDate: '',
+        modifyId: '',
+        modifyDate: '',
+      });
+
+      setGroups((prevGroups) => [...prevGroups, newGroup]);
+      setNewGroupName(null);
+    } catch (error) {
+      console.error('新增群组失败:', error);
     }
   };
 
@@ -74,7 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onSelectGroup }) => {
     if (window.confirm('确认删除该群组吗？')) {
       try {
         await deleteGroup(groupId);
-        setGroups((prevGroups) => prevGroups.filter(group => group.id !== groupId));
+        setGroups((prevGroups) => prevGroups.filter((group) => group.id !== groupId));
         if (activeGroup === groupId) {
           setActiveGroup(null);
           onSelectGroup(0);
@@ -90,8 +81,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onSelectGroup }) => {
     if (newName) {
       try {
         const updatedGroup = await updateGroupName(groupId, newName);
-        setGroups(prevGroups =>
-          prevGroups.map(group => (group.id === updatedGroup.id ? updatedGroup : group))
+        setGroups((prevGroups) =>
+          prevGroups.map((group) => (group.id === updatedGroup.id ? updatedGroup : group))
         );
       } catch (error) {
         console.error('更新群组名称失败:', error);
@@ -99,55 +90,57 @@ const Sidebar: React.FC<SidebarProps> = ({ onSelectGroup }) => {
     }
   };
 
+  const toggleActiveState = () => {
+    setIsActive(!isActive);
+  };
+
   return (
-    <div className={`${styles.wrapper} ${isActive ? styles.active : ''}`}>
-      <div className={styles.sidebar}>
-        <div className={styles.bg_shadow} onClick={() => setIsActive(false)}></div>
-        <div className={styles.sidebar_inner}>
-          <button
-            className={styles.openbutton}
-            onClick={toggleActiveState}
-            disabled={isDisabled}
-          ></button>
-          <div className={styles.close} onClick={() => setIsActive(false)}>
-            <img src={closearrow} alt="点击关闭侧边栏" />
-          </div>
-          <ul className={`${styles.sidebar_menu} mostly-customized-scrollbar`}>
-            <li>
-              <button className={styles.addButton} onClick={handleAddGroup}>
-                新增群组
-              </button>
-            </li>
-            {newGroupName && (
-              <li>
-                <div>新群组名称: {newGroupName}</div>
-              </li>
-            )}
-            {groups.length > 0 ? (
-              groups.map((group) => (
-                <li
-                  key={group.id}
-                  className={`${styles.sidebartitle} ${activeGroup === group.id ? styles.active : ''}`}
-                >
-                  <span onClick={() => handleGroupClick(group.id)}>
-                    {group.name}
-                  </span>
-                  <button className={styles.deleteButton} onClick={() => handleDeleteGroup(group.id)}>
-                    删除
-                  </button>
-                  <button className={styles.updateButton} onClick={() => handleUpdateGroupName(group.id)}>
-                    修改名称
-                  </button>
-                </li>
-              ))
-            ) : (
-              <li>暂无群组</li>
-            )}
-          </ul>
+    <div className={styles.sidebar}>
+      <div className={styles.bg_shadow} onClick={() => setIsActive(false)}></div>
+      <div className={styles.sidebar_inner}>
+        <button
+          className={styles.openbutton}
+          onClick={toggleActiveState}
+          disabled={isDisabled}
+        ></button>
+        <div className={styles.close} onClick={() => setIsActive(false)}>
+          <img src={closearrow} alt="点击关闭侧边栏" />
         </div>
+        <ul className={`${styles.sidebar_menu} mostly-customized-scrollbar`}>
+          <li>
+            <button className={styles.addButton} onClick={handleAddGroup}>
+              新增群组
+            </button>
+          </li>
+          {newGroupName && (
+            <li>
+              <div>新群组名称: {newGroupName}</div>
+            </li>
+          )}
+          {groups.length > 0 ? (
+            groups.map((group) => (
+              <li
+                key={group.id}
+                className={`${styles.sidebartitle} ${activeGroup === group.id ? styles.active : ''}`}
+              >
+                <span onClick={() => handleGroupClick(group.id)}>
+                  {group.name}
+                </span>
+                <button className={styles.deleteButton} onClick={() => handleDeleteGroup(group.id)}>
+                  删除
+                </button>
+                <button className={styles.updateButton} onClick={() => handleUpdateGroupName(group.id)}>
+                  修改名称
+                </button>
+              </li>
+            ))
+          ) : (
+            <li>暂无群组</li>
+          )}
+        </ul>
       </div>
     </div>
   );
 };
 
-export default Sidebar;
+export default GroupManagementSidebar;

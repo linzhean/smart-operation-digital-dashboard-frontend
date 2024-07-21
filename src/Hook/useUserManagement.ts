@@ -1,7 +1,7 @@
 // import { useState, useEffect } from 'react';
 // import { getUsers, admitUser, deleteUser, addUser } from '../services/userManagementServices';
 // import { fetchGroups, addGroup, deleteGroup } from '../services/GroupApi';
-// import { Group, User } from '../services/types/userManagement';
+// import { Group, User, UpdateUserData } from '../services/types/userManagement';
 
 // const useUserManagement = () => {
 //   const [users, setUsers] = useState<User[]>([]);
@@ -37,8 +37,24 @@
 //   }, []);
 
 //   const addUserHandler = async (user: User) => {
+//     const newUser: UpdateUserData = {
+//       userId: user.id,
+//       userName: user.name,
+//       departmentId: '', // Add actual department ID if applicable
+//       departmentName: user.department,
+//       googleId: '', // Add actual Google ID if applicable
+//       gmail: user.email,
+//       identity: 'NO_PERMISSION', // Or use the appropriate value
+//       position: user.position,
+//       available: user.available,
+//       createId: '', // Add actual creator ID if applicable
+//       createDate: new Date().toISOString(),
+//       modifyId: '',
+//       modifyDate: new Date().toISOString()
+//     };
+
 //     try {
-//       await addUser(user);
+//       await addUser(newUser);
 //       setUsers((prevUsers) => [...prevUsers, user]);
 //     } catch (error) {
 //       console.error('Error adding user:', error);

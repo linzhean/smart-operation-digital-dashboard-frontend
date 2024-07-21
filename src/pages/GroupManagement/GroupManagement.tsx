@@ -27,9 +27,6 @@ const GroupManagement: React.FC = () => {
               }
             />
             <Route path="/" element={<Navigate to="GroupList" />} />
-            {/* <Route path="userStatus" element={<UserStatusControl />} /> */}
-            {/* <Route path="userStatus" element={<NewForm />} /> */}
-            {/* <Route path="/GroupList" element={<Navigate to="GroupList" />} /> */}
           </Routes>
         </div>
       </div>

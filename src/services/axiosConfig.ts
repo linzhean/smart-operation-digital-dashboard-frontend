@@ -1,4 +1,3 @@
-// src/services/apiClient.ts
 import axios from 'axios';
 
 const API_BASE_URL = 'http://140.131.115.153:8080'; // 後端 API 基本 URL
@@ -19,7 +18,7 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error) // 直接返回 Promise 拒絕的錯誤
+  (error) => Promise.reject(error)
 );
 
 // 添加響應攔截器

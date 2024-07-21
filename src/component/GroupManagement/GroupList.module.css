@@ -30,7 +30,33 @@
   background-color: #c9302c !important;
 }
 
-.theTable .addButton .theTable table {
+.theTable .addButton, .theTable .removeButton {
+  position: absolute;
+  top: -60px;
+  right: 10px;
+  z-index: 10;
+}
+
+.theTable .addButton {
+  right: 10px;
+}
+
+.theTable .removeButton {
+  right: 105px;
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  padding: 2px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.theTable .removeButton:hover {
+  background-color: #c9302c;
+}
+
+.theTable table {
   width: 100%;
   border-collapse: collapse;
   border-radius: 10px;
@@ -57,7 +83,6 @@
   background-color: #444;
 }
 
-/* 這邊可以控制 userPicker 按鈕 */
 .theTable button {
   font-size: 1rem;
   color: #CCCCCC;
@@ -66,20 +91,6 @@
   border-radius: 5px;
   padding: 0.5rem;
   font-weight: bolder;
-}
-
-@media (max-width: 575px) {
-  .theList tr {
-    font-size: 1rem;
-  }
-
-  .theList button {
-    font-size: 1rem;
-  }
-
-  .theList td {
-    font-size: 1rem;
-  }
 }
 
 .filterButton {
@@ -152,26 +163,24 @@
   background: #1E90FF !important;
 }
 
-.theTable .removeButton {
-  background-color: #d9534f;
-  color: #fff;
-  border: none;
-  padding: 2px 10px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
+@media (max-width: 575px) {
+  .theList tr {
+    font-size: 1rem;
+  }
 
-.theTable .removeButton:hover {
-  background-color: #c9302c;
-}
+  .theList button {
+    font-size: 1rem;
+    padding: 0 5px 0 5px;
+  }
 
-.allow {
-  /* 允許的樣式 */
-  background-color: rgb(16, 162, 16) !important;
+  .theList td {
+    font-size: 1rem;
+  }
 
-}
-
-.deny {
-  background-color: #c9302c !important;
+  .theTable td {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
 }

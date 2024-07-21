@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styles from './UserApplyTable.module.css';
-import { fetchUsers, admitUser } from '../../services/UserAccountService';
-
-interface EmployeeData {
-  name: string;
-  employeeId: string;
-  department: string;
-  email: string;
-  title: string;
-}
+import { fetchUsers, admitUser, removeUser } from '../../services/UserAccountService';
+import { UserAccountBean } from '../../services/types/userManagement';
 
 const UserApplyTable: React.FC = () => {
-  const [employees, setEmployees] = useState<EmployeeData[]>([]);
+  const [users, setUsers] = useState<UserAccountBean[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
     loadInitialData();
@@ -21,12 +15,13 @@ const UserApplyTable: React.FC = () => {
 
   const loadInitialData = async () => {
     try {
-      const data = await fetchUsers();
+      const data = await fetchUsers(page); // Fetch users from backend
+      console.log('Fetched data:', data);
       if (Array.isArray(data)) {
-        setEmployees(data);
-        setHasMore(false); // 假设初始加载不需要分页
+        setUsers(data);
+        setHasMore(data.length > 0); // Determine if there are more users
       } else {
-        console.error('Error: fetchUsers returned data that is not an array.');
+        console.error('Error: fetchUsers did not return an array.');
       }
     } catch (error) {
       console.error('Error loading initial data:', error);
@@ -34,68 +29,68 @@ const UserApplyTable: React.FC = () => {
   };
 
   const fetchMoreData = async () => {
-    // 模拟加载更多数据的逻辑
-    if (employees.length >= 200) {
-      setHasMore(false);
+    // Simulating fetching more data logic
+    if (users.length >= 200) {
+      setHasMore(false); // Disable infinite scroll after reaching a certain limit
       return;
     }
 
-    const moreEmployees: EmployeeData[] = Array.from({ length: 20 }).map((_, index) => ({
-      name: `New User ${employees.length + index + 1}`,
-      employeeId: `E${employees.length + index + 11}`,
-      department: 'Department',
-      email: `newuser${employees.length + index + 1}@example.com`,
-      title: 'Title',
-    }));
-
-    setEmployees([...employees, ...moreEmployees]);
-  };
-
-  const admitEmployee = async (index: number) => {
+    setPage(prevPage => prevPage + 1);
     try {
-      const employee = employees[index];
-      await admitUser(employee.employeeId);
-      const updatedEmployees = employees.filter((_, i) => i !== index);
-      setEmployees(updatedEmployees);
+      const moreUsers = await fetchUsers(page + 1);
+      if (moreUsers.length === 0) {
+        setHasMore(false); // No more users to load
+      }
+      setUsers([...users, ...moreUsers]);
     } catch (error) {
-      console.error('Error admitting user:', error);
+      console.error('Error fetching more data:', error);
     }
   };
 
+  function admitUserHandler(index: number): void {
+    throw new Error('Function not implemented.');
+  }
+
+  function removeUserHandler(index: number): void {
+    throw new Error('Function not implemented.');
+  }
+
+  // Other functions remain the same...
+
   return (
     <>
-      <div className={styles.tableTitle}><h2>待審核帳號列表</h2></div>
+      <div className={styles.tableTitle}><h2>待审核帐号列表</h2></div>
       <div id="scrollableDiv" className={styles.thePermissionList}>
         <InfiniteScroll
-          dataLength={employees.length}
+          dataLength={users.length}
           next={fetchMoreData}
           hasMore={hasMore}
-          loader={<h4 className={styles.loaderMsg}>加載中...</h4>}
-          endMessage={<p className={styles.endMsg}>沒有更多囉</p>}
+          loader={<h4 className={styles.loaderMsg}>加载中...</h4>}
+          endMessage={<p className={styles.endMsg}>没有更多了</p>}
           scrollableTarget="scrollableDiv"
         >
           <table className={styles.thePermissionList}>
             <thead>
               <tr>
-                <th>申請人</th>
-                <th>工號</th>
-                <th>所屬部門</th>
-                <th>電子信箱</th>
-                <th>職稱</th>
+                <th>申请人</th>
+                <th>工号</th>
+                <th>所属部门</th>
+                <th>电子邮箱</th>
+                <th>职称</th>
                 <th>操作</th>
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(employees) && employees.map((employee, index) => (
+              {users.map((user, index) => (
                 <tr key={index}>
-                  <td>{employee.name}</td>
-                  <td>{employee.employeeId}</td>
-                  <td>{employee.department}</td>
-                  <td>{employee.email}</td>
-                  <td>{employee.title}</td>
+                  <td>{user.userName}</td>
+                  <td>{user.userId}</td>
+                  <td>{user.departmentName}</td>
+                  <td>{user.gmail}</td>
+                  <td>{user.position}</td>
                   <td>
-                    <button className={styles.approveButton} onClick={() => admitEmployee(index)}>開通</button>
-                    <button className={styles.disapproveButton}>刪除</button>
+                    <button className={styles.approveButton} onClick={() => admitUserHandler(index)}>开通</button>
+                    <button className={styles.disapproveButton} onClick={() => removeUserHandler(index)}>删除</button>
                   </td>
                 </tr>
               ))}

@@ -1,17 +1,24 @@
-import React from 'react';
-import Table from '../../component/InterimKPIList/InterimKPIList';
+// InterimKPIControl.tsx
+import React, { useState } from 'react';
+import InterimKPIList from '../../component/InterimKPIList/InterimKPIList';
 import Sidebar from '../../component/InterimKPISidebar/InterimKPISidebar';
 
 const InterimKPIControl: React.FC = () => {
+  const [selectedStatus, setSelectedStatus] = useState<string>('啟用中');
+
+  const handleStatusChange = (newStatus: string) => {
+    setSelectedStatus(newStatus);
+  };
+
   return (
     <>
-      <Sidebar />
+      <Sidebar onStatusChange={handleStatusChange} selectedStatus={selectedStatus} />
       <div className="main_container">
         <div className="theContent">
-          <Table />
-        </div></div>
+          <InterimKPIList selectedStatus={selectedStatus} onStatusChange={handleStatusChange} />
+        </div>
+      </div>
     </>
-
   );
 };
 

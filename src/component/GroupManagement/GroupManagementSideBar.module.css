@@ -22,6 +22,19 @@
   transform: scale(1.2);
 }
 
+.deleteButton {
+  margin-left: 10px;
+  color: red;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  text-decoration: underline;
+}
+
+
 .bg_shadow {
   width: 100%;
   height: 100%;
