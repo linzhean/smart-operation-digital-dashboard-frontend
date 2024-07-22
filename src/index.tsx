@@ -22,7 +22,7 @@ ReactDOM.render(
             {/* <Route path="/admin/user-management" element={<UserManagement />} /> */}
             {/* <Route path="/*" element={<PrivateRoute element={<Main />} />} /> */}
             <Route path="/*" element={<Main />} />
-            <Route path="/*" element={<ProfileSetup />} />
+            {/* <Route path="/*" element={<ProfileSetup />} /> */}
           </Routes>
         </Router>
       </UserProvider>

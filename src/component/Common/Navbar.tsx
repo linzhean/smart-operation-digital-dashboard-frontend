@@ -221,6 +221,7 @@ const NavBar: React.FC = () => {
                 <span className={`${styles.navbarText} ${activeLink.startsWith('/mail') ? styles.activeNavLinkText : ''}`}>信件</span>
               </Link>
             </li>
+
             {/* 個人資料 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link

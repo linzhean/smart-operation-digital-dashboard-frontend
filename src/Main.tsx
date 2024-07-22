@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Group from './component/Group';
-import Pdata from './component/Pdata';
+import Pdata from './pages/Pdata/PersonalData';
 import Mail from './pages/Mail/Mail';
 import Navbar from './component/Common/Navbar';
 import DrawerNavigation from './component/Common/DrawerNavigation';
@@ -65,7 +65,7 @@ const Main: React.FC = () => {
         <Route path="/AssignExportControl/*" element={<PrivateRoute element={<AssignExportControl />} />} />
         <Route path="/UserControl/*" element={<PrivateRoute element={<UserControl />} />} /> */}
         <Route path="/home" element={<Home />} />
-        <Route path="/profile" element={<Pdata />} />
+        <Route path="/profile/*" element={<Pdata />} />
         <Route path="/GroupManagement/*" element={<GroupManagement />} />
         <Route path="/mail" element={<Mail />} />
         <Route path="/InterimKPIControl" element={<InterimKPIControl />} />

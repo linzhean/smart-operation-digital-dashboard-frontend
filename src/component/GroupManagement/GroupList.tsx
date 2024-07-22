@@ -85,15 +85,25 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
     }
   };
 
-  // Toggle graph state
   const toggleGraphState = (graphName: string) => {
     const currentState = graphToggleStates[graphName];
     const newState = currentState === 'allow' ? 'deny' : 'allow';
-    if (window.confirm(`您確定要將「${graphName}」狀態更改為${newState === 'allow' ? '允許' : '禁用'}嗎？`)) {
+    if (window.confirm(`您確定要將【${graphName}】狀態更改為${newState === 'allow' ? '允許' : '禁用'}嗎？`)) {
       setGraphToggleStates(prevStates => ({
         ...prevStates,
         [graphName]: newState
       }));
+    }
+  };
+
+  const handleDeleteGroup = async () => {
+    if (window.confirm('您確定要刪除這個群組嗎？')) {
+      // try {
+      //   await deleteGroup(groupId);
+      //   // 放這裡
+      // } catch (error) {
+      //   console.error('Failed to delete group:', error);
+      // }
     }
   };
 
@@ -128,6 +138,9 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
               className={styles.addButton}
             >
               新增成員
+            </Button>
+            <Button variant="contained" color="secondary" onClick={handleDeleteGroup} className={styles.deleteGroupButton}>
+              刪除群組
             </Button>
             {showMemberPicker && (
               <UserPickerDialog

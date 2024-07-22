@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from '../styles/Pdata.module.css';
-import { useUserContext } from '../context/UserContext';
-import { updateUserData } from '../services/Pdata';
+import styles from './PersonalData.module.css';
+import { useUserContext } from '../../context/UserContext';
+import { updateUserData } from '../../services/Pdata';
 import { useNavigate } from 'react-router-dom';
 
 const Pdata: React.FC = () => {
