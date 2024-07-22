@@ -25,11 +25,11 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
         if (Array.isArray(response)) {
           setMemberData(response);
         } else {
-          console.error('API 返回的数据格式不正确:', response);
+          console.error('API 返回的數據不正確:', response);
           setMemberData([]);
         }
       } catch (error) {
-        console.error('获取群组用户失败:', error);
+        console.error('獲取群組用戶失敗:', error);
       }
     };
 
@@ -44,11 +44,11 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
         if (Array.isArray(users)) {
           setAllUsers(users);
         } else {
-          console.error('API 返回的用户列表格式不正确:', users);
+          console.error('API 返回的用戶格式不正確:', users);
           setAllUsers([]);
         }
       } catch (error) {
-        console.error('获取所有用户失败:', error);
+        console.error('獲取所有用戶失敗:', error);
         setAllUsers([]);
       }
     };
@@ -58,12 +58,12 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
 
   // Remove a user from the group
   const handleRemove = async (id: string, name: string) => {
-    if (window.confirm(`你确定要将成员 ${name} 移除群组吗？`)) {
+    if (window.confirm(`您確定要將【${name}】從群組中移除嗎？`)) {
       try {
         await removeUserFromGroup(groupId, parseInt(id, 10));
         setMemberData(prevData => prevData.filter(member => member.userId !== id));
       } catch (error) {
-        console.error('移除用户失败:', error);
+        console.error('移除用戶失敗:', error);
       }
     }
   };
@@ -76,7 +76,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
       ));
       setMemberData(prevData => [...prevData, ...newMembers]);
     } catch (error) {
-      console.error('添加用户到群组失败:', error);
+      console.error('添加用戶到群組失敗:', error);
     }
   };
 
@@ -88,14 +88,14 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
           onClick={() => handleButtonClick('memberControl')}
           className={activeButton === 'memberControl' ? styles.filterActive : ''}
         >
-          群组内成员
+          群組成員
         </button>
         <button
           id="graphControl"
           onClick={() => handleButtonClick('graphControl')}
           className={activeButton === 'graphControl' ? styles.filterActive : ''}
         >
-          群组可视图表
+          群組可視圖表
         </button>
       </div>
 
@@ -108,7 +108,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
               onClick={() => setShowMemberPicker(true)}
               className={styles.addButton}
             >
-              新增成员
+              新增成員
             </Button>
             {showMemberPicker && (
               <UserPickerDialog
@@ -117,7 +117,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                 onSubmit={handleAddMember}
                 groupId={groupId}
                 users={allUsers.filter(user => !memberData.some(member => member.userId === user.userId))}
-                selectedUsers={[]} // 假设开始时为空数组
+                selectedUsers={[]}
               />
             )}
             <div className={styles.theList}>
@@ -125,8 +125,8 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                 <thead>
                   <tr>
                     <th>姓名</th>
-                    <th>所属部门</th>
-                    <th>职务</th>
+                    <th>所屬部門</th>
+                    <th>職稱</th>
                     <th>操作</th>
                   </tr>
                 </thead>
@@ -153,15 +153,15 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
             <table className="custom-scrollbar">
               <thead>
                 <tr>
-                  <th>图表名称</th>
+                  <th>圖表名稱</th>
                   <th>操作</th>
                 </tr>
               </thead>
               <tbody>
-                {['图表A', '图表B', '图表C'].map((item, index) => (
+                {['生產率', '產能利用率', '廢品率'].map((item, index) => (
                   <tr key={index}>
                     <td>{item}</td>
-                    <td>操作按钮</td>
+                    <td>操作</td>
                   </tr>
                 ))}
               </tbody>
