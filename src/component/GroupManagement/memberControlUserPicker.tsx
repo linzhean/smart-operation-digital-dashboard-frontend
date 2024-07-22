@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { User } from '../../services/types/userManagement';
 
@@ -6,20 +6,20 @@ interface UserPickerDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (selectedUsers: User[]) => void;
-  users: User[];
+  users: User[];  // 添加 users 属性
   selectedUsers: User[];
   groupId: number;
 }
 
 const UserPickerDialog: React.FC<UserPickerDialogProps> = ({ open, onClose, onSubmit, users, selectedUsers, groupId }) => {
-  const [currentSelectedIds, setCurrentSelectedIds] = useState<number[]>(selectedUsers.map(user => user.id));
+  const [currentSelectedIds, setCurrentSelectedIds] = React.useState<string[]>(selectedUsers.map(user => user.userId));
 
-  const handleChange = (event: SelectChangeEvent<number[]>) => {
-    setCurrentSelectedIds(event.target.value as number[]);
+  const handleChange = (event: SelectChangeEvent<string[]>) => {
+    setCurrentSelectedIds(event.target.value as string[]);
   };
 
   const handleSubmit = () => {
-    const selected = users.filter(user => currentSelectedIds.includes(user.id));
+    const selected = users.filter(user => currentSelectedIds.includes(user.userId));
     onSubmit(selected);
     onClose();
   };
@@ -36,15 +36,15 @@ const UserPickerDialog: React.FC<UserPickerDialogProps> = ({ open, onClose, onSu
             onChange={handleChange}
             renderValue={(selected) => (
               <div>
-                {users.filter(user => selected.includes(user.id)).map(user => (
-                  <div key={user.id}>{user.name}</div>
+                {users.filter(user => selected.includes(user.userId)).map(user => (
+                  <div key={user.userId}>{user.userName}</div>
                 ))}
               </div>
             )}
           >
             {users.map(user => (
-              <MenuItem key={user.id} value={user.id}>
-                {user.name}
+              <MenuItem key={user.userId} value={user.userId}>
+                {user.userName}
               </MenuItem>
             ))}
           </Select>
@@ -52,7 +52,7 @@ const UserPickerDialog: React.FC<UserPickerDialogProps> = ({ open, onClose, onSu
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">取消</Button>
-        <Button onClick={handleSubmit} color="primary">确定</Button>
+        <Button onClick={handleSubmit} color="primary">确认</Button>
       </DialogActions>
     </Dialog>
   );

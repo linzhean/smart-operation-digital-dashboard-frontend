@@ -18,14 +18,9 @@ export const fetchGroups = async (): Promise<Group[]> => {
 export const fetchUsersByGroupId = async (groupId: number): Promise<User[]> => {
   try {
     const response = await apiClient.get<Response<User[]>>(`${API_URL}/${groupId}`);
-    if (Array.isArray(response.data.data)) {
-      return response.data.data;
-    } else {
-      console.error('API 返回的不是用户数组:', response.data);
-      return [];
-    }
+    return response.data.data || [];
   } catch (error: any) {
-    console.error('获取群组用户失败:', error);
+    console.error('Failed to fetch group users:', error);
     return [];
   }
 };
@@ -56,21 +51,24 @@ export const deleteGroup = async (groupId: number): Promise<void> => {
 };
 
 // 将用户添加到群组
-export const addUserToGroup = async (requestData: AddUserToGroupRequest): Promise<void> => {
+export const addUserToGroup = async (request: AddUserToGroupRequest): Promise<void> => {
   try {
-    await apiClient.post('/group/user', requestData);
+    const response = await apiClient.post<Response<void>>('/group/user', request);
+    if (!response.data.result) {
+      throw new Error('Failed to add user to group: ' + response.data.message);
+    }
   } catch (error: any) {
-    console.error('将用户添加到组失败: ', error.message);
-    throw new Error('将用户添加到组失败: ' + error.message);
+    console.error('Failed to add user to group: ', error.message);
+    throw new Error('Failed to add user to group: ' + error.message);
   }
 };
 
 // 从群组中移除用户
-export const removeUserFromGroup = async (groupId: number, userId: number): Promise<void> => {
+export const removeUserFromGroup = async (groupId: number, userId: string): Promise<void> => { // Changed userId to string
   try {
-     await apiClient.delete<Response<void>>(`${API_URL}/user`, { data: { groupId, userId } });
+    await apiClient.delete<Response<void>>(`${API_URL}/user`, { data: { groupId, userId } });
   } catch (error: any) {
-    throw new Error('将用户从群组移除失败: ' + error.message);
+    throw new Error('Failed to remove user from group: ' + error.message);
   }
 };
 

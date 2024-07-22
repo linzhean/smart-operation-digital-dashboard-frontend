@@ -13,7 +13,7 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup }) => {
   const [isDisabled, setIsDisabled] = useState(window.innerWidth > 1024);
   const [activeGroup, setActiveGroup] = useState<number | null>(null);
   const [groups, setGroups] = useState<Group[]>([]);
-  const [newGroupName, setNewGroupName] = useState<string | null>(null);
+  const [newGroupName, setNewGroupName] = useState<string>('');
 
   useEffect(() => {
     const handleResize = () => {
@@ -46,16 +46,13 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup }) => {
   const handleAddGroup = async () => {
     try {
       const newGroup = await addGroup({
-        name: newGroupName || '',
-        available: true,
-        createId: '',
+        name: newGroupName,
         createDate: '',
-        modifyId: '',
         modifyDate: '',
       });
 
       setGroups((prevGroups) => [...prevGroups, newGroup]);
-      setNewGroupName(null);
+      setNewGroupName('');
     } catch (error) {
       console.error('新增群组失败:', error);
     }
@@ -111,12 +108,14 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup }) => {
             <button className={styles.addButton} onClick={handleAddGroup}>
               新增群组
             </button>
+            <input
+              type="text"
+              value={newGroupName}
+              onChange={(e) => setNewGroupName(e.target.value)}
+              placeholder="输入群组名称"
+              className={styles.newGroupNameInput}
+            />
           </li>
-          {newGroupName && (
-            <li>
-              <div>新群组名称: {newGroupName}</div>
-            </li>
-          )}
           {groups.length > 0 ? (
             groups.map((group) => (
               <li

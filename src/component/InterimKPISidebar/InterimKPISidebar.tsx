@@ -62,23 +62,18 @@ const Sidebar: React.FC<SidebarProps> = ({ onStatusChange, selectedStatus }) => 
             <img src={closearrow} alt="Click to close sidebar" />
           </div>
           <ul className={`${styles.siderbar_menu} mostly-customized-scrollbar`}>
-            <li>
-              <a href="#">
+            <li className={selectedStatus === '啟用中' ? styles.active : ''}>
+              <a href="#" onClick={() => onStatusChange('啟用中')}>
                 <div className={styles.title}>啟用中</div>
               </a>
             </li>
-            <li>
-              <a href="#">
+            <li className={selectedStatus === '已過期' ? styles.active : ''}>
+              <a href="#" onClick={() => onStatusChange('已過期')}>
                 <div className={styles.title}>已過期</div>
               </a>
             </li>
-            <li>
-              <a href="#">
-                <div className={styles.title}>已關閉</div>
-              </a>
-            </li>
-            <li>
-              <a href="#">
+            <li className={selectedStatus === '待審核' ? styles.active : ''}>
+              <a href="#" onClick={() => onStatusChange('待審核')}>
                 <div className={styles.title}>待審核</div>
               </a>
             </li>

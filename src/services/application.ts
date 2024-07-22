@@ -5,40 +5,60 @@ import { ApplicationData } from './types/userManagement';
 // Define your API endpoints
 const APPLICATION_API_BASE = '/application';
 
-export const getApplications = async (status: string, nowPage: number, startDate?: string, endDate?: string): Promise<Response<ApplicationData[]>> => {
-    try {
-      const response = await apiClient.get(`${APPLICATION_API_BASE}`, {
-        params: { status, nowPage, startDate, endDate },
-      });
-      return response.data;
-    } catch (error) {
-      throw new Error('Failed to fetch applications');
-    }
-  };  
-
-export const createApplication = async (applicationData: Partial<ApplicationData>): Promise<Response<ApplicationData>> => {
+// Get applications with optional filters
+export const getApplications = async (
+  status: string,
+  nowPage: number,
+  startDate?: string,
+  endDate?: string
+): Promise<Response<ApplicationData[]>> => {
   try {
-    const response = await apiClient.post(`${APPLICATION_API_BASE}`, applicationData);
+    const response = await apiClient.get<Response<ApplicationData[]>>(`${APPLICATION_API_BASE}`, {
+      params: { status, nowPage, startDate, endDate },
+    });
     return response.data;
   } catch (error) {
-    throw new Error('Failed to create application');
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
+    throw new Error(`Failed to fetch applications: ${errorMsg}`);
   }
 };
 
-export const updateApplication = async (id: number, applicationData: Partial<ApplicationData>): Promise<Response<ApplicationData>> => {
+// Create a new application
+export const createApplication = async (
+  applicationData: Partial<ApplicationData>
+): Promise<Response<ApplicationData>> => {
   try {
-    const response = await apiClient.patch(`${APPLICATION_API_BASE}/permit/${id}`, applicationData);
+    const response = await apiClient.post<Response<ApplicationData>>(`${APPLICATION_API_BASE}`, applicationData);
     return response.data;
   } catch (error) {
-    throw new Error('Failed to update application');
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
+    throw new Error(`Failed to create application: ${errorMsg}`);
   }
 };
 
-export const deleteApplication = async (id: number): Promise<Response<string>> => {
+// Update an existing application
+export const updateApplication = async (
+  id: number,
+  applicationData: Partial<ApplicationData>
+): Promise<Response<ApplicationData>> => {
   try {
-    const response = await apiClient.delete(`${APPLICATION_API_BASE}/${id}`);
+    const response = await apiClient.patch<Response<ApplicationData>>(`${APPLICATION_API_BASE}/permit/${id}`, applicationData);
     return response.data;
   } catch (error) {
-    throw new Error('Failed to delete application');
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
+    throw new Error(`Failed to update application: ${errorMsg}`);
+  }
+};
+
+// Delete an application
+export const deleteApplication = async (
+  id: number
+): Promise<Response<string>> => {
+  try {
+    const response = await apiClient.delete<Response<string>>(`${APPLICATION_API_BASE}/${id}`);
+    return response.data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
+    throw new Error(`Failed to delete application: ${errorMsg}`);
   }
 };

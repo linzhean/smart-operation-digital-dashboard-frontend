@@ -1,25 +1,53 @@
 import React from 'react';
 import "../../../styles/filter.css";
 
-const Filter: React.FC = () => {
+// 状态映射
+const statusMapping: Record<string, string> = {
+  "交辦": "0",
+  "被交辦": "1",
+  "待處理": "2",
+  "已完成": "3",
+};
+
+interface FilterProps {
+  onFilterChange: (status: string[]) => void;
+}
+
+const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
+  // 状态数组
+  const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>([]);
+
+  // 处理选中的状态
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, checked } = event.target;
+    const status = Object.keys(statusMapping).find(key => statusMapping[key] === id);
+
+    if (status) {
+      setSelectedStatuses(prevStatuses => {
+        const updatedStatuses = checked
+          ? [...prevStatuses, status]
+          : prevStatuses.filter(item => item !== status);
+
+        onFilterChange(updatedStatuses); // 调用 onFilterChange 并传递更新后的状态数组
+        return updatedStatuses;
+      });
+    }
+  };
+
   return (
     <div className="filter">
-      <div className="options">
-        <input type="checkbox" name="taskStatus" id="assign" value="assign" />
-        <label htmlFor="assign">交辦</label>
-      </div>
-      <div className="options">
-        <input type="checkbox" name="taskStatus" id="assigned" value="assigned" />
-        <label htmlFor="assigned">被交辦</label>
-      </div>
-      <div className="options">
-        <input type="checkbox" name="taskStatus" id="finished" value="finished" />
-        <label htmlFor="finished">已完成</label>
-      </div>
-      <div className="options">
-        <input type="checkbox" name="taskStatus" id="unfinished" value="unfinished" />
-        <label htmlFor="unfinished">未完成</label>
-      </div>
+      {Object.keys(statusMapping).map((label) => (
+        <div className="options" key={statusMapping[label]}>
+          <input 
+            type="checkbox" 
+            name="taskStatus" 
+            id={statusMapping[label]} 
+            value={statusMapping[label]} 
+            onChange={handleCheckboxChange} 
+          />
+          <label htmlFor={statusMapping[label]}>{label}</label>
+        </div>
+      ))}
     </div>
   );
 };

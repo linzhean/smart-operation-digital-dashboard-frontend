@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getEmails, getEmailDetails, createEmail, updateEmail, deleteEmail, sendEmail } from '../services/mailService';
-import { Email } from '../services/mailService';
+import { getEmails, getEmailDetails, createEmail, updateEmail, deleteEmail, sendEmail, getChatMessages, sendChatMessage } from '../services/mailService';
+import { Email, EmailMessage } from '../services/mailService';
 
 export const useEmails = () => {
     const [emails, setEmails] = useState<Email[]>([]);
@@ -8,15 +8,17 @@ export const useEmails = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
+    const defaultStatus = '0'; // 默认值，或可以从其他地方传递
+
     useEffect(() => {
-        loadEmails('ASSIGN'); // Pass a default status here
+        fetchEmails([defaultStatus]);
     }, []);
 
-    const loadEmails = async (status: string) => {
+    const fetchEmails = async (statuses: string[]) => {
         setLoading(true);
         setError(null);
         try {
-            const fetchedEmails = await getEmails(status);
+            const fetchedEmails = await getEmails(statuses);
             setEmails(fetchedEmails);
         } catch (error: any) {
             setError(error.message);
@@ -42,9 +44,9 @@ export const useEmails = () => {
         setLoading(true);
         setError(null);
         try {
-            const newEmail = { ...email, id: 0 }; // Assuming id should be 0 for new email
+            const newEmail = { ...email, id: 0 };
             await createEmail(newEmail as Email);
-            await loadEmails('ASSIGN'); // Pass a status if needed
+            await fetchEmails([defaultStatus]);
         } catch (error: any) {
             setError(error.message);
         } finally {
@@ -56,9 +58,9 @@ export const useEmails = () => {
         setLoading(true);
         setError(null);
         try {
-            const updatedEmail = { ...email, id }; // Ensure id is included
+            const updatedEmail = { ...email, id };
             await updateEmail(id, updatedEmail as Email);
-            await loadEmails('ASSIGN'); // Pass a status if needed
+            await fetchEmails([defaultStatus]);
         } catch (error: any) {
             setError(error.message);
         } finally {
@@ -71,7 +73,7 @@ export const useEmails = () => {
         setError(null);
         try {
             await deleteEmail(id);
-            await loadEmails('ASSIGN'); // Pass a status if needed
+            await fetchEmails([defaultStatus]);
         } catch (error: any) {
             setError(error.message);
         } finally {
@@ -93,6 +95,43 @@ export const useEmails = () => {
         }
     };
 
+    const getEmailChatMessages = async (emailId: number) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const messages = await getChatMessages(emailId);
+            setSelectedEmail(prevEmail => prevEmail ? { ...prevEmail, messageList: messages } : null);
+        } catch (error: any) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const sendNewChatMessage = async (emailId: number, content: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const message: EmailMessage = {
+                id: 0,
+                mailId: emailId,
+                messageId: 0,
+                content,
+                available: 'true',
+                createId: 'currentUser', // Replace with actual user ID
+                createDate: new Date().toISOString(),
+                modifyId: 'currentUser', // Replace with actual user ID
+                modifyDate: new Date().toISOString(),
+            };
+            await sendChatMessage(emailId, message, content);
+            await getEmailChatMessages(emailId);
+        } catch (error: any) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return {
         emails,
         selectedEmail,
@@ -103,5 +142,8 @@ export const useEmails = () => {
         updateExistingEmail,
         deleteExistingEmail,
         sendSelectedEmail,
+        fetchEmails,
+        getEmailChatMessages,
+        sendNewChatMessage,
     };
 };

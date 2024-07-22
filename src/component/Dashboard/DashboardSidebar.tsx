@@ -49,7 +49,7 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
   };
 
   const handleAddDashboard = async () => {
-    const newDashboardName = prompt('请输入新仪表板名称：');
+    const newDashboardName = prompt('請輸入新儀表板名稱：');
     if (newDashboardName) {
       try {
         const newDashboard = await DashboardService.createDashboard({ name: newDashboardName });

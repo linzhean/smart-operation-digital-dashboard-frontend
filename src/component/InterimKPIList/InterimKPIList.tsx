@@ -9,6 +9,13 @@ interface InterimKPIListProps {
   onStatusChange: (status: string) => void;
 }
 
+const statusMap: { [key: string]: string } = {
+  '交辦': '0',
+  '被交辦': '1',
+  '待處理': '2',
+  '已完成': '3',
+};
+
 const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatusChange }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [formData, setFormData] = useState<Partial<ApplicationData>>({});
@@ -20,7 +27,8 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
 
   const fetchApplications = async () => {
     try {
-      const response = await getApplications(selectedStatus, 1); // 這裡假設 nowPage 為 1，根據你的應用場景調整
+      const statusKey = statusMap[selectedStatus] || '';
+      const response = await getApplications(statusKey, 1);
       if (response.result && response.data) {
         setApplications(response.data);
       } else {

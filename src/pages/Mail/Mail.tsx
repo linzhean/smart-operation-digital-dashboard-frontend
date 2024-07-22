@@ -16,9 +16,19 @@ const Mail: React.FC = () => {
     createNewEmail,
     deleteExistingEmail,
     sendSelectedEmail,
+    fetchEmails,
   } = useEmails();
 
   const [showRightSide, setShowRightSide] = React.useState(false);
+  const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    const fetchFilteredEmails = async () => {
+      await fetchEmails(selectedStatuses);
+    };
+
+    fetchFilteredEmails();
+  }, [selectedStatuses]);
 
   const handleMailItemClick = async (id: number) => {
     await selectEmail(id);
@@ -33,24 +43,26 @@ const Mail: React.FC = () => {
     await createNewEmail({});
   };
 
+  const handleFilterChange = (statuses: string[]) => {
+    setSelectedStatuses(statuses);
+  };
+
   return (
     <main className="mainEmailUnique">
       <div className={`leftsideUnique ${showRightSide ? 'hiddenUnique' : ''}`}>
-        {loading && <p>加载中...</p>}
+        {loading && <p>Loading...</p>}
         {error && <p className="error">{error}</p>}
-        <Filter />
+        <Filter onFilterChange={handleFilterChange} />
         <MailBreif onMailClick={handleMailItemClick} emails={emails} />
-        <button className="create-buttonUnique" onClick={handleCreateEmailClick}>创建邮件</button>
+        <button className="create-buttonUnique" onClick={handleCreateEmailClick}>創建郵件</button>
       </div>
       <div className={`rightsideUnique ${showRightSide ? '' : 'hiddenUnique'}`}>
-        <button className="toggle-buttonUnique" onClick={handleBackClick}>
-          返回
-        </button>
+        <button className="toggle-buttonUnique" onClick={handleBackClick}>返回</button>
         {selectedEmail && (
           <div>
             <ChatBox email={selectedEmail} />
-            <button className="delete-buttonUnique" onClick={() => deleteExistingEmail(selectedEmail.id)}>删除邮件</button>
-            <button className="send-buttonUnique" onClick={sendSelectedEmail}>发送邮件</button>
+            <button className="delete-buttonUnique" onClick={() => deleteExistingEmail(selectedEmail.id)}>刪除郵件</button>
+            <button className="send-buttonUnique" onClick={sendSelectedEmail}>發送郵件</button>
           </div>
         )}
       </div>

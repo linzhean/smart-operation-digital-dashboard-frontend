@@ -3,6 +3,8 @@ import { Response } from './types/Request.type';
 
 export interface Email {
     id: number;
+    subject: string;
+    body: string;
     assignedTaskId: number;
     chartId: number;
     name: string;
@@ -31,6 +33,13 @@ export interface EmailMessage {
     modifyDate: string;
 }
 
+const statusMapping: Record<string, string> = {
+    "交辦": "0",
+    "被交辦": "1",
+    "待處理": "2",
+    "已完成": "3",
+};
+
 // Helper function for the response structure
 const handleApiResponse = <T>(response: Response<T>): T => {
     if (response.result) {
@@ -41,8 +50,9 @@ const handleApiResponse = <T>(response: Response<T>): T => {
 };
 
 // API requests
-export const getEmails = async (status: string): Promise<Email[]> => {
-    const response = await apiClient.get(`/mail`, { params: { status } });
+export const getEmails = async (statuses: string[]): Promise<Email[]> => {
+    const statusValues = statuses.map(st => statusMapping[st] || st).join(',');
+    const response = await apiClient.get(`/mail`, { params: { status: statusValues } });
     return handleApiResponse<Email[]>(response.data);
 };
 
@@ -51,12 +61,12 @@ export const getEmailDetails = async (id: number): Promise<Email> => {
     return handleApiResponse<Email>(response.data);
 };
 
-export const createEmail = async (email: Email): Promise<void> => {
+export const createEmail = async (email: Omit<Email, 'id'>): Promise<void> => {
     const response = await apiClient.post('/mail', email);
     handleApiResponse<void>(response.data);
 };
 
-export const updateEmail = async (id: number, email: Email): Promise<void> => {
+export const updateEmail = async (id: number, email: Partial<Omit<Email, 'id'>>): Promise<void> => {
     const response = await apiClient.patch(`/mail/${id}`, email);
     handleApiResponse<void>(response.data);
 };
@@ -76,7 +86,7 @@ export const getChatMessages = async (emailId: number): Promise<EmailMessage[]> 
     return handleApiResponse<EmailMessage[]>(response.data);
 };
 
-export const sendChatMessage = async (emailId: number, message: EmailMessage, newMessage: string): Promise<EmailMessage> => {
-    const response = await apiClient.post('/mail/message', message);
+export const sendChatMessage = async (emailId: number, message: Omit<EmailMessage, 'id' | 'messageId'>, content?: string): Promise<EmailMessage> => {
+    const response = await apiClient.post(`/mail/${emailId}/messages`, message);
     return handleApiResponse<EmailMessage>(response.data);
 };

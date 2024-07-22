@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Route, Routes, Navigate } from 'react-router';
 import GroupManagementSidebar from '../../component/GroupManagement/GroupManagementSideBar';
 import GroupList from '../../component/GroupManagement/GroupList';
+import styles from './GroupManagement.module.css';
 
 const GroupManagement: React.FC = () => {
   const [selectedGroupId, setSelectedGroupId] = useState<number>(0);
@@ -12,9 +13,10 @@ const GroupManagement: React.FC = () => {
   };
 
   return (
-    <div className="wrapper">
-      <div className="main_container">
-        <div className="theContent">
+    <div className={styles.wrapper}>
+      <GroupManagementSidebar onSelectGroup={setSelectedGroupId} />
+      <div className={styles.main_container}>
+        <div className={styles.theContent}>
           <Routes>
             <Route
               path="/GroupList"

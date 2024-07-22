@@ -2,70 +2,71 @@ import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import UserPickerDialog from './memberControlUserPicker';
 import { User } from '../../services/types/userManagement';
-import { getUserList } from '../../services/userManagementServices'; // 确保导入路径正确
+import { getUsers } from '../../services/userManagementServices';
+import { addUserToGroup } from '../../services/GroupApi';
+import GroupManagementSidebar from './GroupManagementSideBar';
+import GroupList from './GroupList';
 
 const ParentComponent: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedGroupIds, setSelectedGroupIds] = useState<number[]>([]); // 新的状态变量
+  const [selectedGroupId, setSelectedGroupId] = useState<number>(0);
 
-  // 获取用户数据
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const fetchedUsers = await getUserList(); // 使用 list 端点
+        const fetchedUsers = await getUsers();
         setUsers(fetchedUsers);
       } catch (error: any) {
-        console.error('无法获取用户:', error.message);
+        console.error('Unable to fetch users:', error.message);
       }
     };
 
     fetchUsers();
-  }, [selectedGroupIds]); // 当 selectedGroupIds 变化时重新获取用户数据
+  }, [selectedGroupId]);
 
-  // 打开对话框
   const handleOpenDialog = () => {
     setDialogOpen(true);
   };
 
-  // 关闭对话框
   const handleCloseDialog = () => {
     setDialogOpen(false);
   };
 
-  // 提交选中的用户
-  const handleSubmitUsers = (selectedUsers: User[]) => {
-    console.log('选中的用户:', selectedUsers);
+  const handleSubmitUsers = async (selectedUsers: User[]) => {
+    console.log('Selected users:', selectedUsers);
     setSelectedUsers(selectedUsers);
-    // 处理提交逻辑
+    try {
+      const addUserPromises = selectedUsers.map(user =>
+        addUserToGroup({ userId: user.userId, groupId: selectedGroupId })
+      );
+      await Promise.all(addUserPromises);
+      console.log('Users successfully added to the group');
+    } catch (error: any) {
+      console.error('Failed to add users to the group:', error.message);
+    }
   };
 
   return (
     <div>
+      <GroupManagementSidebar onSelectGroup={setSelectedGroupId} />
       <Button variant="contained" color="primary" onClick={handleOpenDialog}>
-        选择用户
+        Select Users
       </Button>
       <UserPickerDialog
         open={dialogOpen}
         onClose={handleCloseDialog}
         onSubmit={handleSubmitUsers}
-        users={users}
         selectedUsers={selectedUsers}
-        groupId={0} // groupId 可以用在需要的地方
-      />
-      <div>
-        <h3>已选择的用户:</h3>
-        {selectedUsers.length > 0 ? (
-          <ul>
-            {selectedUsers.map(user => (
-              <li key={user.id}>{user.name}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>未选择用户</p>
-        )}
-      </div>
+        groupId={selectedGroupId} users={[]}      />
+      {selectedGroupId !== 0 && (
+        <GroupList
+          groupId={selectedGroupId}
+          activeButton={''}
+          handleButtonClick={(buttonId) => {}}
+        />
+      )}
     </div>
   );
 };

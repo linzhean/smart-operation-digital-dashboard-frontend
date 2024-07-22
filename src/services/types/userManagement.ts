@@ -3,32 +3,24 @@ import { ReactNode } from 'react';
 export interface Group {
   id: number;
   name: string;
-  available: boolean;
-  createId: string;
   createDate: string;
-  modifyId: string;
   modifyDate: string;
-  users?: number[];
 }
 
 export interface User {
-  [x: string]: ReactNode;
   id: number;
+  userId: string; // Added userId field
   name: string;
-  userId: string;
-  userName: string;
-  departmentId: string;
-  departmentName: string;
-  googleId: string;
-  gmail: string;
-  identity: string;
-  position: string| null;
+  userName: string; // Added userName field
+  department: string;
+  position: string;
   available: boolean;
   createId: string;
   createDate: string;
   modifyId: string;
   modifyDate: string;
 }
+
 
 export interface EmployeeData {
   [x: string]: any;
@@ -63,19 +55,10 @@ export interface ApplicationData {
 }
 
 export interface UpdateUserData {
-  userId: string;
-  userName: string;
-  departmentId: string;
-  departmentName: string;
-  googleId: string;
-  gmail: string;
-  identity: string;
+  name: string;
+  department: string;
   position: string;
   available: boolean;
-  createId: string;
-  createDate: string;
-  modifyId: string;
-  modifyDate: string;
 }
 
 export interface UserAccountBean {
@@ -95,6 +78,6 @@ export interface UserAccountBean {
 }
 
 export interface AddUserToGroupRequest {
-  userId: string;
+  userId: string; // 這裡假設 userId 是字符串
   groupId: number;
 }
