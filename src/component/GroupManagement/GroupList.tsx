@@ -16,6 +16,11 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
   const [memberData, setMemberData] = useState<User[]>([]);
   const [showMemberPicker, setShowMemberPicker] = useState(false);
   const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [graphToggleStates, setGraphToggleStates] = useState<{ [key: string]: string }>({
+    '生產率': 'allow',
+    '廢品率': 'allow',
+    '產能利用率': 'allow'
+  });
 
   // Fetch users of the current group
   useEffect(() => {
@@ -80,6 +85,18 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
     }
   };
 
+  // Toggle graph state
+  const toggleGraphState = (graphName: string) => {
+    const currentState = graphToggleStates[graphName];
+    const newState = currentState === 'allow' ? 'deny' : 'allow';
+    if (window.confirm(`您確定要將「${graphName}」狀態更改為${newState === 'allow' ? '允許' : '禁用'}嗎？`)) {
+      setGraphToggleStates(prevStates => ({
+        ...prevStates,
+        [graphName]: newState
+      }));
+    }
+  };
+
   return (
     <div>
       <div className={styles.filterButton}>
@@ -89,6 +106,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
           className={activeButton === 'memberControl' ? styles.filterActive : ''}
         >
           群組成員
+          <span></span><span></span><span></span><span></span>
         </button>
         <button
           id="graphControl"
@@ -96,6 +114,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
           className={activeButton === 'graphControl' ? styles.filterActive : ''}
         >
           群組可視圖表
+          <span></span><span></span><span></span><span></span>
         </button>
       </div>
 
@@ -158,10 +177,17 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                 </tr>
               </thead>
               <tbody>
-                {['生產率', '產能利用率', '廢品率'].map((item, index) => (
+                {['生產率', '廢品率', '產能利用率'].map((item, index) => (
                   <tr key={index}>
                     <td>{item}</td>
-                    <td>操作</td>
+                    <td>
+                      <button
+                        className={`${styles.toggleButton} ${graphToggleStates[item] === 'allow' ? styles.allow : styles.deny}`}
+                        onClick={() => toggleGraphState(item)}
+                      >
+                        {graphToggleStates[item] === 'allow' ? '目前狀態：允許' : '目前狀態：禁用'}
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
