@@ -55,10 +55,19 @@ export interface ApplicationData {
 }
 
 export interface UpdateUserData {
-  name: string;
-  department: string;
+  userId: string;
+  userName: string;
+  departmentId: string;
+  departmentName: string;
+  googleId: string;
+  gmail: string;
+  identity: string;
   position: string;
   available: boolean;
+  createId: string;
+  createDate: string;
+  modifyId: string;
+  modifyDate: string;
 }
 
 export interface UserAccountBean {
@@ -81,3 +90,10 @@ export interface AddUserToGroupRequest {
   userId: string; // 這裡假設 userId 是字符串
   groupId: number;
 }
+
+export type ApiUserData = {
+  id: string;
+  name: string;
+  isAdmin: boolean;
+  charAuths: any[]; // 根据实际的 charAuths 结构进行调整
+};

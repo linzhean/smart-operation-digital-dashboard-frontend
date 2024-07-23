@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import UserPickerDialog from './memberControlUserPicker';
 import { User } from '../../services/types/userManagement';
-import { getUsers } from '../../services/userManagementServices';
 import { addUserToGroup } from '../../services/GroupApi';
+import { getUsers } from '../../services/userManagementServices';
 import GroupManagementSidebar from './GroupManagementSideBar';
 import GroupList from './GroupList';
 
@@ -48,9 +48,13 @@ const ParentComponent: React.FC = () => {
     }
   };
 
+  const handleDeleteGroup = async (groupId: number) => {
+    // Implement group deletion logic if necessary
+  };
+
   return (
     <div>
-      <GroupManagementSidebar onSelectGroup={setSelectedGroupId} />
+      <GroupManagementSidebar onSelectGroup={handleDeleteGroup} groupId={0} activeButton={''} handleButtonClick={() => {}} />
       <Button variant="contained" color="primary" onClick={handleOpenDialog}>
         Select Users
       </Button>
@@ -59,12 +63,16 @@ const ParentComponent: React.FC = () => {
         onClose={handleCloseDialog}
         onSubmit={handleSubmitUsers}
         selectedUsers={selectedUsers}
-        groupId={selectedGroupId} users={[]}      />
+        groupId={selectedGroupId}
+        onAddSelectedMembers={() => {}}
+        users={users}
+      />
       {selectedGroupId !== 0 && (
         <GroupList
           groupId={selectedGroupId}
           activeButton={''}
-          handleButtonClick={(buttonId) => {}}
+          handleButtonClick={() => {}}
+          onDeleteGroup={handleDeleteGroup}
         />
       )}
     </div>

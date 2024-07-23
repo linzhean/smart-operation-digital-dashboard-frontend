@@ -14,7 +14,7 @@ export const fetchGroups = async (): Promise<Group[]> => {
   }
 };
 
-// 根据群组 ID 获取用户
+// 根据群组 ID 获取用户 
 export const fetchUsersByGroupId = async (groupId: number): Promise<User[]> => {
   try {
     const response = await apiClient.get<Response<User[]>>(`${API_URL}/${groupId}`);
@@ -64,7 +64,7 @@ export const addUserToGroup = async (request: AddUserToGroupRequest): Promise<vo
 };
 
 // 从群组中移除用户
-export const removeUserFromGroup = async (groupId: number, userId: string): Promise<void> => { // Changed userId to string
+export const removeUserFromGroup = async (groupId: number, userId: string): Promise<void> => {
   try {
     await apiClient.delete<Response<void>>(`${API_URL}/user`, { data: { groupId, userId } });
   } catch (error: any) {

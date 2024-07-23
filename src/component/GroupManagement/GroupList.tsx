@@ -1,6 +1,7 @@
+// GroupList.tsx
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import { fetchUsersByGroupId, addUserToGroup, removeUserFromGroup } from '../../services/GroupApi';
+import { fetchUsersByGroupId, addUserToGroup, removeUserFromGroup, deleteGroup } from '../../services/GroupApi'; // Import deleteGroup API function
 import { User } from '../../services/types/userManagement';
 import { getUsers } from '../../services/userManagementServices';
 import UserPickerDialog from './memberControlUserPicker';
@@ -10,9 +11,10 @@ interface GroupListProps {
   groupId: number;
   activeButton: string;
   handleButtonClick: (buttonId: string) => void;
+  onDeleteGroup: (groupId: number) => void; // Add this line
 }
 
-const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButtonClick }) => {
+const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButtonClick,onDeleteGroup }) => {
   const [memberData, setMemberData] = useState<User[]>([]);
   const [showMemberPicker, setShowMemberPicker] = useState(false);
   const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -22,7 +24,6 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
     '產能利用率': 'allow'
   });
 
-  // Fetch users of the current group
   useEffect(() => {
     const fetchGroupUsers = async () => {
       try {
@@ -41,7 +42,6 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
     fetchGroupUsers();
   }, [groupId]);
 
-  // Fetch all users
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
@@ -61,11 +61,10 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
     fetchAllUsers();
   }, []);
 
-  // Remove a user from the group
   const handleRemove = async (id: string, name: string) => {
     if (window.confirm(`您確定要將【${name}】從群組中移除嗎？`)) {
       try {
-        await removeUserFromGroup(groupId, parseInt(id, 10));
+        await removeUserFromGroup(groupId, id);
         setMemberData(prevData => prevData.filter(member => member.userId !== id));
       } catch (error) {
         console.error('移除用戶失敗:', error);
@@ -73,7 +72,6 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
     }
   };
 
-  // Add new members to the group
   const handleAddMember = async (newMembers: User[]) => {
     try {
       await Promise.all(newMembers.map(user =>
@@ -98,12 +96,12 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
 
   const handleDeleteGroup = async () => {
     if (window.confirm('您確定要刪除這個群組嗎？')) {
-      // try {
-      //   await deleteGroup(groupId);
-      //   // 放這裡
-      // } catch (error) {
-      //   console.error('Failed to delete group:', error);
-      // }
+      try {
+        await deleteGroup(groupId); // Ensure groupId is passed correctly
+        // Handle post-deletion actions (e.g., notify parent component)
+      } catch (error) {
+        console.error('刪除群組失敗:', error);
+      }
     }
   };
 
@@ -139,7 +137,12 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
             >
               新增成員
             </Button>
-            <Button variant="contained" color="secondary" onClick={handleDeleteGroup} className={styles.deleteGroupButton}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleDeleteGroup}
+              className={styles.deleteGroupButton}
+            >
               刪除群組
             </Button>
             {showMemberPicker && (
@@ -149,7 +152,9 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                 onSubmit={handleAddMember}
                 groupId={groupId}
                 users={allUsers.filter(user => !memberData.some(member => member.userId === user.userId))}
-                selectedUsers={[]}
+                selectedUsers={[]} onAddSelectedMembers={function (selectedUsers: User[]): void {
+                  throw new Error('Function not implemented.');
+                } }
               />
             )}
             <div className={styles.theList}>
@@ -169,7 +174,10 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                       <td>{member.department}</td>
                       <td>{member.position || '未指定'}</td>
                       <td>
-                        <Button variant="outlined" onClick={() => handleRemove(member.userId, member.userName)}>
+                        <Button
+                          variant="outlined"
+                          onClick={() => handleRemove(member.userId, member.userName)}
+                        >
                           移除
                         </Button>
                       </td>

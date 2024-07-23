@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import styles from '../styles/Pdata.module.css';
-import { useUserContext } from '../context/UserContext';
-import { fetchUserData, updateUserData } from '../services/Pdata';
+import styles from './PersonalData.module.css';
+import { useUserContext } from '../../context/UserContext';
+import { fetchUserData, updateUserData } from '../../services/Pdata';
+import { UpdateUserData } from '../../services/types/userManagement';
+import apiClient from '../../services/axiosConfig';
 import { useNavigate } from 'react-router-dom';
-import { UpdateUserData } from '../services/types/userManagement';
-import apiClient from '../services/axiosConfig';
 
 const Pdata: React.FC = () => {
   const { state, dispatch } = useUserContext();
@@ -18,21 +18,21 @@ const Pdata: React.FC = () => {
         // Fetch user data from /user-account
         const userData = await fetchUserData();
 
-        // Update context with fetched data
+        // Check if the fetched userData has the correct structure
         const formattedData: UpdateUserData = {
-          userId: userData.user_id || '',
-          userName: userData.user_name || '',
-          departmentId: userData.department_id || '',
-          departmentName: userData.department_name || '',
-          googleId: userData.google_id || '',
+          userId: userData.userId || '',
+          userName: userData.userName || '',
+          departmentId: userData.departmentId || '',
+          departmentName: userData.departmentName || '',
+          googleId: userData.googleId || '',
           gmail: userData.gmail || '',
           identity: userData.identity || '',
           position: userData.position || '',
-          available: userData.available === '1',
-          createId: userData.create_id || '',
-          createDate: userData.create_date || '',
-          modifyId: userData.modify_id || '',
-          modifyDate: userData.modify_date || ''
+          available: userData.available === true,
+          createId: userData.createId || '',
+          createDate: userData.createDate || '',
+          modifyId: userData.modifyId || '',
+          modifyDate: userData.modifyDate || ''
         };
 
         dispatch({ type: 'SET_FORM_DATA', payload: formattedData });

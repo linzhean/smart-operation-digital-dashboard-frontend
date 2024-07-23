@@ -6,15 +6,24 @@ import styles from './GroupManagement.module.css';
 
 const GroupManagement: React.FC = () => {
   const [selectedGroupId, setSelectedGroupId] = useState<number>(0);
-  const [activeButton, setActiveButton] = useState<string>(''); // Manage activeButton state here
+  const [activeButton, setActiveButton] = useState<string>('memberControl'); // Default to 'memberControl'
 
   const handleButtonClick = (buttonId: string) => {
     setActiveButton(buttonId);
   };
 
+  const handleDeleteGroup = (groupId: number) => {
+    // Implement group deletion logic if necessary
+  };
+
   return (
     <div className={styles.wrapper}>
-      <GroupManagementSidebar onSelectGroup={setSelectedGroupId} />
+      <GroupManagementSidebar
+        onSelectGroup={setSelectedGroupId} // Update the selected group ID
+        groupId={selectedGroupId} // Pass the selected group ID to the sidebar
+        activeButton={''} handleButtonClick={function (buttonId: string): void {
+          throw new Error('Function not implemented.');
+        } }      />
       <div className={styles.main_container}>
         <div className={styles.theContent}>
           <Routes>
@@ -25,6 +34,7 @@ const GroupManagement: React.FC = () => {
                   groupId={selectedGroupId}
                   activeButton={activeButton}
                   handleButtonClick={handleButtonClick}
+                  onDeleteGroup={handleDeleteGroup}
                 />
               }
             />
