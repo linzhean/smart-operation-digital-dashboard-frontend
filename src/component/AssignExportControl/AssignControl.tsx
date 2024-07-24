@@ -85,7 +85,7 @@ const AssignTaskControl: React.FC = () => {
   const [currentChart, setCurrentChart] = useState('');
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: string]: User[] }>({});
-  
+
   useEffect(() => {
     fetchUsers()
       .then((data) => {
@@ -97,10 +97,10 @@ const AssignTaskControl: React.FC = () => {
         }
       })
       .catch((error) => {
-        console.error('获取用户数据失败', error);
+        console.error('獲取用戶數據失敗', error);
       });
   }, []);
-  
+
 
   const handleOpenDialog = (chartName: string) => {
     setCurrentChart(chartName);
@@ -122,10 +122,10 @@ const AssignTaskControl: React.FC = () => {
 
     setAssignedTaskSponsors(chartId, userIds)
       .then((response) => {
-        console.log('成功提交:', response.message);
+        console.log('成功提交', response.message);
       })
       .catch((error) => {
-        console.error('提交失败', error);
+        console.error('提交失敗', error);
       });
 
     setDialogOpen(false);
@@ -133,7 +133,7 @@ const AssignTaskControl: React.FC = () => {
 
   const getSelectedUserNames = (chartName: string) => {
     const selectedUsers = selectedUsersMap[chartName] || [];
-    return selectedUsers.length > 0 ? `擁有權限者：共 ${selectedUsers.length} 人` : '設置交辦事項權限';
+    return selectedUsers.length > 0 ? `擁有權限者：共 ${selectedUsers.length} 人` : '設置交辦權限';
   };
 
   return (

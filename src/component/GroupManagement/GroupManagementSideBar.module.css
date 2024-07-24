@@ -110,7 +110,6 @@
   position: absolute;
   top: 40%;
   right: -33%;
-  font-size: 30px;
   color: #fff;
   cursor: pointer;
   display: none;
@@ -128,7 +127,32 @@
   transform: rotate(-180deg);
 }
 
-/* Existing styles here... */
+.editButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin-left: 10px;
+  transition: transform 0.2s;
+  display: none;
+  position: absolute;
+  right: 10px;
+}
+
+.editButton img {
+  width: 20px;
+  height: 20px;
+  vertical-align: text-top !important;
+}
+
+li:hover .editButton {
+  display: inline-block;
+}
+
+.editButton:hover {
+  transform: scale(1.2);
+}
 
 .modal {
   position: fixed;

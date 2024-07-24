@@ -3,7 +3,7 @@ import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './GroupManagementSideBar.module.css';
 import { fetchGroups, addGroup, updateGroupName } from '../../services/GroupApi';
 import { Group } from '../../services/types/userManagement';
-
+import editIcon from '../../assets/icon/edit.svg'
 interface SidebarProps {
   onSelectGroup: (groupId: number) => void;
   groupId: number;
@@ -31,7 +31,7 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
         const fetchedGroups = await fetchGroups();
         setGroups(fetchedGroups);
       } catch (error) {
-        console.error('获取群组信息失败:', error);
+        console.error('獲取群組信息失敗:', error);
       }
     };
 
@@ -60,12 +60,12 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
       setNewGroupName('');
       setIsModalOpen(false);
     } catch (error) {
-      console.error('新增群组失败:', error);
+      console.error('新增群組失敗:', error);
     }
   };
 
   const handleUpdateGroupName = async (groupId: number) => {
-    const newName = prompt('请输入新的群组名称：');
+    const newName = prompt('請輸入新的群組名稱：');
     if (newName) {
       try {
         const updatedGroup = await updateGroupName(groupId, newName);
@@ -73,7 +73,7 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
           prevGroups.map((group) => (group.id === updatedGroup.id ? updatedGroup : group))
         );
       } catch (error) {
-        console.error('更新群组名称失败:', error);
+        console.error('更新群組名稱失敗:', error);
       }
     }
   };
@@ -95,7 +95,7 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
             disabled={isDisabled}
           ></button>
           <div className={styles.close} onClick={() => setIsActive(false)}>
-            <img src={closearrow} alt="点击关闭侧边栏" />
+            <img src={closearrow} alt="關閉側邊欄" />
           </div>
           <ul className={`${styles.sidebar_menu} mostly-customized-scrollbar`}>
             <li>
@@ -112,13 +112,13 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
                   <span onClick={() => handleGroupClick(group.id)}>
                     {group.name}
                   </span>
-                  <button className={styles.updateButton} onClick={() => handleUpdateGroupName(group.id)}>
-                    修改名称
+                  <button className={styles.editButton} onClick={() => handleUpdateGroupName(group.id)}>
+                    <img src={editIcon} alt="" />
                   </button>
                 </li>
               ))
             ) : (
-              <li>暂无群组</li>
+              <li>暫無群組</li>
             )}
           </ul>
         </div>
