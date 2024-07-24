@@ -1,4 +1,3 @@
-
 import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 import { UserAccountBean } from './types/userManagement';
@@ -55,5 +54,15 @@ export const toggleUserStatus = async (userId: string): Promise<any> => {
     return response.data.message;
   } catch (error: any) {
     throw new Error(`切换用户状态时出错：${error.message}`);
+  }
+};
+
+export const fetchTotalPages = async (): Promise<number> => {
+  try {
+    const response = await apiClient.get(`/user-account/page`);
+    return response.data; // Adjust based on API response format
+  } catch (error) {
+    console.error('Error fetching total pages:', error);
+    throw error;
   }
 };

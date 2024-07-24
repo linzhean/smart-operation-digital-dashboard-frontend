@@ -1,25 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styles from './UserApplyTable.module.css';
-import { fetchUsers, admitUser, removeUser } from '../../services/UserAccountService';
+import { fetchUsers, admitUser, removeUser, fetchTotalPages } from '../../services/UserAccountService';
 import { UserAccountBean } from '../../services/types/userManagement';
+import NumberOfPages from './NumberOfPages';
 
 const UserApplyTable: React.FC = () => {
   const [users, setUsers] = useState<UserAccountBean[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [page]);
 
   const loadInitialData = async () => {
     try {
-      const data = await fetchUsers(page); // Fetch users from backend
-      console.log('Fetched data:', data);
-      if (Array.isArray(data)) {
-        setUsers(data);
-        setHasMore(data.length > 0); // Determine if there are more users
+      const [userResponse, pageResponse] = await Promise.all([
+        fetchUsers(page),
+        fetchTotalPages()
+      ]);
+
+      if (Array.isArray(userResponse)) {
+        setUsers(prevUsers => page === 0 ? userResponse : [...prevUsers, ...userResponse]);
+        setTotalPages(pageResponse); // Set total pages from response
+        setHasMore(userResponse.length > 0 && page < pageResponse - 1); // Determine if there are more pages
       } else {
         console.error('Error: fetchUsers did not return an array.');
       }
@@ -28,34 +34,41 @@ const UserApplyTable: React.FC = () => {
     }
   };
 
-  const fetchMoreData = async () => {
-    // Simulating fetching more data logic
-    if (users.length >= 200) {
-      setHasMore(false); // Disable infinite scroll after reaching a certain limit
+  const fetchMoreData = () => {
+    if (page >= totalPages - 1) {
+      setHasMore(false);
       return;
     }
-
     setPage(prevPage => prevPage + 1);
+  };
+
+  const admitUserHandler = async (index: number) => {
     try {
-      const moreUsers = await fetchUsers(page + 1);
-      if (moreUsers.length === 0) {
-        setHasMore(false); // No more users to load
+      const user = users[index];
+      if (user.userId) {
+        await admitUser(user.userId);
+        setUsers(prevUsers => prevUsers.filter((_, i) => i !== index));
       }
-      setUsers([...users, ...moreUsers]);
     } catch (error) {
-      console.error('Error fetching more data:', error);
+      console.error('Error admitting user:', error);
     }
   };
 
-  function admitUserHandler(index: number): void {
-    throw new Error('Function not implemented.');
-  }
+  const removeUserHandler = async (index: number) => {
+    try {
+      const user = users[index];
+      if (user.userId) {
+        await removeUser(user.userId);
+        setUsers(prevUsers => prevUsers.filter((_, i) => i !== index));
+      }
+    } catch (error) {
+      console.error('Error removing user:', error);
+    }
+  };
 
-  function removeUserHandler(index: number): void {
-    throw new Error('Function not implemented.');
-  }
-
-  // Other functions remain the same...
+  const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    setPage(newPage);
+  };
 
   return (
     <>
@@ -82,21 +95,27 @@ const UserApplyTable: React.FC = () => {
             </thead>
             <tbody>
               {users.map((user, index) => (
-                <tr key={index}>
+                <tr key={user.userId}>
                   <td>{user.userName}</td>
                   <td>{user.userId}</td>
                   <td>{user.departmentName}</td>
                   <td>{user.gmail}</td>
                   <td>{user.position}</td>
                   <td>
-                    <button className={styles.approveButton} onClick={() => admitUserHandler(index)}>开通</button>
-                    <button className={styles.disapproveButton} onClick={() => removeUserHandler(index)}>删除</button>
+                    <button className={styles.approveButton} onClick={() => admitUserHandler(index)}>開通</button>
+                    <button className={styles.disapproveButton} onClick={() => removeUserHandler(index)}>刪除</button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </InfiniteScroll>
+        <NumberOfPages
+          count={totalPages}
+          page={page}
+          rowsPerPage={10} // Assuming 10 items per page
+          onPageChange={handlePageChange}
+        />
       </div>
     </>
   );

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styles from './UserStatusControl.module.css';
-import { fetchUsers, toggleUserStatus } from '../../services/UserAccountService';
+import { fetchUsers, toggleUserStatus, fetchTotalPages } from '../../services/UserAccountService';
+import NumberOfPages from './NumberOfPages';
 
-// 定義user資料
+// Define user data interface
 interface User {
   name: string;
   id: string;
@@ -18,47 +19,39 @@ const UserStatusControl: React.FC = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [departmentFilter, setDepartmentFilter] = useState<string>('all');
   const [sortOrder, setSortOrder] = useState<string>('latest');
+  const [page, setPage] = useState<number>(0); // Keep track of the current page
+  const [totalPages, setTotalPages] = useState<number>(1); // Total number of pages
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [page]); // Load data when the page changes
 
   const loadInitialData = async () => {
     try {
-      const data = await fetchUsers();
-      const formattedData: User[] = data.map((employee) => ({
+      const [data, pages] = await Promise.all([fetchUsers(page), fetchTotalPages()]);
+      setTotalPages(pages);
+      const formattedData: User[] = data.map((employee: { userName: any; userId: any; departmentName: any; gmail: any; position: any; }) => ({
         name: employee.userName,
         id: employee.userId,
         department: employee.departmentName,
         email: employee.gmail,
         position: employee.position,
-        status: '停用' // 假设初始状态为停用
+        status: '停用' // Assume initial status is '停用'
       }));
       setUsers(formattedData);
-      setHasMore(formattedData.length >= 20); // 假设每次加载20个用户
+      setHasMore(page < totalPages - 1); // Check if there are more pages
     } catch (error) {
       console.error('Error loading users:', error);
     }
   };
 
   const fetchMoreData = async () => {
-    // 模拟加载更多数据的逻辑
-    if (users.length >= 200) {
+    if (page >= totalPages - 1) {
       setHasMore(false);
       return;
     }
 
-    const moreUsers: User[] = Array.from({ length: 20 }).map((_, index) => ({
-      name: `New User ${users.length + index + 1}`,
-      id: `00${users.length + index + 1}`,
-      department: 'Department',
-      email: `email${users.length + index + 1}@example.com`,
-      position: 'Position',
-      status: '停用',
-    }));
-
-
-    setUsers([...users, ...moreUsers]);
+    setPage(prevPage => prevPage + 1);
   };
 
   const toggleStatus = async (index: number) => {
@@ -87,9 +80,9 @@ const UserStatusControl: React.FC = () => {
       const idA = parseInt(a.id, 10);
       const idB = parseInt(b.id, 10);
       if (sortOrder === 'latest') {
-        return idA - idB;
-      } else {
         return idB - idA;
+      } else {
+        return idA - idB;
       }
     });
   };
@@ -106,11 +99,11 @@ const UserStatusControl: React.FC = () => {
   return (
     <div id="scrollableDiv" className={styles.tableContainer}>
       <div className={styles.tableFilters}>
-        <select>
+        <select onChange={handleSortChange}>
           <option value="latest">工號：從大到小</option>
           <option value="oldest">工號：從小到大</option>
         </select>
-        <select>
+        <select onChange={handleDepartmentFilterChange}>
           <option value="all">部門：全部</option>
           <option value="production">生產部門</option>
           <option value="sales">銷售部門</option>
@@ -138,7 +131,7 @@ const UserStatusControl: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(users) && users.map((user, index) => (
+            {Array.isArray(sortedUsers) && sortedUsers.map((user, index) => (
               <tr key={index}>
                 <td>{user.name}</td>
                 <td>{user.id}</td>
@@ -164,6 +157,14 @@ const UserStatusControl: React.FC = () => {
           </tbody>
         </table>
       </InfiniteScroll>
+      <NumberOfPages
+        count={totalPages * 10} // Assuming 10 items per page
+        page={page}
+        rowsPerPage={10}
+        onPageChange={(event, newPage) => {
+          setPage(newPage);
+        }}
+      />
     </div>
   );
 };
