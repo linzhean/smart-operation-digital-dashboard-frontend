@@ -10,10 +10,10 @@
 }
 
 .h2 {
-  margin: 5px !important;
-  margin-bottom: 10px !important;
-  font-weight: bolder;
   font-size: 1.5rem;
+  font-weight: bolder;
+  margin: 5px;
+  margin-bottom: 10px;
 }
 
 .thePermissionList {

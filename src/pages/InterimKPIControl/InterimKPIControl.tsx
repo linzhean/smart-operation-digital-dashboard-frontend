@@ -12,12 +12,7 @@ const InterimKPIControl: React.FC = () => {
 
   return (
     <>
-      <Sidebar onStatusChange={handleStatusChange} selectedStatus={selectedStatus} />
-      <div className="main_container">
-        <div className="theContent">
-          <InterimKPIList selectedStatus={selectedStatus} onStatusChange={handleStatusChange} />
-        </div>
-      </div>
+      <InterimKPIList selectedStatus={selectedStatus} onStatusChange={handleStatusChange} />
     </>
   );
 };

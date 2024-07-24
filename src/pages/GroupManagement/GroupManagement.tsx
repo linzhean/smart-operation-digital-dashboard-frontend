@@ -17,15 +17,15 @@ const GroupManagement: React.FC = () => {
   };
 
   return (
-    <div className={styles.wrapper}>
+    <div className="wrapper">
       <GroupManagementSidebar
         onSelectGroup={setSelectedGroupId} // Update the selected group ID
         groupId={selectedGroupId} // Pass the selected group ID to the sidebar
         activeButton={''} handleButtonClick={function (buttonId: string): void {
           throw new Error('Function not implemented.');
-        } }      />
-      <div className={styles.main_container}>
-        <div className={styles.theContent}>
+        }} />
+      <div className="main_container">
+        <div className="theContent">
           <Routes>
             <Route
               path="/GroupList"

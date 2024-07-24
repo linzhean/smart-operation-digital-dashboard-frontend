@@ -84,7 +84,7 @@ const Pdata: React.FC = () => {
       <div className={styles.container}>
         <form className={`needs-validation ${styles.profileSide}`} noValidate>
           <div className={styles.legendContainer}>
-            <legend className={styles.legend}>您的个人资料</legend>
+            <legend className={styles.legend}>您的個人資料</legend>
             <div className={styles.theButtonGroup}>
               <div className={styles.theEditButton}>
                 <button
@@ -92,7 +92,7 @@ const Pdata: React.FC = () => {
                   className={`btn ${styles.btn}`}
                   onClick={state.editable ? handleSaveClick : handleEditClick}
                 >
-                  {state.editable ? '保存变更' : '修改资料'}
+                  {state.editable ? '保存變更' : '修改資料'}
                 </button>
               </div>
               {!state.editable && (
@@ -129,7 +129,7 @@ const Pdata: React.FC = () => {
           <div className="row">
             <div className="col-12">
               <label htmlFor="userId" className={styles.formLabel}>
-                工号
+                員工編號
               </label>
               <input
                 type="text"
@@ -163,7 +163,7 @@ const Pdata: React.FC = () => {
           <div className="row">
             <div className="col-12">
               <label htmlFor="departmentName" className={styles.formLabel}>
-                所属部门
+                所屬部門
               </label>
               <select
                 className="form-select"
@@ -174,10 +174,10 @@ const Pdata: React.FC = () => {
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
               >
                 <option value="">...</option>
-                <option value="sales">销售</option>
-                <option value="production">生产</option>
-                <option value="finance">财务</option>
-                <option value="audit">审计</option>
+                <option value="sales">銷售</option>
+                <option value="production">生產</option>
+                <option value="finance">財務</option>
+                <option value="audit">審計</option>
               </select>
             </div>
           </div>
@@ -185,7 +185,7 @@ const Pdata: React.FC = () => {
           <div className="row">
             <div className="col-12">
               <label htmlFor="position" className={styles.formLabel}>
-                职称
+                職稱
               </label>
               <select
                 className="form-select"
@@ -196,9 +196,11 @@ const Pdata: React.FC = () => {
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
               >
                 <option value="">...</option>
-                <option value="employee">一般员工</option>
+                <option value="employee">一般員工</option>
                 <option value="assistant-manager">副理</option>
-                <option value="manager">经理</option>
+                <option value="manager">經理
+
+                </option>
               </select>
             </div>
           </div>

@@ -59,24 +59,24 @@ const UserApplyTable: React.FC = () => {
 
   return (
     <>
-      <div className={styles.tableTitle}><h2>待审核帐号列表</h2></div>
+      <div className={styles.tableTitle}><h2>待審核帳號列表</h2></div>
       <div id="scrollableDiv" className={styles.thePermissionList}>
         <InfiniteScroll
           dataLength={users.length}
           next={fetchMoreData}
           hasMore={hasMore}
-          loader={<h4 className={styles.loaderMsg}>加载中...</h4>}
-          endMessage={<p className={styles.endMsg}>没有更多了</p>}
+          loader={<h4 className={styles.loaderMsg}>加載中...</h4>}
+          endMessage={<p className={styles.endMsg}>沒有更多了</p>}
           scrollableTarget="scrollableDiv"
         >
           <table className={styles.thePermissionList}>
             <thead>
               <tr>
-                <th>申请人</th>
-                <th>工号</th>
-                <th>所属部门</th>
-                <th>电子邮箱</th>
-                <th>职称</th>
+                <th>申請人</th>
+                <th>員工編號</th>
+                <th>所屬部門</th>
+                <th>信箱</th>
+                <th>職稱</th>
                 <th>操作</th>
               </tr>
             </thead>

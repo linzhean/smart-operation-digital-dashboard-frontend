@@ -14,7 +14,7 @@ interface GroupListProps {
   onDeleteGroup: (groupId: number) => void; // Add this line
 }
 
-const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButtonClick,onDeleteGroup }) => {
+const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButtonClick, onDeleteGroup }) => {
   const [memberData, setMemberData] = useState<User[]>([]);
   const [showMemberPicker, setShowMemberPicker] = useState(false);
   const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -154,7 +154,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                 users={allUsers.filter(user => !memberData.some(member => member.userId === user.userId))}
                 selectedUsers={[]} onAddSelectedMembers={function (selectedUsers: User[]): void {
                   throw new Error('Function not implemented.');
-                } }
+                }}
               />
             )}
             <div className={styles.theList}>
