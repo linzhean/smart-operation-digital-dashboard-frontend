@@ -51,15 +51,18 @@ export const deleteGroup = async (groupId: number): Promise<void> => {
 };
 
 // 将用户添加到群组
-export const addUserToGroup = async (request: AddUserToGroupRequest): Promise<void> => {
+export const addUserToGroup = async ({ userId, groupId }: AddUserToGroupRequest) => {
   try {
-    const response = await apiClient.post<Response<void>>('/group/user', request);
+    const response = await apiClient.post(`${API_URL}/user`, null, {
+      params: { userId, groupId }
+    });
     if (!response.data.result) {
-      throw new Error('Failed to add user to group: ' + response.data.message);
+      throw new Error('添加用户失败');
     }
+    return response.data;
   } catch (error: any) {
-    console.error('Failed to add user to group: ', error.message);
-    throw new Error('Failed to add user to group: ' + error.message);
+    console.error('将用户添加到群组失败:', error.message);
+    throw error;
   }
 };
 

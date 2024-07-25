@@ -3,15 +3,16 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import styles from './UserStatusControl.module.css';
 import { fetchUsers, toggleUserStatus, fetchTotalPages } from '../../services/UserAccountService';
 import NumberOfPages from './NumberOfPages';
+import { UserAccountBean } from '../../services/types/userManagement';
 
-// Define user data interface
+// 定义用户数据接口
 interface User {
   name: string;
   id: string;
   department: string;
   email: string;
   position: string;
-  status: string;
+  status: string; // 用户状态（啟用中 或 停用）
 }
 
 const UserStatusControl: React.FC = () => {
@@ -19,29 +20,30 @@ const UserStatusControl: React.FC = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [departmentFilter, setDepartmentFilter] = useState<string>('all');
   const [sortOrder, setSortOrder] = useState<string>('latest');
-  const [page, setPage] = useState<number>(0); // Keep track of the current page
-  const [totalPages, setTotalPages] = useState<number>(1); // Total number of pages
+  const [page, setPage] = useState<number>(0); // 当前页码
+  const [totalPages, setTotalPages] = useState<number>(1); // 总页码
 
   useEffect(() => {
     loadInitialData();
-  }, [page]); // Load data when the page changes
+  }, [page]); // 页码变化时加载数据
 
   const loadInitialData = async () => {
     try {
       const [data, pages] = await Promise.all([fetchUsers(page), fetchTotalPages()]);
       setTotalPages(pages);
-      const formattedData: User[] = data.map((employee: { userName: any; userId: any; departmentName: any; gmail: any; position: any; }) => ({
+  
+      const formattedData: User[] = data.map((employee: UserAccountBean) => ({
         name: employee.userName,
         id: employee.userId,
         department: employee.departmentName,
         email: employee.gmail,
         position: employee.position,
-        status: '停用' // Assume initial status is '停用'
+        status: employee.available === 1 ? '啟用中' : '停用' // Handle available as number
       }));
       setUsers(formattedData);
-      setHasMore(page < totalPages - 1); // Check if there are more pages
+      setHasMore(page < totalPages - 1);
     } catch (error) {
-      console.error('Error loading users:', error);
+      console.error('加载用户时出错:', error);
     }
   };
 
@@ -63,7 +65,7 @@ const UserStatusControl: React.FC = () => {
       updatedUsers[index] = updatedUser;
       setUsers(updatedUsers);
     } catch (error) {
-      console.error('Error updating user status:', error);
+      console.error('更新用户状态时出错:', error);
     }
   };
 
@@ -116,7 +118,7 @@ const UserStatusControl: React.FC = () => {
         next={fetchMoreData}
         hasMore={hasMore}
         loader={<h4 className={styles.loaderMsg}>載入中</h4>}
-        endMessage={<p className={styles.endMsg}>No more users</p>}
+        endMessage={<p className={styles.endMsg}>沒有更多用戶</p>}
         scrollableTarget="scrollableDiv"
       >
         <table className={styles.userTable}>
@@ -157,14 +159,14 @@ const UserStatusControl: React.FC = () => {
           </tbody>
         </table>
       </InfiniteScroll>
-      <NumberOfPages
-        count={totalPages * 10} // Assuming 10 items per page
-        page={page}
-        rowsPerPage={10}
-        onPageChange={(event, newPage) => {
-          setPage(newPage);
-        }}
-      />
+      {totalPages > 1 && (
+        <NumberOfPages
+          count={totalPages * 10}
+          page={page}
+          rowsPerPage={10}
+          onPageChange={(event, newPage) => setPage(newPage)}
+        />
+      )}
     </div>
   );
 };

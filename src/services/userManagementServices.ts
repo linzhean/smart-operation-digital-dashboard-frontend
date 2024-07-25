@@ -43,6 +43,21 @@ export const getUserList = async (
   }
 };
 
+export const getAllUsers = async (): Promise<User[]> => {
+  try {
+    const response = await apiClient.get('/user-account/all');
+    if (response.data.result && Array.isArray(response.data.data)) {
+      return response.data.data;
+    } else {
+      throw new Error(response.data.message || 'Failed to fetch users');
+    }
+  } catch (error: any) {
+    console.error('Unable to fetch users:', error.message);
+    throw error;
+  }
+};
+
+
 // 获取用户详细信息
 export const getUserDetails = async (userId: number): Promise<User> => {
   try {

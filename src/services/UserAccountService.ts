@@ -10,31 +10,51 @@ export const fetchUsers = async (
   identity?: string
 ): Promise<UserAccountBean[]> => {
   try {
+    // 准备查询参数
+    const params: any = {
+      nowPage,
+      departmentId,
+      name
+    };
+
+    // 处理 identity 参数
+    if (identity !== undefined && identity !== '3') {
+      params.identity = identity;
+    } else if (identity === '3') {
+      params.identity = undefined;
+    }
+
+    // 发起 API 请求
     const response = await apiClient.get<Response<UserAccountBean[]>>('/user-account/list', {
-      params: {
-        nowPage,
-        departmentId,
-        name,
-        identity
-      }
+      params
     });
 
     console.log('API Response:', response.data);
 
-    if (response.data && response.data.result && Array.isArray(response.data.data)) {
+    // 处理 API 响应
+    if (response.data?.result && Array.isArray(response.data.data)) {
       return response.data.data;
     } else {
-      throw new Error('API response format is incorrect');
+      throw new Error('API 响应格式不正确');
     }
   } catch (error: any) {
-    console.error('Error fetching users:', error);
-    throw new Error(`Error fetching users: ${error.message}`);
+    console.error('获取用户时出错:', error);
+    throw new Error(`获取用户时出错: ${error.message}`);
   }
 };
 
-export const admitUser = async (userId: string): Promise<void> => {
+export const admitUser = async (userId: string, identity: string): Promise<void> => {
   try {
-    await apiClient.patch<Response<void>>(`/user-account/admit?userId=${userId}&identity=NO_PERMISSION`);
+    const response = await apiClient.patch<Response<void>>('/user-account/admit', null, {
+      params: {
+        userId,
+        identity
+      }
+    });
+
+    if (!response.data.result) {
+      throw new Error(response.data.message || 'Error admitting user');
+    }
   } catch (error: any) {
     throw new Error(`Error admitting user: ${error.message}`);
   }
@@ -42,7 +62,13 @@ export const admitUser = async (userId: string): Promise<void> => {
 
 export const removeUser = async (userId: string): Promise<void> => {
   try {
-    await apiClient.patch<Response<void>>(`/user-account/able?userId=${userId}`);
+    const response = await apiClient.patch<Response<void>>(`/user-account/able`, null, {
+      params: { userId }
+    });
+
+    if (!response.data.result) {
+      throw new Error(response.data.message || 'Error removing user');
+    }
   } catch (error: any) {
     throw new Error(`Error removing user: ${error.message}`);
   }
@@ -59,10 +85,10 @@ export const toggleUserStatus = async (userId: string): Promise<any> => {
 
 export const fetchTotalPages = async (): Promise<number> => {
   try {
-    const response = await apiClient.get(`/user-account/page`);
-    return response.data; // Adjust based on API response format
-  } catch (error) {
-    console.error('Error fetching total pages:', error);
-    throw error;
+    const response = await apiClient.get<Response<{ totalPages: number }>>(`/user-account/pages`);
+    // Use optional chaining and nullish coalescing
+    return response.data?.data?.totalPages ?? 1; // Default to 1 if data or totalPages is undefined
+  } catch (error: any) {
+    throw new Error(`Error fetching total pages: ${error.message}`);
   }
 };

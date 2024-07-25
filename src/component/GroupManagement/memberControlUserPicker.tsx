@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Pagination } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Checkbox,
+  Pagination,
+} from '@mui/material';
 import { User } from '../../services/types/userManagement';
-import { getUserList } from '../../services/userManagementServices';
+import { getAllUsers } from '../../services/userManagementServices'; // Adjust import
 import { makeStyles } from '@mui/styles';
 
 interface UserPickerDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (selectedUsers: User[]) => void;
-  onAddSelectedMembers: (selectedUsers: User[]) => void; // Update here
-  selectedUsers: User[];
   groupId: number;
   users: User[];
+  selectedUsers: User[];
+  onAddSelectedMembers: (selectedUsers: User[]) => void;
 }
 
 const useStyles = makeStyles({
@@ -28,11 +36,6 @@ const useStyles = makeStyles({
     width: 'auto',
     padding: '15px 24px 0px',
   },
-  inputLabel: {
-    color: '#1976d2',
-    background: 'white',
-    padding: '0px 10px',
-  },
   dialogContent: {
     paddingTop: '15px',
   },
@@ -43,10 +46,16 @@ const useStyles = makeStyles({
   },
 });
 
-const UserPickerDialog: React.FC<UserPickerDialogProps> = ({ open, onClose, onSubmit, selectedUsers, groupId, users }) => {
-  const [totalPages, setTotalPages] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const [currentSelectedIds, setCurrentSelectedIds] = useState<string[]>(selectedUsers.map(user => user.userId));
+const UserPickerDialog: React.FC<UserPickerDialogProps> = ({
+  open,
+  onClose,
+  onSubmit,
+  groupId,
+  users,
+  selectedUsers,
+  onAddSelectedMembers
+}) => {
+  const [localSelectedUsers, setLocalSelectedUsers] = useState<User[]>(selectedUsers);
   const [localUsers, setLocalUsers] = useState<User[]>(users);
 
   useEffect(() => {
@@ -54,91 +63,60 @@ const UserPickerDialog: React.FC<UserPickerDialogProps> = ({ open, onClose, onSu
   }, [users]);
 
   useEffect(() => {
-    const fetchTotalPages = async () => {
-      try {
-        const response = await fetch('/user-account/page');
-        const data = await response.json();
-        if (data.result && data.data) {
-          setTotalPages(data.data); // Assuming this is a number representing the total number of pages
-        } else {
-          throw new Error('Failed to fetch total pages: ' + data.message);
-        }
-      } catch (error: any) {
-        console.error('Failed to fetch total pages: ', error.message);
-      }
-    };
-
-    fetchTotalPages();
-  }, []);
-
-  useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const usersList = await getUserList(undefined, undefined, undefined, currentPage); // Update this call according to your API
-        setLocalUsers(usersList);
+        const fetchedUsers = await getAllUsers(); // Fetch all users
+        setLocalUsers(fetchedUsers);
       } catch (error: any) {
         console.error('Unable to fetch users:', error.message);
       }
     };
 
     fetchUsers();
-  }, [currentPage]);
+  }, []);
 
-  const handleChange = (event: SelectChangeEvent<string[]>) => {
-    setCurrentSelectedIds(event.target.value as string[]);
+  const handleToggleUser = (user: User) => {
+    setLocalSelectedUsers(prev =>
+      prev.some(u => u.userId === user.userId)
+        ? prev.filter(u => u.userId !== user.userId)
+        : [...prev, user]
+    );
   };
 
   const handleSubmit = () => {
-    const selected = localUsers.filter(user => currentSelectedIds.includes(user.userId));
-    onAddSelectedMembers(selected);
+    onAddSelectedMembers(localSelectedUsers); // Use the correct function
     onClose();
-  };
-
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setCurrentPage(value - 1);
   };
 
   const classes = useStyles();
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" classes={{ paper: classes.dialogPaper }} style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-      <DialogTitle className={classes.dialogTitle}>選擇用戶</DialogTitle>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      classes={{ paper: classes.dialogPaper }}
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+    >
+      <DialogTitle className={classes.dialogTitle}>选择用户</DialogTitle>
       <DialogContent className={classes.dialogContent}>
-        <FormControl fullWidth>
-          <InputLabel className={classes.inputLabel}>選擇用戶</InputLabel>
-          <Select
-            multiple
-            value={currentSelectedIds}
-            onChange={handleChange}
-            renderValue={(selected) => (
-              <div>
-                {localUsers.filter(user => selected.includes(user.userId)).map(user => (
-                  <div key={user.userId}>{user.userName}</div>
-                ))}
-              </div>
-            )}
-          >
-            {localUsers.map(user => (
-              <MenuItem key={user.userId} value={user.userId}>
-                {user.userName}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {localUsers.map(user => (
+          <div key={user.userId}>
+            <Checkbox
+              checked={localSelectedUsers.some(u => u.userId === user.userId)}
+              onChange={() => handleToggleUser(user)}
+            />
+            {user.userName}
+          </div>
+        ))}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">取消</Button>
-        <Button onClick={handleSubmit} color="primary">確認</Button>
+        <Button onClick={handleSubmit} color="primary">确认</Button>
       </DialogActions>
-      <div className={classes.pagination}>
-        <Pagination count={totalPages} page={currentPage + 1} onChange={handlePageChange} />
-      </div>
     </Dialog>
   );
 };
 
 export default UserPickerDialog;
-function onAddSelectedMembers(selected: User[]) {
-  throw new Error('Function not implemented.');
-}
-

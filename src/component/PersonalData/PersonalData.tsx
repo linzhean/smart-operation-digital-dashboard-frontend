@@ -3,7 +3,6 @@ import styles from './PersonalData.module.css';
 import { useUserContext } from '../../context/UserContext';
 import { fetchUserData, updateUserData } from '../../services/Pdata';
 import { UpdateUserData } from '../../services/types/userManagement';
-import apiClient from '../../services/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 
 const Pdata: React.FC = () => {
@@ -37,11 +36,6 @@ const Pdata: React.FC = () => {
 
         dispatch({ type: 'SET_FORM_DATA', payload: formattedData });
         setInitialData(formattedData);
-
-        // Fetch full user list from /user-account/list
-        const response = await apiClient.get('/user-account/list');
-        console.log('User list:', response.data); // Assuming you want to log the user list
-        // You can further process the user list if needed
       } catch (error) {
         console.error('加载用户数据时出错:', error);
       } finally {
@@ -198,9 +192,7 @@ const Pdata: React.FC = () => {
                 <option value="">...</option>
                 <option value="employee">一般員工</option>
                 <option value="assistant-manager">副理</option>
-                <option value="manager">經理
-
-                </option>
+                <option value="manager">經理</option>
               </select>
             </div>
           </div>

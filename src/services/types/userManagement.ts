@@ -54,7 +54,7 @@ export interface ApplicationData {
   modifyDate: string;
 }
 
-export interface UpdateUserData {
+export interface UserAccountBean {
   userId: string;
   userName: string;
   departmentId: string;
@@ -63,7 +63,7 @@ export interface UpdateUserData {
   gmail: string;
   identity: string;
   position: string;
-  available: boolean;
+  available: number; // This should match the API response
   createId: string;
   createDate: string;
   modifyId: string;
@@ -71,15 +71,16 @@ export interface UpdateUserData {
 }
 
 export interface UserAccountBean {
+  [x: string]: ReactNode;
   userId: string;
   userName: string;
   departmentId: string;
   departmentName: string;
   googleId: string;
   gmail: string;
-  identity: 'NO_PERMISSION' | 'MANAGER' | 'EMPLOYEE' | 'ADMIN';
+  identity: string;
   position: string;
-  available: boolean;
+  available: number;
   createId: string;
   createDate: string;
   modifyId: string;
@@ -97,3 +98,19 @@ export type ApiUserData = {
   isAdmin: boolean;
   charAuths: any[]; // 根据实际的 charAuths 结构进行调整
 };
+
+export interface UpdateUserData {
+  userId: string;
+  userName: string;
+  departmentId: string;
+  departmentName: string;
+  googleId: string;
+  gmail: string;
+  identity: string;
+  position: string;
+  available: boolean; // Update this if you handle available as boolean in your application
+  createId: string;
+  createDate: string;
+  modifyId: string;
+  modifyDate: string;
+}

@@ -1,17 +1,16 @@
-// GroupList.tsx
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import { fetchUsersByGroupId, addUserToGroup, removeUserFromGroup, deleteGroup } from '../../services/GroupApi'; // Import deleteGroup API function
+import UserPickerDialog from './memberControlUserPicker';
+import { fetchUsersByGroupId, addUserToGroup, removeUserFromGroup, deleteGroup } from '../../services/GroupApi';
 import { User } from '../../services/types/userManagement';
 import { getUsers } from '../../services/userManagementServices';
-import UserPickerDialog from './memberControlUserPicker';
 import styles from './GroupList.module.css';
 
 interface GroupListProps {
   groupId: number;
   activeButton: string;
   handleButtonClick: (buttonId: string) => void;
-  onDeleteGroup: (groupId: number) => void; // Add this line
+  onDeleteGroup: (groupId: number) => void;
 }
 
 const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButtonClick, onDeleteGroup }) => {
@@ -28,12 +27,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
     const fetchGroupUsers = async () => {
       try {
         const response = await fetchUsersByGroupId(groupId);
-        if (Array.isArray(response)) {
-          setMemberData(response);
-        } else {
-          console.error('API 返回的數據不正確:', response);
-          setMemberData([]);
-        }
+        setMemberData(response);
       } catch (error) {
         console.error('獲取群組用戶失敗:', error);
       }
@@ -45,16 +39,16 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const users = await getUsers();
-        if (Array.isArray(users)) {
-          setAllUsers(users);
+        const response = await getUsers();
+        console.log('Fetched users:', response);
+        if (Array.isArray(response)) {
+          setAllUsers(response);
         } else {
-          console.error('API 返回的用戶格式不正確:', users);
+          console.error('Expected array but received:', response);
           setAllUsers([]);
         }
       } catch (error) {
         console.error('獲取所有用戶失敗:', error);
-        setAllUsers([]);
       }
     };
 
@@ -75,7 +69,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
   const handleAddMember = async (newMembers: User[]) => {
     try {
       await Promise.all(newMembers.map(user =>
-        addUserToGroup({ userId: user.userId, groupId: groupId })
+        addUserToGroup({ userId: user.userId, groupId })
       ));
       setMemberData(prevData => [...prevData, ...newMembers]);
     } catch (error) {
@@ -97,8 +91,8 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
   const handleDeleteGroup = async () => {
     if (window.confirm('您確定要刪除這個群組嗎？')) {
       try {
-        await deleteGroup(groupId); // Ensure groupId is passed correctly
-        // Handle post-deletion actions (e.g., notify parent component)
+        await deleteGroup(groupId);
+        onDeleteGroup(groupId);
       } catch (error) {
         console.error('刪除群組失敗:', error);
       }
@@ -114,7 +108,6 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
           className={activeButton === 'memberControl' ? styles.filterActive : ''}
         >
           群組成員
-          <span></span><span></span><span></span><span></span>
         </button>
         <button
           id="graphControl"
@@ -122,7 +115,6 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
           className={activeButton === 'graphControl' ? styles.filterActive : ''}
         >
           群組可視圖表
-          <span></span><span></span><span></span><span></span>
         </button>
       </div>
 
@@ -151,10 +143,9 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                 onClose={() => setShowMemberPicker(false)}
                 onSubmit={handleAddMember}
                 groupId={groupId}
-                users={allUsers.filter(user => !memberData.some(member => member.userId === user.userId))}
-                selectedUsers={[]} onAddSelectedMembers={function (selectedUsers: User[]): void {
-                  throw new Error('Function not implemented.');
-                }}
+                users={Array.isArray(allUsers) ? allUsers.filter(user => !memberData.some(member => member.userId === user.userId)) : []}
+                selectedUsers={[]}
+                onAddSelectedMembers={handleAddMember}
               />
             )}
             <div className={styles.theList}>
@@ -203,10 +194,12 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                     <td>{item}</td>
                     <td>
                       <button
-                        className={`${styles.toggleButton} ${graphToggleStates[item] === 'allow' ? styles.allow : styles.deny}`}
+                        className={`${styles.toggleButton} ${
+                          graphToggleStates[item] === 'allow' ? styles.allow : styles.deny
+                        }`}
                         onClick={() => toggleGraphState(item)}
                       >
-                        {graphToggleStates[item] === 'allow' ? '目前狀態：允許' : '目前狀態：禁用'}
+                        {graphToggleStates[item] === 'allow' ? '允許' : '禁用'}
                       </button>
                     </td>
                   </tr>

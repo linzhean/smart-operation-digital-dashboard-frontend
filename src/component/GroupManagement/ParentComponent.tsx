@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import UserPickerDialog from './memberControlUserPicker';
 import { User } from '../../services/types/userManagement';
-import { addUserToGroup } from '../../services/GroupApi';
-import { getUsers } from '../../services/userManagementServices';
+import { addUserToGroup, fetchGroups } from '../../services/GroupApi';
+import { getAllUsers } from '../../services/userManagementServices';
 import GroupManagementSidebar from './GroupManagementSideBar';
 import GroupList from './GroupList';
 
@@ -16,15 +16,15 @@ const ParentComponent: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const fetchedUsers = await getUsers();
+        const fetchedUsers = await getAllUsers();
         setUsers(fetchedUsers);
-      } catch (error: any) {
-        console.error('Unable to fetch users:', error.message);
+      } catch (error) {
+        console.error('Unable to fetch users:', error);
       }
     };
 
     fetchUsers();
-  }, [selectedGroupId]);
+  }, []);
 
   const handleOpenDialog = () => {
     setDialogOpen(true);
@@ -35,7 +35,6 @@ const ParentComponent: React.FC = () => {
   };
 
   const handleSubmitUsers = async (selectedUsers: User[]) => {
-    console.log('Selected users:', selectedUsers);
     setSelectedUsers(selectedUsers);
     try {
       const addUserPromises = selectedUsers.map(user =>
@@ -43,38 +42,39 @@ const ParentComponent: React.FC = () => {
       );
       await Promise.all(addUserPromises);
       console.log('Users successfully added to the group');
-    } catch (error: any) {
+    } catch (error:any) {
       console.error('Failed to add users to the group:', error.message);
     }
   };
 
   const handleDeleteGroup = async (groupId: number) => {
-    // Implement group deletion logic if necessary
+    // Logic to delete group
+    console.log('Group deleted:', groupId);
   };
 
   return (
     <div>
-      <GroupManagementSidebar onSelectGroup={handleDeleteGroup} groupId={0} activeButton={''} handleButtonClick={() => {}} />
+      <GroupManagementSidebar onSelectGroup={(groupId) => setSelectedGroupId(groupId)} groupId={0} activeButton={''} handleButtonClick={function (buttonId: string): void {
+        throw new Error('Function not implemented.');
+      } } />
+      <GroupList
+        groupId={selectedGroupId}
+        activeButton='memberControl'
+        handleButtonClick={() => {}}
+        onDeleteGroup={handleDeleteGroup}
+      />
       <Button variant="contained" color="primary" onClick={handleOpenDialog}>
-        Select Users
+        新增成員
       </Button>
       <UserPickerDialog
         open={dialogOpen}
         onClose={handleCloseDialog}
         onSubmit={handleSubmitUsers}
-        selectedUsers={selectedUsers}
         groupId={selectedGroupId}
-        onAddSelectedMembers={() => {}}
         users={users}
+        selectedUsers={selectedUsers}
+        onAddSelectedMembers={handleSubmitUsers}
       />
-      {selectedGroupId !== 0 && (
-        <GroupList
-          groupId={selectedGroupId}
-          activeButton={''}
-          handleButtonClick={() => {}}
-          onDeleteGroup={handleDeleteGroup}
-        />
-      )}
     </div>
   );
 };

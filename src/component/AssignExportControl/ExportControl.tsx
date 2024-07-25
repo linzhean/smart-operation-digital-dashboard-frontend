@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { fetchUsers, admitUser } from '../../services/UserAccountService';
 import { setExportPermission } from '../../services/exportService';
-import { EmployeeData } from '../../services/types/userManagement';
+import { EmployeeData, UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './ExportControl.module.css';
 
@@ -84,18 +84,24 @@ const ExportControl: React.FC = () => {
   const [currentChart, setCurrentChart] = useState('');
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: string]: User[] }>({});
+ 
   useEffect(() => {
     fetchUsers()
       .then((data) => {
         if (Array.isArray(data)) {
-          setUsers(data);
+          // Convert UserAccountBean[] to User[]
+          const userList: User[] = data.map((user: UserAccountBean) => ({
+            ...user,
+            available: user.available === 1, // Convert number to boolean
+          }));
+          setUsers(userList);
         } else {
           console.error('fetchUsers 返回的數據不是數組：', data);
-          setUsers([]); // 或其他處理方式
+          setUsers([]);
         }
       })
       .catch((error) => {
-        console.error('获取用户数据失败', error);
+        console.error('獲取用戶數據失敗', error);
       });
   }, []);
 

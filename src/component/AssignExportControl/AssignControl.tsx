@@ -9,7 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { fetchUsers } from '../../services/UserAccountService';
 import { setAssignedTaskSponsors } from '../../services/AssignedTaskService';
-import { EmployeeData } from '../../services/types/userManagement';
+import { EmployeeData, UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './AssignControl.module.css';
 
@@ -90,7 +90,12 @@ const AssignTaskControl: React.FC = () => {
     fetchUsers()
       .then((data) => {
         if (Array.isArray(data)) {
-          setUsers(data);
+          // Convert UserAccountBean[] to User[]
+          const userList: User[] = data.map((user: UserAccountBean) => ({
+            ...user,
+            available: user.available === 1, // Convert number to boolean
+          }));
+          setUsers(userList);
         } else {
           console.error('fetchUsers 返回的數據不是數組：', data);
           setUsers([]);
@@ -100,7 +105,6 @@ const AssignTaskControl: React.FC = () => {
         console.error('獲取用戶數據失敗', error);
       });
   }, []);
-
 
   const handleOpenDialog = (chartName: string) => {
     setCurrentChart(chartName);
