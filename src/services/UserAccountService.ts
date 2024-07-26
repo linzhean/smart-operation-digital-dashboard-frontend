@@ -71,15 +71,13 @@ export const admitUser = async (userId: string, identity: string): Promise<void>
 
 export const removeUser = async (userId: string): Promise<void> => {
   try {
-    const response = await apiClient.patch<Response<void>>(`/user-account/able`, null, {
-      params: { userId }
-    });
+    const response = await apiClient.delete<Response<void>>(`/user-account/${userId}`);
 
     if (!response.data.result) {
       throw new Error(response.data.message || 'Error removing user');
     }
   } catch (error: any) {
-    console.error('Error removing user:', error);
+    console.error('Error removing user:', error.response?.data || error); // 打印详细错误信息
     throw new Error(`Error removing user: ${error.message}`);
   }
 };

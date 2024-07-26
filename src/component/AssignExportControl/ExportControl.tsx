@@ -6,9 +6,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { fetchUsers, admitUser } from '../../services/UserAccountService';
+import { getAllUsers } from '../../services/userManagementServices';
 import { setExportPermission } from '../../services/exportService';
-import { EmployeeData, UserAccountBean } from '../../services/types/userManagement';
+import { EmployeeData } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './ExportControl.module.css';
 
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 
 interface User extends EmployeeData {
   selected?: boolean;
-  [key: string]: any; // Allows any additional properties
+  [key: string]: any; // 允许任何额外属性
 }
 
 const UserPickerDialog: React.FC<{
@@ -54,7 +54,7 @@ const UserPickerDialog: React.FC<{
         <Autocomplete
           multiple
           options={users}
-          getOptionLabel={(option) => `${option.id} ${option.name}`} // Ensure `id` and `name` properties exist on `User`
+          getOptionLabel={(option) => `${option.id} ${option.name}`}
           onChange={(event, newValue) => {
             setSelectedUsers(newValue as User[]);
           }}
@@ -84,23 +84,23 @@ const ExportControl: React.FC = () => {
   const [currentChart, setCurrentChart] = useState('');
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: string]: User[] }>({});
- 
+
   useEffect(() => {
-    fetchUsers()
-      .then((data) => {
+    getAllUsers()
+      .then((data: any[]) => {
+        console.log('API 响应数据:', data); // 添加这一行来检查返回的数据
         if (Array.isArray(data)) {
-          // Convert UserAccountBean[] to User[]
-          const userList: User[] = data.map((user: UserAccountBean) => ({
+          const userList: User[] = data.map((user) => ({
             ...user,
-            available: user.available === 1, // Convert number to boolean
+            available: user.available === 1, // 将数字转换为布尔值
           }));
           setUsers(userList);
         } else {
-          console.error('fetchUsers 返回的數據不是數組：', data);
+          console.error('fetchAllUsers 返回的數據不是數組：', data);
           setUsers([]);
         }
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error('獲取用戶數據失敗', error);
       });
   }, []);
@@ -121,12 +121,11 @@ const ExportControl: React.FC = () => {
       [currentChart]: selectedUsers,
     });
 
-    const chartId = parseInt(currentChart, 10); // Parse currentChart to integer
+    const chartId = parseInt(currentChart, 10); // 将 currentChart 解析为整数
 
-    // Assuming setExportPermission expects an array of user IDs or names
-    const userIds = selectedUsers.map(user => user.id); // Adjust this according to your actual data structure
+    const userIds = selectedUsers.map(user => user.id);
 
-    setExportPermission(chartId, userIds) // Pass array of strings (user IDs or names)
+    setExportPermission(chartId, userIds)
       .then((response) => {
         console.log('成功提交:', response.message);
       })

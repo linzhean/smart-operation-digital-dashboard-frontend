@@ -71,6 +71,7 @@ function reducer(state: State, action: Action): State {
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
+  console.log('UserProvider rendered'); // Add this to see if UserProvider is being rendered
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {

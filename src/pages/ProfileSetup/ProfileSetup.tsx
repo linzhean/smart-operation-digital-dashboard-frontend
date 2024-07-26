@@ -3,8 +3,11 @@ import styles from './ProfileSetup.module.css';
 import logo from '../../assets/icon/Logo-GIF-crop.gif';
 import { addUser } from '../../services/userManagementServices';
 import { UpdateUserData } from '../../services/types/userManagement';
+import { useNavigate } from 'react-router-dom';
 
+// 个人资料设置组件
 const ProfileSetup: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     employeeId: '',
@@ -19,34 +22,33 @@ const ProfileSetup: React.FC = () => {
     const newUser: UpdateUserData = {
       userId: formData.employeeId,
       userName: formData.name,
-      departmentId: '', // Add actual department ID if applicable
+      departmentId: '',
       departmentName: formData.department,
-      googleId: '', // Add actual Google ID if applicable
+      googleId: '',
       gmail: formData.email,
       identity: 'NO_PERMISSION',
       position: formData.jobTitle,
       available: false,
-      createId: '', // Add actual creator ID if applicable
+      createId: '',
       createDate: new Date().toISOString(),
       modifyId: '',
       modifyDate: new Date().toISOString()
     };
-
+  
     try {
       await addUser(newUser);
-      window.location.href = '/awaiting-approval';
+      navigate('/awaiting-approval');
     } catch (error) {
-      console.error('Failed to add user:', error);
-      // Handle error appropriately, e.g., show a user-friendly message
+      console.error('添加用户失败:', error);
     }
   };
 
   return (
-    <div className='profileSetupBody'>
+    <div className={styles.profileSetupBody}>
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <img src={logo} alt="Logo" className={styles.logo} />
-          <h1>填寫基本資料完成註冊</h1>
+          <h1>填写基本资料完成注册</h1>
         </div>
         <form onSubmit={handleSubmit} className={styles.setupForm}>
           <div className={styles.formGroup}>
@@ -61,7 +63,7 @@ const ProfileSetup: React.FC = () => {
             />
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="employee-id">員工編號</label>
+            <label htmlFor="employee-id">员工编号</label>
             <input
               type="text"
               id="employee-id"
@@ -78,13 +80,13 @@ const ProfileSetup: React.FC = () => {
               id="email"
               name="email"
               readOnly
-              placeholder="登入自帶@gmail.com放到這裡"
+              placeholder="登录自带@gmail.com放到这里"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="department">所屬部門</label>
+            <label htmlFor="department">所属部门</label>
             <select
               id="department"
               name="department"
@@ -92,29 +94,23 @@ const ProfileSetup: React.FC = () => {
               value={formData.department}
               onChange={(e) => setFormData({ ...formData, department: e.target.value })}
             >
-              <option value="">您的所屬部門</option>
-              <option value="sales">銷售部門</option>
-              <option value="finance">財務部門</option>
-              <option value="production">生產部門</option>
+              <option value="">您的所属部门</option>
+              <option value="department1">部门1</option>
+              <option value="department2">部门2</option>
             </select>
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="job-title">職稱</label>
-            <select
+            <label htmlFor="job-title">职位</label>
+            <input
+              type="text"
               id="job-title"
-              name="jobTitle"
+              name="job-title"
               required
               value={formData.jobTitle}
               onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
-            >
-              <option value="">您目前的職稱</option>
-              <option value="manager">經理</option>
-              <option value="supervisor">主管</option>
-              <option value="staff">員工</option>
-              <option value="intern">實習生</option>
-            </select>
+            />
           </div>
-          <button type="submit" className={styles.setupSubmit}>送出</button>
+          <button type="submit" className={styles.submitButton}>提交</button>
         </form>
       </div>
     </div>

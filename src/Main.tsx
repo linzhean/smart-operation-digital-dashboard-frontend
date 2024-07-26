@@ -13,9 +13,10 @@ import './component/Bootstrap/css/bootstrap.min.css';
 import './styles/Main.css';
 import useMain from './Hook/useMain';
 import GroupManagement from './pages/GroupManagement/GroupManagement';
-import PrivateRoute from './component/PrivateRoute';
+// import PrivateRoute from './component/PrivateRoute';
 import ProfileSetup from './pages/ProfileSetup/ProfileSetup';
 import TaskKpiSetting from './pages/TaskKpiPage/TaskKpiSetting';
+import { UserProvider } from './context/UserContext';
 
 // 需要sideBar的頁面－套wrapper包裹sideBar以及內容
 // 用main_container包裹目的:控制內容顯示在右側
@@ -56,6 +57,7 @@ const Main: React.FC = () => {
         toggleDrawer={toggleDrawer}
       /> */}
       <Navbar />
+      <UserProvider>
       <Routes>
         {/* <Route path="/home" element={<PrivateRoute element={<Home />} />} />
         <Route path="/profile" element={<PrivateRoute element={<Pdata />} />} />
@@ -74,6 +76,7 @@ const Main: React.FC = () => {
         <Route path="/TaskKpiSetting/*" element={<TaskKpiSetting />} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
+      </UserProvider>
     </div>
   );
 };
