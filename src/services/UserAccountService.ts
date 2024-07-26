@@ -45,6 +45,11 @@ export const fetchUsers = async (
 
 export const admitUser = async (userId: string, identity: string): Promise<void> => {
   try {
+    // identity 参数应为 '1' 或 '2'，不应传递 '0' 或 '3'
+    if (identity !== '1' && identity !== '2') {
+      throw new Error('身份参数无效');
+    }
+
     const response = await apiClient.patch<Response<void>>('/user-account/admit', null, {
       params: {
         userId,
@@ -52,13 +57,17 @@ export const admitUser = async (userId: string, identity: string): Promise<void>
       }
     });
 
+    console.log('Admit User Response:', response.data); // 添加日志以帮助调试
+
     if (!response.data.result) {
       throw new Error(response.data.message || 'Error admitting user');
     }
   } catch (error: any) {
+    console.error('Error admitting user:', error.response?.data || error); // 打印详细错误信息
     throw new Error(`Error admitting user: ${error.message}`);
   }
 };
+
 
 export const removeUser = async (userId: string): Promise<void> => {
   try {
@@ -70,6 +79,7 @@ export const removeUser = async (userId: string): Promise<void> => {
       throw new Error(response.data.message || 'Error removing user');
     }
   } catch (error: any) {
+    console.error('Error removing user:', error);
     throw new Error(`Error removing user: ${error.message}`);
   }
 };

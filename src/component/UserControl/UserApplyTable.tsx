@@ -60,7 +60,13 @@ const UserApplyTable: React.FC = () => {
     try {
       const user = users[index];
       if (user.userId) {
-        await admitUser(user.userId, identity.toString()); // 将身份转换为字符串
+        // 确保身份参数是有效的
+        const identityStr = identity.toString();
+        if (identityStr !== '1' && identityStr !== '2') {
+          throw new Error('身份参数无效');
+        }
+        console.log(`Admitting user ${user.userId} with identity ${identityStr}`); // 添加日志以帮助调试
+        await admitUser(user.userId, identityStr); // 将身份转换为字符串
         setUsers(prevUsers => prevUsers.filter((_, i) => i !== index));
         addUser({
           id: user.userId,
@@ -72,12 +78,11 @@ const UserApplyTable: React.FC = () => {
         });
       }
     } catch (error) {
-      console.error('Error admitting user:', error);
+      console.error('Error admitting user:', error); // 打印详细错误信息
       const errorMessage = (error as Error).message || '未知錯誤'; // 类型断言为 Error
       setErrorMessage(`無法將用戶設為經理或員工。錯誤信息：${errorMessage}`);
     }
-  };
-  
+  };    
 
   const removeUserHandler = async (index: number) => {
     setErrorMessage(''); // 重置错误信息

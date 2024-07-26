@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../InterimKPISidebar/InterimKPISidebar';
 import styles from './InterimKPIList.module.css';
 import { ApplicationData } from '../../services/types/userManagement';
-import { getApplications, createApplication, updateApplication, deleteApplication } from '../../services/application';
+import { getApplications, updateApplication, deleteApplication } from '../../services/application';
 
 interface InterimKPIListProps {
   selectedStatus: string;
@@ -10,10 +10,10 @@ interface InterimKPIListProps {
 }
 
 const statusMap: { [key: string]: string } = {
-  '交辦': '0',
-  '被交辦': '1',
-  '待處理': '2',
-  '已完成': '3',
+  '已關閉': '0',
+  '申請未通過': '1',
+  '申請已通過': '2',
+  '正在啓用': '3',
 };
 
 const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatusChange }) => {
@@ -50,7 +50,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
 
   const handleApprove = async (id: number) => {
     try {
-      const response = await updateApplication(id, { applyStatus: 'APPROVED' });
+      const response = await updateApplication(id, { applyStatus: 'PASSED' });
       if (response.result) {
         alert('Application approved successfully');
         fetchApplications();
@@ -76,13 +76,9 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
     }
   };
 
-  const handleStatusChange = (status: string): void => {
-    onStatusChange(status);
-  };
-
   return (
     <div className="wrapper">
-      <Sidebar onStatusChange={handleStatusChange} selectedStatus={selectedStatus} />
+      <Sidebar onStatusChange={onStatusChange} selectedStatus={selectedStatus} />
       <div className={`${styles.content} main_container`}>
         <div className={`${styles.theContent} theContent`}>
           <h2 className={styles.h2}>申請記錄 - {selectedStatus}</h2>
@@ -99,8 +95,8 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                 </tr>
               </thead>
               <tbody>
-                {applications.map((app, index) => (
-                  <tr key={index}>
+                {applications.map((app) => (
+                  <tr key={app.id}>
                     <td>{app.applicant}</td>
                     <td>{app.guarantor}</td>
                     <td>{app.startDate.split(' ')[0]}<br />{app.startDate.split(' ')[1]}</td>
@@ -109,7 +105,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                       <span className={styles.emailIcon} onClick={() => handleEmailClick(app)}>📧</span>
                     </td>
                     <td>
-                      {selectedStatus === '待審核' ? (
+                      {selectedStatus === '申請未通過' ? (
                         <>
                           <button className={styles.approveButton} onClick={() => app.id && handleApprove(app.id)}>核准</button>
                           <button className={styles.deleteButton} onClick={() => app.id && handleDelete(app.id)}>刪除</button>
@@ -131,30 +127,16 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                     <h2>申請表單</h2>
                     <form>
                       <label htmlFor="applicant">申請人:</label>
-                      <br />
-                      <input
-                        type="text"
-                        id="applicant"
-                        name="applicant"
-                        value={formData.applicant}
-                        disabled
-                      />
-                      <br />
-
+                      <input type="text" id="applicant" name="applicant" value={formData.applicant} disabled />
                       <label htmlFor="guarantor">保證人:</label>
-                      <br />
-                      <input type="text" id="guarantor" name="guarantor" value={formData.guarantor} disabled /><br />
-
-                      <label htmlFor="time">時間:</label>
-                      <input type="text" id="time" name="time" value={`${formData.startDate} 至 ${formData.endDate}`} disabled /><br />
-
-                      <label htmlFor="reason">理由:</label>
-                      <br />
-                      <div id="reason" className={styles.reason}>{formData.reason}</div>
-
-                      <div className={styles.buttonContainer}>
-                        <button className={styles.cancelButton} onClick={handleCloseForm}>關閉</button>
-                      </div>
+                      <input type="text" id="guarantor" name="guarantor" value={formData.guarantor} disabled />
+                      <label htmlFor="startDate">開始日期:</label>
+                      <input type="text" id="startDate" name="startDate" value={formData.startDate} disabled />
+                      <label htmlFor="endDate">結束日期:</label>
+                      <input type="text" id="endDate" name="endDate" value={formData.endDate} disabled />
+                      <label htmlFor="content">申請內容:</label>
+                      <textarea id="content" name="content" value={formData.content} disabled />
+                      <button type="button" onClick={handleCloseForm}>關閉</button>
                     </form>
                   </div>
                 </div>

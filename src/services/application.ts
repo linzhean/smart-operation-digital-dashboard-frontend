@@ -25,10 +25,13 @@ export const getApplications = async (
 
 // Create a new application
 export const createApplication = async (
-  applicationData: Partial<ApplicationData>
+  applicationData: Partial<ApplicationData>,
+  params: { [key: string]: any } // Adjusted to handle URL parameters if needed
 ): Promise<Response<ApplicationData>> => {
   try {
-    const response = await apiClient.post<Response<ApplicationData>>(`${APPLICATION_API_BASE}`, applicationData);
+    const response = await apiClient.post<Response<ApplicationData>>(`${APPLICATION_API_BASE}`, applicationData, {
+      params, // Include URL parameters
+    });
     return response.data;
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -39,10 +42,13 @@ export const createApplication = async (
 // Update an existing application
 export const updateApplication = async (
   id: number,
-  applicationData: Partial<ApplicationData>
+  applicationData: Partial<ApplicationData>,
+  params?: { [key: string]: any } // Added optional params
 ): Promise<Response<ApplicationData>> => {
   try {
-    const response = await apiClient.patch<Response<ApplicationData>>(`${APPLICATION_API_BASE}/permit/${id}`, applicationData);
+    const response = await apiClient.patch<Response<ApplicationData>>(`${APPLICATION_API_BASE}/permit/${id}`, applicationData, {
+      params, // Include URL parameters if needed
+    });
     return response.data;
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -52,10 +58,13 @@ export const updateApplication = async (
 
 // Delete an application
 export const deleteApplication = async (
-  id: number
+  id: number,
+  params?: { [key: string]: any } // Added optional params
 ): Promise<Response<string>> => {
   try {
-    const response = await apiClient.delete<Response<string>>(`${APPLICATION_API_BASE}/${id}`);
+    const response = await apiClient.delete<Response<string>>(`${APPLICATION_API_BASE}/${id}`, {
+      params, // Include URL parameters if needed
+    });
     return response.data;
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';

@@ -52,6 +52,7 @@ export interface ApplicationData {
   createDate: string;
   modifyId: string;
   modifyDate: string;
+  content?: string;
 }
 
 export interface UserAccountBean {
@@ -63,7 +64,7 @@ export interface UserAccountBean {
   gmail: string;
   identity: string;
   position: string;
-  available: number; // This should match the API response
+  available: number; 
   createId: string;
   createDate: string;
   modifyId: string;
