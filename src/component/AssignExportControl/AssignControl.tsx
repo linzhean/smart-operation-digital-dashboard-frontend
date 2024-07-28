@@ -1,4 +1,3 @@
-// src/components/AssignControl/Assign.tsx
 import React, { useState, useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -7,9 +6,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { fetchUsers } from '../../services/UserAccountService';
+import { fetchAllUsers } from '../../services/UserAccountService';
 import { setAssignedTaskSponsors } from '../../services/AssignedTaskService';
-import { EmployeeData, UserAccountBean } from '../../services/types/userManagement';
+import { UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './AssignControl.module.css';
 
@@ -22,23 +21,31 @@ const useStyles = makeStyles({
   },
 });
 
-interface User extends EmployeeData {
+interface User extends UserAccountBean {
   selected?: boolean;
-  [key: string]: any;
 }
 
 const UserPickerDialog: React.FC<{
   open: boolean;
-  users: User[];
   onClose: () => void;
   onSubmit: (selectedUsers: User[]) => void;
-}> = ({ open, users, onClose, onSubmit }) => {
+}> = ({ open, onClose, onSubmit }) => {
+  const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    const preSelectedUsers = users.filter((user) => user.selected);
-    setSelectedUsers(preSelectedUsers);
-  }, [users]);
+    fetchAllUsers()
+      .then((data) => {
+        const userList: User[] = data.map((user: UserAccountBean) => ({
+          ...user,
+          available: user.available === true,
+        }));
+        setUsers(userList);
+      })
+      .catch((error) => {
+        console.error('Error fetching users', error);
+      });
+  }, []);
 
   const handleSubmit = () => {
     onSubmit(selectedUsers);
@@ -55,14 +62,14 @@ const UserPickerDialog: React.FC<{
         <Autocomplete
           multiple
           options={users}
-          getOptionLabel={(option) => `${option.id} ${option.name}`}
+          getOptionLabel={(option) => `${option.userId} ${option.userName}`}
           onChange={(event, newValue) => {
             setSelectedUsers(newValue as User[]);
           }}
           value={selectedUsers}
           renderOption={(props, option) => (
             <li {...props}>
-              {option.id} {option.name}
+              {option.userId} {option.userName}
             </li>
           )}
           renderInput={(params) => (
@@ -83,28 +90,7 @@ const UserPickerDialog: React.FC<{
 const AssignTaskControl: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentChart, setCurrentChart] = useState('');
-  const [users, setUsers] = useState<User[]>([]);
   const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: string]: User[] }>({});
-
-  useEffect(() => {
-    fetchUsers()
-      .then((data) => {
-        if (Array.isArray(data)) {
-          // Convert UserAccountBean[] to User[]
-          const userList: User[] = data.map((user: UserAccountBean) => ({
-            ...user,
-            available: user.available === 1, // Convert number to boolean
-          }));
-          setUsers(userList);
-        } else {
-          console.error('fetchUsers 返回的數據不是數組：', data);
-          setUsers([]);
-        }
-      })
-      .catch((error) => {
-        console.error('獲取用戶數據失敗', error);
-      });
-  }, []);
 
   const handleOpenDialog = (chartName: string) => {
     setCurrentChart(chartName);
@@ -122,14 +108,14 @@ const AssignTaskControl: React.FC = () => {
     });
 
     const chartId = parseInt(currentChart, 10);
-    const userIds = selectedUsers.map(user => user.id);
+    const userIds = selectedUsers.map(user => user.userId);
 
     setAssignedTaskSponsors(chartId, userIds)
       .then((response) => {
-        console.log('成功提交', response.message);
+        console.log('Successfully submitted', response.message);
       })
       .catch((error) => {
-        console.error('提交失敗', error);
+        console.error('Submission failed', error);
       });
 
     setDialogOpen(false);
@@ -166,7 +152,7 @@ const AssignTaskControl: React.FC = () => {
           </table>
         </div>
       </div>
-      <UserPickerDialog open={dialogOpen} users={users} onClose={handleCloseDialog} onSubmit={handleSubmit} />
+      <UserPickerDialog open={dialogOpen} onClose={handleCloseDialog} onSubmit={handleSubmit} />
     </>
   );
 };

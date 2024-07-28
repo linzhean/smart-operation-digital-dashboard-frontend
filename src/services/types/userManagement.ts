@@ -23,7 +23,6 @@ export interface User {
 
 
 export interface EmployeeData {
-  [x: string]: any;
   userId: string;
   userName: string;
   departmentName: string;
@@ -35,6 +34,7 @@ export interface EmployeeData {
   modifyId: string;
   modifyDate: string;
 }
+
 
 export interface ApplicationData {
   id?: number;
@@ -64,29 +64,29 @@ export interface UserAccountBean {
   gmail: string;
   identity: string;
   position: string;
-  available: number; 
+  available: boolean;
   createId: string;
   createDate: string;
   modifyId: string;
   modifyDate: string;
 }
 
-export interface UserAccountBean {
-  [x: string]: ReactNode;
-  userId: string;
-  userName: string;
-  departmentId: string;
-  departmentName: string;
-  googleId: string;
-  gmail: string;
-  identity: string;
-  position: string;
-  available: number;
-  createId: string;
-  createDate: string;
-  modifyId: string;
-  modifyDate: string;
-}
+// export interface UserAccountBean {
+//   [x: string]: ReactNode;
+//   userId: string;
+//   userName: string;
+//   departmentId: string;
+//   departmentName: string;
+//   googleId: string;
+//   gmail: string;
+//   identity: string;
+//   position: string;
+//   available: number;
+//   createId: string;
+//   createDate: string;
+//   modifyId: string;
+//   modifyDate: string;
+// }
 
 export interface AddUserToGroupRequest {
   userId: string; // 這裡假設 userId 是字符串
@@ -109,7 +109,7 @@ export interface UpdateUserData {
   gmail: string;
   identity: string;
   position: string;
-  available: boolean; // Update this if you handle available as boolean in your application
+  available: boolean; // Change this to boolean
   createId: string;
   createDate: string;
   modifyId: string;

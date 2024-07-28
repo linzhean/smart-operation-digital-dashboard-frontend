@@ -1,25 +1,21 @@
-// import React from 'react';
-// import { Navigate, useLocation } from 'react-router-dom';
-// import { useUserContext } from '../context/UserControlContext';
+// src/component/PrivateRoute.tsx
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useUserContext } from '../context/UserContext';
 
-// interface PrivateRouteProps {
-//   children: React.ReactNode;
-//   requiredRole: string;
-// }
+interface PrivateRouteProps {
+  allowedRoles: string[];
+  children: React.ReactNode;
+}
 
-// const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, requiredRole }) => {
-//   const { user } = useUserContext();
-//   const location = useLocation();
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles, children }) => {
+  const { user } = useUserContext();
 
-//   if (!user) {
-//     return <Navigate to="/login" state={{ from: location }} replace />;
-//   }
+  if (!user || !allowedRoles.includes(user.identity)) {
+    return <Navigate to="/login" />;
+  }
 
-//   if (user.role !== requiredRole) {
-//     return <Navigate to="/login" state={{ from: location }} replace />;
-//   }
+  return <>{children}</>;
+};
 
-//   return <>{children}</>;
-// };
-
-// export default PrivateRoute;
+export default PrivateRoute;

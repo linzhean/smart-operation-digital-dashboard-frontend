@@ -1,4 +1,4 @@
-// src/services/apiConfig.ts
+// src/services/LoginApi.ts
 export const backendApiUrl = "http://140.131.115.153:8080";
 export const clientId = "629445899576-8mdmcg0etm5r7i28dk088fas2o3tjpm0.apps.googleusercontent.com";
 

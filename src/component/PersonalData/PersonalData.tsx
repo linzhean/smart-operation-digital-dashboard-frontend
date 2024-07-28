@@ -2,13 +2,21 @@ import React, { useEffect, useState } from 'react';
 import styles from './PersonalData.module.css';
 import { useUserContext } from '../../context/UserContext';
 import { fetchUserData, updateUserData } from '../../services/Pdata';
+import { fetchDropdownData } from '../../services/dropdownServices';
 import { UpdateUserData } from '../../services/types/userManagement';
 import { useNavigate } from 'react-router-dom';
+
+interface DropdownOption {
+  value: string;
+  label: string;
+}
 
 const Pdata: React.FC = () => {
   const { state, dispatch } = useUserContext();
   const navigate = useNavigate();
   const [initialData, setInitialData] = useState<UpdateUserData | null>(null);
+  const [departments, setDepartments] = useState<DropdownOption[]>([]);
+  const [identities, setIdentities] = useState<DropdownOption[]>([]);
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -43,7 +51,18 @@ const Pdata: React.FC = () => {
       }
     };
 
+    const loadDropdownData = async () => {
+      try {
+        const dropdownData = await fetchDropdownData();
+        setDepartments(dropdownData.departments || []);
+        setIdentities(dropdownData.identities || []);
+      } catch (error) {
+        console.error('加载下拉选项时出错:', error);
+      }
+    };
+
     loadUserData();
+    loadDropdownData();
   }, [dispatch]);
 
   const handleEditClick = () => {
@@ -160,18 +179,17 @@ const Pdata: React.FC = () => {
                 所屬部門
               </label>
               <select
-                className="form-select"
+                className="form-control"
                 id="departmentName"
-                required
-                disabled={!state.editable}
                 value={state.formData.departmentName}
+                disabled={!state.editable}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
               >
-                <option value="">...</option>
-                <option value="sales">銷售</option>
-                <option value="production">生產</option>
-                <option value="finance">財務</option>
-                <option value="audit">審計</option>
+                {departments.map((department) => (
+                  <option key={department.value} value={department.label}>
+                    {department.label}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -179,39 +197,37 @@ const Pdata: React.FC = () => {
           <div className="row">
             <div className="col-12">
               <label htmlFor="position" className={styles.formLabel}>
-                職稱
+                職位
               </label>
-              <select
-                className="form-select"
+              <input
+                type="text"
+                className="form-control"
                 id="position"
+                value={state.formData.position}
                 required
                 disabled={!state.editable}
-                value={state.formData.position}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
-              >
-                <option value="">...</option>
-                <option value="employee">一般員工</option>
-                <option value="assistant-manager">副理</option>
-                <option value="manager">經理</option>
-              </select>
+              />
             </div>
           </div>
 
           <div className="row">
             <div className="col-12">
-              <label htmlFor="identity" className={styles.formLabel}>身份</label>
+              <label htmlFor="identity" className={styles.formLabel}>
+                身份
+              </label>
               <select
-                className="form-select"
+                className="form-control"
                 id="identity"
-                required
-                disabled={!state.editable}
                 value={state.formData.identity}
+                disabled={!state.editable}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
               >
-                <option value="NO_PERMISSION">無權限</option>
-                <option value="EMPLOYEE">員工</option>
-                <option value="MANAGER">經理</option>
-                <option value="ADMIN">管理員</option>
+                {identities.map((identity) => (
+                  <option key={identity.value} value={identity.label}>
+                    {identity.label}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

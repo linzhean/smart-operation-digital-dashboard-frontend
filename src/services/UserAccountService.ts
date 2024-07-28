@@ -2,6 +2,22 @@ import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 import { UserAccountBean } from './types/userManagement';
 
+export const fetchAllUsers = async (): Promise<UserAccountBean[]> => {
+  try {
+    const response = await apiClient.get<Response<UserAccountBean[]>>('/user-account/all');
+    console.log('API Response:', response.data);
+
+    if (response.data?.result && Array.isArray(response.data.data)) {
+      return response.data.data;
+    } else {
+      throw new Error('API response format is incorrect');
+    }
+  } catch (error: any) {
+    console.error('Error fetching users:', error);
+    throw new Error(`Error fetching users: ${error.message}`);
+  }
+};
+
 // 获取用户列表
 export const fetchUsers = async (
   nowPage: number = 1,

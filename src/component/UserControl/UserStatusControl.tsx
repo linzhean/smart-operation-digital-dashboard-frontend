@@ -38,7 +38,7 @@ const UserStatusControl: React.FC = () => {
         department: employee.departmentName,
         email: employee.gmail,
         position: employee.position,
-        status: employee.available === 1 ? '啟用中' : '停用' // Handle available as number
+        status: employee.available === true ? '啟用中' : '停用' // Handle available as number
       }));
       setUsers(formattedData);
       setHasMore(page < totalPages - 1);
