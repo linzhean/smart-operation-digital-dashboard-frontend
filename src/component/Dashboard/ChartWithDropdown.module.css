@@ -1,0 +1,109 @@
+/* ChartWithDropdown.module.css */
+.chartContainer {
+    position: relative;
+  }
+  
+  .chart {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  
+  .dropdownButton {
+    font-size: 24px; /* Larger font size */
+    padding: 10px; /* Increase padding */
+    cursor: pointer; /* Indicate clickable area */
+  }  
+  
+  .dropdownMenu {
+    display: block; /* Make sure the menu is visible when open */
+    position: absolute; /* Absolute positioning for better control */
+    background-color: #fff; /* Ensure the background is distinct */
+    border: 1px solid #ddd; /* Add a border for separation */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Add shadow for depth */
+    z-index: 1000; /* Ensure it appears above other content */
+  }
+  
+  
+  .dropdownMenu li {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .dropdownMenu li:hover {
+    background: #eee;
+  }
+  
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modalContent {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 400px;
+  }
+  
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  
+  .formGroup {
+    margin-bottom: 15px;
+  }
+  
+  form label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  form input,
+  form textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  form button {
+    padding: 10px 15px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  form button:hover {
+    background: #0056b3;
+  }
+  
+  .dropdownButton:hover {
+    background-color: #f0f0f0; /* Change background on hover */
+  }
+  
+  .dropdownMenu li {
+    padding: 10px; /* Increase padding for easier clicking */
+    cursor: pointer; /* Indicate clickable area */
+  }
+  
+  .dropdownMenu li:hover {
+    background-color: #eee; /* Change background on hover */
+  }
+  

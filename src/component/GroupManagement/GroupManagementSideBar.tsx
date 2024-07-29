@@ -3,7 +3,8 @@ import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './GroupManagementSideBar.module.css';
 import { fetchGroups, addGroup, updateGroupName } from '../../services/GroupApi';
 import { Group } from '../../services/types/userManagement';
-import editIcon from '../../assets/icon/edit.svg'
+import editIcon from '../../assets/icon/edit.svg';
+
 interface SidebarProps {
   onSelectGroup: (groupId: number) => void;
   groupId: number;
@@ -123,6 +124,25 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
           </ul>
         </div>
       </div>
+
+      {/* Modal for adding new group */}
+      {isModalOpen && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <h2>新增群组</h2>
+            <input
+              type="text"
+              value={newGroupName}
+              onChange={(e) => setNewGroupName(e.target.value)}
+              placeholder="请输入群组名称"
+            />
+            <button onClick={handleAddGroup}>確定</button>
+            <button onClick={() => setIsModalOpen(false)} style={{ backgroundColor: '#dc3545' }}>
+              取消
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

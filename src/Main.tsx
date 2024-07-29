@@ -31,6 +31,15 @@ const Main: React.FC = () => {
         <Route path="/UserControl/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><UserControl /></PrivateRoute>} />
         <Route path="/TaskKpiSetting/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><TaskKpiSetting /></PrivateRoute>} />
         <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+        
+        {/* <Route path="/home" element={<Home />} />
+        <Route path="/profile/*" element={<Pdata />} />
+        <Route path="/GroupManagement/*" element={<GroupManagement />} />
+        <Route path="/mail" element={<Mail />} />
+        <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
+        <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
+        <Route path="/UserControl/*" element={<UserControl />} />
+        <Route path="/TaskKpiSetting/*" element={<TaskKpiSetting />} /> */}
       </Routes>
     </div>
   );
