@@ -59,7 +59,7 @@ const ProfileSetup: React.FC = () => {
     };
 
     try {
-      await updateUser('', newUser); // 使用空字符串作为 userId 表示新增用户
+      await updateUser('', newUser);
       navigate('/awaiting-approval');
     } catch (error) {
       console.error('Failed to add user:', error);
@@ -72,7 +72,7 @@ const ProfileSetup: React.FC = () => {
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <img src={logo} alt="Logo" className={styles.logo} />
-          <h1>填寫基本資料完成注冊</h1>
+          <h1>填寫資料以完成註冊</h1>
         </div>
         <form onSubmit={handleSubmit} className={styles.setupForm}>
           {error && <div className={styles.errorMsg}>{error}</div>}
@@ -88,7 +88,7 @@ const ProfileSetup: React.FC = () => {
             />
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="employeeId">ID</label>
+            <label htmlFor="employeeId">員工編號</label>
             <input
               type="text"
               id="employeeId"
@@ -99,7 +99,7 @@ const ProfileSetup: React.FC = () => {
             />
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="email">郵件</label>
+            <label htmlFor="email">信箱</label>
             <input
               type="email"
               id="email"
@@ -111,20 +111,22 @@ const ProfileSetup: React.FC = () => {
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="department">所屬部門</label>
-            <select
-              id="department"
-              name="department"
-              required
-              value={formData.department}
-              onChange={handleChange}
-            >
-              <option value="">選擇你的部門</option>
-              {departments.map((dept) => (
-                <option key={dept.value} value={dept.value}>
-                  {dept.label}
-                </option>
-              ))}
-            </select>
+            <div className={styles.select}>
+              <select
+                id="department"
+                name="department"
+                required
+                value={formData.department}
+                onChange={handleChange}
+              >
+                <option value="">選擇您的部門</option>
+                {departments.map((dept) => (
+                  <option key={dept.value} value={dept.value}>
+                    {dept.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="jobTitle">職位</label>
@@ -139,22 +141,24 @@ const ProfileSetup: React.FC = () => {
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="identity">身份</label>
-            <select
-              id="identity"
-              name="identity"
-              required
-              value={formData.identity}
-              onChange={handleChange}
-            >
-              <option value="">選擇你的身份</option>
-              {identities.map((identity) => (
-                <option key={identity.value} value={identity.value}>
-                  {identity.label}
-                </option>
-              ))}
-            </select>
+            <div className={styles.select}>
+              <select
+                id="identity"
+                name="identity"
+                required
+                value={formData.identity}
+                onChange={handleChange}
+              >
+                <option value="">選擇你的身份</option>
+                {identities.map((identity) => (
+                  <option key={identity.value} value={identity.value}>
+                    {identity.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          <button type="submit" className={styles.submitButton}>提交</button>
+          <button type="submit" className={styles.setupSubmit}>提交</button>
         </form>
       </div>
     </div>

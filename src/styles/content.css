@@ -1,18 +1,17 @@
 /* src/styles/content.css */
-.content {
+/* .content {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   height: calc(100% - 90px);
-  /* 适应底部导航栏 */
   overflow-y: auto;
   background-color: #343541;
   border-radius: 15px;
   padding: 20px;
-}
+} */
 
-.fields {
+/* .fields {
   display: flex;
   margin-top: 40px;
   flex-wrap: wrap;
@@ -146,10 +145,10 @@ select {
 #submitBtn img:hover,
 #editBtn img:hover {
   transform: scale(1.2);
-}
+} */
 
 /* Media Queries for Responsive Web Design (RWD) */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .navbar-nav .nav-item {
     font-size: 2vh;
   }
@@ -167,6 +166,5 @@ select {
   .content {
     padding: 10px;
     height: calc(100% - 80px);
-    /* 调整高度以适应底部导航栏高度变化 */
   }
-}
+} */

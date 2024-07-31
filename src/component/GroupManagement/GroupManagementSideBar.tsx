@@ -3,7 +3,7 @@ import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './GroupManagementSideBar.module.css';
 import { fetchGroups, addGroup, updateGroupName } from '../../services/GroupApi';
 import { Group } from '../../services/types/userManagement';
-import editIcon from '../../assets/icon/edit.svg';
+import editIcon from '../../assets/icon/edit-black.svg';
 
 interface SidebarProps {
   onSelectGroup: (groupId: number) => void;

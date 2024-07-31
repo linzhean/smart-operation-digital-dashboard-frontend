@@ -134,7 +134,7 @@
   transition: transform 0.2s;
   display: none;
   position: absolute;
-  right: 10px;
+  right: 20px;
 }
 
 .editButton img {

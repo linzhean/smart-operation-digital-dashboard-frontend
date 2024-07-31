@@ -50,15 +50,14 @@
 .setupForm input[type="text"],
 .setupForm input[type="email"] {
   width: 100%;
-  padding: 5px;
+  padding: 5px 10px;
   border-radius: 8px;
   border: 2px solid #555;
 }
 
 .setupForm select {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 5px;
+  padding: 7px;
   border-radius: 8px;
   border: 2px solid #555;
 }
@@ -102,5 +101,50 @@
   .theForms select,
   .theForms input {
     font-size: 1rem;
+  }
+}
+
+.select {
+  position: relative;
+  display: flex;
+  background: var(--background-select);
+  border-radius: 8px;
+  overflow: hidden;
+
+  select {
+    appearance: none;
+    outline: 0;
+    background: none;
+    color: inherit;
+    box-shadow: none;
+    flex: 1;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  &::after {
+    content: "\25BC";
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    transition: 0.25s all ease;
+    pointer-events: none;
+  }
+
+
+  &:hover::after {
+    color: #1E90FF;
+    animation: bounce 0.5s infinite;
+  }
+}
+
+@keyframes bounce {
+  25% {
+    transform: translatey(5px);
+  }
+
+  75% {
+    transform: translatey(-5px);
   }
 }
