@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import UserPickerDialog from './memberControlUserPicker';
 import { fetchUsersByGroupId, addUserToGroup, removeUserFromGroup, deleteGroup } from '../../services/GroupApi';
 import { User } from '../../services/types/userManagement';
 import { getUsers } from '../../services/userManagementServices';
 import styles from './GroupList.module.css';
+import moreInfo from '../../assets/icon/more.svg';
 
 interface GroupListProps {
   groupId: number;
@@ -22,6 +26,15 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
     '廢品率': 'allow',
     '產能利用率': 'allow'
   });
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const isMenuOpen = Boolean(anchorEl);
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     const fetchGroupUsers = async () => {
@@ -121,22 +134,46 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
       <div className={styles.theTable}>
         {activeButton === 'memberControl' && (
           <>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setShowMemberPicker(true)}
-              className={styles.addButton}
-            >
-              新增成員
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleDeleteGroup}
-              className={styles.deleteGroupButton}
-            >
-              刪除群組
-            </Button>
+            <div className={styles.buttons}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setShowMemberPicker(true)}
+                className={styles.addButton}
+              >
+                新增成員
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleDeleteGroup}
+                className={styles.deleteGroupButton}
+              >
+                刪除群組
+              </Button>
+
+              <IconButton
+                aria-label="more"
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={handleMenuOpen}
+                className={styles.dropdownButton }
+              >
+                <img src={moreInfo} alt="操作" />
+              </IconButton>
+
+              <Menu
+                id="long-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={isMenuOpen}
+                onClose={handleMenuClose}
+                className={styles.dropdownMenu}
+              >
+                <MenuItem onClick={() => { setShowMemberPicker(true); handleMenuClose(); }}>新增成員</MenuItem>
+                <MenuItem onClick={() => { handleDeleteGroup(); handleMenuClose(); }}>刪除群組</MenuItem>
+              </Menu>
+            </div>
             {showMemberPicker && (
               <UserPickerDialog
                 open={showMemberPicker}
@@ -194,9 +231,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                     <td>{item}</td>
                     <td>
                       <button
-                        className={`${styles.toggleButton} ${
-                          graphToggleStates[item] === 'allow' ? styles.allow : styles.deny
-                        }`}
+                        className={`${styles.toggleButton} ${graphToggleStates[item] === 'allow' ? styles.allow : styles.deny}`}
                         onClick={() => toggleGraphState(item)}
                       >
                         {graphToggleStates[item] === 'allow' ? '允許' : '禁用'}
