@@ -24,7 +24,7 @@ const GroupManagement: React.FC = () => {
         activeButton={''} handleButtonClick={function (buttonId: string): void {
           throw new Error('Function not implemented.');
         }} />
-      <div className="main_container">
+      <div className={styles.groupManage_container}>
         <div className="theContent">
           <Routes>
             <Route
