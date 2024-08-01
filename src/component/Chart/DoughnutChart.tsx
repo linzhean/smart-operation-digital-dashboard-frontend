@@ -1,4 +1,3 @@
-// src/component/Chart/DoughnutChart.tsx
 import React, { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import ChartService from '../../services/ChartService';
@@ -7,74 +6,37 @@ import '../../config/chartConfig';
 interface ChartData {
   labels: string[];
   datasets: {
-    label: string;
     data: number[];
     backgroundColor: string[];
     borderColor: string[];
   }[];
 }
 
-const DoughnutChart: React.FC = () => {
-  const [chartData, setChartData] = useState<ChartData>({
-    labels: [],
-    datasets: [
-      {
-        label: 'Count',
-        data: [],
-        backgroundColor: [
-          'rgba(43, 63, 229, 0.8)',
-          'rgba(250, 192, 19, 0.8)',
-          'rgba(253, 135, 135, 0.8)',
-        ],
-        borderColor: [
-          'rgba(43, 63, 229, 0.8)',
-          'rgba(250, 192, 19, 0.8)',
-          'rgba(253, 135, 135, 0.8)',
-        ],
-      },
-    ],
-  });
+interface DoughnutChartProps {
+  data: ChartData | null;
+}
+
+const DoughnutChart: React.FC<DoughnutChartProps> = ({ data }) => {
+  const [chartData, setChartData] = useState<ChartData | null>(data);
 
   useEffect(() => {
-    const fetchChartData = async () => {
-      try {
-        const data = await ChartService.getAvailableCharts();
+    if (!data) {
+      const fetchChartData = async () => {
+        try {
+          const response = await ChartService.getDashboardCharts(1); // Assuming dashboardId is 1
+          setChartData(response);
+        } catch (error) {
+          console.error('Failed to fetch doughnut chart data:', error);
+        }
+      };
 
-        setChartData({
-          labels: data.map((item: any) => item.label),
-          datasets: [
-            {
-              ...chartData.datasets[0],
-              data: data.map((item: any) => item.value),
-            },
-          ],
-        });
-      } catch (error) {
-        console.error('Error fetching chart data:', error);
-      }
-    };
+      fetchChartData();
+    }
+  }, [data]);
 
-    fetchChartData();
-  }, []);
+  if (!chartData || !chartData.datasets) return <div>Loading...</div>;
 
-  const options = {
-    plugins: {
-      title: {
-        text: 'Revenue Source',
-      },
-    },
-    elements: {
-      arc: {
-        borderWidth: 0,
-      },
-    },
-  };
-
-  return (
-    <div className="categoryCard">
-      <Doughnut data={chartData} options={options} />
-    </div>
-  );
+  return <Doughnut data={chartData} />;
 };
 
 export default DoughnutChart;

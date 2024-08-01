@@ -23,24 +23,25 @@ const useStyles = makeStyles({
 
 interface User extends EmployeeData {
   selected?: boolean;
-  [key: string]: any; // 允许任何额外属性
+  [key: string]: any;
 }
 
 const UserPickerDialog: React.FC<{
   open: boolean;
   users: User[];
+  selectedUserIds: string[];
   onClose: () => void;
   onSubmit: (selectedUsers: User[]) => void;
-}> = ({ open, users, onClose, onSubmit }) => {
+}> = ({ open, users, selectedUserIds, onClose, onSubmit }) => {
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    const preSelectedUsers = users.filter((user) => user.selected);
+    const preSelectedUsers = users.filter((user) => selectedUserIds.includes(user.id));
     setSelectedUsers(preSelectedUsers);
-  }, [users]);
+  }, [users, selectedUserIds]);
 
   const handleSubmit = () => {
-    onSubmit(selectedUsers);
+    onSubmit(selectedUsers); // Pass the User[] directly
     onClose();
   };
 
@@ -81,18 +82,17 @@ const UserPickerDialog: React.FC<{
 
 const ExportControl: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [currentChart, setCurrentChart] = useState('');
+  const [currentChart, setCurrentChart] = useState<string>('');
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: string]: User[] }>({});
+  const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: string]: string[] }>({}); // Map of chart to selected user IDs
 
   useEffect(() => {
     getAllUsers()
       .then((data: any[]) => {
-        console.log('API 响应数据:', data); // 添加这一行来检查返回的数据
         if (Array.isArray(data)) {
           const userList: User[] = data.map((user) => ({
             ...user,
-            available: user.available === 1, // 将数字转换为布尔值
+            available: user.available === 1, // Convert number to boolean
           }));
           setUsers(userList);
         } else {
@@ -105,7 +105,6 @@ const ExportControl: React.FC = () => {
       });
   }, []);
 
-
   const handleOpenDialog = (chartName: string) => {
     setCurrentChart(chartName);
     setDialogOpen(true);
@@ -116,29 +115,44 @@ const ExportControl: React.FC = () => {
   };
 
   const handleSubmit = (selectedUsers: User[]) => {
-    setSelectedUsersMap({
-      ...selectedUsersMap,
-      [currentChart]: selectedUsers,
-    });
-
-    const chartId = parseInt(currentChart, 10); // 将 currentChart 解析为整数
-
-    const userIds = selectedUsers.map(user => user.id);
-
-    setExportPermission(chartId, userIds)
+    const existingUserIds = selectedUsersMap[currentChart] || [];
+    const newUserIds = selectedUsers.map(user => user.id);
+    
+    const toAdd = newUserIds.filter(id => !existingUserIds.includes(id));
+    const toRemove = existingUserIds.filter(id => !newUserIds.includes(id));
+    
+    // Update the selected users map
+    setSelectedUsersMap(prev => ({
+      ...prev,
+      [currentChart]: newUserIds,
+    }));
+    
+    // Update export permissions
+    const chartId = parseInt(currentChart, 10);
+  
+    // Construct the ListDTO object
+    const listDTO = {
+      sponsorList: [], // Add appropriate logic to handle sponsorList
+      exporterList: newUserIds,
+      dashboardCharts: [chartId] // Assuming currentChart is the chartId
+    };
+  
+    // Sending the ListDTO object
+    setExportPermission(chartId, listDTO)
       .then((response) => {
         console.log('成功提交:', response.message);
       })
       .catch((error) => {
         console.error('提交失败', error);
       });
-
+  
     setDialogOpen(false);
   };
-
+  
   const getSelectedUserNames = (chartName: string) => {
-    const selectedUsers = selectedUsersMap[chartName] || [];
-    return selectedUsers.length > 0 ? `擁有權限者：共 ${selectedUsers.length} 人` : '設置匯出權限';
+    const selectedUserIds = selectedUsersMap[chartName] || [];
+    const count = selectedUserIds.length;
+    return count > 0 ? `擁有權限者：共 ${count} 人` : '設置匯出權限';
   };
 
   return (
@@ -167,7 +181,13 @@ const ExportControl: React.FC = () => {
           </table>
         </div>
       </div>
-      <UserPickerDialog open={dialogOpen} users={users} onClose={handleCloseDialog} onSubmit={handleSubmit} />
+      <UserPickerDialog
+        open={dialogOpen}
+        users={users}
+        selectedUserIds={selectedUsersMap[currentChart] || []}
+        onClose={handleCloseDialog}
+        onSubmit={handleSubmit}
+      />
     </>
   );
 };

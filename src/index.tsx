@@ -18,7 +18,7 @@ root.render(
       <ChartProvider>
         <Router>
           <Routes>
-            {/* <Route path="/login" element={<Login />} /> */}
+            <Route path="/login" element={<Login />} />
             <Route path="/profile-setup" element={<ProfileSetup />} />
             <Route path="/awaiting-approval" element={<AwaitingApproval />} />
             <Route path="/*" element={<Main />} />

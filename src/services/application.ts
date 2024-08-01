@@ -1,3 +1,4 @@
+//src\services\application.ts
 import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 import { ApplicationData } from './types/userManagement';

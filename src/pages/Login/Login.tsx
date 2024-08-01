@@ -18,10 +18,13 @@ const Login: React.FC = () => {
       if (!idToken) {
         throw new Error('No ID token received from Google');
       }
-
+  
       const decodedToken: any = jwtDecode(idToken);
       const userId = decodedToken.sub;
-
+  
+      console.log('ID Token:', idToken);
+      console.log('Decoded Token:', decodedToken);
+  
       const res = await fetch(`${backendApiUrl}/login`, {
         method: 'POST',
         headers: {
@@ -30,39 +33,44 @@ const Login: React.FC = () => {
         },
         body: JSON.stringify({ userId, idToken }),
       });
-
+  
+      console.log('Login response:', res);
+  
       if (!res.ok) {
         throw new Error(`Failed to login: ${res.statusText}`);
       }
-
+  
       const authToken = res.headers.get('x-auth-token');
-
+  
       if (authToken) {
         localStorage.setItem('authToken', authToken);
-
+  
         const userResponse = await fetch(`${backendApiUrl}/user-account`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
         });
+  
+        console.log('User response:', userResponse);
+  
         const userData = await userResponse.json();
-
+  
         const identityMapping: { [key: string]: string } = {
           '無權限': 'NO_PERMISSION',
           '高階主管': 'MANAGER',
           '員工': 'EMPLOYEE',
           '管理員': 'ADMIN'
         };
-
+  
         console.log('Raw identity:', userData.data.identity);
         console.log('Identity mapping:', identityMapping);
-
+  
         const mappedIdentity = identityMapping[userData.data.identity] || 'NO_PERMISSION';
-
+  
         console.log('Mapped identity:', mappedIdentity);
-
+  
         setUser({ ...userData.data, identity: mappedIdentity });
-
+  
         switch (mappedIdentity) {
           case 'NO_PERMISSION':
             navigate('/profile-setup');
@@ -85,6 +93,7 @@ const Login: React.FC = () => {
       setError('An error occurred during the login request. Please try again.');
     }
   };
+  
 
   const onFailure = () => {
     alert("Login failed, please try again later.");

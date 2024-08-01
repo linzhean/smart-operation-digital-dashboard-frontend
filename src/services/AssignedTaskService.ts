@@ -1,3 +1,4 @@
+//src\services\AssignedTaskService.ts
 import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 
@@ -19,14 +20,14 @@ export const createAssignedTask = async (assignedTask: AssignedTask): Promise<Re
 };
 
 export const getAssignedTaskSponsors = async (chartId: number): Promise<Response<string[]>> => {
-  const response = await apiClient.get<Response<string[]>>(`/assigned-task/sponsor`, {
+  const response = await apiClient.get<Response<string[]>>('/assigned-task/sponsor', {
     params: { chartId },
   });
   return response.data;
 };
 
-export const setAssignedTaskSponsors = async (chartId: number, sponsors: string[]): Promise<Response<string>> => {
-  const response = await apiClient.post<Response<string>>(`/assigned-task/sponsor`, sponsors, {
+export const setAssignedTaskSponsors = async (chartId: number, data: {sponsorList: string[], exporterList: string[], dashboardCharts: number[]}): Promise<Response<string>> => {
+  const response = await apiClient.post<Response<string>>('/assigned-task/sponsor', data, {
     params: { chartId },
   });
   return response.data;

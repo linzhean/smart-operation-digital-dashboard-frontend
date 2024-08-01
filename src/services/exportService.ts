@@ -32,9 +32,9 @@ export const getExportPermission = async (chartId: number): Promise<Response<any
 };
 
 // POST /export
-export const setExportPermission = async (chartId: number, requestData: string[]): Promise<Response<any>> => {
+export const setExportPermission = async (chartId: number, { sponsorList, exporterList, dashboardCharts }: { sponsorList: string[], exporterList: string[], dashboardCharts: number[] }): Promise<Response<any>> => {
   try {
-    const response = await apiClient.post(`/export`, requestData, {
+    const response = await apiClient.post(`/export`, { sponsorList, exporterList, dashboardCharts }, {
       params: { chartId },
     });
     return response.data;
@@ -58,7 +58,7 @@ export const setExportPermission = async (chartId: number, requestData: string[]
 };
 
 // POST /export/export
-export const exportData = async (chartId: number, requestData: string[]): Promise<Response<any>> => {
+export const exportData = async (chartId: number, requestData: { exporterList: string[], dashboardCharts: number[] }): Promise<Response<any>> => {
   try {
     const response = await apiClient.post(`/export/export`, requestData, {
       params: { chartId },

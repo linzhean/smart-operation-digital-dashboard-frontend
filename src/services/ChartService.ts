@@ -1,5 +1,3 @@
-// src/services/ChartService.ts
-
 import axiosInstance from './axiosConfig';
 
 const ChartService = {
@@ -20,8 +18,14 @@ const ChartService = {
     return response.data;
   },
 
-  createChart: async (chart: any) => {
-    const response = await axiosInstance.post('/chart', chart);
+  createChart: async (dashboardId: number, sponsorList: string[], exporterList: string[], dashboardCharts: number[]) => {
+    const response = await axiosInstance.post('/chart/dashboard', {
+      sponsorList,
+      exporterList,
+      dashboardCharts
+    }, {
+      params: { dashboardId }
+    });
     return response.data;
   },
 
@@ -34,6 +38,11 @@ const ChartService = {
     const response = await axiosInstance.delete(`/chart/${id}`);
     return response.data;
   },
+
+  getChartData: async (chartId: number) => {
+    const response = await axiosInstance.get(`/chart/${chartId}`);
+    return response.data;
+  }
 };
 
 export default ChartService;

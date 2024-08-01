@@ -1,4 +1,3 @@
-// src/component/Chart/BarChart.tsx
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import ChartService from '../../services/ChartService';
@@ -10,69 +9,36 @@ interface ChartData {
     label: string;
     data: number[];
     backgroundColor: string[];
-    borderRadius: number;
-    barThickness: number;
+    borderColor: string[];
+    borderWidth?: number;
   }[];
 }
 
-const BarChart: React.FC = () => {
-  const [chartData, setChartData] = useState<ChartData>({
-    labels: [],
-    datasets: [
-      {
-        label: 'Count',
-        data: [],
-        backgroundColor: [
-          'rgba(43, 63, 229, 0.8)',
-          'rgba(250, 192, 19, 0.8)',
-          'rgba(253, 135, 135, 0.8)',
-        ],
-        borderRadius: 5,
-        barThickness: 10,
-      },
-    ],
-  });
+interface BarChartProps {
+  data: ChartData | null;
+}
+
+const BarChart: React.FC<BarChartProps> = ({ data }) => {
+  const [chartData, setChartData] = useState<ChartData | null>(data);
 
   useEffect(() => {
-    const fetchChartData = async () => {
-      try {
-        const data = await ChartService.getAllCharts();
+    if (!data) {
+      const fetchChartData = async () => {
+        try {
+          const response = await ChartService.getDashboardCharts(1); // Assuming dashboardId is 1
+          setChartData(response);
+        } catch (error) {
+          console.error('Failed to fetch bar chart data:', error);
+        }
+      };
 
-        setChartData({
-          labels: data.map((item: any) => item.label),
-          datasets: [
-            {
-              ...chartData.datasets[0],
-              data: data.map((item: any) => item.value),
-            },
-          ],
-        });
-      } catch (error) {
-        console.error('Error fetching chart data:', error);
-      }
-    };
+      fetchChartData();
+    }
+  }, [data]);
 
-    fetchChartData();
-  }, []);
+  if (!chartData || !chartData.datasets) return <div>Loading...</div>;
 
-  const options = {
-    plugins: {
-      title: {
-        text: 'Revenue Source',
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  };
-
-  return (
-    <div className="customerCard">
-      <Bar data={chartData} options={options} />
-    </div>
-  );
+  return <Bar data={chartData} />;
 };
 
 export default BarChart;

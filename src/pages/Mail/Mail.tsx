@@ -13,14 +13,14 @@ const Mail: React.FC = () => {
     loading,
     error,
     selectEmail,
-    createNewEmail,
     deleteExistingEmail,
-    sendSelectedEmail,
     fetchEmails,
+    sendNewChatMessage, // Updated to use sendNewChatMessage instead
   } = useEmails();
 
   const [showRightSide, setShowRightSide] = React.useState(false);
   const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>([]);
+  const [chatMessage, setChatMessage] = React.useState('');
 
   React.useEffect(() => {
     const fetchFilteredEmails = async () => {
@@ -39,12 +39,15 @@ const Mail: React.FC = () => {
     setShowRightSide(false);
   };
 
-  const handleCreateEmailClick = async () => {
-    await createNewEmail({});
-  };
-
   const handleFilterChange = (statuses: string[]) => {
     setSelectedStatuses(statuses);
+  };
+
+  const handleSendMessage = async () => {
+    if (selectedEmail) {
+      await sendNewChatMessage(selectedEmail.id, chatMessage);
+      setChatMessage(''); // Clear message input after sending
+    }
   };
 
   return (
@@ -54,15 +57,17 @@ const Mail: React.FC = () => {
         {error && <p className="error">{error}</p>}
         <Filter onFilterChange={handleFilterChange} />
         <MailBreif onMailClick={handleMailItemClick} emails={emails} />
-        <button className="create-buttonUnique" onClick={handleCreateEmailClick}>創建郵件</button>
       </div>
       <div className={`rightsideUnique ${showRightSide ? '' : 'hiddenUnique'}`}>
         <button className="toggle-buttonUnique" onClick={handleBackClick}>返回</button>
         {selectedEmail && (
-          <div>
-            <ChatBox email={selectedEmail} />
-            <button className="delete-buttonUnique" onClick={() => deleteExistingEmail(selectedEmail.id)}>刪除郵件</button>
-            <button className="send-buttonUnique" onClick={sendSelectedEmail}>發送郵件</button>
+          <div className="chat-containerUnique">
+            <ChatBox 
+              emailId={selectedEmail.id} 
+              onDelete={() => deleteExistingEmail(selectedEmail.id)}
+              onMessageChange={setChatMessage} // Ensure ChatBox supports onMessageChange prop
+            />
+            <button className="send-buttonUnique" onClick={handleSendMessage}>發送消息</button>
           </div>
         )}
       </div>

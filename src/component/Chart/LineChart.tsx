@@ -1,4 +1,3 @@
-// src/component/Chart/LineChart.tsx
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import ChartService from '../../services/ChartService';
@@ -15,75 +14,33 @@ interface ChartData {
   }[];
 }
 
-const LineChart: React.FC = () => {
-  const [chartData, setChartData] = useState<ChartData>({
-    labels: [],
-    datasets: [
-      {
-        label: 'Revenue',
-        data: [],
-        backgroundColor: '#064FF0',
-        borderColor: '#064FF0',
-        pointRadius: 5,
-      },
-      {
-        label: 'Cost',
-        data: [],
-        backgroundColor: '#FF3030',
-        borderColor: '#FF3030',
-      },
-    ],
-  });
+interface LineChartProps {
+  data: ChartData | null;
+}
+
+const LineChart: React.FC<LineChartProps> = ({ data }) => {
+  const [chartData, setChartData] = useState<ChartData | null>(data);
 
   useEffect(() => {
     const fetchChartData = async () => {
       try {
-        const data = await ChartService.getAllCharts();
-
-        setChartData({
-          labels: data.map((item: any) => item.label),
-          datasets: [
-            {
-              ...chartData.datasets[0],
-              data: data.map((item: any) => item.revenue),
-            },
-            {
-              ...chartData.datasets[1],
-              data: data.map((item: any) => item.cost),
-            },
-          ],
-        });
+        const response = await ChartService.getDashboardCharts(1); // Assuming dashboardId is 1
+        setChartData(response);
       } catch (error) {
-        console.error('Error fetching chart data:', error);
+        console.error('Failed to fetch line chart data:', error);
       }
     };
 
-    fetchChartData();
-  }, []);
+    if (!data) {
+      fetchChartData();
+    } else {
+      setChartData(data);
+    }
+  }, [data]);
 
-  const options = {
-    elements: {
-      line: {
-        tension: 0.5,
-      },
-    },
-    plugins: {
-      title: {
-        text: 'Monthly Revenue & Cost',
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  };
+  if (!chartData || !chartData.datasets) return <div>Loading...</div>;
 
-  return (
-    <div className="revenueCard">
-      <Line data={chartData} options={options} />
-    </div>
-  );
+  return <Line data={chartData} />;
 };
 
 export default LineChart;

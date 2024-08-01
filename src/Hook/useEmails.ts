@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getEmails, getEmailDetails, createEmail, updateEmail, deleteEmail, sendEmail, getChatMessages, sendChatMessage } from '../services/mailService';
+import { getEmails, getEmailDetails, createEmail, updateEmail, deleteEmail, sendChatMessage } from '../services/mailService';
 import { Email, EmailMessage } from '../services/mailService';
+import apiClient from '../services/axiosConfig';
 
 export const useEmails = () => {
     const [emails, setEmails] = useState<Email[]>([]);
@@ -81,49 +82,42 @@ export const useEmails = () => {
         }
     };
 
-    const sendSelectedEmail = async () => {
-        if (selectedEmail) {
-            setLoading(true);
-            setError(null);
-            try {
-                await sendEmail(selectedEmail);
-            } catch (error: any) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        }
-    };
-
     const getEmailChatMessages = async (emailId: number) => {
         setLoading(true);
         setError(null);
         try {
-            const messages = await getChatMessages(emailId);
-            setSelectedEmail(prevEmail => prevEmail ? { ...prevEmail, messageList: messages } : null);
+            // 获取聊天消息
+            const response = await apiClient.get(`/mail/messages`);
+            const messages: EmailMessage[] = handleApiResponse<EmailMessage[]>(response.data); // 确保 messages 是 EmailMessage[] 类型
+            
+            // 更新所选电子邮件的消息列表
+            setSelectedEmail(prevEmail => 
+                prevEmail ? { 
+                    ...prevEmail, 
+                    messageList: messages // 确保这里是正确的 EmailMessage 数组
+                } : null
+            );
         } catch (error: any) {
             setError(error.message);
         } finally {
             setLoading(false);
         }
-    };
+    };    
 
     const sendNewChatMessage = async (emailId: number, content: string) => {
         setLoading(true);
         setError(null);
         try {
-            const message: EmailMessage = {
-                id: 0,
+            const message: Omit<EmailMessage, 'id' | 'messageId'> = {
                 mailId: emailId,
-                messageId: 0,
                 content,
                 available: 'true',
-                createId: 'currentUser', // Replace with actual user ID
+                createId: 'currentUser', // 替换为实际用户ID
                 createDate: new Date().toISOString(),
-                modifyId: 'currentUser', // Replace with actual user ID
+                modifyId: 'currentUser', // 替换为实际用户ID
                 modifyDate: new Date().toISOString(),
             };
-            await sendChatMessage(emailId, message, content);
+            await sendChatMessage(emailId, message);
             await getEmailChatMessages(emailId);
         } catch (error: any) {
             setError(error.message);
@@ -141,9 +135,16 @@ export const useEmails = () => {
         createNewEmail,
         updateExistingEmail,
         deleteExistingEmail,
-        sendSelectedEmail,
         fetchEmails,
         getEmailChatMessages,
         sendNewChatMessage,
     };
 };
+
+function handleApiResponse<T>(data: any): T {
+    if (data.result) {
+        return data.data as T;
+    } else {
+        throw new Error(data.message || 'API Error');
+    }
+}

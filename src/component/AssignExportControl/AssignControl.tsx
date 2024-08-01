@@ -110,7 +110,11 @@ const AssignTaskControl: React.FC = () => {
     const chartId = parseInt(currentChart, 10);
     const userIds = selectedUsers.map(user => user.userId);
 
-    setAssignedTaskSponsors(chartId, userIds)
+    setAssignedTaskSponsors(chartId, {
+      sponsorList: userIds,
+      exporterList: [], // Assuming you manage exporterList separately
+      dashboardCharts: [chartId],
+    })
       .then((response) => {
         console.log('Successfully submitted', response.message);
       })

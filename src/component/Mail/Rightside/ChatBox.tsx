@@ -1,44 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import '../../../styles/chatBox.css';
-import { EmailMessage, getChatMessages, sendChatMessage } from '../../../services/mailService'; // 确保导入了函数
+import { Email, EmailMessage, getEmailDetails, sendChatMessage } from '../../../services/mailService';
 
 interface ChatBoxProps {
-  email: any; // 可以替换为更具体的类型定义
+  emailId: number;
+  onDelete: () => void;
+  onMessageChange?: (message: string) => void; // Add onMessageChange prop
 }
 
-const ChatBox: React.FC<ChatBoxProps> = ({ email }) => {
+const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange }) => {
   const [messages, setMessages] = useState<EmailMessage[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
+  const [email, setEmail] = useState<Email | null>(null);
 
   useEffect(() => {
-    if (email) {
-      loadMessages(email.id);
-    }
-  }, [email]);
+    const loadEmail = async () => {
+      try {
+        const fetchedEmail = await getEmailDetails(emailId);
+        setEmail(fetchedEmail);
+        setMessages(fetchedEmail.messageList); // Assume `messageList` contains messages
+      } catch (error) {
+        console.error('Error fetching email details:', error);
+      }
+    };
 
-  const loadMessages = async (emailId: number) => {
-    try {
-      const fetchedMessages = await getChatMessages(emailId);
-      setMessages(fetchedMessages);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    }
-  };
+    loadEmail();
+  }, [emailId]);
 
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
       try {
-        const newChatMessage = await sendChatMessage(email.id, {
-          mailId: email.id,
+        const newChatMessage = await sendChatMessage(emailId, {
+          mailId: emailId,
           content: newMessage,
-          available: 'true', // 假设默认为 'true'
-          createId: 'user-id', // 这里你需要根据实际情况提供用户 ID
-          createDate: new Date().toISOString(), // 当前时间作为创建时间
-          modifyId: 'user-id',
-          modifyDate: new Date().toISOString()
+          available: 'true',
+          createId: 'user-id', // Replace with actual user ID
+          createDate: new Date().toISOString(),
+          modifyId: 'user-id', // Replace with actual user ID
+          modifyDate: new Date().toISOString(),
         });
         setMessages([...messages, newChatMessage]);
         setNewMessage('');
+        if (onMessageChange) {
+          onMessageChange(newMessage); // Notify parent about the message change
+        }
       } catch (error) {
         console.error('Error sending message:', error);
       }
@@ -46,22 +51,31 @@ const ChatBox: React.FC<ChatBoxProps> = ({ email }) => {
   };
 
   return (
-    <div className="chatBox">
-      <div className="messageContainer">
-        {messages.map((message) => (
-          <div key={message.id} className="message">
-            <span>{message.createId}</span>: {message.content}
-          </div>
+    <div className="chatContainer">
+      <div className="mailTitle">
+        <button className="delete-buttonUnique" onClick={onDelete}>刪除郵件</button>
+        <i className="fa-solid fa-ellipsis"></i>
+      </div>
+      <div className="chatBox custom-scrollbar">
+        {messages && messages.map((message) => (
+          message && (
+            <div key={message.id} className="chatMessage">
+              <div className="messageContent">
+                <span className="sender">{message.createId}</span>
+                <span className="content">{message.content}</span>
+              </div>
+              <span className="timestamp">{new Date(message.createDate).toLocaleString()}</span>
+            </div>
+          )
         ))}
       </div>
-      <div className="inputContainer">
-        <input
-          type="text"
+      <div className="input-container">
+        <textarea
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
+          placeholder="请输入"
         />
-        <button onClick={handleSendMessage}>Send</button>
+        <i className="fa fa-arrow-right arrow-icon" onClick={handleSendMessage}></i>
       </div>
     </div>
   );
