@@ -157,7 +157,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                 aria-controls="long-menu"
                 aria-haspopup="true"
                 onClick={handleMenuOpen}
-                className={styles.dropdownButton }
+                className={styles.dropdownButton}
               >
                 <img src={moreInfo} alt="操作" />
               </IconButton>

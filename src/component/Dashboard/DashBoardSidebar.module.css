@@ -80,7 +80,7 @@
 
 .sidebartitle:hover {
   background-color: #ACACBE;
-  border-radius: 25px;
+  border-radius: 18px;
   color: black;
 
   .dropdownButton {
@@ -90,7 +90,7 @@
 
 .active {
   background-color: #ACACBE;
-  border-radius: 25px;
+  border-radius: 18px;
   color: black;
 }
 

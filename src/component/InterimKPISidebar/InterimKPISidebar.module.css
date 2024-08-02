@@ -50,7 +50,7 @@
   align-items: center;
   position: relative;
   margin-bottom: 1px;
-  color: #CCCCCC;
+  color: rgba(255, 255, 255, 0.35);
   justify-content: center;
   font-size: 1.1rem;
   font-weight: 700;
@@ -58,9 +58,11 @@
 
 .siderbar_menu>li.active>a,
 .siderbar_menu>li>a:hover {
-  background: #ACACBE;
-  color: black;
-  border-radius: 15px;
+  color: white;
+  font-weight: bold;
+  border-left: 7px solid #acacbe;
+  border-radius: 5px;
+  padding-left: 3px;
 }
 
 .close {

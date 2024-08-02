@@ -28,8 +28,16 @@ interface UserPickerDialogProps {
 }
 
 const useStyles = makeStyles({
+  muiDialogroot: {
+    position: 'fixed',
+    zIndex: 999999,
+    right: 0,
+    bottom: 0,
+    top: 0,
+    left: 0,
+  },
   dialogPaper: {
-    width: '60%',
+    width: '55%',
     height: '70%',
     maxHeight: '90%',
     maxWidth: '90%',
@@ -112,9 +120,12 @@ const useStyles = makeStyles({
   },
   cancel: {
     color: 'white',
+    fontWeight: '700'
   },
   submit: {
     color: 'white',
+    fontWeight: '700'
+
   },
   pageIndicator: {
     margin: '0 8px',
@@ -198,12 +209,16 @@ const UserPickerDialog: React.FC<UserPickerDialogProps> = ({
   const totalPages = Math.ceil(availableUsers.length / usersPerPage);
 
   return (
+
     <Dialog
       open={open}
       onClose={onClose}
       fullWidth
       maxWidth="sm"
-      classes={{ paper: classes.dialogPaper }}
+      classes={{
+        paper: classes.dialogPaper,
+        root: classes.muiDialogroot,
+      }}
     >
       <DialogTitle className={classes.dialogTitle}>選擇</DialogTitle>
       <DialogContent className={classes.dialogContent}>
