@@ -6,9 +6,10 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { getAllUsers } from '../../services/userManagementServices';
-import { setExportPermission } from '../../services/exportService';
-import { EmployeeData } from '../../services/types/userManagement';
+import { fetchAllUsers } from '../../services/UserAccountService';
+import { setExportPermission, getExportPermission } from '../../services/exportService';
+import { fetchAllCharts } from '../../services/AssignedTaskService'; // Add this import
+import { EmployeeData, UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './ExportControl.module.css';
 
@@ -22,8 +23,13 @@ const useStyles = makeStyles({
 });
 
 interface User extends EmployeeData {
+  [x: string]: any;
   selected?: boolean;
-  [key: string]: any;
+}
+
+interface Chart {
+  id: number;
+  name: string;
 }
 
 const UserPickerDialog: React.FC<{
@@ -32,16 +38,26 @@ const UserPickerDialog: React.FC<{
   selectedUserIds: string[];
   onClose: () => void;
   onSubmit: (selectedUsers: User[]) => void;
-}> = ({ open, users, selectedUserIds, onClose, onSubmit }) => {
+  chartId: number;
+}> = ({ open, users, selectedUserIds, onClose, onSubmit, chartId }) => {
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    const preSelectedUsers = users.filter((user) => selectedUserIds.includes(user.id));
-    setSelectedUsers(preSelectedUsers);
-  }, [users, selectedUserIds]);
+    fetchAllUsers()
+      .then((data) => {
+        const userList: User[] = data.map((user: UserAccountBean) => ({
+          ...user,
+          available: user.available === true,
+        }));
+        setUsers(userList);
+      })
+      .catch((error) => {
+        console.error('Error fetching users', error);
+      });
+  }, []);
 
   const handleSubmit = () => {
-    onSubmit(selectedUsers); // Pass the User[] directly
+    onSubmit(selectedUsers);
     onClose();
   };
 
@@ -55,14 +71,14 @@ const UserPickerDialog: React.FC<{
         <Autocomplete
           multiple
           options={users}
-          getOptionLabel={(option) => `${option.id} ${option.name}`}
+          getOptionLabel={(option) => `${option.userId} ${option.userName}`}
           onChange={(event, newValue) => {
             setSelectedUsers(newValue as User[]);
           }}
           value={selectedUsers}
           renderOption={(props, option) => (
             <li {...props}>
-              {option.id} {option.name}
+              {option.userId} {option.userName}
             </li>
           )}
           renderInput={(params) => (
@@ -82,12 +98,13 @@ const UserPickerDialog: React.FC<{
 
 const ExportControl: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [currentChart, setCurrentChart] = useState<string>('');
+  const [currentChart, setCurrentChart] = useState<number>(0);
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: string]: string[] }>({}); // Map of chart to selected user IDs
+  const [charts, setCharts] = useState<Chart[]>([]);
+  const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: number]: string[] }>({}); // Map of chart to selected user IDs
 
   useEffect(() => {
-    getAllUsers()
+    fetchAllUsers()
       .then((data: any[]) => {
         if (Array.isArray(data)) {
           const userList: User[] = data.map((user) => ({
@@ -105,8 +122,37 @@ const ExportControl: React.FC = () => {
       });
   }, []);
 
-  const handleOpenDialog = (chartName: string) => {
-    setCurrentChart(chartName);
+  useEffect(() => {
+    fetchAllCharts()
+      .then((response) => {
+        if (response.data) {
+          setCharts(response.data);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching charts', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (currentChart > 0) {
+      getExportPermission(currentChart)
+        .then((response) => {
+          if (response.result && response.data) {
+            setSelectedUsersMap(prev => ({
+              ...prev,
+              [currentChart]: response.data.exporterList || []
+            }));
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching export permissions', error);
+        });
+    }
+  }, [currentChart]);
+
+  const handleOpenDialog = (chartId: number) => {
+    setCurrentChart(chartId);
     setDialogOpen(true);
   };
 
@@ -115,42 +161,33 @@ const ExportControl: React.FC = () => {
   };
 
   const handleSubmit = (selectedUsers: User[]) => {
-    const existingUserIds = selectedUsersMap[currentChart] || [];
-    const newUserIds = selectedUsers.map(user => user.id);
-    
-    const toAdd = newUserIds.filter(id => !existingUserIds.includes(id));
-    const toRemove = existingUserIds.filter(id => !newUserIds.includes(id));
+    const selectedUserIds = selectedUsers.map(user => user.id);
     
     // Update the selected users map
     setSelectedUsersMap(prev => ({
       ...prev,
-      [currentChart]: newUserIds,
+      [currentChart]: selectedUserIds,
     }));
-    
-    // Update export permissions
-    const chartId = parseInt(currentChart, 10);
-  
-    // Construct the ListDTO object
+
     const listDTO = {
       sponsorList: [], // Add appropriate logic to handle sponsorList
-      exporterList: newUserIds,
-      dashboardCharts: [chartId] // Assuming currentChart is the chartId
+      exporterList: selectedUserIds,
+      dashboardCharts: [currentChart],
     };
-  
-    // Sending the ListDTO object
-    setExportPermission(chartId, listDTO)
+
+    setExportPermission(currentChart, listDTO)
       .then((response) => {
         console.log('成功提交:', response.message);
       })
       .catch((error) => {
         console.error('提交失败', error);
       });
-  
+
     setDialogOpen(false);
   };
-  
-  const getSelectedUserNames = (chartName: string) => {
-    const selectedUserIds = selectedUsersMap[chartName] || [];
+
+  const getSelectedUserNames = (chartId: number) => {
+    const selectedUserIds = selectedUsersMap[chartId] || [];
     const count = selectedUserIds.length;
     return count > 0 ? `擁有權限者：共 ${count} 人` : '設置匯出權限';
   };
@@ -167,12 +204,12 @@ const ExportControl: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {['廢品率', '產能利用率', '生產進度達成率'].map((item, index) => (
-                <tr key={index}>
-                  <td>{item}</td>
+              {charts.map((chart) => (
+                <tr key={chart.id}>
+                  <td>{chart.name}</td>
                   <td>
-                    <Button variant="contained" color="primary" onClick={() => handleOpenDialog(item)}>
-                      {getSelectedUserNames(item)}
+                    <Button variant="contained" color="primary" onClick={() => handleOpenDialog(chart.id)}>
+                      {getSelectedUserNames(chart.id)}
                     </Button>
                   </td>
                 </tr>
@@ -187,9 +224,14 @@ const ExportControl: React.FC = () => {
         selectedUserIds={selectedUsersMap[currentChart] || []}
         onClose={handleCloseDialog}
         onSubmit={handleSubmit}
+        chartId={currentChart}
       />
     </>
   );
 };
 
 export default ExportControl;
+function setUsers(userList: User[]) {
+  throw new Error('Function not implemented.');
+}
+

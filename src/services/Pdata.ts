@@ -31,14 +31,14 @@ export const fetchUserData = async (): Promise<UpdateUserData> => {
     }
   } catch (error) {
     console.error('获取用户数据时发生错误:', error);
-    throw new Error('获取用户数据时发生错误');
+    throw error;
   }
 };
 
 // 更新用户数据
-export const updateUserData = async (userData: UpdateUserData): Promise<void> => {
+export const updateUserData = async (updatedData: UpdateUserData): Promise<void> => {
   try {
-    const response = await apiClient.patch<Response<null>>('/user-account', userData);
+    const response = await apiClient.patch<Response<null>>('/user-account', updatedData);
     const { result, errorCode, message } = response.data;
 
     if (!result) {
@@ -47,7 +47,6 @@ export const updateUserData = async (userData: UpdateUserData): Promise<void> =>
     }
   } catch (error) {
     console.error('更新用户数据时发生错误:', error);
-    throw new Error('更新用户数据时发生错误');
+    throw error;
   }
 };
-

@@ -7,7 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { fetchAllUsers } from '../../services/UserAccountService';
-import { setAssignedTaskSponsors } from '../../services/AssignedTaskService';
+import { fetchAllCharts, getAssignedTaskSponsors, setAssignedTaskSponsors } from '../../services/AssignedTaskService';
 import { UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './AssignControl.module.css';
@@ -25,11 +25,17 @@ interface User extends UserAccountBean {
   selected?: boolean;
 }
 
+interface Chart {
+  id: number;
+  name: string;
+}
+
 const UserPickerDialog: React.FC<{
   open: boolean;
   onClose: () => void;
   onSubmit: (selectedUsers: User[]) => void;
-}> = ({ open, onClose, onSubmit }) => {
+  chartId: number;
+}> = ({ open, onClose, onSubmit, chartId }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
 
@@ -46,6 +52,22 @@ const UserPickerDialog: React.FC<{
         console.error('Error fetching users', error);
       });
   }, []);
+
+  useEffect(() => {
+    if (chartId > 0) {
+      getAssignedTaskSponsors(chartId)
+        .then((response) => {
+          if (response.data) {
+            const sponsorList = response.data.sponsorList || [];
+            const selectedSponsorUsers = users.filter(user => sponsorList.includes(user.userId));
+            setSelectedUsers(selectedSponsorUsers);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching sponsors', error);
+        });
+    }
+  }, [chartId, users]);
 
   const handleSubmit = () => {
     onSubmit(selectedUsers);
@@ -89,11 +111,24 @@ const UserPickerDialog: React.FC<{
 
 const AssignTaskControl: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [currentChart, setCurrentChart] = useState('');
-  const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: string]: User[] }>({});
+  const [currentChart, setCurrentChart] = useState(0);
+  const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: number]: User[] }>({});
+  const [charts, setCharts] = useState<Chart[]>([]);
 
-  const handleOpenDialog = (chartName: string) => {
-    setCurrentChart(chartName);
+  useEffect(() => {
+    fetchAllCharts()
+      .then((response) => {
+        if (response.data) {
+          setCharts(response.data);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching charts', error);
+      });
+  }, []);
+
+  const handleOpenDialog = (chartId: number) => {
+    setCurrentChart(chartId);
     setDialogOpen(true);
   };
 
@@ -107,7 +142,7 @@ const AssignTaskControl: React.FC = () => {
       [currentChart]: selectedUsers,
     });
 
-    const chartId = parseInt(currentChart, 10);
+    const chartId = currentChart;
     const userIds = selectedUsers.map(user => user.userId);
 
     setAssignedTaskSponsors(chartId, {
@@ -125,8 +160,8 @@ const AssignTaskControl: React.FC = () => {
     setDialogOpen(false);
   };
 
-  const getSelectedUserNames = (chartName: string) => {
-    const selectedUsers = selectedUsersMap[chartName] || [];
+  const getSelectedUserNames = (chartId: number) => {
+    const selectedUsers = selectedUsersMap[chartId] || [];
     return selectedUsers.length > 0 ? `擁有權限者：共 ${selectedUsers.length} 人` : '設置交辦權限';
   };
 
@@ -142,12 +177,12 @@ const AssignTaskControl: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {['廢品率', '產能利用率', '生產進度達成率'].map((item, index) => (
-                <tr key={index}>
-                  <td>{item}</td>
+              {charts.map((chart) => (
+                <tr key={chart.id}>
+                  <td>{chart.name}</td>
                   <td>
-                    <Button variant="contained" color="primary" onClick={() => handleOpenDialog(item)}>
-                      {getSelectedUserNames(item)}
+                    <Button variant="contained" color="primary" onClick={() => handleOpenDialog(chart.id)}>
+                      {getSelectedUserNames(chart.id)}
                     </Button>
                   </td>
                 </tr>
@@ -156,7 +191,7 @@ const AssignTaskControl: React.FC = () => {
           </table>
         </div>
       </div>
-      <UserPickerDialog open={dialogOpen} onClose={handleCloseDialog} onSubmit={handleSubmit} />
+      <UserPickerDialog open={dialogOpen} onClose={handleCloseDialog} onSubmit={handleSubmit} chartId={currentChart} />
     </>
   );
 };

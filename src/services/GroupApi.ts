@@ -14,14 +14,14 @@ export const fetchGroups = async (): Promise<Group[]> => {
   }
 };
 
-// 根据群组 ID 获取用户 
+// 根据群组 ID 获取用户
 export const fetchUsersByGroupId = async (groupId: number): Promise<User[]> => {
   try {
-    const response = await apiClient.get<Response<User[]>>(`${API_URL}/${groupId}`);
-    return response.data.data || [];
-  } catch (error: any) {
-    console.error('Failed to fetch group users:', error);
-    return [];
+    const response = await apiClient.get<Response<User[]>>(`/group/${groupId}`);
+    return response.data.data || []; // Ensure this is always an array
+  } catch (error) {
+    console.error('獲取用戶列表失敗:', error);
+    throw error;
   }
 };
 
@@ -86,3 +86,21 @@ export const updateGroupName = async (groupId: number, newName: string): Promise
     throw new Error('更新群组名称失败: ' + error.message);
   }
 };
+
+export const updateGroupChartPermissions = async (groupId: number, chartId: number, newState: boolean): Promise<void> => {
+  try {
+    await apiClient.post(`/group/chart`, null, {
+      params: {
+        groupId,
+        chartId
+      },
+      data: {
+        enabled: newState
+      }
+    });
+  } catch (error) {
+    console.error('更新圖表權限失敗:', error);
+    throw error;
+  }
+};
+

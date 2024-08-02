@@ -109,7 +109,7 @@ export interface UpdateUserData {
   gmail: string;
   identity: string;
   position: string;
-  available: boolean; // Change this to boolean
+  available: boolean;
   createId: string;
   createDate: string;
   modifyId: string;

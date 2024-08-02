@@ -4,11 +4,12 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import UserPickerDialog from './memberControlUserPicker';
-import { fetchUsersByGroupId, addUserToGroup, removeUserFromGroup, deleteGroup } from '../../services/GroupApi';
-import { User } from '../../services/types/userManagement';
+import { fetchUsersByGroupId, addUserToGroup, removeUserFromGroup, deleteGroup, updateGroupChartPermissions } from '../../services/GroupApi';
+import ChartService from '../../services/ChartService';
 import { getUsers } from '../../services/userManagementServices';
 import styles from './GroupList.module.css';
 import moreInfo from '../../assets/icon/more.svg';
+import { User } from '../../services/types/userManagement';
 
 interface GroupListProps {
   groupId: number;
@@ -21,45 +22,52 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
   const [memberData, setMemberData] = useState<User[]>([]);
   const [showMemberPicker, setShowMemberPicker] = useState(false);
   const [allUsers, setAllUsers] = useState<User[]>([]);
-  const [graphToggleStates, setGraphToggleStates] = useState<{ [key: string]: string }>({
-    '生產率': 'allow',
-    '廢品率': 'allow',
-    '產能利用率': 'allow'
-  });
+  const [chartPermissions, setChartPermissions] = useState<{ [key: number]: boolean }>({});
+  const [charts, setCharts] = useState<{ id: number; name: string }[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const isMenuOpen = Boolean(anchorEl);
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
 
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
+
+  // Fetch group details and charts
   useEffect(() => {
-    const fetchGroupUsers = async () => {
+    const fetchGroupData = async () => {
       try {
-        const response = await fetchUsersByGroupId(groupId);
-        setMemberData(response);
+        const [userList, chartsResponse] = await Promise.all([
+          fetchUsersByGroupId(groupId),
+          ChartService.getAllCharts()
+        ]);
+
+        // Validate and set userList and chartsResponse
+        setMemberData(userList);
+
+        if (chartsResponse.result && Array.isArray(chartsResponse.data)) {
+          setCharts(chartsResponse.data);
+
+          const initialPermissions: { [key: number]: boolean } = {};
+          chartsResponse.data.forEach((chart: { id: number }) => {
+            initialPermissions[chart.id] = false;
+          });
+          setChartPermissions(initialPermissions);
+        } else {
+          throw new Error('Unexpected charts response format');
+        }
       } catch (error) {
-        console.error('獲取群組用戶失敗:', error);
+        console.error('獲取群組和圖表信息失敗:', error);
       }
     };
 
-    fetchGroupUsers();
+    fetchGroupData();
   }, [groupId]);
 
+  // Fetch all users
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const response = await getUsers();
-        console.log('Fetched users:', response);
-        if (Array.isArray(response)) {
-          setAllUsers(response);
-        } else {
-          console.error('Expected array but received:', response);
-          setAllUsers([]);
-        }
+        const userList = await getUsers();
+        setAllUsers(userList);
       } catch (error) {
         console.error('獲取所有用戶失敗:', error);
       }
@@ -68,6 +76,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
     fetchAllUsers();
   }, []);
 
+  // Remove user from group
   const handleRemove = async (id: string, name: string) => {
     if (window.confirm(`您確定要將【${name}】從群組中移除嗎？`)) {
       try {
@@ -79,6 +88,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
     }
   };
 
+  // Add new members to group
   const handleAddMember = async (newMembers: User[]) => {
     try {
       await Promise.all(newMembers.map(user =>
@@ -90,17 +100,30 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
     }
   };
 
-  const toggleGraphState = (graphName: string) => {
-    const currentState = graphToggleStates[graphName];
-    const newState = currentState === 'allow' ? 'deny' : 'allow';
-    if (window.confirm(`您確定要將【${graphName}】狀態更改為${newState === 'allow' ? '允許' : '禁用'}嗎？`)) {
-      setGraphToggleStates(prevStates => ({
-        ...prevStates,
-        [graphName]: newState
+  // Update chart permissions
+  const updateChartPermissions = async (chartId: number, newState: boolean) => {
+    try {
+      await updateGroupChartPermissions(groupId, chartId, newState);
+      setChartPermissions(prev => ({
+        ...prev,
+        [chartId]: newState
       }));
+    } catch (error) {
+      console.error('更新圖表權限失敗:', error);
     }
   };
 
+  // Toggle chart permission state
+  const toggleChartPermission = (chartId: string | number) => {
+    const id = typeof chartId === 'string' ? parseInt(chartId, 10) : chartId;
+    const currentState = chartPermissions[id];
+    const newState = !currentState;
+    if (window.confirm(`您確定要將【${id}】的狀態更改為${newState ? '允許' : '禁用'}嗎？`)) {
+      updateChartPermissions(id, newState);
+    }
+  };
+
+  // Delete group
   const handleDeleteGroup = async () => {
     if (window.confirm('您確定要刪除這個群組嗎？')) {
       try {
@@ -151,7 +174,6 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
               >
                 刪除群組
               </Button>
-
               <IconButton
                 aria-label="more"
                 aria-controls="long-menu"
@@ -161,7 +183,6 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
               >
                 <img src={moreInfo} alt="操作" />
               </IconButton>
-
               <Menu
                 id="long-menu"
                 anchorEl={anchorEl}
@@ -196,21 +217,25 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                   </tr>
                 </thead>
                 <tbody>
-                  {memberData.map(member => (
-                    <tr key={member.userId}>
-                      <td>{member.userName}</td>
-                      <td>{member.department}</td>
-                      <td>{member.position || '未指定'}</td>
-                      <td>
-                        <Button
-                          variant="outlined"
-                          onClick={() => handleRemove(member.userId, member.userName)}
-                        >
-                          移除
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
+                  {memberData.length > 0 ? (
+                    memberData.map(member => (
+                      <tr key={member.userId}>
+                        <td>{member.userName}</td>
+                        <td>{member.department}</td>
+                        <td>{member.position || '未指定'}</td>
+                        <td>
+                          <Button
+                            variant="outlined"
+                            onClick={() => handleRemove(member.userId, member.userName)}
+                          >
+                            移除
+                          </Button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr><td colSpan={4}>沒有成員</td></tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -226,19 +251,23 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                 </tr>
               </thead>
               <tbody>
-                {['生產率', '廢品率', '產能利用率'].map((item, index) => (
-                  <tr key={index}>
-                    <td>{item}</td>
-                    <td>
-                      <button
-                        className={`${styles.toggleButton} ${graphToggleStates[item] === 'allow' ? styles.allow : styles.deny}`}
-                        onClick={() => toggleGraphState(item)}
-                      >
-                        {graphToggleStates[item] === 'allow' ? '允許' : '禁用'}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {charts.length > 0 ? (
+                  charts.map(chart => (
+                    <tr key={chart.id}>
+                      <td>{chart.name}</td>
+                      <td>
+                        <button
+                          className={`${styles.toggleButton} ${chartPermissions[chart.id] ? styles.allow : styles.deny}`}
+                          onClick={() => toggleChartPermission(chart.id)}
+                        >
+                          {chartPermissions[chart.id] ? '應許' : '禁止'}
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr><td colSpan={2}>沒有圖表</td></tr>
+                )}
               </tbody>
             </table>
           </div>
