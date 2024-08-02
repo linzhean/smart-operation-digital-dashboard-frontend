@@ -14,6 +14,7 @@
   font-size: 1.2rem;
   border: none;
   transition: transform 0.2s, color 0.2s;
+  margin-left: 50px;
 }
 
 .addButton:hover {
@@ -70,7 +71,7 @@
   align-items: center;
   position: relative;
   margin-bottom: 1px;
-  color: rgb(255, 255, 255);
+  color: rgb(255, 255, 255, 0.5);
   font-weight: bold;
   justify-content: center;
   font-size: 1.2rem;
@@ -81,9 +82,13 @@
   background-color: #ACACBE;
   border-radius: 25px;
   color: black;
+
+  .dropdownButton {
+    display: inline-flex !important;
+  }
 }
 
-.active .sidebartitle {
+.active {
   background-color: #ACACBE;
   border-radius: 25px;
   color: black;
@@ -136,6 +141,28 @@ li:hover .moreButton {
 .moreButton:hover {
   transform: scale(1.2);
 }
+
+.dropdownButton {
+  display: none !important;
+  position: absolute !important;
+  right: 0;
+  border: none !important;
+  border-radius: 50px;
+}
+
+.dropdownButton img {
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
+}
+
+.dropdownMenu {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  z-index: 99999999999 !important;
+}
+
+
 
 @media (max-width: 1024px) {
   .sidebar_inner {

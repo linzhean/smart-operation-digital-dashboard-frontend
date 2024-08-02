@@ -3,7 +3,11 @@ import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './DashBoardSidebar.module.css';
 import DashboardService from '../../services/DashboardService';
 import { Dashboard } from '../../services/types/dashboard';
-import more from '../../assets/icon/blueMore.svg'
+import more from '../../assets/icon/homeMore.svg'
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+
 const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => void }> = ({ onSelectDashboard }) => {
   const [isActive, setIsActive] = useState(false);
   const [isDisabled, setIsDisabled] = useState(window.innerWidth > 1024);
@@ -70,7 +74,17 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
       // 可以進一步處理錯誤，例如顯示用戶消息
     }
   };
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const isMenuOpen = Boolean(anchorEl);
   return (
     <div className={`${styles.wrapper} ${isActive ? styles.active : ''}`}>
       <div className={styles.sidebar}>
@@ -90,14 +104,37 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
               <li
                 key={dashboard.id}
                 className={`${styles.sidebartitle} ${activeDashboard === dashboard.id ? styles.active : ''}`}
+                // className={`${styles.sidebartitle} ${styles.active}`}
                 onClick={() => handleDashboardClick(dashboard.id)}
               >
                 <span>
                   儀表板名稱{dashboard.name}
                 </span>
-                <button className={styles.moreButton} onClick={() => handleDeleteDashboard(dashboard.id)}>
+
+                <IconButton
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  onClick={handleMenuOpen}
+                  className={styles.dropdownButton}
+                >
+                  <img src={more} alt="操作" />
+                </IconButton>
+
+                <Menu
+                  id="long-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={isMenuOpen}
+                  onClose={handleMenuClose}
+                  className={styles.dropdownMenu}
+                >
+                  <MenuItem onClick={() => { ; handleMenuClose(); }}>修改名稱</MenuItem>
+                  <MenuItem onClick={() => { handleDeleteDashboard(dashboard.id); handleMenuClose(); }}>刪除</MenuItem>
+                </Menu>
+                {/* <button className={styles.moreButton} onClick={() => handleDeleteDashboard(dashboard.id)}>
                   <img src={more} alt="" />
-                </button>
+                </button> */}
               </li>
             ))}
           </ul>
