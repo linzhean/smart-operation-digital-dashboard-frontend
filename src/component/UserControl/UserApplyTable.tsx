@@ -33,11 +33,11 @@ const UserApplyTable: React.FC = () => {
         setTotalPages(pageResponse);
         setHasMore(userResponse.length > 0 && page < pageResponse - 1);
       } else {
-        console.error('错误：fetchUsers 没有返回数组。');
+        console.error('錯誤：FetchUsers 沒有返回數組。');
       }
     } catch (error) {
-      console.error('加载初始数据时出错：', error);
-      setErrorMessage('加载数据时出错，请稍后重试。');
+      console.error('加載初始數據時出錯：', error);
+      setErrorMessage('加載數據時出錯，請稍後重新嘗試。');
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ const UserApplyTable: React.FC = () => {
     } catch (error) {
       console.error('Error admitting user:', error);
       const errorMessage = (error as Error).message || '未知錯誤';
-      setErrorMessage(`無法將用戶設為經理或員工。錯誤信息：${errorMessage}`);
+      setErrorMessage(`無法將用戶設為經理或員工。錯誤訊息：${errorMessage}`);
     }
   };
 

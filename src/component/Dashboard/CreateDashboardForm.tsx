@@ -11,7 +11,6 @@ const CreateDashboardForm: React.FC = () => {
       await DashboardService.createDashboard({ name });
       setName('');
       setFeedback('Dashboard created successfully!');
-      // Refresh dashboard list or provide feedback to the user
     } catch (error) {
       console.error('Error creating dashboard:', error);
       setFeedback('Error creating dashboard.');

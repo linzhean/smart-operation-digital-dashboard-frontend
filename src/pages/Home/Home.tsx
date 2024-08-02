@@ -11,10 +11,21 @@ import '../../styles/Home.css';
 import { exportData, getExportPermission } from '../../services/exportService';
 import ChartWithDropdown from '../../component/Dashboard/ChartWithDropdown';
 import ChartService from '../../services/ChartService';
-
+import styles from './Home.module.css'
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const Home: React.FC = () => {
+
+  const dashboardContainerStyle = {
+    borderRadius: '15px',
+    color: '#CCCCCC',
+    height: '100vh',
+    marginLeft: '250px',
+    width: 'calc(100% - 250px)',
+    transition: 'all 0.3s ease',
+    marginBottom: '10px'
+  };
+
   const [layout, setLayout] = useState([
     { i: 'lineChart', x: 0, y: 0, w: 4, h: 4 },
     { i: 'barChart', x: 4, y: 0, w: 4, h: 4 },
@@ -72,7 +83,7 @@ const Home: React.FC = () => {
     <div className='wrapper'>
       <div className="Home">
         <DashboardSidebar onSelectDashboard={setSelectedDashboard} />
-        <div className='main_container'>
+        <div className={styles.dashboard_container}>
           <div className='theContent'>
             <ResponsiveGridLayout
               className="layout"

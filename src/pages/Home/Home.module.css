@@ -1,4 +1,4 @@
-.groupManage_container {
+.dashboard_container {
   border-radius: 15px;
   color: #CCCCCC;
   height: 100vh;
@@ -8,8 +8,8 @@
   margin-bottom: 10px;
 }
 
-@media (max-width: 768px) {
-  .groupManage_container {
+@media (max-width: 1024px) {
+  .dashboard_container {
     width: 100%;
     margin-left: 0;
   }

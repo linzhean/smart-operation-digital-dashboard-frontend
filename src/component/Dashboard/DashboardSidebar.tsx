@@ -3,7 +3,7 @@ import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './DashBoardSidebar.module.css';
 import DashboardService from '../../services/DashboardService';
 import { Dashboard } from '../../services/types/dashboard';
-
+import more from '../../assets/icon/blueMore.svg'
 const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => void }> = ({ onSelectDashboard }) => {
   const [isActive, setIsActive] = useState(false);
   const [isDisabled, setIsDisabled] = useState(window.innerWidth > 1024);
@@ -92,8 +92,12 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
                 className={`${styles.sidebartitle} ${activeDashboard === dashboard.id ? styles.active : ''}`}
                 onClick={() => handleDashboardClick(dashboard.id)}
               >
-                {dashboard.name}
-                <button onClick={() => handleDeleteDashboard(dashboard.id)}>删除</button>
+                <span>
+                  儀表板名稱{dashboard.name}
+                </span>
+                <button className={styles.moreButton} onClick={() => handleDeleteDashboard(dashboard.id)}>
+                  <img src={more} alt="" />
+                </button>
               </li>
             ))}
           </ul>

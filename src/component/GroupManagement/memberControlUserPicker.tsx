@@ -205,7 +205,7 @@ const UserPickerDialog: React.FC<UserPickerDialogProps> = ({
       maxWidth="sm"
       classes={{ paper: classes.dialogPaper }}
     >
-      <DialogTitle className={classes.dialogTitle}>选择用户</DialogTitle>
+      <DialogTitle className={classes.dialogTitle}>選擇</DialogTitle>
       <DialogContent className={classes.dialogContent}>
         <div style={{ margin: '10px 0', color: 'grey' }}>已選用戶</div>
         <div>
@@ -246,7 +246,7 @@ const UserPickerDialog: React.FC<UserPickerDialogProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} className={classes.cancel}>取消</Button>
-        <Button onClick={handleSubmit} className={classes.submit}>确认</Button>
+        <Button onClick={handleSubmit} className={classes.submit}>確認</Button>
       </DialogActions>
       <div className={classes.pagination}>
         <IconButton

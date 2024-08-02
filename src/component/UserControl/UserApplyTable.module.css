@@ -113,3 +113,23 @@
 ::-webkit-scrollbar-button {
   display: none;
 }
+
+@keyframes colorChange {
+  0% {
+    color: red;
+  }
+
+  50% {
+    color: rgb(255, 225, 0);
+  }
+
+  100% {
+    color: red;
+  }
+}
+
+.errorMsg {
+  margin: 10px;
+  font-size: 1rem;
+  animation: colorChange 5s infinite;
+}
