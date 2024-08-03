@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import UserPickerDialog from './memberControlUserPicker';
-import { fetchUsersByGroupId, addUserToGroup, removeUserFromGroup, deleteGroup, updateGroupChartPermissions } from '../../services/GroupApi';
-import ChartService from '../../services/ChartService';
-import { getUsers } from '../../services/userManagementServices';
+import useGroupList from '../../Hook/useGroupList';
 import styles from './GroupList.module.css';
 import moreInfo from '../../assets/icon/more.svg';
 import { User } from '../../services/types/userManagement';
@@ -19,121 +17,22 @@ interface GroupListProps {
 }
 
 const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButtonClick, onDeleteGroup }) => {
-  const [memberData, setMemberData] = useState<User[]>([]);
-  const [showMemberPicker, setShowMemberPicker] = useState(false);
-  const [allUsers, setAllUsers] = useState<User[]>([]);
-  const [chartPermissions, setChartPermissions] = useState<{ [key: number]: boolean }>({});
-  const [charts, setCharts] = useState<{ id: number; name: string }[]>([]);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  const isMenuOpen = Boolean(anchorEl);
-
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
-  const handleMenuClose = () => setAnchorEl(null);
-
-  // Fetch group details and charts
-  useEffect(() => {
-    const fetchGroupData = async () => {
-      try {
-        const [userList, chartsResponse] = await Promise.all([
-          fetchUsersByGroupId(groupId),
-          ChartService.getAllCharts()
-        ]);
-
-        // Validate and set userList and chartsResponse
-        setMemberData(userList);
-
-        if (chartsResponse.result && Array.isArray(chartsResponse.data)) {
-          setCharts(chartsResponse.data);
-
-          const initialPermissions: { [key: number]: boolean } = {};
-          chartsResponse.data.forEach((chart: { id: number }) => {
-            initialPermissions[chart.id] = false;
-          });
-          setChartPermissions(initialPermissions);
-        } else {
-          throw new Error('Unexpected charts response format');
-        }
-      } catch (error) {
-        console.error('獲取群組和圖表信息失敗:', error);
-      }
-    };
-
-    fetchGroupData();
-  }, [groupId]);
-
-  // Fetch all users
-  useEffect(() => {
-    const fetchAllUsers = async () => {
-      try {
-        const userList = await getUsers();
-        setAllUsers(userList);
-      } catch (error) {
-        console.error('獲取所有用戶失敗:', error);
-      }
-    };
-
-    fetchAllUsers();
-  }, []);
-
-  // Remove user from group
-  const handleRemove = async (id: string, name: string) => {
-    if (window.confirm(`您確定要將【${name}】從群組中移除嗎？`)) {
-      try {
-        await removeUserFromGroup(groupId, id);
-        setMemberData(prevData => prevData.filter(member => member.userId !== id));
-      } catch (error) {
-        console.error('移除用戶失敗:', error);
-      }
-    }
-  };
-
-  // Add new members to group
-  const handleAddMember = async (newMembers: User[]) => {
-    try {
-      await Promise.all(newMembers.map(user =>
-        addUserToGroup({ userId: user.userId, groupId })
-      ));
-      setMemberData(prevData => [...prevData, ...newMembers]);
-    } catch (error) {
-      console.error('添加用戶到群組失敗:', error);
-    }
-  };
-
-  // Update chart permissions
-  const updateChartPermissions = async (chartId: number, newState: boolean) => {
-    try {
-      await updateGroupChartPermissions(groupId, chartId, newState);
-      setChartPermissions(prev => ({
-        ...prev,
-        [chartId]: newState
-      }));
-    } catch (error) {
-      console.error('更新圖表權限失敗:', error);
-    }
-  };
-
-  // Toggle chart permission state
-  const toggleChartPermission = (chartId: string | number) => {
-    const id = typeof chartId === 'string' ? parseInt(chartId, 10) : chartId;
-    const currentState = chartPermissions[id];
-    const newState = !currentState;
-    if (window.confirm(`您確定要將【${id}】的狀態更改為${newState ? '允許' : '禁用'}嗎？`)) {
-      updateChartPermissions(id, newState);
-    }
-  };
-
-  // Delete group
-  const handleDeleteGroup = async () => {
-    if (window.confirm('您確定要刪除這個群組嗎？')) {
-      try {
-        await deleteGroup(groupId);
-        onDeleteGroup(groupId);
-      } catch (error) {
-        console.error('刪除群組失敗:', error);
-      }
-    }
-  };
+  const {
+    memberData,
+    showMemberPicker,
+    setShowMemberPicker,
+    allUsers,
+    chartPermissions,
+    charts,
+    anchorEl,
+    isMenuOpen,
+    handleRemove,
+    handleAddMember,
+    toggleChartPermission,
+    handleDeleteGroup,
+    handleMenuOpen,
+    handleMenuClose,
+  } = useGroupList({ groupId, onDeleteGroup });
 
   return (
     <div>

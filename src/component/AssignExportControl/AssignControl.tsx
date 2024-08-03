@@ -7,7 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { fetchAllUsers } from '../../services/UserAccountService';
-import { fetchAllCharts, getAssignedTaskSponsors, setAssignedTaskSponsors } from '../../services/AssignedTaskService';
+import { fetchAllCharts, getAssignedTaskSponsors, setAssignedTaskSponsorsForDashboard } from '../../services/AssignedTaskService';
 import { UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './AssignControl.module.css';
@@ -145,18 +145,20 @@ const AssignTaskControl: React.FC = () => {
     const chartId = currentChart;
     const userIds = selectedUsers.map(user => user.userId);
 
-    setAssignedTaskSponsors(chartId, {
+    const requestData = {
       sponsorList: userIds,
-      exporterList: [], // Assuming you manage exporterList separately
-      dashboardCharts: [chartId],
-    })
+      exporterList: [], // Provide an empty array or relevant data if available
+      dashboardCharts: [] // Provide an empty array or relevant data if available
+    };
+  
+    setAssignedTaskSponsorsForDashboard(chartId, requestData)
       .then((response) => {
         console.log('Successfully submitted', response.message);
       })
       .catch((error) => {
         console.error('Submission failed', error);
       });
-
+  
     setDialogOpen(false);
   };
 

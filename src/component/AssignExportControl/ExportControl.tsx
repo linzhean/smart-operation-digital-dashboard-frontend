@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { fetchAllUsers } from '../../services/UserAccountService';
 import { setExportPermission, getExportPermission } from '../../services/exportService';
-import { fetchAllCharts } from '../../services/AssignedTaskService'; // Add this import
+import { fetchAllCharts } from '../../services/AssignedTaskService';
 import { EmployeeData, UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './ExportControl.module.css';
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 });
 
 interface User extends EmployeeData {
-  [x: string]: any;
+  id: string;
   selected?: boolean;
 }
 
@@ -47,6 +47,7 @@ const UserPickerDialog: React.FC<{
       .then((data) => {
         const userList: User[] = data.map((user: UserAccountBean) => ({
           ...user,
+          id: user.userId,
           available: user.available === true,
         }));
         setUsers(userList);
@@ -101,7 +102,7 @@ const ExportControl: React.FC = () => {
   const [currentChart, setCurrentChart] = useState<number>(0);
   const [users, setUsers] = useState<User[]>([]);
   const [charts, setCharts] = useState<Chart[]>([]);
-  const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: number]: string[] }>({}); // Map of chart to selected user IDs
+  const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: number]: string[] }>({}); 
 
   useEffect(() => {
     fetchAllUsers()
@@ -109,6 +110,7 @@ const ExportControl: React.FC = () => {
         if (Array.isArray(data)) {
           const userList: User[] = data.map((user) => ({
             ...user,
+            id: user.userId,
             available: user.available === 1, // Convert number to boolean
           }));
           setUsers(userList);
@@ -139,9 +141,11 @@ const ExportControl: React.FC = () => {
       getExportPermission(currentChart)
         .then((response) => {
           if (response.result && response.data) {
+            const selectedUserIds = response.data.exporterList || [];
+            const selectedUsers = users.filter(user => selectedUserIds.includes(user.id));
             setSelectedUsersMap(prev => ({
               ...prev,
-              [currentChart]: response.data.exporterList || []
+              [currentChart]: selectedUserIds // Ensure it's string[] here
             }));
           }
         })
@@ -149,7 +153,7 @@ const ExportControl: React.FC = () => {
           console.error('Error fetching export permissions', error);
         });
     }
-  }, [currentChart]);
+  }, [currentChart, users]);
 
   const handleOpenDialog = (chartId: number) => {
     setCurrentChart(chartId);
@@ -172,7 +176,7 @@ const ExportControl: React.FC = () => {
     const listDTO = {
       sponsorList: [], // Add appropriate logic to handle sponsorList
       exporterList: selectedUserIds,
-      dashboardCharts: [currentChart],
+      dashboardCharts: [],
     };
 
     setExportPermission(currentChart, listDTO)
