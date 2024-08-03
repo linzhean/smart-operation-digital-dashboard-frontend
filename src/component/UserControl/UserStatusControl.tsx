@@ -31,7 +31,7 @@ const UserStatusControl: React.FC = () => {
     try {
       const [data, pages] = await Promise.all([fetchUsers(page), fetchTotalPages()]);
       setTotalPages(pages);
-  
+
       const formattedData: User[] = data.map((employee: UserAccountBean) => ({
         name: employee.userName,
         id: employee.userId,
@@ -111,7 +111,7 @@ const UserStatusControl: React.FC = () => {
           <option value="sales">銷售部門</option>
           <option value="materials">物料部門</option>
         </select>
-        <input type="search" placeholder="搜尋..." />
+        <input type="search" placeholder="搜尋..." className={styles.searchInput} />
       </div>
       <InfiniteScroll
         dataLength={sortedUsers.length}

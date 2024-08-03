@@ -38,7 +38,7 @@ const DashboardList: React.FC = () => {
 
   return (
     <div>
-      <h2>Dashboards</h2>
+      <h2>Dashboard</h2>
       <ul>
         {dashboards.map((dashboard) => (
           <li key={dashboard.id}>

@@ -157,29 +157,84 @@ li:hover .editButton {
   transform: translate(-50%, -50%);
   background: white;
   padding: 20px;
-  z-index: 10000;
+  z-index: 9999999;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
 }
 
-.modalContent {
+/* .modalContent {
   display: flex;
   flex-direction: column;
   align-items: center;
+} */
+.circleIcon {
+  position: absolute;
+  margin: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  top: -65px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border: 5.5px solid black;
+}
+
+.circleIcon img {
+  width: 45px;
+  height: 45px;
+  display: block;
+  position: absolute;
+  margin-left: 15px;
+  margin-top: 10px;
+}
+
+.closeModal {
+  border: none;
+  background-color: transparent !important;
+  display: block;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: -19px;
+  right: -15px;
+  color: black;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.closeModal:hover {
+  cursor: pointer;
+  color: tomato;
+}
+
+.modalContent {
+  position: relative;
+  border-radius: 12px;
+  width: 330px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 18px;
+  padding-bottom: 10px;
+  background-color: #fcfcfc;
 }
 
 .modalContent h2 {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  font-weight: 900;
 }
 
 .modalContent input {
   padding: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   width: 100%;
   box-sizing: border-box;
+  border: 2px solid black;
+  border-radius: 15px;
 }
 
-.modalContent button {
+.modalSubmit {
   margin: 5px;
   padding: 10px 20px;
   border: none;
@@ -189,19 +244,25 @@ li:hover .editButton {
   border-radius: 5px;
 }
 
-.modalContent button:last-of-type {
-  background-color: #dc3545;
-}
-
-.modalContent button:hover {
+.modalSubmit {
   opacity: 0.8;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999998;
+}
 
 @media (max-width: 768px) {
   .sidebar_inner {
     left: -120%;
     transition: all 0.5s ease;
+
   }
 
   .main_container {
@@ -229,4 +290,90 @@ li:hover .editButton {
   .openbutton {
     display: none;
   }
+}
+
+.modalSubmit {
+  background: #1E90FF;
+  width: 100%;
+  height: 40px;
+  line-height: 42px;
+  padding: 0;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.modalSubmit span {
+  font-size: 1.5rem;
+  color: #000;
+  font-weight: 900;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.modalSubmit:before,
+.modalSubmit:after {
+  position: absolute;
+  content: "";
+  right: 0;
+  top: 0;
+  background: #1E90FF;
+  transition: all 0.3s ease;
+}
+
+.modalSubmit:before {
+  height: 0%;
+  width: 2px;
+}
+
+.modalSubmit:after {
+  width: 0%;
+  height: 2px;
+}
+
+.modalSubmit:hover {
+  background: #1e8fff77;
+  box-shadow: none;
+}
+
+.modalSubmit:hover:before {
+  height: 100%;
+}
+
+.modalSubmit:hover:after {
+  width: 100%;
+}
+
+.modalSubmit span:hover {
+  color: black;
+}
+
+.modalSubmit span:before,
+.modalSubmit span:after {
+  position: absolute;
+  content: "";
+  left: 0;
+  bottom: 0;
+  background: #1E90FF;
+  transition: all 0.3s ease;
+}
+
+.modalSubmit span:before {
+  width: 2px;
+  height: 0%;
+}
+
+.modalSubmit span:after {
+  width: 0%;
+  height: 2px;
+}
+
+.modalSubmit span:hover:before {
+  height: 100%;
+}
+
+.modalSubmit span:hover:after {
+  width: 100%;
 }

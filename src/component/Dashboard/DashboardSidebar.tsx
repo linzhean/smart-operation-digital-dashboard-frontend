@@ -36,7 +36,6 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
         }
       } catch (error) {
         console.error('Failed to fetch dashboards:', error);
-        // 可以進一步處理錯誤，例如顯示用戶消息
       }
     };
 
@@ -60,7 +59,6 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
         setDashboards(prevDashboards => [...prevDashboards, newDashboard]);
       } catch (error) {
         console.error('Failed to add dashboard:', error);
-        // 可以進一步處理錯誤，例如顯示用戶消息
       }
     }
   };

@@ -4,7 +4,7 @@ import styles from './GroupManagementSideBar.module.css';
 import { fetchGroups, addGroup, updateGroupName } from '../../services/GroupApi';
 import { Group } from '../../services/types/userManagement';
 import editIcon from '../../assets/icon/edit-black.svg';
-
+import newGroup from '../../assets/icon/newGroup.svg'
 interface SidebarProps {
   onSelectGroup: (groupId: number) => void;
   groupId: number;
@@ -125,23 +125,37 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
         </div>
       </div>
 
-      {/* Modal for adding new group */}
-      {isModalOpen && (
+      {isModalOpen && (<>
+        <div className={styles.overlay} onClick={() => setIsModalOpen(false)}></div>
+
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <h2>新增群组</h2>
+
+            <div className={styles.circleIcon}>
+              <img src={newGroup} alt="" />
+            </div>
+
+            <h2>新增群組</h2>
+            <button onClick={() => setIsModalOpen(false)} className={styles.closeModal}>X</button>
+
+
             <input
               type="text"
               value={newGroupName}
               onChange={(e) => setNewGroupName(e.target.value)}
-              placeholder="请输入群组名称"
+              placeholder="請輸入群組名稱"
             />
-            <button onClick={handleAddGroup}>確定</button>
-            <button onClick={() => setIsModalOpen(false)} style={{ backgroundColor: '#dc3545' }}>
-              取消
-            </button>
+
+            <div>
+              <button onClick={handleAddGroup} className={styles.modalSubmit}>
+                <span>確定</span>
+              </button>
+            </div>
+
           </div>
         </div>
+
+      </>
       )}
     </div>
   );

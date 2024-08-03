@@ -7,24 +7,12 @@ import BarChart from '../../component/Chart/BarChart';
 import DoughnutChart from '../../component/Chart/DoughnutChart';
 import DashboardSidebar from '../../component/Dashboard/DashboardSidebar';
 import { saveAs } from 'file-saver';
-import '../../styles/Home.css';
 import { exportData, getExportPermission } from '../../services/exportService';
 import ChartWithDropdown from '../../component/Dashboard/ChartWithDropdown';
 import ChartService from '../../services/ChartService';
 import styles from './Home.module.css'
 const ResponsiveGridLayout = WidthProvider(Responsive);
-
 const Home: React.FC = () => {
-
-  const dashboardContainerStyle = {
-    borderRadius: '15px',
-    color: '#CCCCCC',
-    height: '100vh',
-    marginLeft: '250px',
-    width: 'calc(100% - 250px)',
-    transition: 'all 0.3s ease',
-    marginBottom: '10px'
-  };
 
   const [layout, setLayout] = useState([
     { i: 'lineChart', x: 0, y: 0, w: 4, h: 4 },
@@ -91,17 +79,17 @@ const Home: React.FC = () => {
               breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
               cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
             >
-              <div key="lineChart" className="dataCard">
+              <div key="lineChart" className={styles.dataCard}>
                 <ChartWithDropdown exportData={handleExport} chartId={1} requestData={requestData} onChartSelect={handleChartSelect}>
                   <LineChart data={selectedChartData} />
                 </ChartWithDropdown>
               </div>
-              <div key="barChart" className="dataCard">
+              <div key="barChart" className={styles.dataCard}>
                 <ChartWithDropdown exportData={handleExport} chartId={2} requestData={requestData} onChartSelect={handleChartSelect}>
                   <BarChart data={selectedChartData} />
                 </ChartWithDropdown>
               </div>
-              <div key="doughnutChart" className="dataCard">
+              <div key="doughnutChart" className={styles.dataCard}>
                 <ChartWithDropdown exportData={handleExport} chartId={3} requestData={requestData} onChartSelect={handleChartSelect}>
                   <DoughnutChart data={selectedChartData} />
                 </ChartWithDropdown>

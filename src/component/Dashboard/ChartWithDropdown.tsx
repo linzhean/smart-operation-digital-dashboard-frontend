@@ -6,6 +6,8 @@ import { createEmail } from '../../services/mailService';
 import { createApplication } from '../../services/application'; // 导入 createApplication 函数
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import more from '../../assets/icon/more.svg'
+
 
 interface ChartWithDropdownProps {
   children: React.ReactNode;
@@ -182,7 +184,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
       <div className={styles.chartHeader}>
         <div className={styles.dropdownContainer}>
           <button onClick={toggleDropdown} className={styles.dropdownButton}>
-            :
+            <img src={more} alt="" />
           </button>
           {isDropdownOpen && (
             <div className={styles.dropdownMenu}>

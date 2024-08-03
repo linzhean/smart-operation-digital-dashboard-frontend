@@ -193,3 +193,19 @@
     top: 0%;
   }
 }
+
+.searchInput::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  height: 12px;
+  width: 12px;
+  background: url('../../assets/icon/closeX.svg') no-repeat center;
+  background-size: contain;
+}
+
+.searchInput::-moz-search-clear {
+  height: 12px;
+  width: 12px;
+  background-size: contain;
+  background: url('../../assets/icon/closeX.svg') no-repeat center;
+
+}
