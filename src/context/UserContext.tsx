@@ -1,7 +1,7 @@
-// src/context/UserContext.tsx
 import React, { createContext, useReducer, ReactNode, useContext, useEffect, useState } from 'react';
 import { fetchWithAuth } from '../utils/fetchWithAuth';
 import { backendApiUrl } from '../services/LoginApi';
+import { UpdateUserData } from '../services/types/userManagement';
 
 interface User {
   id: string;
@@ -19,23 +19,23 @@ interface UserContextType {
   isAuthenticated: boolean;
 }
 
-interface FormData {
-  userId: string;
-  userName: string;
-  departmentId: string;
-  departmentName: string;
-  googleId: string;
-  gmail: string;
-  identity: string;
-  position: string;
-  available: boolean;
-  createId: string;
-  createDate: string;
-  modifyId: string;
-  modifyDate: string;
+interface State {
+  formData: UpdateUserData;
+  loading: boolean;
+  editable: boolean;
+  isAuthenticated: boolean;
 }
 
-const initialState = {
+type Action =
+  | { type: 'SET_USER'; payload: User }
+  | { type: 'CLEAR_USER' }
+  | { type: 'SET_FORM_DATA'; payload: UpdateUserData }
+  | { type: 'SET_LOADING'; payload: boolean }
+  | { type: 'SET_EDITABLE'; payload: boolean }
+  | { type: 'SET_AUTHENTICATED'; payload: boolean }
+  | { type: 'UPDATE_FORM_DATA'; payload: { id: string; value: string } };
+
+const initialState: State = {
   formData: {
     userId: '',
     userName: '',
@@ -43,29 +43,18 @@ const initialState = {
     departmentName: '',
     googleId: '',
     gmail: '',
-    identity: 'NO_PERMISSION',
+    identity: '',
     position: '',
-    available: true,
+    available: false,
     createId: '',
     createDate: '',
     modifyId: '',
-    modifyDate: '',
+    modifyDate: ''
   },
-  loading: true,
+  loading: false,
   editable: false,
-  isAuthenticated: false,
+  isAuthenticated: false
 };
-
-type State = typeof initialState;
-
-type Action =
-  | { type: 'SET_USER'; payload: User }
-  | { type: 'CLEAR_USER' }
-  | { type: 'SET_FORM_DATA'; payload: FormData }
-  | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_EDITABLE'; payload: boolean }
-  | { type: 'SET_AUTHENTICATED'; payload: boolean }
-  | { type: 'UPDATE_FORM_DATA'; payload: { id: string; value: string } };
 
 const userReducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -126,7 +115,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } else {
       dispatch({ type: 'SET_AUTHENTICATED', payload: false });
     }
-  }, []);  
+  }, []);
 
   const value = {
     user,

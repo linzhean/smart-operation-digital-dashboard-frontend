@@ -3,7 +3,7 @@ import styles from './ChartWithDropdown.module.css';
 import { createAssignedTask } from '../../services/AssignedTaskService';
 import ChartService from '../../services/ChartService';
 import { createEmail } from '../../services/mailService';
-import { createApplication } from '../../services/application'; // 导入 createApplication 函数
+import { createApplication } from '../../services/application';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import more from '../../assets/icon/more.svg'
@@ -21,7 +21,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChartSelectModalOpen, setIsChartSelectModalOpen] = useState(false);
-  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [isRequestKpiModalOpen, setIsRequestKpiModalOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
@@ -39,8 +39,8 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         const response = await ChartService.getAvailableCharts();
         setCharts(response.data);
       } catch (error) {
-        console.error('获取图表时出错:', error);
-        alert('获取图表失败。请稍后再试。');
+        console.error('獲取圖表時出錯:', error);
+        alert('獲取圖表失敗。請稍後再試。');
       }
     };
 
@@ -55,13 +55,13 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     try {
       const result = await exportData(chartId, requestData);
       if (!result.result) {
-        alert(`数据导出失败: ${result.errorCode}`);
+        alert(`匯出失敗: ${result.errorCode}`);
       } else {
-        // 处理导出成功的情况（例如，下载文件）
+        // 處理匯出成功的邏輯，例如觸發文件下載
       }
     } catch (error) {
-      console.error('导出时出错:', error);
-      alert('导出过程中发生错误。请重试。');
+      console.error('匯出過程中出錯:', error);
+      alert('匯出過程中發生錯誤。請重試。');
     } finally {
       setIsDropdownOpen(false);
     }
@@ -77,25 +77,20 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     setIsDropdownOpen(false);
   };
 
-  const handleRequestKPI = () => {
-    setIsRequestModalOpen(true);
-    setIsDropdownOpen(false);
-  };
-
   const closeModal = () => setIsModalOpen(false);
   const closeChartSelectModal = () => setIsChartSelectModalOpen(false);
-  const closeRequestModal = () => setIsRequestModalOpen(false);
+  const closeRequestKpiModal = () => setIsRequestKpiModalOpen(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedCharts.length === 0) {
-      alert('请选择一个图表。');
+      alert('請選擇一個圖表。');
       return;
     }
 
     try {
       const assignedTask = {
-        chartId: selectedCharts[0], // 使用第一个选中的图表ID
+        chartId: selectedCharts[0],
         name: subject,
         defaultProcessor: email,
         available: true,
@@ -104,17 +99,17 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
       await createAssignedTask(assignedTask);
 
       const newEmail = {
-        assignedTaskId: selectedCharts[0], // 使用第一个选中的图表ID
+        assignedTaskId: selectedCharts[0],
         chartId: chartId,
         name: subject,
         status: "ASSIGN",
-        publisher: 'user-id', // 替换为实际的用户 ID
+        publisher: 'user-id',
         receiver: email,
         emailSendTime: new Date().toISOString(),
         available: true,
-        createId: 'user-id', // 替换为实际的用户 ID
+        createId: 'user-id',
         createDate: new Date().toISOString(),
-        modifyId: 'user-id', // 替换为实际的用户 ID
+        modifyId: 'user-id',
         modifyDate: new Date().toISOString(),
         firstMessage: {
           id: 0,
@@ -122,19 +117,19 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
           messageId: 0,
           content: message,
           available: 'true',
-          createId: 'user-id', // 替换为实际的用户 ID
+          createId: 'user-id',
           createDate: new Date().toISOString(),
-          modifyId: 'user-id', // 替换为实际的用户 ID
+          modifyId: 'user-id',
           modifyDate: new Date().toISOString(),
         },
         messageList: []
       };
 
       await createEmail(newEmail);
-      alert('任务已委派，邮件已成功发送！');
+      alert('交辦和郵件發送成功！');
     } catch (error) {
-      console.error('委派任务或发送邮件时出错:', error);
-      alert('委派任务或发送邮件失败。请重试。');
+      console.error('交辦和郵件發送時出錯:', error);
+      alert('交辦和郵件發送失敗。請重試。');
     } finally {
       closeModal();
     }
@@ -143,40 +138,49 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
   const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!startDate || !endDate || !sponsor) {
-      alert('请同时选择开始日期和结束日期，并提供一个赞助人。');
+      alert('請提供開始日期、結束日期和保證人。');
       return;
     }
 
     try {
+      const startDateStr = startDate.toISOString();
+      const endDateStr = endDate.toISOString();
+      
+      console.log('startDate:', startDateStr);
+      console.log('endDate:', endDateStr);
+
       const kpiRequest = {
         chartId,
         requestContent,
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
+        startDate: startDateStr,
+        endDate: endDateStr,
+        startDateStr: startDateStr,
+        endDateStr: endDateStr,
         sponsor,
       };
 
-      await createApplication(kpiRequest, {}); // 调整为使用 createApplication
-      alert('KPI 请求已成功提交！');
+      await createApplication(kpiRequest, {});
+      alert('KPI 請求提交成功！');
     } catch (error) {
-      console.error('提交 KPI 请求时出错:', error);
-      alert('提交 KPI 请求失败。请重试。');
+      console.error('提交 KPI 請求時出錯:', error);
+      alert('提交 KPI 請求失敗。請重試。');
     } finally {
-      closeRequestModal();
+      closeRequestKpiModal();
     }
   };
 
+
   const handleKpiSelection = (kpiId: number) => {
-    setSelectedKPIs((prevSelectedKPIs) =>
+    setSelectedKPIs(prevSelectedKPIs =>
       prevSelectedKPIs.includes(kpiId)
-        ? prevSelectedKPIs.filter((id) => id !== kpiId)
+        ? prevSelectedKPIs.filter(id => id !== kpiId)
         : [...prevSelectedKPIs, kpiId]
     );
   };
 
   const confirmChartSelection = () => {
     setSelectedCharts(selectedKPIs);
-    closeChartSelectModal();
+    setIsRequestKpiModalOpen(true);
   };
 
   return (
@@ -197,32 +201,32 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
       </div>
       {children}
 
-      {selectedCharts.map((chartId) => (
+      {selectedCharts.map(chartId => (
         <div key={chartId} className={styles.selectedChart}>
-          {/* 根据图表ID渲染相应的图表组件 */}
-          <h3>图表 ID: {chartId}</h3>
-          {/* 在这里添加图表渲染逻辑 */}
+          {/* 根據 chartId 渲染圖表組件 */}
+          <h3>圖表 ID: {chartId}</h3>
+          {/* 在這裡添加您的圖表渲染邏輯 */}
         </div>
       ))}
 
       {isModalOpen && (
         <div className={styles.modal}>
           <form onSubmit={handleSubmit} className={styles.modalContent}>
-            <h2>交辦事項</h2>
+            <h2>交辦</h2>
             <div className={styles.formGroup}>
-              <label>郵件信箱：</label>
+              <label>電子郵件:</label>
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div className={styles.formGroup}>
-              <label>主题:</label>
+              <label>主題:</label>
               <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} required />
             </div>
             <div className={styles.formGroup}>
-              <label>内容:</label>
-              <textarea value={message} onChange={(e) => setMessage(e.target.value)} required></textarea>
+              <label>內容:</label>
+              <textarea value={message} onChange={(e) => setMessage(e.target.value)} required />
             </div>
             <button type="submit">提交</button>
-            <button type="button" onClick={closeModal}>取消</button>
+            <button type="button" onClick={closeModal}>關閉</button>
           </form>
         </div>
       )}
@@ -231,47 +235,57 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <h2>選擇圖表</h2>
-            <ul>
-              {charts.map((chart) => (
-                <li key={chart.id}>
+            <div>
+              {charts.map(chart => (
+                <div key={chart.id} className={styles.chartOption}>
                   <input
                     type="checkbox"
                     id={`chart-${chart.id}`}
-                    onChange={() => handleKpiSelection(chart.id)}
                     checked={selectedKPIs.includes(chart.id)}
+                    onChange={() => handleKpiSelection(chart.id)}
                   />
                   <label htmlFor={`chart-${chart.id}`}>{chart.name}</label>
-                </li>
+                </div>
               ))}
-            </ul>
-            <button onClick={confirmChartSelection}>確認</button>
-            <button onClick={closeChartSelectModal}>取消</button>
+            </div>
+            <button onClick={confirmChartSelection}>請求 KPI</button>
+            <button type="button" onClick={closeChartSelectModal}>關閉</button>
           </div>
         </div>
       )}
 
-      {isRequestModalOpen && (
+      {isRequestKpiModalOpen && (
         <div className={styles.modal}>
           <form onSubmit={handleRequestSubmit} className={styles.modalContent}>
-            <h2>请求 KPI</h2>
+            <h2>請求 KPI</h2>
             <div className={styles.formGroup}>
-              <label>开始日期：</label>
-              <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+              <label>開始日期:</label>
+              <DatePicker
+                selected={startDate}
+                onChange={(date: Date | null) => setStartDate(date)}
+                dateFormat="yyyy/MM/dd"
+                required
+              />
             </div>
             <div className={styles.formGroup}>
-              <label>结束日期：</label>
-              <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} />
+              <label>結束日期:</label>
+              <DatePicker
+                selected={endDate}
+                onChange={(date: Date | null) => setEndDate(date)}
+                dateFormat="yyyy/MM/dd"
+                required
+              />
             </div>
             <div className={styles.formGroup}>
-              <label>赞助人：</label>
+              <label>請求內容:</label>
+              <textarea value={requestContent} onChange={(e) => setRequestContent(e.target.value)} required />
+            </div>
+            <div className={styles.formGroup}>
+              <label>保證人:</label>
               <input type="text" value={sponsor} onChange={(e) => setSponsor(e.target.value)} required />
             </div>
-            <div className={styles.formGroup}>
-              <label>请求内容：</label>
-              <textarea value={requestContent} onChange={(e) => setRequestContent(e.target.value)} required></textarea>
-            </div>
-            <button type="submit">提交请求</button>
-            <button type="button" onClick={closeRequestModal}>取消</button>
+            <button type="submit">提交</button>
+            <button type="button" onClick={closeRequestKpiModal}>關閉</button>
           </form>
         </div>
       )}

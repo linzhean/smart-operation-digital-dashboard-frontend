@@ -22,28 +22,9 @@ const Pdata: React.FC = () => {
     const loadUserData = async () => {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
-        // Fetch user data from /user-account
         const userData = await fetchUserData();
-
-        // Check if the fetched userData has the correct structure
-        const formattedData: UpdateUserData = {
-          userId: userData.userId || '',
-          userName: userData.userName || '',
-          departmentId: userData.departmentId || '',
-          departmentName: userData.departmentName || '',
-          googleId: userData.googleId || '',
-          gmail: userData.gmail || '',
-          identity: userData.identity || '',
-          position: userData.position || '',
-          available: userData.available === true,
-          createId: userData.createId || '',
-          createDate: userData.createDate || '',
-          modifyId: userData.modifyId || '',
-          modifyDate: userData.modifyDate || ''
-        };
-
-        dispatch({ type: 'SET_FORM_DATA', payload: formattedData });
-        setInitialData(formattedData);
+        dispatch({ type: 'SET_FORM_DATA', payload: userData });
+        setInitialData(userData);
       } catch (error) {
         console.error('加载用户数据时出错:', error);
       } finally {
@@ -89,6 +70,7 @@ const Pdata: React.FC = () => {
 
   const handleLogoutClick = () => {
     localStorage.removeItem('authToken');
+    dispatch({ type: 'CLEAR_USER' });
     navigate('/login');
   };
 
@@ -186,7 +168,7 @@ const Pdata: React.FC = () => {
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
               >
                 {departments.map((department) => (
-                  <option key={department.value} value={department.label}>
+                  <option key={department.value} value={department.value}>
                     {department.label}
                   </option>
                 ))}
@@ -224,7 +206,7 @@ const Pdata: React.FC = () => {
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
               >
                 {identities.map((identity) => (
-                  <option key={identity.value} value={identity.label}>
+                  <option key={identity.value} value={identity.value}>
                     {identity.label}
                   </option>
                 ))}
