@@ -7,26 +7,26 @@ const DashboardList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchDashboards = async () => {
-    try {
-      const data = await DashboardService.getAllDashboards();
-      setDashboards(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error('Error fetching dashboards:', error);
-      setError('Error fetching dashboards.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchDashboards = async () => {
+      try {
+        const data = await DashboardService.getAllDashboards();
+        setDashboards(data);
+      } catch (error) {
+        console.error('Error fetching dashboards:', error);
+        setError('Error fetching dashboards.');
+      } finally {
+        setLoading(false);
+      }
+    };
+  
     fetchDashboards();
   }, []);
 
   const handleDelete = async (id: string) => {
     try {
       await DashboardService.deleteDashboard(id);
-      fetchDashboards();
+      setDashboards(prevDashboards => prevDashboards.filter(dashboard => dashboard.id !== id));
     } catch (error) {
       console.error('Error deleting dashboard:', error);
       setError('Error deleting dashboard.');
@@ -43,7 +43,7 @@ const DashboardList: React.FC = () => {
         {dashboards.map((dashboard) => (
           <li key={dashboard.id}>
             {dashboard.name}
-            <button onClick={() => handleDelete(dashboard.id)}>Delete</button>
+            <button onClick={() => handleDelete(dashboard.id)}>刪除</button>
           </li>
         ))}
       </ul>

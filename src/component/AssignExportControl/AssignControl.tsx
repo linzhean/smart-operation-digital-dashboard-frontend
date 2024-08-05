@@ -7,7 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { fetchAllUsers } from '../../services/UserAccountService';
-import { fetchAllCharts, getAssignedTaskSponsors, setAssignedTaskSponsorsForDashboard } from '../../services/AssignedTaskService';
+import { fetchAllCharts, getAllAssignedTasks, setAssignedTaskSponsorsForDashboard } from '../../services/AssignedTaskService';
 import { UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './AssignControl.module.css';
@@ -55,16 +55,22 @@ const UserPickerDialog: React.FC<{
 
   useEffect(() => {
     if (chartId > 0) {
-      getAssignedTaskSponsors(chartId)
+      getAllAssignedTasks()
         .then((response) => {
-          if (response.data) {
-            const sponsorList = response.data.sponsorList || [];
+          const assignedTasks = response.data;
+          if (assignedTasks) {
+            const sponsorList = assignedTasks
+              .filter(task => task.chartId === chartId)
+              .map(task => task.createId); // Use createId or another identifier
             const selectedSponsorUsers = users.filter(user => sponsorList.includes(user.userId));
             setSelectedUsers(selectedSponsorUsers);
+          } else {
+            console.warn('No assigned tasks found');
+            setSelectedUsers([]); // Reset selectedUsers if no tasks are found
           }
         })
         .catch((error) => {
-          console.error('Error fetching sponsors', error);
+          console.error('Error fetching assigned tasks', error);
         });
     }
   }, [chartId, users]);
@@ -108,6 +114,7 @@ const UserPickerDialog: React.FC<{
     </Dialog>
   );
 };
+
 
 const AssignTaskControl: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);

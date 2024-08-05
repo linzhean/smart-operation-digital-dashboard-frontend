@@ -80,7 +80,7 @@ export const updateAssignedTaskForDashboard = async (id: number, assignedTask: A
 };
 
 // Get all assigned tasks (AssignTaskControl 后台用)
-export const getAllAssignedTasks = async (): Promise<Response<AssignedTask[]>> => {
+export const getAllAssignedTasks = async (chartId?: number): Promise<Response<AssignedTask[]>> => {
   try {
     const response = await apiClient.get<Response<AssignedTask[]>>('/assigned-task');
     return response.data;

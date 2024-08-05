@@ -1,7 +1,17 @@
 .chartContainer {
   position: absolute;
-  right: 0;
+  left: 10px;
   top: 0;
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+.dropdownContainer {
+  position: relative;
 }
 
 .chart {
@@ -9,7 +19,6 @@
   width: 100%;
   height: 100%;
 }
-
 
 
 .dropdown {
@@ -24,6 +33,7 @@
 .dropdownButton {
   font-size: 24px;
   /* 更大的字体大小 */
+  border: none;
   padding: 10px;
   /* 增加内边距 */
   cursor: pointer;
@@ -35,13 +45,15 @@
   /* 确保菜单在打开时可见 */
   position: absolute;
   /* 更好控制的位置 */
+  top: 100%;
+  right: 0;
   background-color: #fff;
   /* 背景颜色确保菜单清晰可见 */
   border: 1px solid #ddd;
   /* 边框分隔 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   /* 阴影效果 */
-  z-index: 2000;
+  z-index: 1000;
   /* 确保菜单在其他内容之上 */
 }
 

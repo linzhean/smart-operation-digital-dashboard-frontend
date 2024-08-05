@@ -1,3 +1,4 @@
+// components/ChartWithDropdown.tsx
 import React from 'react';
 import styles from './ChartWithDropdown.module.css';
 import { useChartWithDropdown } from '../../Hook/useChartWithDropdown'; // Adjust the path as necessary
@@ -75,9 +76,10 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
       </div>
       {children}
 
-      {selectedCharts.map(chartId => (
-        <div key={chartId} className={styles.selectedChart}>
-          {/* 根據 chartId 渲染圖表信息 */}
+      {selectedCharts.map(chart => (
+        <div key={chart.id} className={styles.selectedChart}>
+          <p>Chart ID: {chart.id}</p>
+          <p>Chart Name: {chart.name}</p>
         </div>
       ))}
 

@@ -1,6 +1,7 @@
+// Hook/useChartWithDropdown.ts
 import { useState, useEffect } from 'react';
 import ChartService from '../services/ChartService';
-import { createEmail } from '../services/mailService';
+import { createEmail, Email } from '../services/mailService';
 import { createApplication } from '../services/application';
 import { getAssignedTaskSponsors } from '../services/AssignedTaskService';
 
@@ -13,7 +14,7 @@ export function useChartWithDropdown(exportData: (chartId: number, requestData: 
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [charts, setCharts] = useState<any[]>([]);
-  const [selectedCharts, setSelectedCharts] = useState<number[]>([]);
+  const [selectedCharts, setSelectedCharts] = useState<{ id: number, name: string }[]>([]);
   const [selectedKPIs, setSelectedKPIs] = useState<number[]>([]);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -69,126 +70,107 @@ export function useChartWithDropdown(exportData: (chartId: number, requestData: 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedCharts.length === 0) {
-      alert('請選擇一個圖表。');
-      return;
+        alert('請選擇一個圖表。');
+        return;
     }
-
+  
     try {
-      const assignedTask = {
-        chartId: selectedCharts[0],
-        name: subject,
-        defaultProcessor: email,
-        available: true,
+        const assignedTask = {
+            chartId: selectedCharts[0].id,
+            name: subject,
+            defaultProcessor: email,
+            available: true,
+        };
+  
+        await getAssignedTaskSponsors(assignedTask.chartId);
+  
+        // Adjust email object to match Omit<Email, 'id'>
+        const emailData: Omit<Email, 'id'> = {
+          assignedTaskId: assignedTask.chartId,
+          chartId: selectedCharts[0].id,
+          name: subject,
+          status: "ASSIGN",
+          publisher: email,
+          receiver: email,
+          emailSendTime: formatDate(new Date()), // Updated
+          available: true,
+          createId: "currentUserId",
+          createDate: formatDate(new Date()), // Updated
+          modifyId: "currentUserId",
+          modifyDate: formatDate(new Date()), // Updated
+          firstMessage: {
+              id: 0,
+              mailId: assignedTask.chartId,
+              messageId: 0,
+              content: message,
+              available: "string",
+              createId: "currentUserId",
+              createDate: formatDate(new Date()), // Updated
+              modifyId: "currentUserId",
+              modifyDate: formatDate(new Date()), // Updated
+          },
+          messageList: []  // Adjust as needed
       };
-
-      await getAssignedTaskSponsors(assignedTask.chartId);
-
-      const newEmail = {
-        assignedTaskId: selectedCharts[0],
-        chartId: chartId,
-        name: subject,
-        status: "ASSIGN",
-        publisher: 'user-id',
-        receiver: email,
-        emailSendTime: new Date().toISOString(),
-        available: true,
-        createId: 'user-id',
-        createDate: new Date().toISOString(),
-        modifyId: 'user-id',
-        modifyDate: new Date().toISOString(),
-        firstMessage: {
-          id: 0,
-          mailId: 0,
-          messageId: 0,
-          content: message,
-          available: 'true',
-          createId: 'user-id',
-          createDate: new Date().toISOString(),
-          modifyId: 'user-id',
-          modifyDate: new Date().toISOString(),
-        },
-        messageList: []
-      };
-
-      await createEmail(newEmail);
-      alert('交辦和郵件發送成功！');
-    } catch (error) {
-      console.error('交辦和郵件發送時出錯:', error);
-      alert('交辦和郵件發送失敗。請重試。');
-    } finally {
-      closeModal();
-    }
-  };
-
-  const handleRequestSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!startDate || !endDate || !sponsor) {
-      alert('請提供開始日期、結束日期和保證人。');
-      return;
-    }
-
-    try {
-      const startDateStr = startDate.toISOString();
-      const endDateStr = endDate.toISOString();
       
-      console.log('startDate:', startDateStr);
-      console.log('endDate:', endDateStr);
-
-      const kpiRequest = {
-        chartId,
-        requestContent,
-        startDate: startDateStr,
-        endDate: endDateStr,
-        sponsor,
-      };
-
-      await createApplication(kpiRequest, {});
-      alert('KPI 請求提交成功！');
+  
+        await createEmail(emailData);
+  
+        setIsModalOpen(false);
     } catch (error) {
-      console.error('提交 KPI 請求時出錯:', error);
-      alert('提交 KPI 請求失敗。請重試。');
-    } finally {
-      closeRequestKpiModal();
+        console.error('提交交辦任務時出錯:', error);
+        alert('提交交辦任務失敗。請重試。');
     }
   };
+
 
   const handleKpiSelection = (kpiId: number) => {
-    setSelectedKPIs(prevSelectedKPIs =>
-      prevSelectedKPIs.includes(kpiId)
-        ? prevSelectedKPIs.filter(id => id !== kpiId)
-        : [...prevSelectedKPIs, kpiId]
-    );
+    setSelectedKPIs(prev => {
+      if (prev.includes(kpiId)) {
+        return prev.filter(id => id !== kpiId);
+      } else {
+        return [...prev, kpiId];
+      }
+    });
   };
 
-  const confirmChartSelection = async () => {
-    if (selectedKPIs.length === 0) {
-      alert('請選擇至少一個圖表。');
-      return;
-    }
-
-    const listDTO = {
-      dashboardCharts: selectedKPIs,
-      sponsorList: [], // 提供實際的贊助人列表
-      exporterList: [] // 提供實際的導出人列表
-    };
-
-    try {
-      // 替換 dashboardId 為實際值或從 props 中獲取
-      const dashboardId = 123; // 需要根據實際情況設置
-      await ChartService.createChart(dashboardId, listDTO.sponsorList, listDTO.exporterList, listDTO.dashboardCharts);
-      alert('圖表選擇成功！');
-    } catch (error) {
-      console.error('提交圖表選擇時出錯:', error);
-      alert('提交圖表選擇失敗。請重試。');
-    } finally {
-      setIsChartSelectModalOpen(false);
-    }
+  const confirmChartSelection = () => {
+    const selectedChartsData = charts.filter(chart => selectedKPIs.includes(chart.id));
+    setSelectedCharts(selectedChartsData);
+    setIsChartSelectModalOpen(false);
   };
 
   const handleRequestKpi = () => {
     setIsRequestKpiModalOpen(true);
-    setIsChartSelectModalOpen(false);
   };
+
+  const formatDate = (date: Date | null): string => {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };  
+
+  const handleRequestSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const requestData = {
+        startDateStr: formatDate(startDate),
+        endDateStr: formatDate(endDate),
+        sponsor,
+        requestContent,
+        selectedKPIs,
+      };
+      await createApplication(requestData); // Provide empty params object
+      setIsRequestKpiModalOpen(false);
+    } catch (error) {
+      console.error('提交 KPI 請求時出錯:', error);
+      alert('提交 KPI 請求失敗。請重試。');
+    }
+  };  
 
   const handleStartDateChange = (date: Date | null) => setStartDate(date);
   const handleEndDateChange = (date: Date | null) => setEndDate(date);

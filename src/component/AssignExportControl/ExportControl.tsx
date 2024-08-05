@@ -41,28 +41,18 @@ const UserPickerDialog: React.FC<{
   chartId: number;
 }> = ({ open, users, selectedUserIds, onClose, onSubmit, chartId }) => {
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+  const classes = useStyles();
 
   useEffect(() => {
-    fetchAllUsers()
-      .then((data) => {
-        const userList: User[] = data.map((user: UserAccountBean) => ({
-          ...user,
-          id: user.userId,
-          available: user.available === true,
-        }));
-        setUsers(userList);
-      })
-      .catch((error) => {
-        console.error('Error fetching users', error);
-      });
-  }, []);
+    const initialSelectedUsers = users.filter(user => selectedUserIds.includes(user.id));
+    setSelectedUsers(initialSelectedUsers);
+  }, [users, selectedUserIds]);
 
   const handleSubmit = () => {
     onSubmit(selectedUsers);
     onClose();
   };
 
-  const classes = useStyles();
   return (
     <Dialog open={open} onClose={onClose} style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }} classes={{ paper: classes.dialogPaper }}>
       <DialogTitle style={{ color: 'black', fontSize: '1.5rem', fontWeight: 'bold', width: 'auto', padding: '10px 24px 0px 24px' }}>
@@ -105,55 +95,49 @@ const ExportControl: React.FC = () => {
   const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: number]: string[] }>({}); 
 
   useEffect(() => {
-    fetchAllUsers()
-      .then((data: any[]) => {
-        if (Array.isArray(data)) {
-          const userList: User[] = data.map((user) => ({
+    const fetchData = async () => {
+      try {
+        // Fetch all users
+        const userData = await fetchAllUsers();
+        if (Array.isArray(userData)) {
+          const userList: User[] = userData.map((user) => ({
             ...user,
             id: user.userId,
-            available: user.available === 1, // Convert number to boolean
+            available: Boolean(user.available), // Convert number to boolean
           }));
           setUsers(userList);
         } else {
-          console.error('fetchAllUsers 返回的數據不是數組：', data);
+          console.error('fetchAllUsers 返回的數據不是數組：', userData);
           setUsers([]);
         }
-      })
-      .catch((error: any) => {
-        console.error('獲取用戶數據失敗', error);
-      });
-  }, []);
 
-  useEffect(() => {
-    fetchAllCharts()
-      .then((response) => {
-        if (response.data) {
-          setCharts(response.data);
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching charts', error);
-      });
-  }, []);
+        // Fetch all charts
+        const chartResponse = await fetchAllCharts();
+        if (chartResponse.data) {
+          setCharts(chartResponse.data);
 
-  useEffect(() => {
-    if (currentChart > 0) {
-      getExportPermission(currentChart)
-        .then((response) => {
-          if (response.result && response.data) {
-            const selectedUserIds = response.data.exporterList || [];
-            const selectedUsers = users.filter(user => selectedUserIds.includes(user.id));
-            setSelectedUsersMap(prev => ({
-              ...prev,
-              [currentChart]: selectedUserIds // Ensure it's string[] here
-            }));
+          // Fetch permissions for each chart
+          const permissionsMap: { [key: number]: string[] } = {};
+          for (const chart of chartResponse.data) {
+            try {
+              const permissionResponse = await getExportPermission(chart.id);
+              if (permissionResponse.result && permissionResponse.data) {
+                const selectedUserIds = permissionResponse.data.exporterList || [];
+                permissionsMap[chart.id] = selectedUserIds;
+              }
+            } catch (error) {
+              console.error('Error fetching export permissions', error);
+            }
           }
-        })
-        .catch((error) => {
-          console.error('Error fetching export permissions', error);
-        });
-    }
-  }, [currentChart, users]);
+          setSelectedUsersMap(permissionsMap);
+        }
+      } catch (error) {
+        console.error('Error fetching data', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleOpenDialog = (chartId: number) => {
     setCurrentChart(chartId);
@@ -166,7 +150,7 @@ const ExportControl: React.FC = () => {
 
   const handleSubmit = (selectedUsers: User[]) => {
     const selectedUserIds = selectedUsers.map(user => user.id);
-    
+
     // Update the selected users map
     setSelectedUsersMap(prev => ({
       ...prev,
@@ -235,7 +219,3 @@ const ExportControl: React.FC = () => {
 };
 
 export default ExportControl;
-function setUsers(userList: User[]) {
-  throw new Error('Function not implemented.');
-}
-

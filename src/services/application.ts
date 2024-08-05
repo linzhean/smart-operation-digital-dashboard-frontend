@@ -27,11 +27,11 @@ export const getApplications = async (
 // Create a new application
 export const createApplication = async (
   applicationData: Partial<ApplicationData>,
-  params: { [key: string]: any } // Adjusted to handle URL parameters if needed
+  params?: { [key: string]: any } // Make params optional
 ): Promise<Response<ApplicationData>> => {
   try {
     const response = await apiClient.post<Response<ApplicationData>>(`${APPLICATION_API_BASE}`, applicationData, {
-      params, // Include URL parameters
+      params, // Include URL parameters if provided
     });
     return response.data;
   } catch (error) {

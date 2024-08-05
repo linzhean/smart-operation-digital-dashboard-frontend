@@ -1,3 +1,4 @@
+//src\services\mailService.ts
 import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 
@@ -35,6 +36,7 @@ const handleApiResponse = <T>(response: Response<T>): T => {
     if (response.result) {
         return response.data as T;
     } else {
+        console.error('API Error:', response.message || 'Unknown error');
         throw new Error(response.message || 'API Error');
     }
 };

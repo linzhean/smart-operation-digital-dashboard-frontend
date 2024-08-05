@@ -69,7 +69,7 @@ export const addUserToGroup = async ({ userId, groupId }: AddUserToGroupRequest)
 // 从群组中移除用户
 export const removeUserFromGroup = async (groupId: number, userId: string): Promise<void> => {
   try {
-    await apiClient.delete<Response<void>>(`${API_URL}/user`, { data: { groupId, userId } });
+    await apiClient.delete<Response<void>>(`${API_URL}/user`, { params: { userId, groupId } });
   } catch (error: any) {
     throw new Error('Failed to remove user from group: ' + error.message);
   }
