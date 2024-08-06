@@ -37,22 +37,14 @@ export interface EmployeeData {
 
 
 export interface ApplicationData {
-  id?: number;
-  chartId?: number;
+  id: number;
   applicant: string;
   guarantor: string;
   startDate: string;
   endDate: string;
-  startDateStr?: string;
-  endDateStr?: string;
-  reason: string;
-  applyStatus: string;
-  available: boolean;
-  createId: string;
-  createDate: string;
-  modifyId: string;
-  modifyDate: string;
-  content?: string;
+  content: string;
+  applyStatus: number; // 确保 applyStatus 是数字类型
+  groupId: number; // 确保 groupId 是必填字段
 }
 
 export interface UserAccountBean {

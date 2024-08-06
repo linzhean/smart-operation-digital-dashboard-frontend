@@ -83,6 +83,16 @@
   /* 确保 modal 在其他内容之上 */
 }
 
+.modal h2 {
+  margin-top: 0;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+}
+
+
 .modalContent {
   background: #fff;
   padding: 20px;

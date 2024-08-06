@@ -11,7 +11,9 @@ import { exportData, getExportPermission } from '../../services/exportService';
 import ChartWithDropdown from '../../component/Dashboard/ChartWithDropdown';
 import ChartService from '../../services/ChartService';
 import styles from './Home.module.css'
+
 const ResponsiveGridLayout = WidthProvider(Responsive);
+
 const Home: React.FC = () => {
 
   const [layout, setLayout] = useState([
@@ -25,7 +27,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (selectedDashboard) {
-      // 基于所选仪表板获取数据
+      // Fetch data based on the selected dashboard
     }
   }, [selectedDashboard]);
 
@@ -33,24 +35,24 @@ const Home: React.FC = () => {
     try {
       const permissionResponse = await getExportPermission(chartId);
       if (!permissionResponse.result) {
-        alert(`获取导出权限失败: ${permissionResponse.errorCode}`);
+        alert(`Failed to get export permission: ${permissionResponse.errorCode}`);
         return { result: false, errorCode: permissionResponse.errorCode, data: new Blob() };
       }
 
       const exportResponse = await exportData(chartId, { exporterList: requestData, dashboardCharts: [chartId] });
       if (!exportResponse.result) {
-        alert(`导出数据失败: ${exportResponse.errorCode}`);
+        alert(`Failed to export data: ${exportResponse.errorCode}`);
         return { result: false, errorCode: exportResponse.errorCode, data: new Blob() };
       }
 
       const blob = new Blob([exportResponse.data], { type: 'application/octet-stream' });
       saveAs(blob, 'exported_data.csv');
 
-      alert('数据导出成功!');
+      alert('Data exported successfully!');
       return { result: true, errorCode: '', data: blob };
     } catch (error) {
-      console.error('导出错误:', error);
-      alert('导出过程中发生错误。请再试一次。');
+      console.error('Export error:', error);
+      alert('An error occurred during export. Please try again.');
       return { result: false, errorCode: 'unknown', data: new Blob() };
     }
   };
@@ -60,8 +62,8 @@ const Home: React.FC = () => {
       const chartData = await ChartService.getChartData(chartId);
       setSelectedChartData(chartData.data);
     } catch (error) {
-      console.error('获取图表数据失败:', error);
-      alert('选择图表时发生错误。请再试一次。');
+      console.error('Failed to get chart data:', error);
+      alert('An error occurred while selecting the chart. Please try again.');
     }
   };
 
@@ -80,17 +82,17 @@ const Home: React.FC = () => {
               cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
             >
               <div key="lineChart" className={styles.dataCard}>
-                <ChartWithDropdown exportData={handleExport} chartId={1} requestData={requestData} onChartSelect={handleChartSelect}>
+                <ChartWithDropdown exportData={handleExport} chartId={1} requestData={requestData} onChartSelect={handleChartSelect} currentUserId={''}>
                   <LineChart data={selectedChartData} />
                 </ChartWithDropdown>
               </div>
               <div key="barChart" className={styles.dataCard}>
-                <ChartWithDropdown exportData={handleExport} chartId={2} requestData={requestData} onChartSelect={handleChartSelect}>
+                <ChartWithDropdown exportData={handleExport} chartId={2} requestData={requestData} onChartSelect={handleChartSelect} currentUserId={''}>
                   <BarChart data={selectedChartData} />
                 </ChartWithDropdown>
               </div>
               <div key="doughnutChart" className={styles.dataCard}>
-                <ChartWithDropdown exportData={handleExport} chartId={3} requestData={requestData} onChartSelect={handleChartSelect}>
+                <ChartWithDropdown exportData={handleExport} chartId={3} requestData={requestData} onChartSelect={handleChartSelect} currentUserId={''}>
                   <DoughnutChart data={selectedChartData} />
                 </ChartWithDropdown>
               </div>

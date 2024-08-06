@@ -31,25 +31,14 @@ const Sidebar: React.FC<SidebarProps> = ({ onStatusChange, selectedStatus }) => 
     };
   }, []);
 
-  useEffect(() => {
-    const handleMenuClick = () => {
-      const menuItems = document.querySelectorAll(`.${styles.siderbar_menu} li`);
-      menuItems.forEach(item => {
-        item.addEventListener("click", () => {
-          menuItems.forEach(i => i.classList.remove(styles.active));
-          item.classList.add(styles.active);
-          onStatusChange(item.textContent?.trim() || '');
-        });
-      });
-    };
-
-    handleMenuClick();
-  }, [onStatusChange]);
-
   const handleSidebarToggle = () => {
     if (!isDisabled) {
       setIsActive(!isActive);
     }
+  };
+
+  const handleMenuItemClick = (status: string) => {
+    onStatusChange(status);
   };
 
   return (
@@ -69,26 +58,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onStatusChange, selectedStatus }) => 
             <img src={closearrow} alt="Click to close sidebar" />
           </div>
           <ul className={`${styles.siderbar_menu} mostly-customized-scrollbar`}>
-            <li className={selectedStatus === '已關閉' ? styles.active : ''}>
-              <a href="#" onClick={() => onStatusChange('已關閉')}>
-                <div className={styles.title}>已關閉</div>
-              </a>
-            </li>
-            <li className={selectedStatus === '申請未通過' ? styles.active : ''}>
-              <a href="#" onClick={() => onStatusChange('申請未通過')}>
-                <div className={styles.title}>申請未通過</div>
-              </a>
-            </li>
-            <li className={selectedStatus === '申請已通過' ? styles.active : ''}>
-              <a href="#" onClick={() => onStatusChange('申請已通過')}>
-                <div className={styles.title}>申請已通過</div>
-              </a>
-            </li>
-            <li className={selectedStatus === '正在啓用' ? styles.active : ''}>
-              <a href="#" onClick={() => onStatusChange('正在啓用')}>
-                <div className={styles.title}>正在啓用</div>
-              </a>
-            </li>
+            {Object.keys(statusMap).map(status => (
+              <li key={status} className={selectedStatus === status ? styles.active : ''}>
+                <a href="#" onClick={() => handleMenuItemClick(status)}>
+                  <div className={styles.title}>{status}</div>
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

@@ -1,4 +1,3 @@
-// InterimKPIControl.tsx
 import React, { useState } from 'react';
 import InterimKPIList from '../../component/InterimKPIList/InterimKPIList';
 import Sidebar from '../../component/InterimKPISidebar/InterimKPISidebar';

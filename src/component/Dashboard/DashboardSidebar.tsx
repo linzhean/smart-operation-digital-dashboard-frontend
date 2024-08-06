@@ -7,6 +7,12 @@ import more from '../../assets/icon/homeMore.svg';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => void }> = ({ onSelectDashboard }) => {
   const [isActive, setIsActive] = useState(false);
@@ -16,6 +22,9 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [editingDashboardId, setEditingDashboardId] = useState<string | null>(null);
   const [newDashboardName, setNewDashboardName] = useState<string>('');
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dashboardName, setDashboardName] = useState('');
+  const [dashboardDescription, setDashboardDescription] = useState('');
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,7 +46,7 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
       } catch (error) {
         console.error('Failed to fetch dashboards:', error);
       }
-    };    
+    };
 
     fetchAllDashboards();
   }, []);
@@ -51,12 +60,22 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
     onSelectDashboard(dashboardId);
   };
 
-  const handleAddDashboard = async () => {
-    const newDashboardName = prompt('請輸入新儀表板名稱：');
-    if (newDashboardName) {
+  const handleAddDashboardOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleAddDashboardClose = () => {
+    setOpenDialog(false);
+    setDashboardName('');
+    setDashboardDescription('');
+  };
+
+  const handleAddDashboardSubmit = async () => {
+    if (dashboardName) {
       try {
-        const newDashboard = await DashboardService.createDashboard({ name: newDashboardName });
+        const newDashboard = await DashboardService.createDashboard({ name: dashboardName, description: dashboardDescription });
         setDashboards(prevDashboards => [...prevDashboards, newDashboard]);
+        handleAddDashboardClose();
       } catch (error) {
         console.error('Failed to add dashboard:', error);
       }
@@ -80,10 +99,24 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
     setAnchorEl(null);
   };
 
-  const handleEditDashboardName = (dashboardId: string, currentName: string) => {
-    setEditingDashboardId(dashboardId);
-    setNewDashboardName(currentName);
-    handleMenuClose();
+  const handleEditDescription = (dashboardId: string, currentDescription: string) => {
+    const newDescription = prompt('請輸入儀表板說明文字（非必填）：', currentDescription);
+    if (newDescription !== null) {
+      updateDashboardDescription(dashboardId, newDescription);
+    }
+  };
+
+  const updateDashboardDescription = async (dashboardId: string, newDescription: string) => {
+    try {
+      await DashboardService.patchDashboard(dashboardId, { description: newDescription });
+      setDashboards(prevDashboards =>
+        prevDashboards.map(dashboard =>
+          dashboard.id === dashboardId ? { ...dashboard, description: newDescription } : dashboard
+        )
+      );
+    } catch (error) {
+      console.error('Failed to update dashboard description:', error);
+    }
   };
 
   const handleUpdateDashboardName = async () => {
@@ -116,7 +149,7 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
           </div>
           <ul className={`${styles.sidebar_menu} mostly-customized-scrollbar`}>
             <li>
-              <button className={styles.addButton} onClick={handleAddDashboard}>
+              <button className={styles.addButton} onClick={handleAddDashboardOpen}>
                 新儀表板
               </button>
             </li>
@@ -159,14 +192,49 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
                   onClose={handleMenuClose}
                   className={styles.dropdownMenu}
                 >
-                  <MenuItem onClick={() => handleEditDashboardName(dashboard.id, dashboard.name)}>修改名稱</MenuItem>
+                  <MenuItem onClick={() => { handleUpdateDashboardName(); handleMenuClose(); }}>修改名稱</MenuItem>
                   <MenuItem onClick={() => { handleDeleteDashboard(dashboard.id); handleMenuClose(); }}>刪除</MenuItem>
+                  <MenuItem onClick={() => handleEditDescription(dashboard.id, dashboard.description || '')}>進階說明編輯</MenuItem>
                 </Menu>
               </li>
             ))}
           </ul>
         </div>
       </div>
+
+      {/* Add Dashboard Dialog */}
+      <Dialog open={openDialog} onClose={handleAddDashboardClose}>
+        <DialogTitle>新增儀表板</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="儀表板名稱"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={dashboardName}
+            onChange={(e) => setDashboardName(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="儀表板說明文字（非必填）"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={dashboardDescription}
+            onChange={(e) => setDashboardDescription(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAddDashboardClose} color="primary">
+            取消
+          </Button>
+          <Button onClick={handleAddDashboardSubmit} color="primary">
+            確定
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../InterimKPISidebar/InterimKPISidebar';
 import styles from './InterimKPIList.module.css';
 import { ApplicationData } from '../../services/types/userManagement';
-import { getApplications, updateApplication, deleteApplication } from '../../services/application';
+import { getApplications, updateApplication, deleteApplication, closeApplication } from '../../services/application';
 
 interface InterimKPIListProps {
   selectedStatus: string;
   onStatusChange: (status: string) => void;
 }
 
-const statusMap: { [key: string]: string } = {
-  '已關閉': '0',
-  '申請未通過': '1',
-  '申請已通過': '2',
-  '正在啓用': '3',
+const statusMap: { [key: string]: number } = {
+  '已關閉': 0,
+  '申請未通過': 1,
+  '申請已通過': 2,
+  '正在啓用': 3,
 };
 
 const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatusChange }) => {
@@ -22,20 +22,25 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
   const [applications, setApplications] = useState<ApplicationData[]>([]);
 
   useEffect(() => {
+    console.log('Fetching applications...'); // 添加日志
     fetchApplications();
   }, [selectedStatus]);
 
   const fetchApplications = async () => {
     try {
-      const statusKey = statusMap[selectedStatus] || '';
-      const response = await getApplications(statusKey, 1);
-      if (response.result && response.data) {
-        setApplications(response.data);
+      const statusKey = statusMap[selectedStatus] || 0;
+      console.log('Fetching applications with status:', statusKey); // 输出请求参数
+      const response = await getApplications(statusKey.toString(), 0); // 将 nowPage 设置为 0
+      console.log('API response:', response); // 输出 API 响应
+      if (response.result && Array.isArray(response.data)) {
+        setApplications(response.data); // 更新状态
       } else {
-        alert(response.message || 'Failed to fetch applications');
+        console.error('Unexpected API response format:', response);
+        alert(response.message || '获取申请数据失败');
       }
     } catch (error) {
-      alert('Failed to fetch applications');
+      console.error('Error fetching applications:', error);
+      alert('获取申请数据失败');
     }
   };
 
@@ -48,33 +53,54 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
     setIsFormVisible(false);
   };
 
-  const handleApprove = async (id: number) => {
+  const handleApprove = async (id: number, groupId: number) => {
     try {
-      const response = await updateApplication(id, { applyStatus: 'PASSED' });
+      console.log('Sending approval request', id, groupId);
+      const response = await updateApplication(id, { applyStatus: 1 }, groupId);
+      console.log('Approve response:', response);
       if (response.result) {
-        alert('Application approved successfully');
+        alert('申請已批准');
         fetchApplications();
       } else {
-        alert(response.message || 'Failed to approve application');
+        alert(response.message || '批准申請失敗');
       }
     } catch (error) {
-      alert('Failed to approve application');
+      console.error('Approve error:', error);
+      alert('批准申請失敗');
     }
-  };
-
-  const handleDelete = async (id: number) => {
+  };  
+  
+  const handleDelete = async (id: number, groupId: number) => {
     try {
-      const response = await deleteApplication(id);
+      const response = await deleteApplication(id, groupId);
+      console.log('Delete response:', response); // 输出响应
       if (response.result) {
-        alert('Application deleted successfully');
+        alert('申請已刪除');
         fetchApplications();
       } else {
-        alert(response.message || 'Failed to delete application');
+        alert(response.message || '刪除申請失敗');
       }
     } catch (error) {
-      alert('Failed to delete application');
+      console.error('Delete error:', error); // 输出错误信息
+      alert('刪除申請失敗');
     }
   };
+  
+  const handleClose = async (id: number, groupId: number) => {
+    try {
+      const response = await closeApplication(id, groupId);
+      console.log('Close response:', response); // 输出响应
+      if (response.result) {
+        alert('申請已關閉');
+        fetchApplications();
+      } else {
+        alert(response.message || '關閉申請失敗');
+      }
+    } catch (error) {
+      console.error('Close error:', error); // 输出错误信息
+      alert('關閉申請失敗');
+    }
+  };  
 
   return (
     <div className="wrapper">
@@ -95,7 +121,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                 </tr>
               </thead>
               <tbody>
-                {applications.map((app) => (
+                {Array.isArray(applications) && applications.map((app) => (
                   <tr key={app.id}>
                     <td>{app.applicant}</td>
                     <td>{app.guarantor}</td>
@@ -107,11 +133,13 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                     <td>
                       {selectedStatus === '申請未通過' ? (
                         <>
-                          <button className={styles.approveButton} onClick={() => app.id && handleApprove(app.id)}>核准</button>
-                          <button className={styles.deleteButton} onClick={() => app.id && handleDelete(app.id)}>刪除</button>
+                        <button className={styles.approveButton} onClick={() => app.id && app.groupId && handleApprove(app.id, app.groupId)}>核准</button>
+                        <button className={styles.deleteButton} onClick={() => app.id && app.groupId && handleDelete(app.id, app.groupId)}>刪除</button>
                         </>
+                      ) : selectedStatus === '正在啓用' ? (
+                        <button className={styles.closeButton} onClick={() => app.id && app.groupId && handleClose(app.id, app.groupId)}>關閉</button>
                       ) : (
-                        <button className={styles.deleteButton} onClick={() => app.id && handleDelete(app.id)}>刪除</button>
+                        <button className={styles.deleteButton} onClick={() => app.id && app.groupId && handleDelete(app.id, app.groupId)}>刪除</button>
                       )}
                     </td>
                   </tr>

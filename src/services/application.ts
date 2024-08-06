@@ -1,12 +1,10 @@
-//src\services\application.ts
 import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 import { ApplicationData } from './types/userManagement';
 
-// Define your API endpoints
 const APPLICATION_API_BASE = '/application';
 
-// Get applications with optional filters
+// 获取申请列表
 export const getApplications = async (
   status: string,
   nowPage: number,
@@ -24,15 +22,12 @@ export const getApplications = async (
   }
 };
 
-// Create a new application
+// 创建申请
 export const createApplication = async (
-  applicationData: Partial<ApplicationData>,
-  params?: { [key: string]: any } // Make params optional
+  applicationData: Partial<ApplicationData>
 ): Promise<Response<ApplicationData>> => {
   try {
-    const response = await apiClient.post<Response<ApplicationData>>(`${APPLICATION_API_BASE}`, applicationData, {
-      params, // Include URL parameters if provided
-    });
+    const response = await apiClient.post<Response<ApplicationData>>(`${APPLICATION_API_BASE}`, applicationData);
     return response.data;
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -40,15 +35,15 @@ export const createApplication = async (
   }
 };
 
-// Update an existing application
+// 更新申请状态
 export const updateApplication = async (
   id: number,
   applicationData: Partial<ApplicationData>,
-  params?: { [key: string]: any } // Added optional params
+  groupId: number
 ): Promise<Response<ApplicationData>> => {
   try {
     const response = await apiClient.patch<Response<ApplicationData>>(`${APPLICATION_API_BASE}/permit/${id}`, applicationData, {
-      params, // Include URL parameters if needed
+      params: { groupId },
     });
     return response.data;
   } catch (error) {
@@ -57,14 +52,30 @@ export const updateApplication = async (
   }
 };
 
-// Delete an application
+// 关闭申请
+export const closeApplication = async (
+  id: number,
+  groupId?: number
+): Promise<Response<string>> => {
+  try {
+    const response = await apiClient.patch<Response<string>>(`${APPLICATION_API_BASE}/close/${id}`, undefined, {
+      params: { groupId },
+    });
+    return response.data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
+    throw new Error(`Failed to close application: ${errorMsg}`);
+  }
+};
+
+// 删除申请
 export const deleteApplication = async (
   id: number,
-  params?: { [key: string]: any } // Added optional params
+  groupId?: number
 ): Promise<Response<string>> => {
   try {
     const response = await apiClient.delete<Response<string>>(`${APPLICATION_API_BASE}/${id}`, {
-      params, // Include URL parameters if needed
+      params: { groupId },
     });
     return response.data;
   } catch (error) {

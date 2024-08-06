@@ -1,10 +1,11 @@
-// components/ChartWithDropdown.tsx
-import React from 'react';
+//src\component\Dashboard\ChartWithDropdown.tsx
+import React, { useEffect, useState } from 'react';
 import styles from './ChartWithDropdown.module.css';
 import { useChartWithDropdown } from '../../Hook/useChartWithDropdown'; // Adjust the path as necessary
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import more from '../../assets/icon/more.svg';
+import { fetchAllUsers } from '../../services/UserAccountService'; // Adjust the path as necessary
 
 interface ChartWithDropdownProps {
   children: React.ReactNode;
@@ -12,9 +13,10 @@ interface ChartWithDropdownProps {
   chartId: number;
   requestData: string[];
   onChartSelect: (chartId: number) => void;
+  currentUserId: string;
 }
 
-const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, onChartSelect }) => {
+const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, onChartSelect, currentUserId }) => {
   const {
     isDropdownOpen,
     toggleDropdown,
@@ -56,7 +58,24 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     setIsModalOpen,
     setIsChartSelectModalOpen,
     setIsRequestKpiModalOpen,
-  } = useChartWithDropdown(exportData, chartId, requestData);
+    users, // Add users state
+    setUsers, // Add setUsers method
+    selectedUser, // Add selectedUser state
+    setSelectedUser, // Add setSelectedUser method
+  } = useChartWithDropdown(exportData, chartId, requestData, currentUserId);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const userList = await fetchAllUsers();
+        setUsers(userList);
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+        alert('Failed to fetch users. Please try again later.');
+      }
+    };
+    fetchUsers();
+  }, [setUsers]);
 
   return (
     <div className={styles.chartContainer}>
@@ -155,12 +174,18 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             </label>
             <label>
               保證人:
-              <input
-                type="text"
-                value={sponsor}
-                onChange={e => setSponsor(e.target.value)}
+              <select
+                value={selectedUser || ''}
+                onChange={e => setSelectedUser(e.target.value)}
                 required
-              />
+              >
+                <option value="">選擇保證人</option>
+                {users.map(user => (
+                  <option key={user.userId} value={user.userId}>
+                    {user.userName}
+                  </option>
+                ))}
+              </select>
             </label>
             <label>
               請求內容:
