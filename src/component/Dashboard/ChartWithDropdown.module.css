@@ -1,17 +1,7 @@
 .chartContainer {
   position: absolute;
-  left: 10px;
+  right: 0;
   top: 0;
-}
-
-.chartHeader {
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px;
-}
-
-.dropdownContainer {
-  position: relative;
 }
 
 .chart {
@@ -20,11 +10,15 @@
   height: 100%;
 }
 
+
+
 .dropdown {
   position: fixed;
+
   top: 10px;
   right: 10px;
   z-index: 2000;
+
 }
 
 .dropdownButton {
@@ -32,6 +26,8 @@
   background-color: transparent !important;
   font-size: 24px;
   padding: 10px 10px !important;
+
+
   cursor: pointer;
   width: 60px !important;
 }
@@ -39,23 +35,38 @@
 .dropdownMenu {
   background-color: #007bff;
   display: block;
+
   position: absolute;
   border-radius: 15px;
   padding: 10px;
+
+
+
+
+
   z-index: 2000;
+
 }
 
 .dropdownMenu li {
   padding: 10px;
+
   cursor: pointer;
+
 }
 
 .dropdownMenu li:hover {
   background-color: #eee;
+
 }
 
 .modal {
   background: pink;
+
+
+
+
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,31 +85,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  /* 确保 modal 在其他内容之上 */
-}
-
-.modal h2 {
-  margin-top: 0;
-}
-
-.modal form {
-  display: flex;
-  flex-direction: column;
-}
-
-
-.modalContent {
-  background: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  width: 400px;
-  z-index: 2000;
-  /* 确保 modal 内容在 modal 背景之上 */
   background: rgba(255, 0, 0, 0.5);
   z-index: 999;
 }
