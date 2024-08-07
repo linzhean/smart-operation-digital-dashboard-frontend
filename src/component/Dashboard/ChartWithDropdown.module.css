@@ -15,61 +15,60 @@
 }
 
 .chart {
-  position: relative;
+  /* position: relative; */
   width: 100%;
   height: 100%;
 }
 
-
 .dropdown {
   position: fixed;
-  /* 确保 dropdown 菜单固定在视口中 */
   top: 10px;
   right: 10px;
   z-index: 2000;
-  /* 确保 dropdown 菜单在其他内容之上 */
 }
 
 .dropdownButton {
+
+  background-color: transparent !important;
   font-size: 24px;
-  /* 更大的字体大小 */
-  border: none;
-  padding: 10px;
-  /* 增加内边距 */
+  padding: 10px 10px !important;
   cursor: pointer;
-  /* 显示为可点击区域 */
+  width: 60px !important;
 }
 
 .dropdownMenu {
+  background-color: #007bff;
   display: block;
-  /* 确保菜单在打开时可见 */
   position: absolute;
-  /* 更好控制的位置 */
-  top: 100%;
-  right: 0;
-  background-color: #fff;
-  /* 背景颜色确保菜单清晰可见 */
-  border: 1px solid #ddd;
-  /* 边框分隔 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  /* 阴影效果 */
-  z-index: 1000;
-  /* 确保菜单在其他内容之上 */
+  border-radius: 15px;
+  padding: 10px;
+  z-index: 2000;
 }
 
 .dropdownMenu li {
   padding: 10px;
-  /* 增加内边距，方便点击 */
   cursor: pointer;
-  /* 显示为可点击区域 */
 }
 
 .dropdownMenu li:hover {
   background-color: #eee;
-  /* 鼠标悬停时的背景色 */
 }
 
 .modal {
+  background: pink;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -50%);
+}
+
+.modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -100,6 +99,8 @@
   width: 400px;
   z-index: 2000;
   /* 确保 modal 内容在 modal 背景之上 */
+  background: rgba(255, 0, 0, 0.5);
+  z-index: 999;
 }
 
 .close {
@@ -153,8 +154,10 @@ form button:hover {
 }
 
 .dropdownMenu {
-  top: 0;
-  left: 100%;
-  margin-left: 8px;
-  /* 控制與按鈕之間的間距 */
+  top: 65%;
+  right: 15%;
+}
+
+.dropdownMenu button:last-child {
+  margin-bottom: 0;
 }

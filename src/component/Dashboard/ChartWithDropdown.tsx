@@ -4,8 +4,8 @@ import styles from './ChartWithDropdown.module.css';
 import { useChartWithDropdown } from '../../Hook/useChartWithDropdown'; // Adjust the path as necessary
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import more from '../../assets/icon/more.svg';
 import { fetchAllUsers } from '../../services/UserAccountService'; // Adjust the path as necessary
+import more from '../../assets/icon/KPImoreBlue.svg';
 
 interface ChartWithDropdownProps {
   children: React.ReactNode;
@@ -17,6 +17,9 @@ interface ChartWithDropdownProps {
 }
 
 const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, onChartSelect, currentUserId }) => {
+  const handleDropdownClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
   const {
     isDropdownOpen,
     toggleDropdown,
@@ -80,7 +83,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
   return (
     <div className={styles.chartContainer}>
       <div className={styles.chartHeader}>
-        <div className={styles.dropdownContainer}>
+        <div className={styles.dropdownContainer} onClick={handleDropdownClick}>
           <button onClick={toggleDropdown} className={styles.dropdownButton}>
             <img src={more} alt="" />
           </button>
@@ -102,8 +105,11 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         </div>
       ))}
 
+
+
       {/* Modal for delegating tasks */}
-      {isModalOpen && (
+      {isModalOpen && (<>
+        <div className={styles.modalOverlay} onClick={closeModal}></div>
         <div className={styles.modal}>
           <form onSubmit={handleSubmit}>
             <h2>交辦任務</h2>
@@ -136,7 +142,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             <button type="submit">提交</button>
             <button type="button" onClick={closeModal}>取消</button>
           </form>
-        </div>
+        </div></>
       )}
 
       {/* Modal for selecting charts */}

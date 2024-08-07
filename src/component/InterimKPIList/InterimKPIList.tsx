@@ -164,7 +164,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                       <input type="text" id="endDate" name="endDate" value={formData.endDate} disabled />
                       <label htmlFor="content">申請內容:</label>
                       <textarea id="content" name="content" value={formData.content} disabled />
-                      <button type="button" onClick={handleCloseForm}>關閉</button>
+                      <button type="button" onClick={handleCloseForm} className={styles.cancel}>關閉</button>
                     </form>
                   </div>
                 </div>
