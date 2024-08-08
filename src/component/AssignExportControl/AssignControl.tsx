@@ -115,7 +115,6 @@ const UserPickerDialog: React.FC<{
   );
 };
 
-
 const AssignTaskControl: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentChart, setCurrentChart] = useState(0);
@@ -148,17 +147,19 @@ const AssignTaskControl: React.FC = () => {
       ...selectedUsersMap,
       [currentChart]: selectedUsers,
     });
-
+  
     const chartId = currentChart;
     const userIds = selectedUsers.map(user => user.userId);
-
+  
     const requestData = {
+      chartId: chartId,
+      name: 'Task Name',  // 請填寫一個有效的名稱，這個值可以是用戶輸入或從其他地方獲取
       sponsorList: userIds,
-      exporterList: [], // Provide an empty array or relevant data if available
-      dashboardCharts: [] // Provide an empty array or relevant data if available
+      exporterList: [],
+      dashboardCharts: []
     };
   
-    setAssignedTaskSponsorsForDashboard(chartId, requestData)
+    setAssignedTaskSponsorsForDashboard(requestData)
       .then((response) => {
         console.log('Successfully submitted', response.message);
       })
@@ -167,11 +168,16 @@ const AssignTaskControl: React.FC = () => {
       });
   
     setDialogOpen(false);
-  };
+  };  
 
   const getSelectedUserNames = (chartId: number) => {
     const selectedUsers = selectedUsersMap[chartId] || [];
     return selectedUsers.length > 0 ? `擁有權限者：共 ${selectedUsers.length} 人` : '設置交辦權限';
+  };
+
+  const currentUser = {
+    userId: '123',
+    permissions: ['create_task', 'update_task'],
   };
 
   return (
@@ -190,9 +196,13 @@ const AssignTaskControl: React.FC = () => {
                 <tr key={chart.id}>
                   <td>{chart.name}</td>
                   <td>
-                    <Button variant="contained" color="primary" onClick={() => handleOpenDialog(chart.id)}>
-                      {getSelectedUserNames(chart.id)}
-                    </Button>
+                    {currentUser.permissions.includes('create_task') || currentUser.permissions.includes('update_task') ? (
+                      <Button variant="contained" color="primary" onClick={() => handleOpenDialog(chart.id)}>
+                        {getSelectedUserNames(chart.id)}
+                      </Button>
+                    ) : (
+                      <span>無權限設置</span>
+                    )}
                   </td>
                 </tr>
               ))}

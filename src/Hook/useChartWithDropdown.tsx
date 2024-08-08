@@ -28,6 +28,7 @@ export function useChartWithDropdown(
   const [sponsor, setSponsor] = useState('');
   const [users, setUsers] = useState<any[]>([]); // Add users state
   const [selectedUser, setSelectedUser] = useState<string | null>(null); // Add selectedUser state
+  const [interactiveCharts, setInteractiveCharts] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchCharts = async () => {
@@ -200,6 +201,23 @@ export function useChartWithDropdown(
     }
   };
 
+  const handleAdvancedAnalysis = async () => {
+    try {
+      const response = await ChartService.getAvailableCharts();
+      
+      if (response.result) {
+        // Extract data from response
+        setInteractiveCharts(response.data); // Assuming response.data is the array
+      } else {
+        console.error('Failed to fetch interactive charts:', response.message);
+        alert('Failed to fetch interactive charts. Please try again later.');
+      }
+    } catch (error) {
+      console.error('Failed to fetch interactive charts:', error);
+      alert('Failed to fetch interactive charts. Please try again later.');
+    }
+  };  
+
   const handleStartDateChange = (date: Date | null) => setStartDate(date);
   const handleEndDateChange = (date: Date | null) => setEndDate(date);
 
@@ -247,6 +265,9 @@ export function useChartWithDropdown(
     users,
     setUsers,
     selectedUser,
-    setSelectedUser
+    setSelectedUser,
+    setInteractiveCharts,
+    interactiveCharts,
+    handleAdvancedAnalysis
   };
 }

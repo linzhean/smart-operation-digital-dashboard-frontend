@@ -194,7 +194,7 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
                 >
                   <MenuItem onClick={() => { handleUpdateDashboardName(); handleMenuClose(); }}>修改名稱</MenuItem>
                   <MenuItem onClick={() => { handleDeleteDashboard(dashboard.id); handleMenuClose(); }}>刪除</MenuItem>
-                  <MenuItem onClick={() => handleEditDescription(dashboard.id, dashboard.description || '')}>進階說明編輯</MenuItem>
+                  <MenuItem onClick={() => handleEditDescription(dashboard.id, dashboard.description || '')}>說明編輯</MenuItem>
                 </Menu>
               </li>
             ))}

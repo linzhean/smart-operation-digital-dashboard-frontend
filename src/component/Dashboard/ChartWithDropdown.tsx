@@ -65,6 +65,9 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     setUsers, // Add setUsers method
     selectedUser, // Add selectedUser state
     setSelectedUser, // Add setSelectedUser method
+    interactiveCharts, // Add interactiveCharts state
+    setInteractiveCharts, // Add setInteractiveCharts method
+    handleAdvancedAnalysis // Add handleAdvancedAnalysis method
   } = useChartWithDropdown(exportData, chartId, requestData, currentUserId);
 
   useEffect(() => {
@@ -92,6 +95,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
               <button onClick={handleExport}>匯出</button>
               <button onClick={handleDelegate}>交辦</button>
               <button onClick={handleChartSelect}>選擇圖表</button>
+              <button onClick={handleAdvancedAnalysis}>進階分析</button>
             </div>
           )}
         </div>
@@ -204,6 +208,20 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             <button type="submit">提交</button>
             <button type="button" onClick={closeRequestKpiModal}>取消</button>
           </form>
+        </div>
+      )}
+
+      {Array.isArray(interactiveCharts) && interactiveCharts.length > 0 && (
+        <div className={styles.modal}>
+          <h2>進階分析</h2>
+          {interactiveCharts.map(chart => (
+            <div key={chart.id}>
+              <h3>{chart.name}</h3>
+              {/* Render interactive chart component here */}
+              <img src={chart.interactiveUrl} alt={chart.name} />
+            </div>
+          ))}
+          <button onClick={() => setInteractiveCharts([])}>關閉</button>
         </div>
       )}
     </div>

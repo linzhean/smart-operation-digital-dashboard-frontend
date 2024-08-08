@@ -52,6 +52,32 @@
   transform: scale(1.2);
 }
 
+.addChartButton {
+  background: linear-gradient(90deg, #4a90e2 0%, #9013fe 100%);
+  color: white;
+  border: none;
+  border-radius: 30px; /* 圓角 */
+  padding: 10px 20px; /* 內邊距 */
+  font-size: 1rem; /* 字體大小 */
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 增加陰影 */
+  transition: all 0.3s ease;
+}
+
+.addChartButton:hover {
+  background: linear-gradient(90deg, #9013fe 0%, #4a90e2 100%);
+  transform: scale(1.05); /* 當懸停時稍微放大 */
+}
+
+.addChartButton:active {
+  background: #4a90e2;
+  transform: scale(0.95); /* 按下時稍微縮小 */
+}
+
+
+
 @media (max-width: 768px) {
   .dataCard {
     width: 100%;

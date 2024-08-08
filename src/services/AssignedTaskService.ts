@@ -43,19 +43,17 @@ export const getAssignedTaskSponsors = async (chartId: number): Promise<Response
 
 // Set assigned task sponsors for a specific chart ID (仪表板页面用)
 export const setAssignedTaskSponsorsForDashboard = async (
-  chartId: number,
-  data: { sponsorList: string[], exporterList: string[], dashboardCharts: number[] }
+  data: { chartId: number, sponsorList: string[], exporterList: string[], dashboardCharts: number[] }
 ): Promise<Response<string>> => {
   try {
-    const response = await apiClient.post<Response<string>>('/assigned-task', data, {
-      params: { chartId },
-    });
+    const response = await apiClient.post<Response<string>>('/assigned-task', data);
     return response.data;
   } catch (error) {
     console.error('Error setting assigned task sponsors', error);
     throw error;
   }
 };
+
 
 // Delete an assigned task by ID (仪表板页面用)
 export const deleteAssignedTaskForDashboard = async (id: number): Promise<Response<string>> => {
