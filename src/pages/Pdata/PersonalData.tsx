@@ -10,7 +10,7 @@ const Pdata: React.FC = () => {
     <div className='wrapper'>
       <PdataSidebar />
       <div className="main_container">
-        <div className="theContent">
+        <div className="theContent" style={{ overflow: 'hidden' }}>
           <Routes>
             <Route path="profile" element={<Profile />} />
             <Route path="loginHistory" element={<LoginHistory />} />
@@ -18,7 +18,7 @@ const Pdata: React.FC = () => {
           </Routes>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -4,7 +4,8 @@ import styles from './GroupManagementSideBar.module.css';
 import { fetchGroups, addGroup, updateGroupName } from '../../services/GroupApi';
 import { Group } from '../../services/types/userManagement';
 import editIcon from '../../assets/icon/edit-black.svg';
-import newGroup from '../../assets/icon/newGroup.svg'
+import newGroup from '../../assets/icon/newGroup.svg';
+import rename from '../../assets/icon/rename.svg'
 interface SidebarProps {
   onSelectGroup: (groupId: number) => void;
   groupId: number;
@@ -19,6 +20,11 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
   const [groups, setGroups] = useState<Group[]>([]);
   const [newGroupName, setNewGroupName] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 新增兩個 state 管理更新名稱的 Modal
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
+  const [updatedGroupName, setUpdatedGroupName] = useState<string>('');
 
   useEffect(() => {
     const handleResize = () => {
@@ -65,14 +71,20 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
     }
   };
 
-  const handleUpdateGroupName = async (groupId: number) => {
-    const newName = prompt('請輸入新的群組名稱：');
-    if (newName) {
+  const handleUpdateGroupName = (groupId: number) => {
+    setSelectedGroupId(groupId);
+    setIsUpdateModalOpen(true);
+  };
+
+  const handleConfirmUpdate = async () => {
+    if (updatedGroupName && selectedGroupId !== null) {
       try {
-        const updatedGroup = await updateGroupName(groupId, newName);
+        const updatedGroup = await updateGroupName(selectedGroupId, updatedGroupName);
         setGroups((prevGroups) =>
           prevGroups.map((group) => (group.id === updatedGroup.id ? updatedGroup : group))
         );
+        setIsUpdateModalOpen(false);
+        setUpdatedGroupName('');
       } catch (error) {
         console.error('更新群組名稱失敗:', error);
       }
@@ -125,37 +137,64 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
         </div>
       </div>
 
-      {isModalOpen && (<>
-        <div className={styles.overlay} onClick={() => setIsModalOpen(false)}></div>
+      {isModalOpen && (
+        <>
+          <div className={styles.overlay} onClick={() => setIsModalOpen(false)}></div>
 
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <div className={styles.circleIcon}>
+                <img src={newGroup} className={styles.newGroup} alt="" />
+              </div>
 
-            <div className={styles.circleIcon}>
-              <img src={newGroup} alt="" />
+              <h2>新增群組</h2>
+              <button onClick={() => setIsModalOpen(false)} className={styles.closeModal}>X</button>
+
+              <input
+                type="text"
+                value={newGroupName}
+                onChange={(e) => setNewGroupName(e.target.value)}
+                placeholder="請輸入群組名稱"
+              />
+
+              <div>
+                <button onClick={handleAddGroup} className={styles.modalSubmit}>
+                  <span>確定</span>
+                </button>
+              </div>
             </div>
-
-            <h2>新增群組</h2>
-            <button onClick={() => setIsModalOpen(false)} className={styles.closeModal}>X</button>
-
-
-            <input
-              type="text"
-              value={newGroupName}
-              onChange={(e) => setNewGroupName(e.target.value)}
-              placeholder="請輸入群組名稱"
-            />
-
-            <div>
-              <button onClick={handleAddGroup} className={styles.modalSubmit}>
-                <span>確定</span>
-              </button>
-            </div>
-
           </div>
-        </div>
+        </>
+      )}
 
-      </>
+      {isUpdateModalOpen && (
+        <>
+          <div className={styles.overlay} onClick={() => setIsUpdateModalOpen(false)}></div>
+
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <div className={styles.circleIcon}>
+                <img src={rename} className={styles.rename} alt="" />
+              </div>
+
+              <h2>更新群組名稱</h2>
+              <button onClick={() => setIsUpdateModalOpen(false)} className={styles.closeModal}>X</button>
+
+              <input
+                type="text"
+                value={updatedGroupName}
+                onChange={(e) => setUpdatedGroupName(e.target.value)}
+                placeholder="請輸入新的群組名稱"
+              />
+
+              <div>
+                <button onClick={handleConfirmUpdate} className={styles.modalSubmit}>
+                  <span>確定</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

@@ -180,14 +180,24 @@ li:hover .editButton {
   border: 5.5px solid black;
 }
 
-.circleIcon img {
-  width: 45px;
+.newGroup {
+  width: 35px;
   height: 45px;
   display: block;
   position: absolute;
-  margin-left: 15px;
-  margin-top: 10px;
+  margin-left: 20px;
+  margin-top: 11px;
 }
+
+.rename {
+  height: 48px;
+  display: block;
+  position: absolute;
+  margin-left: 11px;
+  margin-top: 12px;
+}
+
+
 
 .closeModal {
   border: none;
@@ -304,7 +314,7 @@ li:hover .editButton {
 }
 
 .modalSubmit span {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #000;
   font-weight: 900;
   position: relative;
