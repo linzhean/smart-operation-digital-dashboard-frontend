@@ -157,12 +157,10 @@ li:hover .moreButton {
 }
 
 .dropdownMenu {
-  background-color: rgba(0, 0, 0, 0.5);
+  /* background-color: rgba(0, 0, 0, 0.5); */
   color: white;
   z-index: 99999999999 !important;
 }
-
-
 
 @media (max-width: 1024px) {
   .sidebar_inner {

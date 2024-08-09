@@ -140,7 +140,7 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
 
   return (
     <div className={`${styles.wrapper} ${isActive ? styles.active : ''}`}>
-      <div className={styles.sidebar}>
+      < div className={styles.sidebar} >
         <div className={styles.bg_shadow} onClick={() => setIsActive(false)}></div>
         <div className={styles.sidebar_inner}>
           <button className={styles.openbutton} onClick={toggleActiveState} disabled={isDisabled}></button>
@@ -187,7 +187,7 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
                 <Menu
                   id="long-menu"
                   anchorEl={anchorEl}
-                  keepMounted
+                  // keepMounted
                   open={isMenuOpen}
                   onClose={handleMenuClose}
                   className={styles.dropdownMenu}
@@ -200,10 +200,10 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
             ))}
           </ul>
         </div>
-      </div>
+      </div >
 
       {/* Add Dashboard Dialog */}
-      <Dialog open={openDialog} onClose={handleAddDashboardClose}>
+      < Dialog open={openDialog} onClose={handleAddDashboardClose} >
         <DialogTitle>新增儀表板</DialogTitle>
         <DialogContent>
           <TextField
@@ -234,8 +234,8 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
             確定
           </Button>
         </DialogActions>
-      </Dialog>
-    </div>
+      </Dialog >
+    </div >
   );
 };
 
