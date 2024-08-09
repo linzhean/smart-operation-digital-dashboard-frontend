@@ -100,7 +100,7 @@
   margin-bottom: 15px;
 }
 
-form label {
+/* form label {
   display: block;
   margin-bottom: 5px;
 }
@@ -122,7 +122,7 @@ form button {
 
 form button:hover {
   background: #0056b3;
-}
+} */
 
 .chartList {
   list-style: none;

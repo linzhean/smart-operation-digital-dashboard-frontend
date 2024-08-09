@@ -68,8 +68,8 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
       console.error('Approve error:', error);
       alert('批准申請失敗');
     }
-  };  
-  
+  };
+
   const handleDelete = async (id: number, groupId: number) => {
     try {
       const response = await deleteApplication(id, groupId);
@@ -85,7 +85,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
       alert('刪除申請失敗');
     }
   };
-  
+
   const handleClose = async (id: number, groupId: number) => {
     try {
       const response = await closeApplication(id, groupId);
@@ -100,14 +100,14 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
       console.error('Close error:', error); // 输出错误信息
       alert('關閉申請失敗');
     }
-  };  
+  };
 
   return (
     <div className="wrapper">
       <Sidebar onStatusChange={onStatusChange} selectedStatus={selectedStatus} />
       <div className={`${styles.content} main_container`}>
         <div className={`${styles.theContent} theContent`}>
-          <h2 className={styles.h2}>申請記錄 - {selectedStatus}</h2>
+          <h2 className={styles.h2}>申請記錄 － {selectedStatus}</h2>
           <div className={styles.thePermissionList}>
             <table className={styles.customScrollbar}>
               <thead>
@@ -133,11 +133,11 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                     <td>
                       {selectedStatus === '申請未通過' ? (
                         <>
-                        <button className={styles.approveButton} onClick={() => app.id && app.groupId && handleApprove(app.id, app.groupId)}>核准</button>
-                        <button className={styles.deleteButton} onClick={() => app.id && app.groupId && handleDelete(app.id, app.groupId)}>刪除</button>
+                          <button className={styles.approveButton} onClick={() => app.id && app.groupId && handleApprove(app.id, app.groupId)}>核准</button>
+                          <button className={styles.deleteButton} onClick={() => app.id && app.groupId && handleDelete(app.id, app.groupId)}>刪除</button>
                         </>
                       ) : selectedStatus === '正在啓用' ? (
-                        <button className={styles.closeButton} onClick={() => app.id && app.groupId && handleClose(app.id, app.groupId)}>關閉</button>
+                        <button className={styles.deleteButton} onClick={() => app.id && app.groupId && handleClose(app.id, app.groupId)}>關閉</button>
                       ) : (
                         <button className={styles.deleteButton} onClick={() => app.id && app.groupId && handleDelete(app.id, app.groupId)}>刪除</button>
                       )}
@@ -163,8 +163,11 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                       <label htmlFor="endDate">結束日期:</label>
                       <input type="text" id="endDate" name="endDate" value={formData.endDate} disabled />
                       <label htmlFor="content">申請內容:</label>
-                      <textarea id="content" name="content" value={formData.content} disabled />
-                      <button type="button" onClick={handleCloseForm} className={styles.cancel}>關閉</button>
+                      <textarea id="content" name="content" value={formData.content} className={styles.theTextarea} />
+                      <div className={styles.buttonContainer}>
+                        <button type="button" onClick={handleCloseForm} className={styles.cancel}>關閉</button>
+                        {/* <button type="button" onClick={handleCloseForm} className={styles.submit} disabled>繳交</button> */}
+                      </div>
                     </form>
                   </div>
                 </div>
