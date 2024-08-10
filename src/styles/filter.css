@@ -52,7 +52,7 @@ input[type="checkbox"]:hover {
   transform: scale(1.1);
 }
 
-input[type="checkbox"]:hover + label {
+input[type="checkbox"]:hover+label {
   transform: scale(1.1);
 }
 
@@ -60,6 +60,6 @@ input[type="checkbox"]:checked {
   border: 15px solid #1E90FF;
 }
 
-input[type="checkbox"]:checked + label {
+/* input[type="checkbox"]:checked + label {
   color: #1E90FF;
-}
+} */

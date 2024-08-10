@@ -1,0 +1,328 @@
+#msform {
+  top: 50%;
+  width: 95%;
+  background-color: #333;
+  right: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  position: fixed;
+  padding: 30px;
+  border-radius: 20px;
+  /* z-index: 99999999999; */
+}
+
+.firstNext {
+  margin-top: 15px;
+}
+
+#msform fieldset {
+  background: white;
+  border: 0 none;
+  border-radius: 15px;
+  box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+  padding: 20px 30px;
+  box-sizing: border-box;
+  width: 80%;
+  margin: 0 10%;
+  position: relative;
+}
+
+#msform fieldset:not(:first-of-type) {
+  display: none;
+}
+
+#msform input,
+#msform textarea {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: montserrat;
+  color: #2C3E50;
+  font-size: 0.8rem;
+}
+
+.kpiInputs {
+  display: none;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999999999;
+}
+
+.checkboxWrapper {
+  margin-bottom: 20px;
+  font-weight: 900;
+  font-size: 1rem;
+}
+
+.checkboxWrapper label {
+  width: 100%;
+  border: 2px solid #ACACBE;
+  padding: 5px;
+  border-radius: 20px;
+  position: relative;
+}
+
+.kpiInputs:checked+label {
+  background-color: #1E90FF;
+  color: black;
+  padding: 7px;
+  border-radius: 20px;
+  border: none;
+}
+
+.applyMore {
+  border: none;
+  background: none;
+  width: 100%;
+  padding: 5px;
+  color: blue;
+}
+
+.kpiInputs:checked+label::after {
+  content: '✔';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 26px;
+  color: white;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.submit:hover {
+  box-shadow: 0 0 0 1px white, 0 0 0 4px #279eae !important;
+}
+
+.actionButton {
+  width: 100px;
+  background: #2892f9ba;
+  font-weight: bold;
+  color: white;
+  border: 0 none;
+  border-radius: 1px;
+  cursor: pointer;
+  padding: 10px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.actionButton:hover,
+.actionButton:focus {
+  box-shadow: 0 0 0 2px white, 0 0 0 3px #1E90FF;
+}
+
+.theKPIs {
+  overflow: auto;
+  overflow-x: hidden;
+  max-height: 280px;
+}
+
+.fsTitle {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  color: #2C3E50;
+  margin-bottom: 10px;
+  font-weight: 900;
+}
+
+.fsSubtitle {
+  font-weight: normal;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+#progressbar {
+  margin-bottom: 30px;
+  overflow: hidden;
+  counter-reset: step;
+}
+
+#progressbar li {
+  list-style-type: none;
+  font-size: 9px;
+  width: 33.33%;
+  float: left;
+  color: #ccc;
+  position: relative;
+  font-weight: 800;
+  font-size: 0.8rem;
+  z-index: 3;
+}
+
+#progressbar li:before {
+  content: counter(step);
+  counter-increment: step;
+  width: 20px;
+  line-height: 20px;
+  display: block;
+  font-size: 10px;
+  color: #333;
+  background: #6d6d6d;
+  border-radius: 3px;
+  margin: 0 auto 5px auto;
+}
+
+#progressbar li:after {
+  content: '';
+  width: 95%;
+  height: 2px;
+  background: #545454;
+  position: absolute;
+  left: -43%;
+  top: 9px;
+  z-index: -1;
+}
+
+#progressbar li:first-child:after {
+  content: none;
+}
+
+#progressbar li.active:before,
+#progressbar li.active:after {
+  background: #1E90FF;
+  color: white;
+}
+
+@media (min-width: 850px) {
+  #msform {
+    width: 45%;
+  }
+}
+
+@media (max-width: 400px) {
+  .fsTitle {
+    font-size: 1rem;
+  }
+}
+
+.formOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 300000;
+}
+
+.checkFormContent {
+  height: 75%;
+  overflow: auto;
+  width: clamp(45%, 20%, 80%);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 300010;
+  background: #212121;
+  color: #CCCCCC;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 2.5px 2.5px 2.5px rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .checkFormContent {
+    width: clamp(60%, 75vw, 80%);
+  }
+}
+
+.checkFormContent h2 {
+  font-weight: bold;
+  margin: 0px !important;
+  margin-bottom: 1rem !important;
+}
+
+.checkFormContent input {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.checkFormContent form label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+
+.checkFormContent .submit {
+  margin-left: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: white;
+  color: black;
+  padding: 5px 15px;
+}
+
+.checkFormContent .cancel {
+  margin-left: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: black;
+  color: rgb(255, 255, 255);
+  box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
+  padding: 5px 15px;
+}
+
+.checkFormContent input:disabled {
+  font-size: 1rem;
+  background-color: transparent;
+  color: white;
+  pointer-events: none;
+  border: rgba(255, 255, 255, 0.3) 3px solid;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.checkFormContent .cancel {
+  margin-left: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: black;
+  color: rgb(255, 255, 255);
+  box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
+  padding: 5px 15px;
+}
+
+.theTextarea {
+  pointer-events: none;
+  resize: none;
+  width: 100%;
+  background-color: transparent;
+  font-size: 1rem;
+  color: white;
+  border: rgba(255, 255, 255, 0.3) 3px solid;
+  border-radius: 5px;
+  font-weight: bold;
+  padding: 10px;
+}

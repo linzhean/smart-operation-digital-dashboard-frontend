@@ -100,7 +100,7 @@
   background-color: transparent;
   font-size: 1rem;
   color: white;
-  border: 1px solid #ccc;
+  border: rgba(255, 255, 255, 0.3) 3px solid;
   border-radius: 5px;
   font-weight: bold;
   padding: 10px;

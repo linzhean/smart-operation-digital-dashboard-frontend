@@ -19,7 +19,7 @@ const DashboardList: React.FC = () => {
         setLoading(false);
       }
     };
-  
+
     fetchDashboards();
   }, []);
 

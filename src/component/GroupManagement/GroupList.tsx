@@ -159,7 +159,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                           className={`${styles.toggleButton} ${chartPermissions[chart.id] ? styles.allow : styles.deny}`}
                           onClick={() => toggleChartPermission(chart.id)}
                         >
-                          {chartPermissions[chart.id] ? '應許' : '禁止'}
+                          {chartPermissions[chart.id] ? '允許' : '禁止'}
                         </button>
                       </td>
                     </tr>

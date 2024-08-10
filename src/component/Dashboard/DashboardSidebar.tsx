@@ -13,6 +13,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import MultiStepForm from './dashBoardForm'
 
 const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => void }> = ({ onSelectDashboard }) => {
   const [isActive, setIsActive] = useState(false);
@@ -25,6 +26,7 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
   const [openDialog, setOpenDialog] = useState(false);
   const [dashboardName, setDashboardName] = useState('');
   const [dashboardDescription, setDashboardDescription] = useState('');
+  const [showMultiStepForm, setShowMultiStepForm] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -61,7 +63,8 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
   };
 
   const handleAddDashboardOpen = () => {
-    setOpenDialog(true);
+    // setOpenDialog(true);
+    setShowMultiStepForm(true);
   };
 
   const handleAddDashboardClose = () => {
@@ -187,21 +190,21 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
                 <Menu
                   id="long-menu"
                   anchorEl={anchorEl}
-                  // keepMounted
+                  keepMounted
                   open={isMenuOpen}
                   onClose={handleMenuClose}
                   className={styles.dropdownMenu}
                 >
                   <MenuItem onClick={() => { handleUpdateDashboardName(); handleMenuClose(); }}>修改名稱</MenuItem>
                   <MenuItem onClick={() => { handleDeleteDashboard(dashboard.id); handleMenuClose(); }}>刪除</MenuItem>
-                  <MenuItem onClick={() => handleEditDescription(dashboard.id, dashboard.description || '')}>說明編輯</MenuItem>
+                  <MenuItem onClick={() => handleEditDescription(dashboard.id, dashboard.description || '')}>編輯說明文字</MenuItem>
                 </Menu>
               </li>
             ))}
           </ul>
         </div>
       </div >
-
+      {showMultiStepForm && <MultiStepForm />}
       {/* Add Dashboard Dialog */}
       < Dialog open={openDialog} onClose={handleAddDashboardClose} >
         <DialogTitle>新增儀表板</DialogTitle>

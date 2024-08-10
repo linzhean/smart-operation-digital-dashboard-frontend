@@ -193,11 +193,9 @@ li:hover .editButton {
   height: 48px;
   display: block;
   position: absolute;
-  margin-left: 11px;
+  margin-left: 10px;
   margin-top: 12px;
 }
-
-
 
 .closeModal {
   border: none;

@@ -13,18 +13,18 @@ import AwaitingApproval from './pages/ProfileSetup/AwaitingApproval';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
-  <React.StrictMode>
-    <UserProvider>
-      <ChartProvider>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/profile-setup" element={<ProfileSetup />} />
-            <Route path="/awaiting-approval" element={<AwaitingApproval />} />
-            <Route path="/*" element={<Main />} />
-          </Routes>
-        </Router>
-      </ChartProvider>
-    </UserProvider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <UserProvider>
+    <ChartProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile-setup" element={<ProfileSetup />} />
+          <Route path="/awaiting-approval" element={<AwaitingApproval />} />
+          <Route path="/*" element={<Main />} />
+        </Routes>
+      </Router>
+    </ChartProvider>
+  </UserProvider>
+  // </React.StrictMode>
 );
