@@ -1,3 +1,4 @@
+//src\Hook\useEmails.ts
 import { useState, useEffect } from 'react';
 import { getEmails, getEmailDetails, createEmail, updateEmail, deleteEmail, sendChatMessage } from '../services/mailService';
 import { Email, EmailMessage } from '../services/mailService';

@@ -1,3 +1,4 @@
+//src\component\Mail\Rightside\ChatBox.tsx
 import React, { useState, useEffect } from 'react';
 import '../../../styles/chatBox.css';
 import { Email, EmailMessage, getEmailDetails, sendChatMessage } from '../../../services/mailService';

@@ -1,9 +1,9 @@
-//src\services\mailService.ts
+// src/services/mailService.ts
 import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 
 export interface Email {
-    id: number;
+    id: number; // Add this line
     assignedTaskId: number;
     chartId: number;
     name: string;
@@ -16,13 +16,16 @@ export interface Email {
     createDate: string;
     modifyId: string;
     modifyDate: string;
-    firstMessage: EmailMessage;
+    firstMessage: {
+        content: string;
+    };
     messageList: EmailMessage[];
-  }  
+}
+
 
 export interface EmailMessage {
     id: number;
-    mailId: number;
+    mailId: number;  // 確保 mailId 是必填的
     messageId: number;
     content: string;
     available: string;
@@ -33,13 +36,14 @@ export interface EmailMessage {
 }
 
 const handleApiResponse = <T>(response: Response<T>): T => {
+    console.log('API Response:', response);
     if (response.result) {
-        return response.data as T;
+      return response.data as T;
     } else {
-        console.error('API Error:', response.message || 'Unknown error');
-        throw new Error(response.message || 'API Error');
+      console.error('API Error:', response.message || 'Unknown error');
+      throw new Error(response.message || 'API Error');
     }
-};
+  };
 
 // Get email list based on status
 export const getEmails = async (statuses: string[]): Promise<Email[]> => {
@@ -55,10 +59,17 @@ export const getEmailDetails = async (id: number): Promise<Email> => {
 };
 
 // Create a new email
-export const createEmail = async (email: Omit<Email, 'id'>): Promise<void> => {
+export const createEmail = async (email: {
+    chartId: number;
+    name: string;
+    receiver: string;
+    firstMessage: {
+      content: string;
+    };
+  }): Promise<Email> => {
     const response = await apiClient.post('/mail', email);
-    handleApiResponse<void>(response.data);
-};
+    return handleApiResponse<Email>(response.data); // Ensure response.data contains the created email with 'id'
+  };  
 
 // Update an existing email
 export const updateEmail = async (id: number, email: Partial<Omit<Email, 'id'>>): Promise<void> => {
@@ -73,7 +84,16 @@ export const deleteEmail = async (id: number): Promise<void> => {
 };
 
 // Send a chat message
-export const sendChatMessage = async (emailId: number, message: Omit<EmailMessage, 'id' | 'messageId'>): Promise<EmailMessage> => {
-    const response = await apiClient.post('/mail/message', { ...message, mailId: emailId });
+export const sendChatMessage = async (mailId: number, message: {
+    mailId: number;
+    content: string;
+    available: string;
+    createId: string;
+    createDate: string;
+    modifyId: string;
+    modifyDate: string;
+  }): Promise<EmailMessage> => {
+    const response = await apiClient.post('/mail/message', message);
     return handleApiResponse<EmailMessage>(response.data);
-};
+  };
+  

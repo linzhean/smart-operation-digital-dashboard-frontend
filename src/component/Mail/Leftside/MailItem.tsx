@@ -1,3 +1,4 @@
+//src\component\Mail\Leftside\MailItem.tsx
 import React from 'react';
 import '../../../styles/mailItem.css';
 import KPI from '../../../assets/icon/testKPI.svg';

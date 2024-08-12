@@ -1,3 +1,4 @@
+//src\services\AssignedTaskService.ts
 import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 
@@ -43,10 +44,16 @@ export const getAssignedTaskSponsors = async (chartId: number): Promise<Response
 
 // Set assigned task sponsors for a specific chart ID (仪表板页面用)
 export const setAssignedTaskSponsorsForDashboard = async (
-  data: { chartId: number, sponsorList: string[], exporterList: string[], dashboardCharts: number[] }
+  chartId: number, // Added chartId as a parameter
+  data: { sponsorList: string[]; exporterList: string[]; dashboardCharts: number[] }
 ): Promise<Response<string>> => {
   try {
-    const response = await apiClient.post<Response<string>>('/assigned-task', data);
+    // Log the data being sent to the backend to verify it
+    console.log("Request data:", data);
+
+    const response = await apiClient.post<Response<string>>('/assigned-task/sponsor', data, {
+      params: { chartId } // Send chartId as a query parameter
+    });
     return response.data;
   } catch (error) {
     console.error('Error setting assigned task sponsors', error);
@@ -69,7 +76,7 @@ export const deleteAssignedTaskForDashboard = async (id: number): Promise<Respon
 // Update an existing assigned task by ID (仪表板页面用)
 export const updateAssignedTaskForDashboard = async (id: number, assignedTask: AssignedTask): Promise<Response<AssignedTask>> => {
   try {
-    const response = await apiClient.patch<Response<AssignedTask>>(`/assigned-task/sponsor/${id}`, assignedTask);
+    const response = await apiClient.patch<Response<AssignedTask>>(`/assigned-task/${id}`, assignedTask);
     return response.data;
   } catch (error) {
     console.error('Error updating assigned task', error);

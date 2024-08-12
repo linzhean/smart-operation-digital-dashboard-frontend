@@ -1,4 +1,3 @@
-//src\component\Dashboard\ChartWithDropdown.tsx
 import React, { useEffect, useState } from 'react';
 import styles from './ChartWithDropdown.module.css';
 import { useChartWithDropdown } from '../../Hook/useChartWithDropdown'; // Adjust the path as necessary
@@ -20,6 +19,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
   const handleDropdownClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
+
   const {
     isDropdownOpen,
     toggleDropdown,
@@ -43,7 +43,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     endDate,
     sponsor,
     requestContent,
-    email,
+    email, // Maintain the email state for UI, but not for backend submission
     subject,
     message,
     charts,
@@ -109,44 +109,59 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         </div>
       ))}
 
-
-
       {/* Modal for delegating tasks */}
-      {isModalOpen && (<>
-        <div className={styles.modalOverlay} onClick={closeModal}></div>
-        <div className={styles.modal}>
-          <form onSubmit={handleSubmit}>
-            <h2>交辦任務</h2>
-            <label>
-              主題:
-              <input
-                type="text"
-                value={subject}
-                onChange={e => setSubject(e.target.value)}
-                required
-              />
-            </label>
-            <label>
-              郵件地址:
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-            </label>
-            <label>
-              消息內容:
-              <textarea
-                value={message}
-                onChange={e => setMessage(e.target.value)}
-                required
-              />
-            </label>
-            <button type="submit">提交</button>
-            <button type="button" onClick={closeModal}>取消</button>
-          </form>
-        </div></>
+      {isModalOpen && (
+        <>
+          <div className={styles.modalOverlay} onClick={closeModal}></div>
+          <div className={styles.modal}>
+            <form onSubmit={handleSubmit}>
+              <h2>交辦任務</h2>
+              <label>
+                主題:
+                <input
+                  type="text"
+                  value={subject}
+                  onChange={e => setSubject(e.target.value)}
+                  required
+                />
+              </label>
+              <label>
+                指定人:
+                <select
+                  value={selectedUser || ''}
+                  onChange={e => setSelectedUser(e.target.value)}
+                  required
+                >
+                  <option value="">選擇指定人</option>
+                  {users.map(user => (
+                    <option key={user.userId} value={user.userId}>
+                      {user.userName}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                收件人:
+                <input
+                  type="text"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                />
+              </label>
+              <label>
+                消息內容:
+                <textarea
+                  value={message}
+                  onChange={e => setMessage(e.target.value)}
+                  required
+                />
+              </label>
+              <button type="submit">提交</button>
+              <button type="button" onClick={closeModal}>取消</button>
+            </form>
+          </div>
+        </>
       )}
 
       {/* Modal for selecting charts */}

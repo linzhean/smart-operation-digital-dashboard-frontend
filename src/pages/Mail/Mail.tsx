@@ -1,3 +1,4 @@
+//src\pages\Mail\Mail.tsx
 import React from 'react';
 import '../../styles/mainEmail.css';
 import Filter from '../../component/Mail/Leftside/Filter';

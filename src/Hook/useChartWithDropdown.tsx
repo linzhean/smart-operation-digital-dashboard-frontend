@@ -1,14 +1,14 @@
-//src\Hook\useChartWithDropdown.tsx
+// src/Hook/useChartWithDropdown.tsx
 import { useState, useEffect } from 'react';
 import ChartService from '../services/ChartService';
-import { createEmail, Email } from '../services/mailService';
+import { createEmail, Email, sendChatMessage } from '../services/mailService';
 import { createApplication } from '../services/application';
 import { getAssignedTaskSponsors } from '../services/AssignedTaskService';
-import { fetchAllUsers } from '../services/UserAccountService'; // Add this import
+import { fetchAllUsers } from '../services/UserAccountService';
 
 export function useChartWithDropdown(
-  exportData: (chartId: number, requestData: string[]) => Promise<{ result: boolean; errorCode: string; data: Blob; }>, 
-  chartId: number, 
+  exportData: (chartId: number, requestData: string[]) => Promise<{ result: boolean; errorCode: string; data: Blob; }>,
+  chartId: number,
   requestData: string[],
   currentUserId: string
 ) {
@@ -26,8 +26,8 @@ export function useChartWithDropdown(
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [requestContent, setRequestContent] = useState('');
   const [sponsor, setSponsor] = useState('');
-  const [users, setUsers] = useState<any[]>([]); // Add users state
-  const [selectedUser, setSelectedUser] = useState<string | null>(null); // Add selectedUser state
+  const [users, setUsers] = useState<any[]>([]);
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [interactiveCharts, setInteractiveCharts] = useState<any[]>([]);
 
   useEffect(() => {
@@ -88,58 +88,47 @@ export function useChartWithDropdown(
   const closeChartSelectModal = () => setIsChartSelectModalOpen(false);
   const closeRequestKpiModal = () => setIsRequestKpiModalOpen(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (selectedCharts.length === 0) {
-      alert('Please select a chart.');
-      return;
-    }
+ // Inside useChartWithDropdown.tsx
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (selectedCharts.length === 0) {
+    alert('Please select a chart.');
+    return;
+  }
 
-    try {
-      const assignedTask = {
-        chartId: selectedCharts[0].id,
-        name: subject,
-        defaultProcessor: email,
-        available: true,
-      };
+  try {
+    const assignedTask = {
+      chartId: selectedCharts[0].id,
+      name: subject,
+      receiver: selectedUser || '', // Default to empty string if selectedUser is null
+      firstMessage: {
+        content: message,
+      },
+    };
 
-      await getAssignedTaskSponsors(assignedTask.chartId);
+    // Create the email with the adjusted body
+    const createdEmail = await createEmail(assignedTask);
 
-      const emailData: Omit<Email, 'id'> = {
-        assignedTaskId: assignedTask.chartId,
-        chartId: selectedCharts[0].id,
-        name: subject,
-        status: "ASSIGN",
-        publisher: email,
-        receiver: email,
-        emailSendTime: formatDate(new Date()),
-        available: true,
+    if (createdEmail && createdEmail.id) {
+      await sendChatMessage(createdEmail.id, {
+        mailId: createdEmail.id, // Ensure mailId is included
+        content: message,
+        available: "string", // Adjust this if necessary
         createId: currentUserId,
         createDate: formatDate(new Date()),
         modifyId: currentUserId,
         modifyDate: formatDate(new Date()),
-        firstMessage: {
-          id: 0,
-          mailId: assignedTask.chartId,
-          messageId: 0,
-          content: message,
-          available: "string",
-          createId: currentUserId,
-          createDate: formatDate(new Date()),
-          modifyId: currentUserId,
-          modifyDate: formatDate(new Date()),
-        },
-        messageList: []
-      };
-
-      await createEmail(emailData);
-
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error('Error submitting delegate task:', error);
-      alert('Failed to submit delegate task. Please try again.');
+      });
+    } else {
+      throw new Error('Failed to create email.');
     }
-  };
+
+    setIsModalOpen(false);
+  } catch (error) {
+    console.error('Error submitting delegate task:', error);
+    alert('Failed to submit delegate task. Please try again.');
+  }
+};
 
   const handleKpiSelection = (kpiId: number) => {
     setSelectedKPIs(prev => {
@@ -178,7 +167,7 @@ export function useChartWithDropdown(
       alert('請選擇一個圖表。');
       return;
     }
-  
+
     try {
       const requestData = {
         chartId: selectedCharts[0].id,
@@ -204,7 +193,7 @@ export function useChartWithDropdown(
   const handleAdvancedAnalysis = async () => {
     try {
       const response = await ChartService.getAvailableCharts();
-      
+
       if (response.result) {
         // Extract data from response
         setInteractiveCharts(response.data); // Assuming response.data is the array
@@ -216,7 +205,9 @@ export function useChartWithDropdown(
       console.error('Failed to fetch interactive charts:', error);
       alert('Failed to fetch interactive charts. Please try again later.');
     }
-  };  
+  };
+
+
 
   const handleStartDateChange = (date: Date | null) => setStartDate(date);
   const handleEndDateChange = (date: Date | null) => setEndDate(date);

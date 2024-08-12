@@ -1,3 +1,4 @@
+//src\component\Mail\Leftside\MailBreif.tsx
 import React from 'react';
 import '../../../styles/mailBreif.css';
 import MailItem from "./MailItem";

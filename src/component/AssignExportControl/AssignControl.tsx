@@ -7,7 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { fetchAllUsers } from '../../services/UserAccountService';
-import { fetchAllCharts, getAllAssignedTasks, setAssignedTaskSponsorsForDashboard } from '../../services/AssignedTaskService';
+import { fetchAllCharts, getAssignedTaskSponsors, setAssignedTaskSponsorsForDashboard } from '../../services/AssignedTaskService';
 import { UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './AssignControl.module.css';
@@ -55,25 +55,26 @@ const UserPickerDialog: React.FC<{
 
   useEffect(() => {
     if (chartId > 0) {
-      getAllAssignedTasks()
+      getAssignedTaskSponsors(chartId)
         .then((response) => {
-          const assignedTasks = response.data;
-          if (assignedTasks) {
-            const sponsorList = assignedTasks
-              .filter(task => task.chartId === chartId)
-              .map(task => task.createId); // Use createId or another identifier
-            const selectedSponsorUsers = users.filter(user => sponsorList.includes(user.userId));
-            setSelectedUsers(selectedSponsorUsers);
+          if (response && response.data) {
+            const sponsorList = response.data.sponsorList || [];
+            const selectedUsers = users.filter((user) =>
+              sponsorList.includes(user.userId)
+            );
+            setSelectedUsers(selectedUsers);
           } else {
-            console.warn('No assigned tasks found');
-            setSelectedUsers([]); // Reset selectedUsers if no tasks are found
+            console.warn('No sponsor data available');
+            setSelectedUsers([]);
           }
         })
         .catch((error) => {
-          console.error('Error fetching assigned tasks', error);
+          console.error('Error fetching assigned task sponsors', error);
+          setSelectedUsers([]);
         });
     }
   }, [chartId, users]);
+  
 
   const handleSubmit = () => {
     onSubmit(selectedUsers);
@@ -143,32 +144,34 @@ const AssignTaskControl: React.FC = () => {
   };
 
   const handleSubmit = (selectedUsers: User[]) => {
-    setSelectedUsersMap({
-      ...selectedUsersMap,
+    setSelectedUsersMap((prevMap) => ({
+      ...prevMap,
       [currentChart]: selectedUsers,
-    });
+    }));
   
-    const chartId = currentChart;
     const userIds = selectedUsers.map(user => user.userId);
   
     const requestData = {
-      chartId: chartId,
-      name: 'Task Name',  // 請填寫一個有效的名稱，這個值可以是用戶輸入或從其他地方獲取
       sponsorList: userIds,
-      exporterList: [],
-      dashboardCharts: []
+      exporterList: [], // Add relevant data if available
+      dashboardCharts: [], // Add relevant data if available
     };
   
-    setAssignedTaskSponsorsForDashboard(requestData)
-      .then((response) => {
-        console.log('Successfully submitted', response.message);
+    console.log("Submitting data:", requestData);
+  
+    // Pass the chartId to the function
+    setAssignedTaskSponsorsForDashboard(currentChart, requestData)
+      .then(response => {
+        console.log('Successfully set task sponsors', response);
       })
-      .catch((error) => {
-        console.error('Submission failed', error);
+      .catch(error => {
+        console.error('Failed to set task sponsors', error);
       });
   
     setDialogOpen(false);
-  };  
+  };
+  
+  
 
   const getSelectedUserNames = (chartId: number) => {
     const selectedUsers = selectedUsersMap[chartId] || [];
@@ -210,7 +213,12 @@ const AssignTaskControl: React.FC = () => {
           </table>
         </div>
       </div>
-      <UserPickerDialog open={dialogOpen} onClose={handleCloseDialog} onSubmit={handleSubmit} chartId={currentChart} />
+      <UserPickerDialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        onSubmit={handleSubmit}
+        chartId={currentChart}
+      />
     </>
   );
 };
