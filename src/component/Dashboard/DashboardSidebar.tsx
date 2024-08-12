@@ -13,7 +13,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import MultiStepForm from './dashBoardForm'
+import MultiStepForm from './dashBoardForm';
 
 const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => void }> = ({ onSelectDashboard }) => {
   const [isActive, setIsActive] = useState(false);
@@ -63,8 +63,11 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
   };
 
   const handleAddDashboardOpen = () => {
-    // setOpenDialog(true);
     setShowMultiStepForm(true);
+  };
+
+  const closeForm = () => {
+    setShowMultiStepForm(false);
   };
 
   const handleAddDashboardClose = () => {
@@ -143,7 +146,7 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
 
   return (
     <div className={`${styles.wrapper} ${isActive ? styles.active : ''}`}>
-      < div className={styles.sidebar} >
+      <div className={styles.sidebar}>
         <div className={styles.bg_shadow} onClick={() => setIsActive(false)}></div>
         <div className={styles.sidebar_inner}>
           <button className={styles.openbutton} onClick={toggleActiveState} disabled={isDisabled}></button>
@@ -203,10 +206,10 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
             ))}
           </ul>
         </div>
-      </div >
-      {showMultiStepForm && <MultiStepForm />}
+      </div>
+      {showMultiStepForm && <MultiStepForm onClose={closeForm} />}
       {/* Add Dashboard Dialog */}
-      < Dialog open={openDialog} onClose={handleAddDashboardClose} >
+      <Dialog open={openDialog} onClose={handleAddDashboardClose}>
         <DialogTitle>新增儀表板</DialogTitle>
         <DialogContent>
           <TextField
@@ -234,11 +237,11 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
             取消
           </Button>
           <Button onClick={handleAddDashboardSubmit} color="primary">
-            確定
+            新增
           </Button>
         </DialogActions>
-      </Dialog >
-    </div >
+      </Dialog>
+    </div>
   );
 };
 

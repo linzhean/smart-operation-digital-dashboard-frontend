@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import styles from './dashBoardForm.module.css';
+import closeIcon from '../../assets/icon/X.svg'
+interface MultiStepFormProps {
+  onClose: () => void;
+}
 
-const MultiStepForm: React.FC = () => {
+const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const handleClose = () => {
 
+    onClose();
+  };
   const nextStep = () => {
     setCurrentStep((prevStep) => prevStep + 1);
   };
@@ -44,8 +51,9 @@ const MultiStepForm: React.FC = () => {
   };
 
   return (
-    <div className={styles.overlay}>
+    <div className={styles.overlay} onClick={handleClose}>
       <form id={styles.msform}>
+        <div onClick={handleClose} className={`${styles.closeForm}`}><img src={closeIcon} alt="關閉表單" /></div>
         <ul id={styles.progressbar}>
           <li className={currentStep >= 0 ? styles.active : ''}>設定名稱</li>
           <li className={currentStep >= 1 ? styles.active : ''}>選擇圖表</li>

@@ -70,11 +70,15 @@
 }
 
 .checkboxWrapper label {
-  width: 100%;
+  width: 85%;
   border: 2px solid #ACACBE;
   padding: 5px;
   border-radius: 20px;
   position: relative;
+}
+
+.checkboxWrapper label:first-of-type {
+  margin-top: 2px !important;
 }
 
 .kpiInputs:checked+label {
@@ -103,6 +107,12 @@
   color: white;
 }
 
+
+.kpiInputs:hover {
+  transform: none !important;
+}
+
+
 .buttonGroup {
   display: flex;
   gap: 10px;
@@ -130,10 +140,28 @@
   box-shadow: 0 0 0 2px white, 0 0 0 3px #1E90FF;
 }
 
+.closeForm {
+  position: fixed;
+  right: 0%;
+  top: 5%;
+  width: 50px;
+  height: 50px;
+  z-index: 4;
+  transition: transform 2s ease-in-out;
+}
+
+.closeForm img {
+  width: 15px;
+}
+
+.closeForm:hover img {
+  transform: scale(1.2);
+}
+
 .theKPIs {
   overflow: auto;
   overflow-x: hidden;
-  max-height: 280px;
+  max-height: 235px;
 }
 
 .fsTitle {
