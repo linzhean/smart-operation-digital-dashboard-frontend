@@ -97,7 +97,7 @@ const Home: React.FC = () => {
             >
               {charts.map(chart => (
                 <div key={`chart-${chart.id}`} className={styles.dataCard}>
-                  <ChartWithDropdown exportData={handleExport} chartId={chart.id} requestData={[]} onChartSelect={handleChartSelect} currentUserId={''}>
+                  <ChartWithDropdown static={true} exportData={handleExport} chartId={chart.id} requestData={[]} onChartSelect={handleChartSelect} currentUserId={''}>
                     {/* 根據圖表類型動態渲染圖表組件 */}
                     <LineChart data={selectedChartData} /> {/* 根據圖表類型進行調整 */}
                   </ChartWithDropdown>
