@@ -115,10 +115,10 @@
 
 .buttonGroup {
   display: flex;
-  gap: 10px;
+  gap: 15px;
 }
 
-.submit:hover {
+.finish:hover {
   box-shadow: 0 0 0 1px white, 0 0 0 4px #279eae !important;
 }
 
@@ -281,12 +281,6 @@
   margin-bottom: 1rem !important;
 }
 
-.checkFormContent input {
-  width: 100%;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
-}
-
 .checkFormContent form label {
   margin-bottom: 0.5rem;
   font-weight: bold;
@@ -302,6 +296,7 @@
   background-color: white;
   color: black;
   padding: 5px 15px;
+  transition: transform 0.2s ease-out;
 }
 
 .checkFormContent .cancel {
@@ -313,13 +308,17 @@
   color: rgb(255, 255, 255);
   box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
   padding: 5px 15px;
+  transition: transform 0.2s ease-out;
 }
 
-.checkFormContent input:disabled {
+
+.checkFormContent input {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
   font-size: 1rem;
   background-color: transparent;
   color: white;
-  pointer-events: none;
   border: rgba(255, 255, 255, 0.3) 3px solid;
   border-radius: 5px;
   padding: 10px;
@@ -331,19 +330,7 @@
   margin-top: 15px;
 }
 
-.checkFormContent .cancel {
-  margin-left: 10px;
-  font-size: 1rem;
-  border-radius: 10px;
-  font-weight: bold;
-  background-color: black;
-  color: rgb(255, 255, 255);
-  box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
-  padding: 5px 15px;
-}
-
 .theTextarea {
-  pointer-events: none;
   resize: none;
   width: 100%;
   background-color: transparent;
@@ -354,3 +341,13 @@
   font-weight: bold;
   padding: 10px;
 }
+
+.submit:hover {
+  transform: scale(1.2) !important;
+}
+
+.cancel:hover {
+  transform: scale(1.2) !important;
+}
+
+/* 下面是控制datePicker覆蓋react本來樣式 */

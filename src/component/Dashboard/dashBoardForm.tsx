@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
+import Datetime from 'react-datetime';
+import "react-datetime/css/react-datetime.css";
 import styles from './dashBoardForm.module.css';
 import closeIcon from '../../assets/icon/X.svg'
+import './dateTime.css'
+
+
 interface MultiStepFormProps {
   onClose: () => void;
 }
@@ -51,7 +56,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose }) => {
   };
 
   return (
-    <div className={styles.overlay} onClick={handleClose}>
+    <div className={styles.overlay}>
       <form id={styles.msform}>
         <div onClick={handleClose} className={`${styles.closeForm}`}><img src={closeIcon} alt="關閉表單" /></div>
         <ul id={styles.progressbar}>
@@ -91,7 +96,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose }) => {
           <textarea name="dashboardDescription" placeholder="例如：了解生產狀況"></textarea>
           <div className={styles.buttonGroup}>
             <input type="button" name="previous" className={`${styles.actionButton} ${styles.previous}`} value="上一步" onClick={previousStep} />
-            <input type="button" name="submit" className={`${styles.actionButton} ${styles.submit}`} value="完成" />
+            <input type="button" name="submit" className={`${styles.actionButton} ${styles.finish}`} value="完成" />
           </div>
         </fieldset>
       </form>
@@ -104,17 +109,34 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose }) => {
               <h2>申請表單</h2>
               <form>
                 <label htmlFor="applicant">申請人:</label>
-                <input type="text" id="applicant" name="applicant" value={formData.applicant} disabled />
+                <input type="text" id="applicant" name="applicant" />
+
                 <label htmlFor="guarantor">保證人:</label>
-                <input type="text" id="guarantor" name="guarantor" value={formData.guarantor} disabled />
+                <input type="text" id="guarantor" name="guarantor" />
+
                 <label htmlFor="startDate">開始日期:</label>
-                <input type="text" id="startDate" name="startDate" value={formData.startDate} disabled />
+                <Datetime
+                  dateFormat="YYYY-MM-DD"
+                  timeFormat={true}  // 需不需要日期後面的時間? 需要>true 不需要>false
+                  closeOnSelect={true}
+                  inputProps={{ id: "startDate", name: "startDate" }}
+
+                />
+
                 <label htmlFor="endDate">結束日期:</label>
-                <input type="text" id="endDate" name="endDate" value={formData.endDate} disabled />
+                <Datetime
+                  dateFormat="YYYY-MM-DD"
+                  timeFormat={true}
+                  closeOnSelect={true}
+                  inputProps={{ id: "endDate", name: "endDate" }}
+                />
+
                 <label htmlFor="content">申請內容:</label>
-                <textarea id="content" name="content" value={formData.content} className={styles.theTextarea} />
+                <textarea id="content" name="content" className={styles.theTextarea} />
+
                 <div className={styles.buttonContainer}>
                   <button type="button" onClick={handleCloseForm} className={styles.cancel}>關閉</button>
+                  <button type="button" onClick={handleCloseForm} className={styles.submit}>提交</button>
                 </div>
               </form>
             </div>
