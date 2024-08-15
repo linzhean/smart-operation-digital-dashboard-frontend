@@ -115,39 +115,16 @@
   transform: rotate(-180deg);
 }
 
-.moreButton {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 1.2rem;
-  margin-left: 10px;
-  transition: transform 0.2s;
-  display: none;
-  position: absolute;
-  right: 20px;
-}
-
-.moreButton img {
-  width: 20px;
-  height: 20px;
-  vertical-align: text-top !important;
-}
-
-li:hover .moreButton {
-  display: inline-block;
-}
-
-.moreButton:hover {
-  transform: scale(1.2);
-}
-
 .dropdownButton {
-  display: none !important;
+  opacity: 0;
   position: absolute !important;
   right: 0;
   border: none !important;
   border-radius: 50px;
+}
+
+.dropdownButton:hover {
+  opacity: 1;
 }
 
 .dropdownButton img {
