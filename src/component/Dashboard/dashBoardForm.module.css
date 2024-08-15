@@ -67,6 +67,7 @@
   margin-bottom: 20px;
   font-weight: 900;
   font-size: 1rem;
+  pointer-events: auto;
 }
 
 .checkboxWrapper label {
@@ -159,6 +160,7 @@
 }
 
 .theKPIs {
+  pointer-events: auto;
   overflow: auto;
   overflow-x: hidden;
   max-height: 235px;
@@ -276,22 +278,24 @@
 }
 
 .checkFormContent h2 {
-  font-weight: bold;
-  margin: 0px !important;
-  margin-bottom: 1rem !important;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
 }
 
-.checkFormContent input {
+.checkFormContent form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   width: 100%;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
+  box-sizing: border-box;
 }
 
 .checkFormContent form label {
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px; /* Space between label and input/textarea */
 }
+
 
 
 .checkFormContent .submit {
@@ -313,6 +317,15 @@
   color: rgb(255, 255, 255);
   box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
   padding: 5px 15px;
+}
+
+.checkFormContent .cancel {
+  background-color: #dc3545;
+  color: white;
+}
+
+.checkFormContent .cancel:hover {
+  background-color: #c82333;
 }
 
 .checkFormContent input:disabled {

@@ -1,9 +1,8 @@
 // src/Hook/useChartWithDropdown.tsx
 import { useState, useEffect } from 'react';
 import ChartService from '../services/ChartService';
-import { createEmail, Email, sendChatMessage } from '../services/mailService';
+import { createEmail, sendChatMessage } from '../services/mailService';
 import { createApplication } from '../services/application';
-import { getAssignedTaskSponsors } from '../services/AssignedTaskService';
 import { fetchAllUsers } from '../services/UserAccountService';
 
 export function useChartWithDropdown(
@@ -88,47 +87,46 @@ export function useChartWithDropdown(
   const closeChartSelectModal = () => setIsChartSelectModalOpen(false);
   const closeRequestKpiModal = () => setIsRequestKpiModalOpen(false);
 
- // Inside useChartWithDropdown.tsx
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (selectedCharts.length === 0) {
-    alert('Please select a chart.');
-    return;
-  }
-
-  try {
-    const assignedTask = {
-      chartId: selectedCharts[0].id,
-      name: subject,
-      receiver: selectedUser || '', // Default to empty string if selectedUser is null
-      firstMessage: {
-        content: message,
-      },
-    };
-
-    // Create the email with the adjusted body
-    const createdEmail = await createEmail(assignedTask);
-
-    if (createdEmail && createdEmail.id) {
-      await sendChatMessage(createdEmail.id, {
-        mailId: createdEmail.id, // Ensure mailId is included
-        content: message,
-        available: "string", // Adjust this if necessary
-        createId: currentUserId,
-        createDate: formatDate(new Date()),
-        modifyId: currentUserId,
-        modifyDate: formatDate(new Date()),
-      });
-    } else {
-      throw new Error('Failed to create email.');
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (selectedCharts.length === 0) {
+      alert('Please select a chart.');
+      return;
     }
 
-    setIsModalOpen(false);
-  } catch (error) {
-    console.error('Error submitting delegate task:', error);
-    alert('Failed to submit delegate task. Please try again.');
-  }
-};
+    try {
+      const assignedTask = {
+        chartId: selectedCharts[0].id,
+        name: subject,
+        receiver: selectedUser || '', // Default to empty string if selectedUser is null
+        firstMessage: {
+          content: message,
+        },
+      };
+
+      // Create the email with the adjusted body
+      const createdEmail = await createEmail(assignedTask);
+
+      if (createdEmail && createdEmail.id) {
+        await sendChatMessage(createdEmail.id, {
+          mailId: createdEmail.id, // Ensure mailId is included
+          content: message,
+          available: "string", // Adjust this if necessary
+          createId: currentUserId,
+          createDate: formatDate(new Date()),
+          modifyId: currentUserId,
+          modifyDate: formatDate(new Date()),
+        });
+      } else {
+        throw new Error('Failed to create email.');
+      }
+
+      setIsModalOpen(false);
+    } catch (error: any) {
+      console.error('Error submitting delegate task:', error);
+      alert(`Failed to submit delegate task. Details: ${error.message}`);
+    }
+  };
 
   const handleKpiSelection = (kpiId: number) => {
     setSelectedKPIs(prev => {
@@ -171,22 +169,23 @@ export function useChartWithDropdown(
     try {
       const requestData = {
         chartId: selectedCharts[0].id,
-        applicant: currentUserId,
-        guarantor: selectedUser || '',
         startDateStr: formatDate(startDate),
         endDateStr: formatDate(endDate),
-        reason: requestContent,
+        guarantorId: selectedUser || '', // 如果 selectedUser 为 null，则默认为空字符串
+        content: requestContent,
       };
+
       const response = await createApplication(requestData);
-      if (response.result) {
-        alert('請求提交成功');
+
+      if (response && response.result) {
+        alert('KPI 申请提交成功。');
         setIsRequestKpiModalOpen(false);
       } else {
-        alert('請求提交失敗：' + response.message);
+        alert(`KPI 申请提交失败：${response.errorCode}`);
       }
-    } catch (error) {
-      console.error('提交 KPI 請求時出錯:', error);
-      alert('提交 KPI 請求失敗。請重試。');
+    } catch (error: any) {
+      console.error('提交 KPI 申请时出错:', error);
+      alert('提交 KPI 申请时发生错误。请重试。');
     }
   };
 
@@ -206,8 +205,6 @@ export function useChartWithDropdown(
       alert('Failed to fetch interactive charts. Please try again later.');
     }
   };
-
-
 
   const handleStartDateChange = (date: Date | null) => setStartDate(date);
   const handleEndDateChange = (date: Date | null) => setEndDate(date);
@@ -257,8 +254,7 @@ export function useChartWithDropdown(
     setUsers,
     selectedUser,
     setSelectedUser,
-    setInteractiveCharts,
+    handleAdvancedAnalysis,
     interactiveCharts,
-    handleAdvancedAnalysis
   };
 }

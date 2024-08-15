@@ -7,12 +7,6 @@ import more from '../../assets/icon/homeMore.svg';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import MultiStepForm from './dashBoardForm';
 
 const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => void }> = ({ onSelectDashboard }) => {
@@ -23,9 +17,6 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [editingDashboardId, setEditingDashboardId] = useState<string | null>(null);
   const [newDashboardName, setNewDashboardName] = useState<string>('');
-  const [openDialog, setOpenDialog] = useState(false);
-  const [dashboardName, setDashboardName] = useState('');
-  const [dashboardDescription, setDashboardDescription] = useState('');
   const [showMultiStepForm, setShowMultiStepForm] = useState(false);
 
   useEffect(() => {
@@ -68,24 +59,6 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
 
   const closeForm = () => {
     setShowMultiStepForm(false);
-  };
-
-  const handleAddDashboardClose = () => {
-    setOpenDialog(false);
-    setDashboardName('');
-    setDashboardDescription('');
-  };
-
-  const handleAddDashboardSubmit = async () => {
-    if (dashboardName) {
-      try {
-        const newDashboard = await DashboardService.createDashboard({ name: dashboardName, description: dashboardDescription });
-        setDashboards(prevDashboards => [...prevDashboards, newDashboard]);
-        handleAddDashboardClose();
-      } catch (error) {
-        console.error('Failed to add dashboard:', error);
-      }
-    }
   };
 
   const handleDeleteDashboard = async (dashboardId: string) => {
@@ -207,40 +180,9 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
           </ul>
         </div>
       </div>
-      {showMultiStepForm && <MultiStepForm onClose={closeForm} />}
-      {/* Add Dashboard Dialog */}
-      <Dialog open={openDialog} onClose={handleAddDashboardClose}>
-        <DialogTitle>新增儀表板</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="儀表板名稱"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={dashboardName}
-            onChange={(e) => setDashboardName(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="儀表板說明文字（非必填）"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={dashboardDescription}
-            onChange={(e) => setDashboardDescription(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleAddDashboardClose} color="primary">
-            取消
-          </Button>
-          <Button onClick={handleAddDashboardSubmit} color="primary">
-            新增
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {showMultiStepForm && <MultiStepForm onClose={closeForm} exportData={function (chartId: number, requestData: string[]): Promise<{ result: boolean; errorCode: string; data: Blob; }> {
+        throw new Error('Function not implemented.');
+      } } currentUserId={''} />}
     </div>
   );
 };

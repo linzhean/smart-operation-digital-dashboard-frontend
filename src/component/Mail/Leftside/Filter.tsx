@@ -1,8 +1,6 @@
-//src\component\Mail\Leftside\Filter.tsx
 import React from 'react';
 import "../../../styles/filter.css";
 
-// 状态映射
 const statusMapping: Record<string, string> = {
   "交辦": "0",
   "被交辦": "1",
@@ -15,25 +13,23 @@ interface FilterProps {
 }
 
 const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
-  // 状态数组
   const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>([]);
 
-  // 处理选中的状态
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, checked } = event.target;
     const status = Object.keys(statusMapping).find(key => statusMapping[key] === id);
-
+  
     if (status) {
       setSelectedStatuses(prevStatuses => {
         const updatedStatuses = checked
-          ? [...prevStatuses, status]
-          : prevStatuses.filter(item => item !== status);
-
-        onFilterChange(updatedStatuses); // 调用 onFilterChange 并传递更新后的状态数组
+          ? [...prevStatuses, statusMapping[status]]
+          : prevStatuses.filter(item => item !== statusMapping[status]);
+  
+        onFilterChange(updatedStatuses);
         return updatedStatuses;
       });
     }
-  };
+  };  
 
   return (
     <div className="filter">

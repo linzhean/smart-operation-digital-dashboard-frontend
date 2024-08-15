@@ -16,7 +16,6 @@ const MailItem: React.FC<MailItemProps> = ({ email, onClick }) => {
         <img src={KPI} alt="KPI" />
         <div className="kpi-details">
           <div className="kpiname">{email.name}</div>
-          <h5 className="caption">{email.firstMessage?.content || 'No content available'}</h5>
           <h6 className="assignor">发起人: {email.publisher}</h6>
           <h6 className="time">{new Date(email.createDate).toLocaleString()}</h6>
         </div>
