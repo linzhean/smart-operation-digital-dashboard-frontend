@@ -1,8 +1,7 @@
-//src\services\ChartService.ts
 import axiosInstance from './axiosConfig';
 
 const ChartService = {
-  getAllCharts: async (p0?: { id: number; dashboardId: string[]; }) => {
+  getAllCharts: async () => {
     const response = await axiosInstance.get('/chart/all');
     return response.data;
   },
@@ -27,6 +26,11 @@ const ChartService = {
     }, {
       params: { dashboardId }
     });
+    return response.data;
+  },
+
+  updateChart: async (id: string, chart: any) => {
+    const response = await axiosInstance.put(`/chart/${id}`, chart);
     return response.data;
   },
 

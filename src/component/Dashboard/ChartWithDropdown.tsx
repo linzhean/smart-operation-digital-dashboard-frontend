@@ -43,7 +43,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     endDate,
     sponsor,
     requestContent,
-    email,
+    email, // Maintain the email state for UI, but not for backend submission
     subject,
     message,
     charts,
@@ -61,12 +61,13 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     setIsModalOpen,
     setIsChartSelectModalOpen,
     setIsRequestKpiModalOpen,
-    users,
-    setUsers,
-    selectedUser,
-    setSelectedUser,
-    handleAdvancedAnalysis,
-    interactiveCharts,
+    users, // Add users state
+    setUsers, // Add setUsers method
+    selectedUser, // Add selectedUser state
+    setSelectedUser, // Add setSelectedUser method
+    interactiveCharts, // Add interactiveCharts state
+    setInteractiveCharts, // Add setInteractiveCharts method
+    handleAdvancedAnalysis // Add handleAdvancedAnalysis method
   } = useChartWithDropdown(exportData, chartId, requestData, currentUserId);
 
   useEffect(() => {
@@ -93,7 +94,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             <div className={styles.dropdownMenu}>
               <button onClick={handleExport}>匯出</button>
               <button onClick={handleDelegate}>交辦</button>
-              {/* <button onClick={handleChartSelect}>選擇圖表</button> */}
+              <button onClick={handleChartSelect}>選擇圖表</button>
               <button onClick={handleAdvancedAnalysis}>進階分析</button>
             </div>
           )}
@@ -164,7 +165,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
       )}
 
       {/* Modal for selecting charts */}
-      {/* {isChartSelectModalOpen && (
+      {isChartSelectModalOpen && (
         <div className={styles.modal}>
           <h2>選擇圖表</h2>
           {charts.map(chart => (
@@ -181,10 +182,10 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
           <button onClick={handleRequestKpi}>請求 KPI</button>
           <button onClick={closeChartSelectModal}>取消</button>
         </div>
-      )} */}
+      )}
 
       {/* Modal for KPI request */}
-      {/* {isRequestKpiModalOpen && (
+      {isRequestKpiModalOpen && (
         <div className={styles.modal}>
           <form onSubmit={handleRequestSubmit}>
             <h2>請求 KPI</h2>
@@ -223,7 +224,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             <button type="button" onClick={closeRequestKpiModal}>取消</button>
           </form>
         </div>
-      )} */}
+      )}
 
       {Array.isArray(interactiveCharts) && interactiveCharts.length > 0 && (
         <div className={styles.modal}>
@@ -235,7 +236,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
               <img src={chart.interactiveUrl} alt={chart.name} />
             </div>
           ))}
-          <button type="button" onClick={closeRequestKpiModal}>關閉</button>
+          <button onClick={() => setInteractiveCharts([])}>關閉</button>
         </div>
       )}
     </div>

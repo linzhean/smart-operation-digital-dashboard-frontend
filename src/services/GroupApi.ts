@@ -7,7 +7,7 @@ const API_URL = '/group';
 // 获取所有群组
 export const fetchGroups = async (): Promise<Group[]> => {
   try {
-    const response = await apiClient.get<Response<Group[]>>(`${API_URL}/user`);
+    const response = await apiClient.get<Response<Group[]>>(`${API_URL}`);
     return response.data.data || [];
   } catch (error: any) {
     throw new Error('获取群组信息失败: ' + error.message);
@@ -15,17 +15,15 @@ export const fetchGroups = async (): Promise<Group[]> => {
 };
 
 // 根据群组 ID 获取用户
-// 修改获取群组信息的 API 请求
 export const fetchUsersByGroupId = async (groupId: number): Promise<User[]> => {
   try {
-    const response = await apiClient.get<Response<User[]>>(`/group/user/${groupId}`);
-    return response.data.data || [];
+    const response = await apiClient.get<Response<User[]>>(`/group/${groupId}`);
+    return response.data.data || []; // Ensure this is always an array
   } catch (error) {
     console.error('獲取用戶列表失敗:', error);
     throw error;
   }
 };
-
 
 export const addGroup = async (group: Omit<Group, 'id'>): Promise<Group> => {
   try {
@@ -106,13 +104,3 @@ export const updateGroupChartPermissions = async (groupId: number, chartId: numb
   }
 };
 
-export const fetchChartsByGroupId = async (groupId: number): Promise<{ id: number; name: string }[]> => {
-  try {
-    const url = `/group/chart/${groupId}`
-    const response = await apiClient.get<Response<{ id: number; name: string }[]>>(url);
-    return response.data.data || [];
-  } catch (error) {
-    console.error('获取群组图表失败:', error);
-    throw error;
-  }
-};

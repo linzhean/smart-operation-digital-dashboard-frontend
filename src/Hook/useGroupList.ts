@@ -1,13 +1,8 @@
+// hooks/useGroupList.ts
 import { useState, useEffect } from 'react';
 import { User } from '../services/types/userManagement';
-import { 
-  fetchUsersByGroupId, 
-  addUserToGroup, 
-  removeUserFromGroup, 
-  deleteGroup, 
-  updateGroupChartPermissions,
-  fetchChartsByGroupId 
-} from '../services/GroupApi';
+import { fetchUsersByGroupId, addUserToGroup, removeUserFromGroup, deleteGroup, updateGroupChartPermissions } from '../services/GroupApi';
+import ChartService from '../services/ChartService';
 import { getUsers } from '../services/userManagementServices';
 
 interface UseGroupListParams {
@@ -28,28 +23,26 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   useEffect(() => {
     const fetchGroupData = async () => {
       try {
-        // Fetch users and charts for the group
         const [userList, chartsResponse] = await Promise.all([
           fetchUsersByGroupId(groupId),
-          fetchChartsByGroupId(groupId) // Fetch charts and permissions by groupId
+          ChartService.getAllCharts()
         ]);
 
         setMemberData(userList);
 
-        if (Array.isArray(chartsResponse)) {
-          setCharts(chartsResponse);
+        if (chartsResponse.result && Array.isArray(chartsResponse.data)) {
+          setCharts(chartsResponse.data);
 
-          // Initialize chart permissions based on fetched charts
           const initialPermissions: { [key: number]: boolean } = {};
-          chartsResponse.forEach((chart) => {
-            initialPermissions[chart.id] = false; // Default to false, adjust as needed
+          chartsResponse.data.forEach((chart: { id: number }) => {
+            initialPermissions[chart.id] = false;
           });
           setChartPermissions(initialPermissions);
         } else {
           throw new Error('Unexpected charts response format');
         }
       } catch (error) {
-        console.error('获取群组和图表信息失败:', error);
+        console.error('獲取群組和圖表信息失敗:', error);
       }
     };
 
@@ -62,7 +55,7 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
         const userList = await getUsers();
         setAllUsers(userList);
       } catch (error) {
-        console.error('获取所有用户失败:', error);
+        console.error('獲取所有用戶失敗:', error);
       }
     };
 
@@ -70,12 +63,12 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   }, []);
 
   const handleRemove = async (id: string, name: string) => {
-    if (window.confirm(`您确定要将【${name}】从群组中移除吗？`)) {
+    if (window.confirm(`您確定要將【${name}】從群組中移除嗎？`)) {
       try {
         await removeUserFromGroup(groupId, id);
         setMemberData(prevData => prevData.filter(member => member.userId !== id));
       } catch (error) {
-        console.error('移除用户失败:', error);
+        console.error('移除用戶失敗:', error);
       }
     }
   };
@@ -87,7 +80,7 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
       ));
       setMemberData(prevData => [...prevData, ...newMembers]);
     } catch (error) {
-      console.error('添加用户到群组失败:', error);
+      console.error('添加用戶到群組失敗:', error);
     }
   };
 
@@ -99,7 +92,7 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
         [chartId]: newState
       }));
     } catch (error) {
-      console.error('更新图表权限失败:', error);
+      console.error('更新圖表權限失敗:', error);
     }
   };
 
@@ -107,18 +100,18 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
     const id = typeof chartId === 'string' ? parseInt(chartId, 10) : chartId;
     const currentState = chartPermissions[id];
     const newState = !currentState;
-    if (window.confirm(`您确定要将【${id}】的状态更改为${newState ? '允许' : '禁用'}吗？`)) {
+    if (window.confirm(`您確定要將【${id}】的狀態更改為${newState ? '允許' : '禁用'}嗎？`)) {
       updateChartPermissions(id, newState);
     }
   };
 
   const handleDeleteGroup = async () => {
-    if (window.confirm('您确定要删除这个群组吗？')) {
+    if (window.confirm('您確定要刪除這個群組嗎？')) {
       try {
         await deleteGroup(groupId);
         onDeleteGroup(groupId);
       } catch (error) {
-        console.error('删除群组失败:', error);
+        console.error('刪除群組失敗:', error);
       }
     }
   };
