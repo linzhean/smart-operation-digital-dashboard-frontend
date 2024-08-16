@@ -72,7 +72,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
 
   const handleDelete = async (id: number, groupId: number) => {
     try {
-      const response = await deleteApplication(id, groupId);
+      const response = await deleteApplication(id);
       console.log('Delete response:', response); // 输出响应
       if (response.result) {
         alert('申請已刪除');
@@ -88,7 +88,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
 
   const handleClose = async (id: number, groupId: number) => {
     try {
-      const response = await closeApplication(id, groupId);
+      const response = await closeApplication(id);
       console.log('Close response:', response); // 输出响应
       if (response.result) {
         alert('申請已關閉');

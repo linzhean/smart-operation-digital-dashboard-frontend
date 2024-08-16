@@ -47,34 +47,34 @@ const handleApiResponse = <T>(response: Response<T>): T => {
 
 // Get email list based on status
 export const getEmails = async (statuses: string[]): Promise<Email[]> => {
-    const statusValues = statuses.join(',');
-    const response = await apiClient.get('/mail', { params: { status: statusValues } });
-    return handleApiResponse<Email[]>(response.data);
+  const statusValues = statuses.join(',');
+  const response = await apiClient.get('/mail', { params: { status: statusValues } });
+  return handleApiResponse<Email[]>(response.data);
 };
 
 // Get email details by ID
 export const getEmailDetails = async (id: number): Promise<Email> => {
-    const response = await apiClient.get(`/mail/${id}`);
-    return handleApiResponse<Email>(response.data);
+  const response = await apiClient.get(`/mail/${id}`);
+  return handleApiResponse<Email>(response.data);
 };
 
 // Create a new email
 export const createEmail = async (email: {
-    chartId: number;
-    name: string;
-    receiver: string;
-    firstMessage: {
-      content: string;
-    };
-  }): Promise<Email> => {
-    const response = await apiClient.post('/mail', email);
-    return handleApiResponse<Email>(response.data); // Ensure response.data contains the created email with 'id'
-  };  
+  chartId: number;
+  name: string;
+  receiver: string;
+  firstMessage: {
+    content: string;
+  };
+}): Promise<Email> => {
+  const response = await apiClient.post('/mail', email);
+  return handleApiResponse<Email>(response.data); // Ensure response.data contains the created email with 'id'
+}; 
 
 // Update an existing email
 export const updateEmail = async (id: number, email: Partial<Omit<Email, 'id'>>): Promise<void> => {
-    const response = await apiClient.patch(`/mail/${id}`, email);
-    handleApiResponse<void>(response.data);
+  const response = await apiClient.patch(`/mail/${id}`, email);
+  handleApiResponse<void>(response.data);
 };
 
 // Delete an email
@@ -85,8 +85,8 @@ export const deleteEmail = async (id: number): Promise<void> => {
 
 // Send a chat message
 export const sendChatMessage = async (emailId: number, message: {
-  mailId: number;
-  messageId: number;
+  mailId?: number; // Mark as optional
+  messageId: number | null; // Allow messageId to be null for new messages
   content: string;
   available: string;
   createId: string;
@@ -94,9 +94,17 @@ export const sendChatMessage = async (emailId: number, message: {
   modifyId: string;
   modifyDate: string;
 }): Promise<EmailMessage> => {
-
-  const requestBody = {
-    mailId: message.mailId,
+  // Create a request body with optional mailId
+  const requestBody: {
+    mailId?: number;
+    messageId: number | null;
+    content: string;
+    available: string;
+    createId: string;
+    createDate: string;
+    modifyId: string;
+    modifyDate: string;
+  } = {
     messageId: message.messageId,
     content: message.content,
     available: message.available,
@@ -106,13 +114,17 @@ export const sendChatMessage = async (emailId: number, message: {
     modifyDate: message.modifyDate,
   };
 
+  if (message.mailId !== undefined) { // Only include mailId if it's defined
+    requestBody.mailId = message.mailId;
+  }
+
   try {
     const response = await apiClient.post('/mail/message', requestBody, {
       headers: {
         'Content-Type': 'application/json'
       },
       params: {
-        mailId: message.mailId // Ensure mailId is passed as a query parameter
+        mailId: message.mailId // Ensure mailId is passed as a query parameter if needed
       }
     });
     return handleApiResponse<EmailMessage>(response.data);
@@ -122,4 +134,36 @@ export const sendChatMessage = async (emailId: number, message: {
   }
 };
 
-  
+export const sendMessage = async (emailId: number, message: {
+  mailId?: number;
+  messageId: number | null;
+  content: string;
+  available: string;
+  createId: string;
+  createDate: string;
+  modifyId: string;
+  modifyDate: string;
+}): Promise<EmailMessage> => {
+  const requestBody: {
+      messageId: number | null;
+      content: string;
+  } = {
+      messageId: message.messageId,
+      content: message.content,
+  };
+
+  try {
+      const response = await apiClient.post('/mail/message', requestBody, {
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          params: {
+              mailId: message.mailId // Ensure mailId is passed as a query parameter
+          }
+      });
+      return handleApiResponse<EmailMessage>(response.data);
+  } catch (error: any) {
+      console.error('API Error:', error.response?.data || error.message);
+      throw error;
+  }
+};

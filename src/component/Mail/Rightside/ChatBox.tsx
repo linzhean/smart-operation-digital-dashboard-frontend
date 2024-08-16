@@ -1,12 +1,11 @@
-//src\component\Mail\Rightside\ChatBox.tsx
 import React, { useState, useEffect } from 'react';
 import '../../../styles/chatBox.css';
-import { Email, EmailMessage, getEmailDetails, sendChatMessage } from '../../../services/mailService';
+import { Email, EmailMessage, getEmailDetails, sendMessage } from '../../../services/mailService';
 
 interface ChatBoxProps {
   emailId: number;
   onDelete: () => void;
-  onMessageChange?: (message: string) => void; // Add onMessageChange prop
+  onMessageChange?: (message: string) => void;
 }
 
 const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange }) => {
@@ -19,7 +18,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
       try {
         const fetchedEmail = await getEmailDetails(emailId);
         setEmail(fetchedEmail);
-        setMessages(fetchedEmail.messageList); // Assume `messageList` contains messages
+        setMessages(fetchedEmail.messageList);
       } catch (error) {
         console.error('Error fetching email details:', error);
       }
@@ -29,54 +28,62 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
   }, [emailId]);
 
   const handleSendMessage = async () => {
-    if (newMessage.trim()) {
-        try {
-            const newChatMessage = await sendChatMessage(emailId, {
-              messageId: Date.now(), // Unique ID or timestamp
-              content: newMessage,
-              available: 'true', // Example value, adjust if needed
-              createId: 'currentUserId', // Replace with actual user ID
-              createDate: new Date().toISOString(),
-              modifyId: 'currentUserId', // Replace with actual user ID
-              modifyDate: new Date().toISOString(),
-              mailId: 0
-            });
-            setMessages([...messages, newChatMessage]);
-            setNewMessage('');
-            if (onMessageChange) {
-                onMessageChange(newMessage); // Notify parent component
-            }
-        } catch (error) {
-            console.error('发送消息时出错:', error);
+    if (newMessage.trim()) { // Ensure message is not empty
+      try {
+        const newMessageId = Date.now(); // Generate a unique ID
+        const newChatMessage = await sendMessage(emailId, {
+          messageId: newMessageId,
+          content: newMessage,
+          available: 'true',
+          createId: 'currentUser',
+          createDate: new Date().toISOString(),
+          modifyId: 'currentUser',
+          modifyDate: new Date().toISOString(),
+        });
+        setMessages([...messages, newChatMessage]);
+        setNewMessage('');
+        if (onMessageChange) {
+          onMessageChange(newMessage);
         }
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
+    } else {
+      console.error('Message content cannot be empty.');
     }
-};
-
+  };
 
   return (
     <div className="chatContainer">
       <div className="mailTitle">
-        <button className="delete-buttonUnique" onClick={onDelete}>刪除郵件</button>
+        <button className="delete-buttonUnique" onClick={onDelete}>刪除</button>
         <i className="fa-solid fa-ellipsis"></i>
       </div>
       <div className="chatBox custom-scrollbar">
-        {messages && messages.map((message) => (
-          message && (
-            <div key={message.id} className="chatMessage">
+        {messages.length > 0 ? (
+          messages.map((message) => (
+            <div key={message.messageId} className="chatMessage">
               <div className="messageContent">
                 <span className="sender">{message.createId}</span>
                 <span className="content">{message.content}</span>
               </div>
               <span className="timestamp">{new Date(message.createDate).toLocaleString()}</span>
             </div>
-          )
-        ))}
+          ))
+        ) : (
+          <p>No messages yet</p>
+        )}
       </div>
       <div className="input-container">
         <textarea
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="请输入"
+          onChange={(e) => {
+            setNewMessage(e.target.value);
+            if (onMessageChange) {
+              onMessageChange(e.target.value);
+            }
+          }}
+          placeholder="輸入你的内容..."
         />
         <i className="fa fa-arrow-right arrow-icon" onClick={handleSendMessage}></i>
       </div>

@@ -1,6 +1,6 @@
-//src\Hook\useEmails.ts
+// src/Hook/useEmails.ts
 import { useState, useEffect } from 'react';
-import { getEmails, getEmailDetails, createEmail, updateEmail, deleteEmail, sendChatMessage } from '../services/mailService';
+import { getEmails, getEmailDetails, createEmail, updateEmail, deleteEmail, sendMessage } from '../services/mailService';
 import { Email, EmailMessage } from '../services/mailService';
 import apiClient from '../services/axiosConfig';
 
@@ -46,7 +46,9 @@ export const useEmails = () => {
         setLoading(true);
         setError(null);
         try {
-            const newEmail = { ...email, id: 0 };
+            // 从 email 对象中删除 createDate
+            const { createDate, ...emailWithoutCreateDate } = email;
+            const newEmail = { ...emailWithoutCreateDate, id: 0 };
             await createEmail(newEmail as Email);
             await fetchEmails([defaultStatus]);
         } catch (error: any) {
@@ -87,15 +89,13 @@ export const useEmails = () => {
         setLoading(true);
         setError(null);
         try {
-            // 获取聊天消息
-            const response = await apiClient.get(`/mail/messages`);
-            const messages: EmailMessage[] = handleApiResponse<EmailMessage[]>(response.data); // 确保 messages 是 EmailMessage[] 类型
+            const response = await apiClient.get(`/mail/${emailId}`);
+            const messages: EmailMessage[] = handleApiResponse<EmailMessage[]>(response.data);
 
-            // 更新所选电子邮件的消息列表
             setSelectedEmail(prevEmail =>
                 prevEmail ? {
                     ...prevEmail,
-                    messageList: messages // 确保这里是正确的 EmailMessage 数组
+                    messageList: messages
                 } : null
             );
         } catch (error: any) {
@@ -105,21 +105,49 @@ export const useEmails = () => {
         }
     };
 
+    const formatDate = (date: Date): string => {
+        const yyyy = date.getFullYear();
+        const MM = (`0${date.getMonth() + 1}`).slice(-2);
+        const dd = (`0${date.getDate()}`).slice(-2);
+        const HH = (`0${date.getHours()}`).slice(-2);
+        const mm = (`0${date.getMinutes()}`).slice(-2);
+        const ss = (`0${date.getSeconds()}`).slice(-2);
+        return `${yyyy}-${MM}-${dd} ${HH}:${mm}:${ss}`;
+    };
+
     const sendNewChatMessage = async (emailId: number, content: string) => {
+        if (!content.trim()) {
+            console.error('Message content cannot be empty.');
+            return;
+        }
+    
         setLoading(true);
         setError(null);
         try {
-            const message: Omit<EmailMessage, 'id'> = {
-                messageId: Date.now(), // Example of generating a unique ID
+            // Fetch email details to get the existing message list
+            const emailDetails = await getEmailDetails(emailId);
+            const messages = emailDetails.messageList;
+    
+            // Determine the messageId for the new message (use id of the last message in the list or default to 0)
+            const lastMessage = messages[messages.length - 1];
+            const newMessageId = lastMessage ? lastMessage.id : 0; // Use 0 as the default value
+    
+            // Create the new message object
+            const newMessage: Omit<EmailMessage, 'id'> = {
+                messageId: newMessageId,
                 content,
-                available: 'true', // Example value
-                createId: 'currentUser', // Replace with actual user ID
-                createDate: new Date().toISOString(),
-                modifyId: 'currentUser', // Replace with actual user ID
-                modifyDate: new Date().toISOString(),
-                mailId: emailId // Ensure mailId is set correctly
+                available: 'true',
+                createId: 'currentUser',
+                createDate: formatDate(new Date()),
+                modifyId: 'currentUser',
+                modifyDate: formatDate(new Date()),
+                mailId: emailId
             };
-            await sendChatMessage(emailId, message);
+    
+            // Send the new message
+            await sendMessage(emailId, newMessage);
+    
+            // Refresh the chat messages
             await getEmailChatMessages(emailId);
         } catch (error: any) {
             setError(error.message);
@@ -127,9 +155,7 @@ export const useEmails = () => {
             setLoading(false);
         }
     };
-
-
-
+    
 
     return {
         emails,

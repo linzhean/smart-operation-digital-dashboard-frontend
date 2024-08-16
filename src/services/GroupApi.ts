@@ -7,7 +7,7 @@ const API_URL = '/group';
 // 获取所有群组
 export const fetchGroups = async (): Promise<Group[]> => {
   try {
-    const response = await apiClient.get<Response<Group[]>>(`${API_URL}`);
+    const response = await apiClient.get<Response<Group[]>>(`${API_URL}/user`);
     return response.data.data || [];
   } catch (error: any) {
     throw new Error('获取群组信息失败: ' + error.message);
@@ -100,6 +100,22 @@ export const updateGroupChartPermissions = async (groupId: number, chartId: numb
     });
   } catch (error) {
     console.error('更新圖表權限失敗:', error);
+    throw error;
+  }
+};
+
+export const fetchChartsByGroupId = async (groupId: number): Promise<{ id: number; name: string }[]> => {
+  try {
+    // 构造 URL，将 groupId 作为路径参数
+    const url = `/group/chart/${groupId}`;
+
+    // 发起 GET 请求
+    const response = await apiClient.get<Response<{ id: number; name: string }[]>>(url);
+
+    // 返回数据，如果没有数据则返回空数组
+    return response.data.data || [];
+  } catch (error) {
+    console.error('获取群组图表失败:', error);
     throw error;
   }
 };

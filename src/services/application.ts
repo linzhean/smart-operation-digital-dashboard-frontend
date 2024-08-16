@@ -43,7 +43,7 @@ export const updateApplication = async (
 ): Promise<Response<ApplicationData>> => {
   try {
     const response = await apiClient.patch<Response<ApplicationData>>(`${APPLICATION_API_BASE}/permit/${id}`, applicationData, {
-      params: { groupId },
+      params: { groupId,id },
     });
     return response.data;
   } catch (error) {
@@ -55,11 +55,10 @@ export const updateApplication = async (
 // 关闭申请
 export const closeApplication = async (
   id: number,
-  groupId?: number
 ): Promise<Response<string>> => {
   try {
     const response = await apiClient.patch<Response<string>>(`${APPLICATION_API_BASE}/close/${id}`, undefined, {
-      params: { groupId },
+      params: { id },
     });
     return response.data;
   } catch (error) {
@@ -71,11 +70,11 @@ export const closeApplication = async (
 // 删除申请
 export const deleteApplication = async (
   id: number,
-  groupId?: number
+
 ): Promise<Response<string>> => {
   try {
     const response = await apiClient.delete<Response<string>>(`${APPLICATION_API_BASE}/${id}`, {
-      params: { groupId },
+      params: { id },
     });
     return response.data;
   } catch (error) {
