@@ -111,9 +111,10 @@ export function useChartWithDropdown(
 
     if (createdEmail && createdEmail.id) {
       await sendChatMessage(createdEmail.id, {
-        mailId: createdEmail.id, // Ensure mailId is included
+        mailId: createdEmail.id, // 确保 mailId 是请求体的一部分
+        messageId: Date.now(), // 使用当前时间戳或生成唯一 ID 的方法作为示例
         content: message,
-        available: "string", // Adjust this if necessary
+        available: "true", // Adjust this if necessary
         createId: currentUserId,
         createDate: formatDate(new Date()),
         modifyId: currentUserId,
@@ -129,6 +130,7 @@ export function useChartWithDropdown(
     alert('Failed to submit delegate task. Please try again.');
   }
 };
+
 
   const handleKpiSelection = (kpiId: number) => {
     setSelectedKPIs(prev => {

@@ -84,16 +84,42 @@ export const deleteEmail = async (id: number): Promise<void> => {
 };
 
 // Send a chat message
-export const sendChatMessage = async (mailId: number, message: {
-    mailId: number;
-    content: string;
-    available: string;
-    createId: string;
-    createDate: string;
-    modifyId: string;
-    modifyDate: string;
-  }): Promise<EmailMessage> => {
-    const response = await apiClient.post('/mail/message', message);
-    return handleApiResponse<EmailMessage>(response.data);
+export const sendChatMessage = async (emailId: number, message: {
+  mailId: number;
+  messageId: number;
+  content: string;
+  available: string;
+  createId: string;
+  createDate: string;
+  modifyId: string;
+  modifyDate: string;
+}): Promise<EmailMessage> => {
+
+  const requestBody = {
+    mailId: message.mailId,
+    messageId: message.messageId,
+    content: message.content,
+    available: message.available,
+    createId: message.createId,
+    createDate: message.createDate,
+    modifyId: message.modifyId,
+    modifyDate: message.modifyDate,
   };
+
+  try {
+    const response = await apiClient.post('/mail/message', requestBody, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      params: {
+        mailId: message.mailId // Ensure mailId is passed as a query parameter
+      }
+    });
+    return handleApiResponse<EmailMessage>(response.data);
+  } catch (error: any) {
+    console.error('API Error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
   

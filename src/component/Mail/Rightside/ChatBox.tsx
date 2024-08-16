@@ -30,26 +30,28 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
 
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
-      try {
-        const newChatMessage = await sendChatMessage(emailId, {
-          mailId: emailId,
-          content: newMessage,
-          available: 'true',
-          createId: 'user-id', // Replace with actual user ID
-          createDate: new Date().toISOString(),
-          modifyId: 'user-id', // Replace with actual user ID
-          modifyDate: new Date().toISOString(),
-        });
-        setMessages([...messages, newChatMessage]);
-        setNewMessage('');
-        if (onMessageChange) {
-          onMessageChange(newMessage); // Notify parent about the message change
+        try {
+            const newChatMessage = await sendChatMessage(emailId, {
+              messageId: Date.now(), // Unique ID or timestamp
+              content: newMessage,
+              available: 'true', // Example value, adjust if needed
+              createId: 'currentUserId', // Replace with actual user ID
+              createDate: new Date().toISOString(),
+              modifyId: 'currentUserId', // Replace with actual user ID
+              modifyDate: new Date().toISOString(),
+              mailId: 0
+            });
+            setMessages([...messages, newChatMessage]);
+            setNewMessage('');
+            if (onMessageChange) {
+                onMessageChange(newMessage); // Notify parent component
+            }
+        } catch (error) {
+            console.error('发送消息时出错:', error);
         }
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
     }
-  };
+};
+
 
   return (
     <div className="chatContainer">

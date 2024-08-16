@@ -212,7 +212,9 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
           </ul>
         </div>
       </div>
-      {showMultiStepForm && <MultiStepForm onClose={closeForm} />}
+      {showMultiStepForm && <MultiStepForm onClose={closeForm} exportData={function (chartId: number, requestData: string[]): Promise<{ result: boolean; errorCode: string; data: Blob; }> {
+        throw new Error('Function not implemented.');
+      } } currentUserId={''} />}
       {/* Add Dashboard Dialog */}
       <Dialog open={openDialog} onClose={handleAddDashboardClose}>
         <DialogTitle>新增儀表板</DialogTitle>

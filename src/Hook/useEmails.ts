@@ -90,11 +90,11 @@ export const useEmails = () => {
             // 获取聊天消息
             const response = await apiClient.get(`/mail/messages`);
             const messages: EmailMessage[] = handleApiResponse<EmailMessage[]>(response.data); // 确保 messages 是 EmailMessage[] 类型
-            
+
             // 更新所选电子邮件的消息列表
-            setSelectedEmail(prevEmail => 
-                prevEmail ? { 
-                    ...prevEmail, 
+            setSelectedEmail(prevEmail =>
+                prevEmail ? {
+                    ...prevEmail,
                     messageList: messages // 确保这里是正确的 EmailMessage 数组
                 } : null
             );
@@ -103,20 +103,21 @@ export const useEmails = () => {
         } finally {
             setLoading(false);
         }
-    };    
+    };
 
     const sendNewChatMessage = async (emailId: number, content: string) => {
         setLoading(true);
         setError(null);
         try {
-            const message: Omit<EmailMessage, 'id' | 'messageId'> = {
-                mailId: emailId,
+            const message: Omit<EmailMessage, 'id'> = {
+                messageId: Date.now(), // Example of generating a unique ID
                 content,
-                available: 'true',
-                createId: 'currentUser', // 替换为实际用户ID
+                available: 'true', // Example value
+                createId: 'currentUser', // Replace with actual user ID
                 createDate: new Date().toISOString(),
-                modifyId: 'currentUser', // 替换为实际用户ID
+                modifyId: 'currentUser', // Replace with actual user ID
                 modifyDate: new Date().toISOString(),
+                mailId: emailId // Ensure mailId is set correctly
             };
             await sendChatMessage(emailId, message);
             await getEmailChatMessages(emailId);
@@ -126,6 +127,9 @@ export const useEmails = () => {
             setLoading(false);
         }
     };
+
+
+
 
     return {
         emails,
