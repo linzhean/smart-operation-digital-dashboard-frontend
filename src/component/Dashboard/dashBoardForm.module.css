@@ -15,6 +15,13 @@
 
 .firstNext {
   margin-top: 15px;
+  width: 100% !important;
+}
+
+#msform h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 10px;
 }
 
 #msform fieldset {
@@ -35,16 +42,19 @@
 
 #msform input,
 #msform textarea {
+  font-weight: 700;
+  font-size: 1rem !important;
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 3px;
   margin-bottom: 10px;
   width: 100%;
   box-sizing: border-box;
-  font-family: montserrat;
   color: #2C3E50;
   font-size: 0.8rem;
+  margin-top: 10px;
 }
+
 
 .kpiInputs {
   display: none;
@@ -116,6 +126,15 @@
 .buttonGroup {
   display: flex;
   gap: 15px;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.buttonGroup>* {
+  flex: 1 1 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .finish:hover {
@@ -126,7 +145,7 @@
   width: 100px;
   background: #2892f9ba;
   font-weight: bold;
-  color: white;
+  color: black;
   border: 0 none;
   border-radius: 1px;
   cursor: pointer;
@@ -278,7 +297,11 @@
 .checkFormContent h2 {
   font-weight: bold;
   margin: 0px !important;
-  margin-bottom: 1rem !important;
+  margin-bottom: 1.5rem !important;
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-thickness: 4px;
+  text-decoration-color: rgba(255, 255, 255, 0.207);
 }
 
 .checkFormContent form label {
@@ -286,7 +309,6 @@
   font-weight: bold;
   font-size: 1.2rem;
 }
-
 
 .checkFormContent .submit {
   margin-left: 10px;
@@ -311,26 +333,25 @@
   transition: transform 0.2s ease-out;
 }
 
-
-.checkFormContent input {
-  width: 100%;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
-  font-size: 1rem;
-  background-color: transparent;
-  color: white;
-  border: rgba(255, 255, 255, 0.3) 3px solid;
-  border-radius: 5px;
-  padding: 10px;
-}
-
 .buttonContainer {
   display: flex;
   justify-content: flex-end;
   margin-top: 15px;
 }
 
+.applyKPItextarea {
+  resize: none;
+  width: 100%;
+  height: 160px;
+  border: none;
+  background: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
 .theTextarea {
+  height: 150px;
   resize: none;
   width: 100%;
   background-color: transparent;
@@ -350,4 +371,77 @@
   transform: scale(1.2) !important;
 }
 
-/* 下面是控制datePicker覆蓋react本來樣式 */
+.KPIbuttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+}
+
+.submit:hover {
+  transform: scale(1.2) !important;
+}
+
+.cancel:hover {
+  transform: scale(1.2) !important;
+}
+
+.applyKPIlabelGroup label {
+  margin-right: 10px;
+}
+
+.checkFormContent input {
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: transparent;
+  color: white;
+  border: rgba(255, 255, 255, 0.3) 3px solid;
+  border-radius: 5px;
+  width: 125px;
+  padding: 5px 10px;
+  margin-left: 7px;
+}
+
+
+.applyKPIlabelGroup select {
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  border: rgba(255, 255, 255, 0.3) 3px solid;
+  border-radius: 5px;
+  padding: 5px 8.5px;
+  margin-left: 8px;
+}
+
+
+.applyKPIlabelGroup {
+  border-bottom: 2px solid #acacbe8e;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+}
+
+.cancel {
+  margin-left: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: black;
+  color: rgb(255, 255, 255);
+  box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
+  padding: 5px 15px;
+  transition: transform 0.2s ease-out;
+}
+
+.submit {
+  margin-left: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: white;
+  color: black;
+  padding: 5px 15px;
+  transition: transform 0.2s ease-out;
+}

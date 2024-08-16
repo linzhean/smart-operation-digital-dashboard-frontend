@@ -141,7 +141,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
 
   return (
     <div className={styles.overlay} onClick={handleClose}>
-      <div className={styles.formContainer} onClick={(e) => e.stopPropagation()}>
+      <div onClick={(e) => e.stopPropagation()}>
         <form id={styles.msform}>
           <div onClick={handleClose} className={styles.closeForm}>
             <img src={closeIcon} alt="關閉表單" />
@@ -163,7 +163,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                 onChange={(e) => setDashboardName(e.target.value)}
                 required
               />
-              <button type="button" onClick={() => setCurrentStep(1)}>下一步</button>
+              <button className={`${styles.actionButton} ${styles.next} ${styles.firstNext}`} type="button" onClick={() => setCurrentStep(1)}>下一步</button>
             </fieldset>
           )}
 
@@ -179,7 +179,9 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                 {charts.map(chart => (
                   <div key={chart.id} className={styles.checkboxWrapper}>
                     <input
+
                       type="checkbox"
+                      id={`kpi-${chart.id}`}
                       checked={selectedKPIs.includes(chart.id)}
                       onChange={() => handleKpiSelection(chart.id)}
                       className={styles.kpiInputs}
@@ -189,8 +191,8 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                 ))}
               </div>
               <div className={styles.buttonGroup}>
-              <button type="button" className={styles.actionButton} onClick={previousStep}>上一步</button>
-              <button type="button" className={styles.actionButton} onClick={confirmChartSelection}>下一步</button>
+                <button type="button" className={styles.actionButton} onClick={previousStep}>上一步</button>
+                <button type="button" className={styles.actionButton} onClick={confirmChartSelection}>下一步</button>
               </div>
             </fieldset>
           )}
@@ -199,15 +201,13 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
             <fieldset>
               <h2 className={styles.fsTitle}>說明文字</h2>
               <h3 className={styles.fsSubtitle}>非必填</h3>
-              <label>
-                説明內容:
-                <textarea
-                  name="requestContent"
-                  value={requestContent}
-                  onChange={(e) => setRequestContent(e.target.value)}
-                  required
-                />
-              </label>
+              <textarea
+                className={styles.theTextarea}
+                name="requestContent"
+                value={requestContent}
+                onChange={(e) => setRequestContent(e.target.value)}
+                required
+              />
               <div className={styles.buttonGroup}>
                 <button type="button" className={styles.actionButton} onClick={previousStep}>上一步</button>
                 <button type="button" className={styles.actionButton} onClick={handleSubmit}>完成</button>
@@ -220,10 +220,12 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
           <div className={styles.checkFormContainer}>
             <div className={styles.formOverlay} onClick={handleCloseForm}></div>
             <div className={styles.checkFormContent}>
+              <h2>申請臨時圖表</h2>
               <form onSubmit={handleRequestSubmit}>
-                <label>
-                  選擇負責人:
+                <div className={styles.applyKPIlabelGroup}>
+                  <label htmlFor='guarantor'>保證人</label>
                   <select
+                    id='guarantor'
                     value={selectedUser || ''}
                     onChange={(e) => setSelectedUser(e.target.value)}
                     required
@@ -235,44 +237,52 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                       </option>
                     ))}
                   </select>
-                </label>
-                <label>
-                  開始日期:
+                </div>
+                <div className={styles.applyKPIlabelGroup}>
+
+                  <label htmlFor='KPIstartDate'>開始日期</label>
                   <DatePicker
+                    id='KPIstartDate'
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
                     dateFormat="yyyy-MM-dd"
                     placeholderText="選擇開始日期"
                     required
                   />
-                </label>
-                <label>
-                  結束日期:
+                </div>
+                <div className={styles.applyKPIlabelGroup}>
+
+                  <label htmlFor='KPIendDate'>結束日期</label>
                   <DatePicker
+                    id='KPIendDate'
                     selected={endDate}
                     onChange={(date) => setEndDate(date)}
                     dateFormat="yyyy-MM-dd"
                     placeholderText="選擇結束日期"
                     required
                   />
-                </label>
-                <label>
-                  申請原因:
+                </div>
+                <div className={styles.LastapplyKPIlabelGroup}>
                   <textarea
+                    className={styles.applyKPItextarea}
+                    placeholder='申請原由'
                     name="requestContent"
                     value={requestContent}
                     onChange={(e) => setRequestContent(e.target.value)}
                     required
                   />
-                </label>
-                <button type="submit">提交申請</button>
-                <button type="button" onClick={handleCloseForm}>取消</button>
+                </div>
+                <div className={styles.KPIbuttonGroup}>
+                  <button type="button" onClick={handleCloseForm} className={styles.cancel}>取消</button>
+                  <button type="submit" className={styles.submit}>提交</button>
+
+                </div>
               </form>
             </div>
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 

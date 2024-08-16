@@ -19,12 +19,9 @@
 }
 
 .dropdownButton {
-
   background-color: transparent !important;
   font-size: 24px;
   padding: 10px 10px !important;
-
-
   cursor: pointer;
   width: 60px !important;
 }
@@ -51,17 +48,31 @@
 }
 
 .modal {
-  background: pink;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  position: fixed !important;
+  height: 75%;
+  overflow: auto;
+  width: 40%;
+  position: fixed;
   top: 50%;
   left: 50%;
-  width: 300px;
-  height: 300px;
   transform: translate(-50%, -50%);
+  z-index: 300010;
+  background: #212121;
+  color: #CCCCCC;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 2.5px 2.5px 2.5px rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 850px) {
+  .modal {
+    width: 65%;
+  }
+}
+
+@media (max-width: 500px) {
+  .modal {
+    width: 80%;
+  }
 }
 
 .modalOverlay {
@@ -70,8 +81,131 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.8);
   z-index: 999;
+}
+
+/* 進階分析樣式 */
+.advancedAnalysisForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.advancedAnalysisForm h2 {
+  width: 100%;
+  font-weight: bold;
+  margin: 0px !important;
+  margin-bottom: 1.5rem !important;
+  text-align: center;
+}
+
+.advancedAnalysisForm h3 {
+  font-size: 1.2rem;
+  font-weight: 900;
+  background-color: aliceblue;
+  color: black;
+  margin-bottom: 1rem;
+  border-radius: 15px;
+  padding: 10px;
+  display: ruby-text;
+}
+
+.advancedAnalysisForm img {
+  margin: 15px;
+  width: 100%;
+}
+
+/* 交辦表單樣式 */
+.AssignForm h2 {
+  width: 100%;
+  font-weight: bold;
+  margin: 0px !important;
+  margin-bottom: 1.5rem !important;
+  text-align: center;
+}
+
+.AssignForm {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.AssignForm .labelGroup {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid #acacbe60;
+}
+
+.AssignForm label {
+  flex-shrink: 0;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-right: 1.2rem;
+  margin-bottom: 3px;
+}
+
+.AssignForm input {
+  font-size: 1.1rem;
+  flex-grow: 1;
+  font-weight: bold;
+  background-color: transparent;
+  color: white;
+  border: none;
+  margin-bottom: 6px;
+}
+
+.select {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex: 1;
+  border: none;
+  font-size: 1.05rem;
+
+  select {
+    width: 100%;
+    padding: 7px;
+    border: none;
+    appearance: none;
+    outline: 0;
+    background: none;
+    color: inherit;
+    box-shadow: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  &::after {
+    content: "\25BC";
+    position: absolute;
+    right: 12px;
+    top: 4px;
+    transition: 0.25s all ease;
+    pointer-events: none;
+  }
+
+  &:hover::after {
+    color: #1E90FF;
+    animation: bounce 0.5s infinite;
+  }
+}
+
+.AssignForm textarea {
+  color: white;
+  max-height: 300px;
+  resize: none;
+  width: 100%;
+  height: 150px;
+  background: none;
+  border: none;
+  font-size: 1.15rem;
+}
+
+.LastlabelGroup {
+  border-bottom: none !important;
 }
 
 .close {
@@ -80,34 +214,6 @@
   right: 10px;
   cursor: pointer;
 }
-
-.formGroup {
-  margin-bottom: 15px;
-}
-
-/* form label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-form input,
-form textarea {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-}
-
-form button {
-  padding: 10px 15px;
-  background: #007bff;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-form button:hover {
-  background: #0056b3;
-} */
 
 .chartList {
   list-style: none;
@@ -131,4 +237,45 @@ form button:hover {
 
 .dropdownMenu button:last-child {
   margin-bottom: 0;
+}
+
+/* 可共用樣式(主要是submit/cancel按鈕) */
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+}
+
+.submit:hover {
+  transform: scale(1.2) !important;
+}
+
+.cancel:hover {
+  transform: scale(1.2) !important;
+}
+
+.cancel {
+  margin-left: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: black;
+  color: rgb(255, 255, 255);
+  box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
+  padding: 5px 15px;
+  transition: transform 0.2s ease-out;
+}
+
+.submit {
+  margin-left: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: white;
+  color: black;
+  padding: 5px 15px;
+  transition: transform 0.2s ease-out;
 }

@@ -84,6 +84,86 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     fetchUsers();
   }, [setUsers]);
 
+  // 交辦事項
+  const AssignForm = (<>
+    <div className={styles.modalOverlay} onClick={closeModal}></div>
+    <div className={styles.modal}>
+      <form onSubmit={handleSubmit} className={styles.AssignForm}>
+        <h2>撰寫郵件交辦</h2>
+        <div className={styles.labelGroup}>
+          <label htmlFor='AssignFormTitle'>標題</label>
+          <input
+            id='AssignFormTitle'
+            type="text"
+            value={subject}
+            onChange={e => setSubject(e.target.value)}
+            required
+          />
+        </div>
+        <div className={styles.labelGroup}>
+          <label htmlFor='AssignFormPersonInCharge'>指定負責人</label>
+          <div className={styles.select}>
+            <select
+              id='AssignFormPersonInCharge'
+              value={selectedUser || ''}
+              onChange={e => setSelectedUser(e.target.value)}
+              required
+            >
+              <option value=""></option>
+              {users.map(user => (
+                <option key={user.userId} value={user.userId}>
+                  {user.userName}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className={styles.labelGroup}>
+          <label htmlFor="email">收件人</label>
+          <input
+            id='email'
+            type="text"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className={`${styles.labelGroup} ${styles.lastlabelGroup}`}>
+          <textarea
+            placeholder="請輸入郵件內容..."
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+            required
+          />
+        </div>
+        <div className={styles.buttonGroup}>
+          <button type="button" onClick={closeModal} className={styles.cancel}>取消</button>
+          <button type="submit" className={styles.submit}>提交</button>
+        </div>
+      </form>
+    </div></>)
+
+  // 進階分析 
+  const advancedAnalysis = (
+    <>
+      <div className={styles.modalOverlay} onClick={closeModal}></div>
+      <div className={styles.modal}>
+        <div className={styles.advancedAnalysisForm}>
+          <h2>進階分析</h2>
+          {interactiveCharts.map(chart => (
+            <div key={chart.id}>
+              <h3>{chart.name}</h3>
+              <img src={chart.interactiveUrl} alt={chart.name} />
+            </div>
+          ))}
+          <div className={styles.buttonGroup}>
+            <button onClick={() => setInteractiveCharts([])} className={styles.cancel}>關閉</button>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+
   return (
     <div className={styles.chartContainer}>
       <div className={styles.chartHeader}>
@@ -110,62 +190,10 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         </div>
       ))}
 
-      {/* Modal for delegating tasks */}
-      {isModalOpen && (
-        <>
-          <div className={styles.modalOverlay} onClick={closeModal}></div>
-          <div className={styles.modal}>
-            <form onSubmit={handleSubmit}>
-              <h2>交辦任務</h2>
-              <label>
-                主題:
-                <input
-                  type="text"
-                  value={subject}
-                  onChange={e => setSubject(e.target.value)}
-                  required
-                />
-              </label>
-              <label>
-                指定人:
-                <select
-                  value={selectedUser || ''}
-                  onChange={e => setSelectedUser(e.target.value)}
-                  required
-                >
-                  <option value="">選擇指定人</option>
-                  {users.map(user => (
-                    <option key={user.userId} value={user.userId}>
-                      {user.userName}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                收件人:
-                <input
-                  type="text"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                />
-              </label>
-              <label>
-                消息內容:
-                <textarea
-                  value={message}
-                  onChange={e => setMessage(e.target.value)}
-                  required
-                />
-              </label>
-              <button type="submit">提交</button>
-              <button type="button" onClick={closeModal}>取消</button>
-            </form>
-          </div>
-        </>
-      )}
+      {/* 交辦的表單 */}
+      {isModalOpen && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}
 
-      {/* Modal for selecting charts */}
+      {/* Modal for sting charts */}
       {isChartSelectModalOpen && (
         <div className={styles.modal}>
           <h2>選擇圖表</h2>
@@ -227,19 +255,9 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         </div>
       )}
 
-      {Array.isArray(interactiveCharts) && interactiveCharts.length > 0 && (
-        <div className={styles.modal}>
-          <h2>進階分析</h2>
-          {interactiveCharts.map(chart => (
-            <div key={chart.id}>
-              <h3>{chart.name}</h3>
-              {/* Render interactive chart component here */}
-              <img src={chart.interactiveUrl} alt={chart.name} />
-            </div>
-          ))}
-          <button onClick={() => setInteractiveCharts([])}>關閉</button>
-        </div>
-      )}
+      {Array.isArray(interactiveCharts) && interactiveCharts.length > 0 && (ReactDOM.createPortal(advancedAnalysis, document.getElementById('portal-root')!))}
+
+
     </div>
   );
 };
