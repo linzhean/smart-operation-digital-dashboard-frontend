@@ -9,11 +9,13 @@ export interface Group {
 
 export interface User {
   id: number;
+  groupId: number;
   userId: string; // Added userId field
   name: string;
   userName: string; // Added userName field
   department: string;
   position: string;
+  userGroupId: number;
   available: boolean;
   createId: string;
   createDate: string;
@@ -43,8 +45,8 @@ export interface ApplicationData {
   startDate: string;
   endDate: string;
   content: string;
-  applyStatus: number; // 确保 applyStatus 是数字类型
-  groupId: number; // 确保 groupId 是必填字段
+  applyStatus: number;
+  groupId?: number; 
 }
 
 export interface UserAccountBean {

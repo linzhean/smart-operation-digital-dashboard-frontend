@@ -125,10 +125,12 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                         <td>
                           <Button
                             variant="outlined"
-                            onClick={() => handleRemove(member.userId, member.userName)}
+                            onClick={() => handleRemove(Number(member.userId), member.userName)}
                           >
                             移除
                           </Button>
+
+
                         </td>
                       </tr>
                     ))
@@ -171,6 +173,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
             </table>
           </div>
         )}
+
       </div>
     </div>
   );

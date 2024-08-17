@@ -17,7 +17,7 @@ export const fetchGroups = async (): Promise<Group[]> => {
 // 根据群组 ID 获取用户
 export const fetchUsersByGroupId = async (groupId: number): Promise<User[]> => {
   try {
-    const response = await apiClient.get<Response<User[]>>(`/group/${groupId}`);
+    const response = await apiClient.get<Response<User[]>>(`/group/user/${groupId}`);
     return response.data.data || []; // Ensure this is always an array
   } catch (error) {
     console.error('獲取用戶列表失敗:', error);
@@ -67,13 +67,19 @@ export const addUserToGroup = async ({ userId, groupId }: AddUserToGroupRequest)
 };
 
 // 从群组中移除用户
-export const removeUserFromGroup = async (groupId: number, userId: string): Promise<void> => {
+// 从群组中移除用户
+export const removeUserFromGroup = async (userGroupId: number, userId?: number): Promise<{ result: boolean; message?: string }> => {
   try {
-    await apiClient.delete<Response<void>>(`${API_URL}/user`, { params: { userId, groupId } });
+    const response = await apiClient.delete<{ result: boolean; message?: string }>(`${API_URL}/user`, {
+      params: { userGroupId }
+    });
+    return response.data;
   } catch (error: any) {
-    throw new Error('Failed to remove user from group: ' + error.message);
+    console.error('移除用户失败:', error.message);
+    throw error;
   }
 };
+
 
 // 根据 ID 更新群组名称
 export const updateGroupName = async (groupId: number, newName: string): Promise<Group> => {
@@ -119,4 +125,17 @@ export const fetchChartsByGroupId = async (groupId: number): Promise<{ id: numbe
     throw error;
   }
 };
+
+// 在 GroupApi.ts 里增加这个方法
+export const removeChartFromGroup = async (groupId: number, chartId: number): Promise<void> => {
+  try {
+    await apiClient.delete<void>(`${API_URL}/chart`, {
+      params: { groupId, chartId }
+    });
+  } catch (error: any) {
+    console.error('移除图表失败:', error.message);
+    throw error;
+  }
+};
+
 

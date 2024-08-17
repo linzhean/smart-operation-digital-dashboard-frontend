@@ -39,12 +39,16 @@ export const createApplication = async (
 export const updateApplication = async (
   id: number,
   applicationData: Partial<ApplicationData>,
-  groupId: number
+  groupId: number // groupId 是必需的
 ): Promise<Response<ApplicationData>> => {
   try {
-    const response = await apiClient.patch<Response<ApplicationData>>(`${APPLICATION_API_BASE}/permit/${id}`, applicationData, {
-      params: { groupId,id },
-    });
+    const response = await apiClient.patch<Response<ApplicationData>>(
+      `${APPLICATION_API_BASE}/permit/${id}`, 
+      applicationData, 
+      { 
+        params: { groupId } // groupId is passed as a query parameter
+      }
+    );
     return response.data;
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -53,13 +57,9 @@ export const updateApplication = async (
 };
 
 // 关闭申请
-export const closeApplication = async (
-  id: number,
-): Promise<Response<string>> => {
+export const closeApplication = async (id: number): Promise<Response<string>> => {
   try {
-    const response = await apiClient.patch<Response<string>>(`${APPLICATION_API_BASE}/close/${id}`, undefined, {
-      params: { id },
-    });
+    const response = await apiClient.patch<Response<string>>(`${APPLICATION_API_BASE}/close/${id}`);
     return response.data;
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -68,14 +68,9 @@ export const closeApplication = async (
 };
 
 // 删除申请
-export const deleteApplication = async (
-  id: number,
-
-): Promise<Response<string>> => {
+export const deleteApplication = async (id: number): Promise<Response<string>> => {
   try {
-    const response = await apiClient.delete<Response<string>>(`${APPLICATION_API_BASE}/${id}`, {
-      params: { id },
-    });
+    const response = await apiClient.delete<Response<string>>(`${APPLICATION_API_BASE}/${id}`);
     return response.data;
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';

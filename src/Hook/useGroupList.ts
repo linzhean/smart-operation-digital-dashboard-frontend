@@ -6,7 +6,8 @@ import {
   removeUserFromGroup, 
   deleteGroup, 
   updateGroupChartPermissions,
-  fetchChartsByGroupId 
+  fetchChartsByGroupId,
+  removeChartFromGroup
 } from '../services/GroupApi';
 import { getUsers } from '../services/userManagementServices';
 
@@ -23,38 +24,34 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   const [charts, setCharts] = useState<{ id: number; name: string }[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
 
   useEffect(() => {
     const fetchGroupData = async () => {
       try {
-        // Fetch users and charts for the group
         const [userList, chartsResponse] = await Promise.all([
           fetchUsersByGroupId(groupId),
-          fetchChartsByGroupId(groupId) // Fetch charts and permissions by groupId
+          fetchChartsByGroupId(groupId)
         ]);
-
+  
         setMemberData(userList);
-
         if (Array.isArray(chartsResponse)) {
           setCharts(chartsResponse);
-
-          // Initialize chart permissions based on fetched charts
+  
           const initialPermissions: { [key: number]: boolean } = {};
-          chartsResponse.forEach((chart) => {
-            initialPermissions[chart.id] = false; // Default to false, adjust as needed
+          chartsResponse.forEach(chart => {
+            initialPermissions[chart.id] = false;
           });
           setChartPermissions(initialPermissions);
         } else {
           throw new Error('Unexpected charts response format');
         }
       } catch (error) {
-        console.error('获取群组和图表信息失败:', error);
+        console.error('Failed to fetch group and chart data:', error);
       }
     };
-
+  
     fetchGroupData();
-  }, [groupId]);
+  }, [groupId]);  
 
   useEffect(() => {
     const fetchAllUsers = async () => {
@@ -62,23 +59,55 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
         const userList = await getUsers();
         setAllUsers(userList);
       } catch (error) {
-        console.error('获取所有用户失败:', error);
+        console.error('Failed to fetch all users:', error);
       }
     };
 
     fetchAllUsers();
   }, []);
 
-  const handleRemove = async (id: string, name: string) => {
-    if (window.confirm(`您确定要将【${name}】从群组中移除吗？`)) {
+  const handleRemove = async (userId: number, name: string) => {
+    if (window.confirm(`確定要將 ${name} 從群組中移除嗎？`)) {
       try {
-        await removeUserFromGroup(groupId, id);
-        setMemberData(prevData => prevData.filter(member => member.userId !== id));
+        // Fetch the user data from the group
+        const users = await fetchUsersByGroupId(groupId);
+        
+        if (!Array.isArray(users)) {
+          console.error('Unexpected format for users:', users);
+          alert('移除用戶失敗，原因：用戶列表格式錯誤');
+          return;
+        }
+        
+        // Find the userGroupId for the specific user
+        const user = users.find(user => user.userId === userId.toString());
+  
+        if (user) {
+          const userGroupId = user.userGroupId;
+  
+          if (userGroupId !== undefined) {
+            const response = await removeUserFromGroup(userGroupId, userId);
+            if (response.result) {
+              setMemberData(prevData =>
+                prevData.filter(member => Number(member.userId) !== userId)
+              );
+            } else {
+              console.error(`移除用戶失敗: ${response.message}, id = ${userId}`);
+              alert(`移除用戶失敗，原因：${response.message}`);
+            }
+          } else {
+            console.error('User group ID not found for user ID:', userId);
+            alert('移除用戶失敗，原因：用戶群組 ID 未找到');
+          }
+        } else {
+          console.error('User not found for user ID:', userId);
+          alert('移除用戶失敗，原因：找不到用戶');
+        }
       } catch (error) {
-        console.error('移除用户失败:', error);
+        console.error('移除用戶失敗:', error);
+        alert('移除用戶時發生錯誤，請稍後再試。');
       }
     }
-  };
+  };      
 
   const handleAddMember = async (newMembers: User[]) => {
     try {
@@ -87,38 +116,46 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
       ));
       setMemberData(prevData => [...prevData, ...newMembers]);
     } catch (error) {
-      console.error('添加用户到群组失败:', error);
+      console.error('Failed to add users to group:', error);
     }
   };
 
   const updateChartPermissions = async (chartId: number, newState: boolean) => {
     try {
-      await updateGroupChartPermissions(groupId, chartId, newState);
-      setChartPermissions(prev => ({
-        ...prev,
-        [chartId]: newState
-      }));
+      if (newState) {
+        await updateGroupChartPermissions(groupId, chartId, newState);
+        setChartPermissions(prev => ({
+          ...prev,
+          [chartId]: newState
+        }));
+      } else {
+        await removeChartFromGroup(groupId, chartId); // Remove chart if permission is denied
+        setChartPermissions(prev => {
+          const { [chartId]: _, ...rest } = prev;
+          return rest;
+        });
+      }
     } catch (error) {
-      console.error('更新图表权限失败:', error);
+      console.error('Failed to update chart permissions:', error);
     }
-  };
+  };  
 
   const toggleChartPermission = (chartId: string | number) => {
     const id = typeof chartId === 'string' ? parseInt(chartId, 10) : chartId;
     const currentState = chartPermissions[id];
     const newState = !currentState;
-    if (window.confirm(`您确定要将【${id}】的状态更改为${newState ? '允许' : '禁用'}吗？`)) {
+    if (window.confirm(`Are you sure you want to change the status of chart ${id} to ${newState ? 'enabled' : 'disabled'}?`)) {
       updateChartPermissions(id, newState);
     }
-  };
+  };  
 
   const handleDeleteGroup = async () => {
-    if (window.confirm('您确定要删除这个群组吗？')) {
+    if (window.confirm('Are you sure you want to delete this group?')) {
       try {
         await deleteGroup(groupId);
         onDeleteGroup(groupId);
       } catch (error) {
-        console.error('删除群组失败:', error);
+        console.error('Failed to delete group:', error);
       }
     }
   };
@@ -132,6 +169,8 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
     setAnchorEl(null);
     setIsMenuOpen(false);
   };
+
+  
   return {
     memberData,
     showMemberPicker,
