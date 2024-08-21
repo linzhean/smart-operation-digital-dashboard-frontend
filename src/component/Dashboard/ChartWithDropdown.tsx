@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { fetchAllUsers } from '../../services/UserAccountService'; // Adjust the path as necessary
 import more from '../../assets/icon/KPImoreBlue.svg';
 import ReactDOM from 'react-dom';
+import { useRef } from 'react';
 
 interface ChartWithDropdownProps {
   children: React.ReactNode;
@@ -19,6 +20,55 @@ interface ChartWithDropdownProps {
 const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, onChartSelect, currentUserId }) => {
   const handleDropdownClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
+  };
+
+  //console用 
+  useEffect(() => {
+    const handleKeyboardEvent = (event: KeyboardEvent) => {
+      console.log(`Received key event: ${event.key}`);
+    };
+
+    document.addEventListener('keydown', handleKeyboardEvent);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyboardEvent);
+    };
+  }, []);
+
+  const mouseEnterTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const mouseLeaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    setIsDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    if (mouseEnterTimeoutRef.current) {
+      clearTimeout(mouseEnterTimeoutRef.current);
+    }
+    mouseLeaveTimeoutRef.current = setTimeout(() => {
+      setIsDropdownOpen(false);
+
+    }, 2000);
+  };
+
+  const handleSimulateClick = () => {
+    const targetElement = document.activeElement as HTMLElement | null;
+    if (targetElement) {
+      const enterEvent = new KeyboardEvent('keydown', {
+        key: 'Enter',
+        code: 'Enter',
+        keyCode: 13,
+        charCode: 13,
+        bubbles: true,
+        cancelable: true,
+      });
+
+      targetElement.dispatchEvent(enterEvent);
+      console.log('被滑鼠點擊了，並模擬鍵盤 Enter 鍵效果');
+    } else {
+      console.log('未找到焦点元素');
+    }
   };
 
   const {
@@ -53,6 +103,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     setEmail,
     setSubject,
     setMessage,
+    setIsDropdownOpen,
     setSelectedCharts,
     setSelectedKPIs,
     setRequestContent,
@@ -167,8 +218,17 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
   return (
     <div className={styles.chartContainer}>
       <div className={styles.chartHeader}>
-        <div className={styles.dropdownContainer} onClick={handleDropdownClick}>
-          <button onClick={toggleDropdown} className={styles.dropdownButton}>
+        <div
+          className={styles.dropdownContainer}
+          onClick={handleDropdownClick}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}>
+          <button
+            onClick={() => {
+              toggleDropdown();
+            }}
+            className={styles.dropdownButton}
+          >
             <img src={more} alt="" />
           </button>
           {isDropdownOpen && (

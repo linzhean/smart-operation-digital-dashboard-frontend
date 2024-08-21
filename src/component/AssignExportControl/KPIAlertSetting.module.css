@@ -1,0 +1,68 @@
+.settingAlert {
+  width: auto;
+  height: 300px;
+  padding: 25px 30px;
+  background-color: #ACACBE;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid black;
+  border-radius: 15px;
+  z-index: 2;
+}
+
+.settingAlert h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.descriptionText {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: black;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+}
+
+.submit:hover {
+  transform: scale(1.2) !important;
+}
+
+.cancel:hover {
+  transform: scale(1.2) !important;
+}
+
+.cancel {
+  margin-left: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: black;
+  color: rgb(255, 255, 255);
+  box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
+  padding: 5px 15px;
+  transition: transform 0.2s ease-out;
+}
+
+.submit {
+  margin-left: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: white;
+  color: black;
+  padding: 5px 15px;
+  transition: transform 0.2s ease-out;
+}

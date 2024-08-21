@@ -24,6 +24,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [requestContent, setRequestContent] = useState('');
+  const [applyReason, setApplyReason] = useState('');
   const [users, setUsers] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -248,6 +249,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                     dateFormat="yyyy-MM-dd"
                     placeholderText="選擇開始日期"
                     required
+                    autoComplete="off"
                   />
                 </div>
                 <div className={styles.applyKPIlabelGroup}>
@@ -260,15 +262,16 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                     dateFormat="yyyy-MM-dd"
                     placeholderText="選擇結束日期"
                     required
+                    autoComplete="off"
                   />
                 </div>
                 <div className={styles.LastapplyKPIlabelGroup}>
                   <textarea
                     className={styles.applyKPItextarea}
-                    placeholder='申請原由'
-                    name="requestContent"
-                    value={requestContent}
-                    onChange={(e) => setRequestContent(e.target.value)}
+                    placeholder='請填寫此次申請理由'
+                    name="applyReason"
+                    value={applyReason}
+                    onChange={(e) => setApplyReason(e.target.value)}
                     required
                   />
                 </div>

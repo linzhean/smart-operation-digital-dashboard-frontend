@@ -88,48 +88,48 @@ export function useChartWithDropdown(
   const closeChartSelectModal = () => setIsChartSelectModalOpen(false);
   const closeRequestKpiModal = () => setIsRequestKpiModalOpen(false);
 
- // Inside useChartWithDropdown.tsx
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (selectedCharts.length === 0) {
-    alert('Please select a chart.');
-    return;
-  }
-
-  try {
-    const assignedTask = {
-      chartId: selectedCharts[0].id,
-      name: subject,
-      receiver: selectedUser || '', // Default to empty string if selectedUser is null
-      firstMessage: {
-        content: message,
-      },
-    };
-
-    // Create the email with the adjusted body
-    const createdEmail = await createEmail(assignedTask);
-
-    if (createdEmail && createdEmail.id) {
-      await sendChatMessage(createdEmail.id, {
-        mailId: createdEmail.id, // 确保 mailId 是请求体的一部分
-        messageId: Date.now(), // 使用当前时间戳或生成唯一 ID 的方法作为示例
-        content: message,
-        available: "true", // Adjust this if necessary
-        createId: currentUserId,
-        createDate: formatDate(new Date()),
-        modifyId: currentUserId,
-        modifyDate: formatDate(new Date()),
-      });
-    } else {
-      throw new Error('Failed to create email.');
+  // Inside useChartWithDropdown.tsx
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (selectedCharts.length === 0) {
+      alert('Please select a chart.');
+      return;
     }
 
-    setIsModalOpen(false);
-  } catch (error) {
-    console.error('Error submitting delegate task:', error);
-    alert('Failed to submit delegate task. Please try again.');
-  }
-};
+    try {
+      const assignedTask = {
+        chartId: selectedCharts[0].id,
+        name: subject,
+        receiver: selectedUser || '', // Default to empty string if selectedUser is null
+        firstMessage: {
+          content: message,
+        },
+      };
+
+      // Create the email with the adjusted body
+      const createdEmail = await createEmail(assignedTask);
+
+      if (createdEmail && createdEmail.id) {
+        await sendChatMessage(createdEmail.id, {
+          mailId: createdEmail.id, // 确保 mailId 是请求体的一部分
+          messageId: Date.now(), // 使用当前时间戳或生成唯一 ID 的方法作为示例
+          content: message,
+          available: "true", // Adjust this if necessary
+          createId: currentUserId,
+          createDate: formatDate(new Date()),
+          modifyId: currentUserId,
+          modifyDate: formatDate(new Date()),
+        });
+      } else {
+        throw new Error('Failed to create email.');
+      }
+
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error submitting delegate task:', error);
+      alert('Failed to submit delegate task. Please try again.');
+    }
+  };
 
 
   const handleKpiSelection = (kpiId: number) => {
@@ -252,6 +252,7 @@ export function useChartWithDropdown(
     setSponsor,
     setStartDate,
     setEndDate,
+    setIsDropdownOpen,
     setIsModalOpen,
     setIsChartSelectModalOpen,
     setIsRequestKpiModalOpen,

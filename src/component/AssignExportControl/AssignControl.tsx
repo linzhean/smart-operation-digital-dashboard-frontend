@@ -11,7 +11,7 @@ import { fetchAllCharts, getAssignedTaskSponsors, setAssignedTaskSponsorsForDash
 import { UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './AssignControl.module.css';
-
+import KPIAlertSetting from './KPIAlertSetting'
 const useStyles = makeStyles({
   dialogPaper: {
     width: '50%',
@@ -74,7 +74,7 @@ const UserPickerDialog: React.FC<{
         });
     }
   }, [chartId, users]);
-  
+
 
   const handleSubmit = () => {
     onSubmit(selectedUsers);
@@ -82,6 +82,12 @@ const UserPickerDialog: React.FC<{
   };
 
   const classes = useStyles();
+
+  const [showKPIAlertSetting, setShowKPIAlertSetting] = useState(false);
+  const handleSetAlert = () => {
+    setShowKPIAlertSetting(true);
+  };
+
   return (
     <Dialog open={open} onClose={onClose} style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }} classes={{ paper: classes.dialogPaper }}>
       <DialogTitle style={{ color: 'black', fontSize: '1.5rem', fontWeight: 'bold', width: 'auto', padding: '10px 24px 0px 24px' }}>
@@ -121,6 +127,15 @@ const AssignTaskControl: React.FC = () => {
   const [currentChart, setCurrentChart] = useState(0);
   const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: number]: User[] }>({});
   const [charts, setCharts] = useState<Chart[]>([]);
+  const [showKPIAlertSetting, setShowKPIAlertSetting] = useState(false);
+
+  const handleSetAlert = () => {
+    setShowKPIAlertSetting(true);
+  };
+  const handleCloseAlert = () => {
+    setShowKPIAlertSetting(false);
+  };
+
 
   useEffect(() => {
     fetchAllCharts()
@@ -148,17 +163,17 @@ const AssignTaskControl: React.FC = () => {
       ...prevMap,
       [currentChart]: selectedUsers,
     }));
-  
+
     const userIds = selectedUsers.map(user => user.userId);
-  
+
     const requestData = {
       sponsorList: userIds,
       exporterList: [], // Add relevant data if available
       dashboardCharts: [], // Add relevant data if available
     };
-  
+
     console.log("Submitting data:", requestData);
-  
+
     // Pass the chartId to the function
     setAssignedTaskSponsorsForDashboard(currentChart, requestData)
       .then(response => {
@@ -167,11 +182,11 @@ const AssignTaskControl: React.FC = () => {
       .catch(error => {
         console.error('Failed to set task sponsors', error);
       });
-  
+
     setDialogOpen(false);
   };
-  
-  
+
+
 
   const getSelectedUserNames = (chartId: number) => {
     const selectedUsers = selectedUsersMap[chartId] || [];
@@ -197,7 +212,8 @@ const AssignTaskControl: React.FC = () => {
             <tbody>
               {charts.map((chart) => (
                 <tr key={chart.id}>
-                  <td>{chart.name}</td>
+                  <td onClick={handleSetAlert}>{chart.name}</td>
+
                   <td>
                     {currentUser.permissions.includes('create_task') || currentUser.permissions.includes('update_task') ? (
                       <Button variant="contained" color="primary" onClick={() => handleOpenDialog(chart.id)}>
@@ -219,6 +235,9 @@ const AssignTaskControl: React.FC = () => {
         onSubmit={handleSubmit}
         chartId={currentChart}
       />
+      {showKPIAlertSetting && (
+        <KPIAlertSetting onClose={handleCloseAlert} />
+      )}
     </>
   );
 };
