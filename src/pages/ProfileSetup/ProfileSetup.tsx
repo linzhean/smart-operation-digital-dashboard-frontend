@@ -23,9 +23,13 @@ const ProfileSetup: React.FC = () => {
   useEffect(() => {
     const loadDropdownData = async () => {
       try {
-        const dropdownData = await fetchDropdownData();
-        setDepartments(dropdownData.departments || []);
-        setIdentities(dropdownData.identities || []);
+        // 先获取部门数据
+        const departmentData = await fetchDropdownData('department');
+        setDepartments(departmentData);
+        
+        // 再获取身份数据
+        const identityData = await fetchDropdownData('identity');
+        setIdentities(identityData);
       } catch (error) {
         console.error('Failed to load dropdown data:', error);
       }

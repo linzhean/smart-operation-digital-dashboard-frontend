@@ -1,3 +1,4 @@
+//src\services\GroupApi.ts
 import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 import { User, Group, AddUserToGroupRequest } from './types/userManagement';
@@ -17,14 +18,15 @@ export const fetchGroups = async (): Promise<Group[]> => {
 // 根据群组 ID 获取用户
 export const fetchUsersByGroupId = async (groupId: number): Promise<User[]> => {
   try {
-    const response = await apiClient.get<Response<User[]>>(`/group/user/${groupId}`);
-    return response.data.data || []; // Ensure this is always an array
-  } catch (error) {
-    console.error('獲取用戶列表失敗:', error);
+    const response = await apiClient.get<Response<User[]>>(`${API_URL}/user/${groupId}`);
+    return response.data.data || [];
+  } catch (error: any) {
+    console.error('获取用户列表失败:', error);
     throw error;
   }
 };
 
+// 新增群组
 export const addGroup = async (group: Omit<Group, 'id'>): Promise<Group> => {
   try {
     const response = await apiClient.post<Response<Group>>(API_URL, {
@@ -53,9 +55,13 @@ export const deleteGroup = async (groupId: number): Promise<void> => {
 // 将用户添加到群组
 export const addUserToGroup = async ({ userId, groupId }: AddUserToGroupRequest) => {
   try {
-    const response = await apiClient.post(`${API_URL}/user`, null, {
-      params: { userId, groupId }
-    });
+    const response = await apiClient.post<Response<{ result: boolean }>>(
+      `${API_URL}/user`,
+      null,
+      {
+        params: { userId, groupId },
+      }
+    );
     if (!response.data.result) {
       throw new Error('添加用户失败');
     }
@@ -67,19 +73,21 @@ export const addUserToGroup = async ({ userId, groupId }: AddUserToGroupRequest)
 };
 
 // 从群组中移除用户
-// 从群组中移除用户
-export const removeUserFromGroup = async (userGroupId: number, userId?: number): Promise<{ result: boolean; message?: string }> => {
+export const removeUserFromGroup = async (
+userGroupId: number, userId?: number): Promise<{ result: boolean; message?: string }> => {
   try {
-    const response = await apiClient.delete<{ result: boolean; message?: string }>(`${API_URL}/user`, {
-      params: { userGroupId }
-    });
+    const response = await apiClient.delete<Response<{ result: boolean; message?: string }>>(
+      `${API_URL}/user`,
+      {
+        params: { userGroupId },
+      }
+    );
     return response.data;
   } catch (error: any) {
     console.error('移除用户失败:', error.message);
     throw error;
   }
 };
-
 
 // 根据 ID 更新群组名称
 export const updateGroupName = async (groupId: number, newName: string): Promise<Group> => {
@@ -93,49 +101,50 @@ export const updateGroupName = async (groupId: number, newName: string): Promise
   }
 };
 
-export const updateGroupChartPermissions = async (groupId: number, chartId: number, newState: boolean): Promise<void> => {
+// 更新群组的图表权限
+export const updateGroupChartPermissions = async (
+  groupId: number,
+  chartId: number,
+  newState: boolean
+): Promise<void> => {
   try {
-    await apiClient.post(`/group/chart`, null, {
-      params: {
-        groupId,
-        chartId
-      },
-      data: {
-        enabled: newState
-      }
+    await apiClient.post<void>(`${API_URL}/chart`, null, {
+      params: { groupId, chartId },
+      data: { enabled: newState },
     });
-  } catch (error) {
-    console.error('更新圖表權限失敗:', error);
+  } catch (error: any) {
+    console.error('更新图表权限失败:', error);
     throw error;
   }
 };
 
-export const fetchChartsByGroupId = async (groupId: number): Promise<{ id: number; name: string }[]> => {
+// 根据群组 ID 获取图表
+export const fetchChartsByGroupId = async (groupId: number): Promise<
+  {
+    [x: string]: any; id: number; name: string; chartGroupId: number 
+}[]
+> => {
   try {
-    // 构造 URL，将 groupId 作为路径参数
-    const url = `/group/chart/${groupId}`;
-
-    // 发起 GET 请求
-    const response = await apiClient.get<Response<{ id: number; name: string }[]>>(url);
-
-    // 返回数据，如果没有数据则返回空数组
+    const response = await apiClient.get<Response<{ id: number; name: string; chartGroupId: number }[]>>(
+      `${API_URL}/chart/${groupId}`
+    );
     return response.data.data || [];
-  } catch (error) {
+  } catch (error: any) {
     console.error('获取群组图表失败:', error);
     throw error;
   }
 };
 
-// 在 GroupApi.ts 里增加这个方法
-export const removeChartFromGroup = async (groupId: number, chartId: number): Promise<void> => {
+// 从群组中移除图表
+// Remove chart from group
+export const removeChartFromGroup = async (chartGroupId: number, chartId: number): Promise<void> => {
   try {
     await apiClient.delete<void>(`${API_URL}/chart`, {
-      params: { groupId, chartId }
+      params: { userGroupId: chartGroupId, chartId },
     });
   } catch (error: any) {
     console.error('移除图表失败:', error.message);
     throw error;
   }
 };
-
 

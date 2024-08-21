@@ -7,11 +7,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { fetchAllUsers } from '../../services/UserAccountService';
-import { fetchAllCharts, getAssignedTaskSponsors, setAssignedTaskSponsorsForDashboard } from '../../services/AssignedTaskService';
+import { fetchAllCharts, getAssignedTaskSponsors, setAssignedTaskSponsorsForDashboard, getAllAssignedTasks } from '../../services/AssignedTaskService';
 import { UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './AssignControl.module.css';
-import KPIAlertSetting from './KPIAlertSetting'
+import KPIAlertSetting from './KPIAlertSetting';
+
 const useStyles = makeStyles({
   dialogPaper: {
     width: '50%',
@@ -28,6 +29,14 @@ interface User extends UserAccountBean {
 interface Chart {
   id: number;
   name: string;
+}
+
+interface AssignedTask {
+  id: number;
+  chartId: number;
+  name: string;
+  defaultProcessor: string;
+  available: boolean;
 }
 
 const UserPickerDialog: React.FC<{
@@ -75,18 +84,12 @@ const UserPickerDialog: React.FC<{
     }
   }, [chartId, users]);
 
-
   const handleSubmit = () => {
     onSubmit(selectedUsers);
     onClose();
   };
 
   const classes = useStyles();
-
-  const [showKPIAlertSetting, setShowKPIAlertSetting] = useState(false);
-  const handleSetAlert = () => {
-    setShowKPIAlertSetting(true);
-  };
 
   return (
     <Dialog open={open} onClose={onClose} style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }} classes={{ paper: classes.dialogPaper }}>
@@ -127,6 +130,7 @@ const AssignTaskControl: React.FC = () => {
   const [currentChart, setCurrentChart] = useState(0);
   const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: number]: User[] }>({});
   const [charts, setCharts] = useState<Chart[]>([]);
+  const [assignedTasks, setAssignedTasks] = useState<{ [key: number]: AssignedTask[] }>({});
   const [showKPIAlertSetting, setShowKPIAlertSetting] = useState(false);
 
   const handleSetAlert = () => {
@@ -135,7 +139,6 @@ const AssignTaskControl: React.FC = () => {
   const handleCloseAlert = () => {
     setShowKPIAlertSetting(false);
   };
-
 
   useEffect(() => {
     fetchAllCharts()
@@ -146,6 +149,27 @@ const AssignTaskControl: React.FC = () => {
       })
       .catch((error) => {
         console.error('Error fetching charts', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    getAllAssignedTasks()
+      .then((response) => {
+        if (response.data) {
+          const taskMap: { [key: number]: AssignedTask[] } = {};
+          response.data.forEach((task) => {
+            if (task.id !== undefined) {
+              if (!taskMap[task.chartId]) {
+                taskMap[task.chartId] = [];
+              }
+              taskMap[task.chartId].push(task as AssignedTask);
+            }
+          });
+          setAssignedTasks(taskMap);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching assigned tasks', error);
       });
   }, []);
 
@@ -168,13 +192,10 @@ const AssignTaskControl: React.FC = () => {
 
     const requestData = {
       sponsorList: userIds,
-      exporterList: [], // Add relevant data if available
-      dashboardCharts: [], // Add relevant data if available
+      exporterList: [],
+      dashboardCharts: [],
     };
 
-    console.log("Submitting data:", requestData);
-
-    // Pass the chartId to the function
     setAssignedTaskSponsorsForDashboard(currentChart, requestData)
       .then(response => {
         console.log('Successfully set task sponsors', response);
@@ -186,11 +207,12 @@ const AssignTaskControl: React.FC = () => {
     setDialogOpen(false);
   };
 
-
-
   const getSelectedUserNames = (chartId: number) => {
     const selectedUsers = selectedUsersMap[chartId] || [];
-    return selectedUsers.length > 0 ? `擁有權限者：共 ${selectedUsers.length} 人` : '設置交辦權限';
+    const taskCount = assignedTasks[chartId]?.length || 0;
+    return selectedUsers.length > 0
+      ? `擁有權限者：共 ${selectedUsers.length} 人，已分配任務：${taskCount} 個`
+      : '設置交辦權限';
   };
 
   const currentUser = {
@@ -213,7 +235,6 @@ const AssignTaskControl: React.FC = () => {
               {charts.map((chart) => (
                 <tr key={chart.id}>
                   <td onClick={handleSetAlert}>{chart.name}</td>
-
                   <td>
                     {currentUser.permissions.includes('create_task') || currentUser.permissions.includes('update_task') ? (
                       <Button variant="contained" color="primary" onClick={() => handleOpenDialog(chart.id)}>

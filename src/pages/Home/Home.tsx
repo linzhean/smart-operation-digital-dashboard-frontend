@@ -22,8 +22,30 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (selectedDashboard) {
-      // 獲取並設置選定儀表板的佈局
-      // 獲取儀表板的現有圖表
+      const fetchDashboardCharts = async () => {
+        try {
+          const dashboardCharts = await ChartService.getDashboardCharts(Number(selectedDashboard));
+          if (Array.isArray(dashboardCharts)) {
+            setCharts(dashboardCharts);
+            const newLayout = dashboardCharts.map((chart: any, index: number) => ({
+              i: `chart-${chart.id}`,
+              x: (index * 4) % 12,
+              y: Math.floor(index / 3) * 4,
+              w: 4,
+              h: 4,
+            }));
+            setLayout(newLayout);
+          } else {
+            console.error('Dashboard charts is not an array:', dashboardCharts);
+            setCharts([]);
+          }
+        } catch (error) {
+          console.error('Failed to fetch dashboard charts:', error);
+          setCharts([]);
+        }
+      };
+      fetchDashboardCharts();
+    } else {
       setLayout([]);
       setCharts([]);
     }

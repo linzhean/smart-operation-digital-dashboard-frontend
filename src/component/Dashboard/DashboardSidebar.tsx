@@ -43,7 +43,6 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
     const fetchAllDashboards = async () => {
       try {
         const fetchedDashboards = await DashboardService.getAllDashboards();
-        console.log('Fetched dashboards:', fetchedDashboards);
         setDashboards(fetchedDashboards);
       } catch (error) {
         console.error('Failed to fetch dashboards:', error);

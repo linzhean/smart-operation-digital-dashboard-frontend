@@ -34,9 +34,13 @@ const Pdata: React.FC = () => {
 
     const loadDropdownData = async () => {
       try {
-        const dropdownData = await fetchDropdownData();
-        setDepartments(dropdownData.departments || []);
-        setIdentities(dropdownData.identities || []);
+        // 加载部门数据
+        const departmentData = await fetchDropdownData('department');
+        setDepartments(departmentData);
+
+        // 加载身份数据
+        const identityData = await fetchDropdownData('identity');
+        setIdentities(identityData);
       } catch (error) {
         console.error('加载下拉选项时出错:', error);
       }
@@ -173,6 +177,7 @@ const Pdata: React.FC = () => {
                   </option>
                 ))}
               </select>
+
             </div>
           </div>
 
@@ -218,5 +223,6 @@ const Pdata: React.FC = () => {
     </main>
   );
 };
+
 
 export default Pdata;

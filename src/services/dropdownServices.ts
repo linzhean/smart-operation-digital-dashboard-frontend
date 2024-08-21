@@ -1,22 +1,40 @@
-// src/services/dropdownServices.ts
 import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 
-interface DropdownData {
-  departments: { value: string; label: string }[];
-  identities: { value: string; label: string }[];
+interface DropdownOption {
+  value: string;
+  label: string;
 }
 
-export const fetchDropdownData = async (): Promise<DropdownData> => {
+interface DropdownData {
+  departmentList?: { key: string; value: string }[];
+  identityList?: { key: string; value: string }[];
+}
+
+// 获取下拉选项数据
+export const fetchDropdownData = async (type: 'identity' | 'department'): Promise<DropdownOption[]> => {
   try {
-    const response = await apiClient.get<Response<DropdownData>>('/dropdown');
+    const response = await apiClient.get<Response<DropdownData>>('/dropdown', {
+      params: { type }
+    });
+
     if (response.data.result && response.data.data) {
-      return response.data.data;
-    } else {
-      throw new Error('Failed to fetch dropdown data: ' + response.data.message);
+      if (type === 'department') {
+        return response.data.data.departmentList?.map(dept => ({
+          value: dept.key,
+          label: dept.value
+        })) || [];
+      } else if (type === 'identity') {
+        return response.data.data.identityList?.map(id => ({
+          value: id.key,
+          label: id.value
+        })) || [];
+      }
     }
+
+    throw new Error('获取下拉选项数据失败: ' + response.data.message);
   } catch (error: any) {
-    console.error('Failed to fetch dropdown data: ', error.message);
-    throw new Error('Failed to fetch dropdown data: ' + error.message);
+    console.error('获取下拉选项数据失败: ', error.message);
+    return [];
   }
 };

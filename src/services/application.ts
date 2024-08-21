@@ -36,18 +36,15 @@ export const createApplication = async (
 };
 
 // 更新申请状态
+// 更新申请状态
 export const updateApplication = async (
   id: number,
-  applicationData: Partial<ApplicationData>,
-  groupId: number // groupId 是必需的
+  applicationData: Partial<ApplicationData>
 ): Promise<Response<ApplicationData>> => {
   try {
     const response = await apiClient.patch<Response<ApplicationData>>(
       `${APPLICATION_API_BASE}/permit/${id}`, 
-      applicationData, 
-      { 
-        params: { groupId } // groupId is passed as a query parameter
-      }
+      applicationData
     );
     return response.data;
   } catch (error) {
@@ -55,6 +52,7 @@ export const updateApplication = async (
     throw new Error(`Failed to update application: ${errorMsg}`);
   }
 };
+
 
 // 关闭申请
 export const closeApplication = async (id: number): Promise<Response<string>> => {

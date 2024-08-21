@@ -25,32 +25,32 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
     console.log('Fetching applications...'); // Adding log
     fetchApplications();
   }, [selectedStatus]);
-  
+
   const fetchApplications = async () => {
     try {
       const statusKey = statusMap[selectedStatus] || 0;
       const response = await getApplications(statusKey.toString(), 0);
       console.log('API response:', response);
-      
+
       if (response.result && Array.isArray(response.data)) {
         response.data.forEach(app => {
           console.log('Application:', app);
           if (app.groupId === undefined) {
-            console.warn('groupId is missing in application:', app);
-            // 如果 groupId 缺失，可以考虑向用户展示警告信息或做其他处理
+            console.warn('groupId 在申请中缺失:', app);
+            // 根据需要处理缺失的 groupId，例如设置默认值或显示消息
           }
         });
         setApplications(response.data);
       } else {
-        console.error('Unexpected API response format:', response);
-        alert(response.message || 'Failed to fetch applications');
+        console.error('API 响应格式异常:', response);
+        alert(response.message || '获取申请失败');
       }
     } catch (error) {
-      console.error('Error fetching applications:', error);
-      alert('Failed to fetch applications');
+      console.error('获取申请时出错:', error);
+      alert('获取申请失败');
     }
-  };       
-      
+  };
+
   const handleEmailClick = (data: ApplicationData) => {
     console.log('Handling email click', data);
     setFormData(data);
@@ -62,14 +62,14 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
     setIsFormVisible(false);
   };
 
-  const handleApprove = async (id: number, groupId: number) => {
+  const handleApprove = async (id: number | undefined) => {
+    if (id === undefined) {
+      console.error('id 未定义');
+      alert('id 缺失');
+      return;
+    }
     try {
-      if (!id || groupId === undefined) {
-        console.error('id 或 groupId 缺失', { id, groupId });
-        alert('id 或 groupId 缺失');
-        return;
-      }
-      const response = await updateApplication(id, { applyStatus: 1 }, groupId);
+      const response = await updateApplication(id, { applyStatus: 1 });
       if (response.result) {
         alert('申请已批准');
         fetchApplications();
@@ -80,7 +80,8 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
       console.error('批准错误:', error);
       alert('批准申请失败');
     }
-  };    
+  };
+
 
   const handleDelete = async (id: number) => {
     try {
@@ -149,10 +150,10 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                             className={styles.approveButton}
                             onClick={() => {
                               console.log("Approve button clicked");
-                              if (app.id && app.groupId) {
-                                handleApprove(app.id, app.groupId);
+                              if (app.id) {
+                                handleApprove(app.id);
                               } else {
-                                console.error("app.id or app.groupId is undefined", app);
+                                console.error("app.id is undefined", app);
                               }
                             }}
                           >
@@ -201,6 +202,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                           刪除
                         </button>
                       )}
+
                     </td>
 
                   </tr>

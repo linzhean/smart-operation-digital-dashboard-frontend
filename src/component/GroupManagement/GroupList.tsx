@@ -4,10 +4,10 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import UserPickerDialog from './memberControlUserPicker';
+import ChartPickerDialog from './ChartPickerDialog';
 import useGroupList from '../../Hook/useGroupList';
 import styles from './GroupList.module.css';
 import moreInfo from '../../assets/icon/more.svg';
-import { User } from '../../services/types/userManagement';
 
 interface GroupListProps {
   groupId: number;
@@ -22,16 +22,19 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
     showMemberPicker,
     setShowMemberPicker,
     allUsers,
-    chartPermissions,
     charts,
+    allCharts,
     anchorEl,
     isMenuOpen,
     handleRemove,
     handleAddMember,
-    toggleChartPermission,
+    handleAddChart,
+    handleRemoveChart,
     handleDeleteGroup,
     handleMenuOpen,
     handleMenuClose,
+    showChartPicker,
+    setShowChartPicker,
   } = useGroupList({ groupId, onDeleteGroup });
 
   return (
@@ -118,7 +121,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                 <tbody>
                   {memberData.length > 0 ? (
                     memberData.map(member => (
-                      <tr key={member.userId}>
+                      <tr key={member.userId}> {/* 確保 userId 是唯一的 */}
                         <td>{member.userName}</td>
                         <td>{member.department}</td>
                         <td>{member.position || '未指定'}</td>
@@ -129,8 +132,6 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                           >
                             移除
                           </Button>
-
-
                         </td>
                       </tr>
                     ))
@@ -138,42 +139,62 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                     <tr><td colSpan={4}>沒有成員</td></tr>
                   )}
                 </tbody>
+
               </table>
             </div>
           </>
         )}
         {activeButton === 'graphControl' && (
-          <div className={styles.theList}>
-            <table className="custom-scrollbar">
-              <thead>
-                <tr>
-                  <th>圖表名稱</th>
-                  <th>操作</th>
-                </tr>
-              </thead>
-              <tbody>
-                {charts.length > 0 ? (
-                  charts.map(chart => (
-                    <tr key={chart.id}>
-                      <td>{chart.name}</td>
-                      <td>
-                        <button
-                          className={`${styles.toggleButton} ${chartPermissions[chart.id] ? styles.allow : styles.deny}`}
-                          onClick={() => toggleChartPermission(chart.id)}
-                        >
-                          {chartPermissions[chart.id] ? '允許' : '禁止'}
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr><td colSpan={2}>沒有圖表</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <>
+            <div className={styles.buttons}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setShowChartPicker(true)}
+                className={styles.addChartButton}
+              >
+                新增圖表
+              </Button>
+            </div>
+            {showChartPicker && (
+              <ChartPickerDialog
+              open={showChartPicker}
+              onClose={() => setShowChartPicker(false)}
+              onAdd={handleAddChart}
+              charts={allCharts} // 確保這裡傳遞的是 allCharts
+            />
+            )}
+            <div className={styles.theList}>
+              <table className="custom-scrollbar">
+                <thead>
+                  <tr>
+                    <th>圖表名稱</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {charts.length > 0 ? (
+                    charts.map(chart => (
+                      <tr key={chart.id}>
+                        <td>{chart.chartName}</td>
+                        <td>
+                          <button
+                            className={styles.deleteButton}
+                            onClick={() => handleRemoveChart(chart.id)}
+                          >
+                            刪除
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr><td colSpan={2}>沒有圖表</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
-
       </div>
     </div>
   );
