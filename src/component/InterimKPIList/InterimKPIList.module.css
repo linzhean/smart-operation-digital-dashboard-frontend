@@ -7,7 +7,7 @@
   flex-wrap: wrap;
   padding: 10px;
   overflow: auto;
-  white-space: nowrap;
+  /* white-space: nowrap; */
 }
 
 .h2 {
@@ -222,6 +222,28 @@
   padding: 10px;
 }
 
+.theNoWrapTitle {
+  white-space: nowrap;
+}
+
 .hiddenForm {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 0.8em;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ACACBE;
+  border: 0.1em solid #343541;
+  border-radius: 100vw;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(204, 204, 204, 0.5);
+}
+
+::-webkit-scrollbar-button {
   display: none;
 }

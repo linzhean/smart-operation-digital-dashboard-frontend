@@ -19,6 +19,7 @@ interface GroupListProps {
 const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButtonClick, onDeleteGroup }) => {
   const {
     memberData,
+    
     showMemberPicker,
     setShowMemberPicker,
     allUsers,
