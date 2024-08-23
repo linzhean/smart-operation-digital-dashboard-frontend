@@ -66,3 +66,8 @@
     padding-right: 0px;
   }
 }
+
+.alertIcon {
+  vertical-align: text-bottom;
+  width: 30px;
+}

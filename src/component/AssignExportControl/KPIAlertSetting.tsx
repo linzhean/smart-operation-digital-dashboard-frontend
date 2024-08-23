@@ -8,9 +8,12 @@ const minDistance = 1;
 
 interface KPIAlertSettingProps {
   onClose: () => void;
+  chartName: string | null;
 }
 
-export default function KPIAlertSetting({ onClose }: KPIAlertSettingProps) {
+
+export default function KPIAlertSetting({ onClose, chartName }: KPIAlertSettingProps) {
+
   const [value, setValue] = React.useState<number[]>([20, 50]);
 
   const handleSliderChange = (
@@ -59,8 +62,9 @@ export default function KPIAlertSetting({ onClose }: KPIAlertSettingProps) {
 
   return (
     <div className={styles.settingAlert}>
-      <h2>設定警訊數值</h2>
-      <div className={styles.descriptionText}>當數值超過此區間會引發警訊</div>
+      <h2>{`${chartName}警訊`}</h2>
+      <div className={`${styles.descriptionText} ${styles.firstline}`}>若數值超過此區間</div>
+      <div className={styles.descriptionText}>系統會發送異常信件通知您</div>
       <Box sx={{ width: 200 }}>
         <Slider
           value={value}

@@ -11,7 +11,6 @@ import { exportData, getExportPermission } from '../../services/exportService';
 import ChartWithDropdown from '../../component/Dashboard/ChartWithDropdown';
 import ChartService from '../../services/ChartService';
 import styles from './Home.module.css';
-
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const Home: React.FC = () => {
@@ -103,14 +102,14 @@ const Home: React.FC = () => {
       <div className="Home">
         <DashboardSidebar onSelectDashboard={setSelectedDashboard} />
         <div className={styles.dashboard_container}>
-          <button
-            onClick={handleAddChart}
-            className={styles.addChartButton}
-            disabled={!selectedDashboard} // Disable button if no dashboard is selected
-          >
-            新增圖表
-          </button>
           <div className='theContent'>
+            <button
+              onClick={handleAddChart}
+              className={styles.addChartButton}
+              disabled={!selectedDashboard} // Disable button if no dashboard is selected
+            >
+              新增圖表
+            </button>
             <ResponsiveGridLayout
               className="layout"
               layouts={{ lg: layout, md: layout, sm: layout, xs: layout, xxs: layout }}

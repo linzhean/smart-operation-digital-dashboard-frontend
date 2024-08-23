@@ -18,61 +18,62 @@ interface ChartWithDropdownProps {
 }
 
 const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, onChartSelect, currentUserId }) => {
-  const handleDropdownClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-  };
+  // const handleDropdownClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  //   event.stopPropagation();
+  // };
 
   //console用 
-  useEffect(() => {
-    const handleKeyboardEvent = (event: KeyboardEvent) => {
-      console.log(`Received key event: ${event.key}`);
-    };
+  // useEffect(() => {
+  //   const handleKeyboardEvent = (event: KeyboardEvent) => {
+  //     console.log(`Received key event: ${event.key}`);
+  //   };
 
-    document.addEventListener('keydown', handleKeyboardEvent);
+  //   document.addEventListener('keydown', handleKeyboardEvent);
 
-    return () => {
-      document.removeEventListener('keydown', handleKeyboardEvent);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener('keydown', handleKeyboardEvent);
+  //   };
+  // }, []);
 
-  const mouseEnterTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const mouseLeaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // try2
+  // const mouseEnterTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // const mouseLeaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleMouseEnter = () => {
-    setIsDropdownOpen(true);
-  };
+  // const handleMouseEnter = () => {
+  //   setIsDropdownOpen(true);
+  // };
 
-  const handleMouseLeave = () => {
-    if (mouseEnterTimeoutRef.current) {
-      clearTimeout(mouseEnterTimeoutRef.current);
-    }
-    mouseLeaveTimeoutRef.current = setTimeout(() => {
-      setIsDropdownOpen(false);
+  // const handleMouseLeave = () => {
+  //   if (mouseEnterTimeoutRef.current) {
+  //     clearTimeout(mouseEnterTimeoutRef.current);
+  //   }
+  //   mouseLeaveTimeoutRef.current = setTimeout(() => {
+  //     setIsDropdownOpen(false);
 
-    }, 2000);
-  };
+  //   }, 2000);
+  // };
 
-  const handleSimulateClick = () => {
-    const targetElement = document.activeElement as HTMLElement | null;
-    if (targetElement) {
-      const enterEvent = new KeyboardEvent('keydown', {
-        key: 'Enter',
-        code: 'Enter',
-        keyCode: 13,
-        charCode: 13,
-        bubbles: true,
-        cancelable: true,
-      });
+  // const handleSimulateClick = () => {
+  //   const targetElement = document.activeElement as HTMLElement | null;
+  //   if (targetElement) {
+  //     const enterEvent = new KeyboardEvent('keydown', {
+  //       key: 'Enter',
+  //       code: 'Enter',
+  //       keyCode: 13,
+  //       charCode: 13,
+  //       bubbles: true,
+  //       cancelable: true,
+  //     });
 
-      targetElement.dispatchEvent(enterEvent);
-      console.log('被滑鼠點擊了，並模擬鍵盤 Enter 鍵效果');
-    } else {
-      console.log('未找到焦点元素');
-    }
-  };
+  //     targetElement.dispatchEvent(enterEvent);
+  //     console.log('被滑鼠點擊了，並模擬鍵盤 Enter 鍵效果');
+  //   } else {
+  //     console.log('未找到焦点元素');
+  //   }
+  // };
 
   const {
-    isDropdownOpen,
+    // isDropdownOpen,
     toggleDropdown,
     handleExport,
     handleDelegate,
@@ -103,7 +104,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     setEmail,
     setSubject,
     setMessage,
-    setIsDropdownOpen,
+    // setIsDropdownOpen,
     setSelectedCharts,
     setSelectedKPIs,
     setRequestContent,
@@ -215,14 +216,157 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     </>
   )
 
+  // try
+  // const [hoverTime, setHoverTime] = useState(0);
+  // const hoverInterval = useRef<number | null>(null);
+
+  // const hoverMenuTimeout = useRef<number | null>(null);
+  // const closeMenuTimeout = useRef<number | null>(null);
+
+  // const handleMenuMouseEnter = () => {
+  //   if (closeMenuTimeout.current) {
+  //     clearTimeout(closeMenuTimeout.current);
+  //   }
+  //   setHoverTime(0);
+  //   hoverInterval.current = window.setInterval(() => {
+  //     setHoverTime(prev => {
+  //       if (prev < 1.5) {
+  //         return prev + 0.1; // 每0.1秒更新一次進度
+  //       } else {
+  //         clearInterval(hoverInterval.current!);
+  //         toggleDropdown();
+  //         return prev;
+  //       }
+  //     });
+  //   }, 100); // 每100毫秒更新一次進度
+
+  //   hoverMenuTimeout.current = window.setTimeout(() => {
+  //     toggleDropdown();
+  //   }, 1500);
+  // };
+
+  // const handleMenuMouseLeave = () => {
+  //   if (hoverMenuTimeout.current) {
+  //     clearTimeout(hoverMenuTimeout.current);
+  //   }
+  //   if (hoverInterval.current) {
+  //     clearInterval(hoverInterval.current);
+  //   }
+  //   closeMenuTimeout.current = window.setTimeout(() => {
+  //     toggleDropdown();
+  //   }, 1000);
+  // };
+
+
+  // 設定Menu
+  const [hoverTime, setHoverTime] = useState(0);
+  const hoverInterval = useRef<number | null>(null);
+  const hoverMenuTimeout = useRef<number | null>(null);
+  const closeMenuTimeout = useRef<number | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleMenuMouseEnter = () => {
+    if (closeMenuTimeout.current) {
+      clearTimeout(closeMenuTimeout.current);
+    }
+    setHoverTime(0);
+    hoverInterval.current = window.setInterval(() => {
+      setHoverTime(prev => {
+        if (prev < 1) { // 更新進度至0.9
+          return prev + 0.1; // 每0.1秒更新一次進度
+        } else {
+          clearInterval(hoverInterval.current!);
+          setIsDropdownOpen(true);
+          toggleDropdown();
+          return prev;
+        }
+      });
+    }, 100);
+
+    hoverMenuTimeout.current = window.setTimeout(() => {
+      if (!isDropdownOpen) {
+        setIsDropdownOpen(true);
+        toggleDropdown();
+      }
+    }, 1000);
+  };
+
+  const handleMenuMouseLeave = () => {
+    if (hoverMenuTimeout.current) {
+      clearTimeout(hoverMenuTimeout.current);
+    }
+    if (hoverInterval.current) {
+      clearInterval(hoverInterval.current);
+    }
+
+    closeMenuTimeout.current = window.setTimeout(() => {
+      setHoverTime(0);
+      if (isDropdownOpen) {
+        setIsDropdownOpen(false);
+        toggleDropdown();
+      }
+    }, 300);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (hoverMenuTimeout.current) {
+        clearTimeout(hoverMenuTimeout.current);
+      }
+      if (closeMenuTimeout.current) {
+        clearTimeout(closeMenuTimeout.current);
+      }
+      if (hoverInterval.current) {
+        clearInterval(hoverInterval.current);
+      }
+    };
+  }, []);
+
+
+  // 設定button
+  const hoverTimeouts = useRef<{ [key: string]: NodeJS.Timeout | null }>({
+    export: null,
+    delegate: null,
+    advancedAnalysis: null,
+  });
+
+  const [hoverProgress, setHoverProgress] = useState<{ [key: string]: number }>({
+    export: 0,
+    delegate: 0,
+    advancedAnalysis: 0,
+  });
+
+  const handleMouseEnter = (action: string, callback: () => void) => {
+    let progress = 0;
+    hoverTimeouts.current[action] = setInterval(() => {
+      progress += 0.1;
+      setHoverProgress(prev => ({ ...prev, [action]: progress }));
+      if (progress >= 1) {
+        clearInterval(hoverTimeouts.current[action]!);
+        callback();
+      }
+    }, 100);
+  };
+
+  const handleMouseLeave = (action: string) => {
+    if (hoverTimeouts.current[action]) {
+      clearInterval(hoverTimeouts.current[action]!);
+      hoverTimeouts.current[action] = null;
+    }
+    setHoverProgress(prev => ({ ...prev, [action]: 0 }));
+  };
+
   return (
     <div className={styles.chartContainer}>
       <div className={styles.chartHeader}>
         <div
           className={styles.dropdownContainer}
-          onClick={handleDropdownClick}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}>
+          onMouseEnter={handleMenuMouseEnter}
+          onMouseLeave={handleMenuMouseLeave}
+        >
+          {hoverTime > 0 && (
+            <div className={styles.MenuTimerCircle} style={{ '--progress': hoverTime / 1 } as React.CSSProperties} />
+          )}
           <button
             onClick={() => {
               toggleDropdown();
@@ -232,11 +376,48 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             <img src={more} alt="" />
           </button>
           {isDropdownOpen && (
+            // <div className={styles.dropdownMenu}>
+            //   <button onClick={handleExport}>匯出</button>
+            //   <button onClick={handleDelegate}>交辦</button>
+            //   {/* <button onClick={handleChartSelect}>選擇圖表</button> */}
+            //   <button onClick={handleAdvancedAnalysis}>進階分析</button>
+            // </div>
             <div className={styles.dropdownMenu}>
-              <button onClick={handleExport}>匯出</button>
-              <button onClick={handleDelegate}>交辦</button>
-              <button onClick={handleChartSelect}>選擇圖表</button>
-              <button onClick={handleAdvancedAnalysis}>進階分析</button>
+              <div
+                className={styles.buttonContainer}
+                onMouseEnter={() => handleMouseEnter('export', handleExport)}
+                onMouseLeave={() => handleMouseLeave('export')}
+              >
+                <button>匯出</button>
+                <div
+                  className={styles.timerCircle}
+                  style={{ '--progress': hoverProgress.export } as React.CSSProperties}
+                />
+              </div>
+
+              <div
+                className={styles.buttonContainer}
+                onMouseEnter={() => handleMouseEnter('delegate', handleDelegate)}
+                onMouseLeave={() => handleMouseLeave('delegate')}
+              >
+                <button>交辦</button>
+                <div
+                  className={styles.timerCircle}
+                  style={{ '--progress': hoverProgress.delegate } as React.CSSProperties}
+                />
+              </div>
+
+              <div
+                className={styles.buttonContainer}
+                onMouseEnter={() => handleMouseEnter('advancedAnalysis', handleAdvancedAnalysis)}
+                onMouseLeave={() => handleMouseLeave('advancedAnalysis')}
+              >
+                <button>進階分析</button>
+                <div
+                  className={styles.timerCircle}
+                  style={{ '--progress': hoverProgress.advancedAnalysis } as React.CSSProperties}
+                />
+              </div>
             </div>
           )}
         </div>
@@ -252,8 +433,9 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
 
       {/* 交辦的表單 */}
       {isModalOpen && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}
+      {/* 進階分析 */}
+      {Array.isArray(interactiveCharts) && interactiveCharts.length > 0 && (ReactDOM.createPortal(advancedAnalysis, document.getElementById('portal-root')!))}
 
-      {/* Modal for sting charts */}
       {isChartSelectModalOpen && (
         <div className={styles.modal}>
           <h2>選擇圖表</h2>
@@ -273,7 +455,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         </div>
       )}
 
-      {/* Modal for KPI request */}
       {isRequestKpiModalOpen && (
         <div className={styles.modal}>
           <form onSubmit={handleRequestSubmit}>
@@ -315,7 +496,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         </div>
       )}
 
-      {Array.isArray(interactiveCharts) && interactiveCharts.length > 0 && (ReactDOM.createPortal(advancedAnalysis, document.getElementById('portal-root')!))}
 
 
     </div>

@@ -12,6 +12,7 @@ import { UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './AssignControl.module.css';
 import KPIAlertSetting from './KPIAlertSetting';
+import alertIcon from '../../assets/icon/alertSetting.svg'
 
 const useStyles = makeStyles({
   dialogPaper: {
@@ -132,10 +133,13 @@ const AssignTaskControl: React.FC = () => {
   const [charts, setCharts] = useState<Chart[]>([]);
   const [assignedTasks, setAssignedTasks] = useState<{ [key: number]: AssignedTask[] }>({});
   const [showKPIAlertSetting, setShowKPIAlertSetting] = useState(false);
+  const [currentChartName, setCurrentChartName] = useState<string | null>(null);
 
-  const handleSetAlert = () => {
+  const handleSetAlert = (chartName: string) => {
+    setCurrentChartName(chartName);
     setShowKPIAlertSetting(true);
   };
+
   const handleCloseAlert = () => {
     setShowKPIAlertSetting(false);
   };
@@ -234,7 +238,8 @@ const AssignTaskControl: React.FC = () => {
             <tbody>
               {charts.map((chart) => (
                 <tr key={chart.id}>
-                  <td onClick={handleSetAlert}>{chart.name}</td>
+                  <td onClick={() => handleSetAlert(chart.name)}>{chart.name} <img src={alertIcon} className={styles.alertIcon} alt="" /></td>
+
                   <td>
                     {currentUser.permissions.includes('create_task') || currentUser.permissions.includes('update_task') ? (
                       <Button variant="contained" color="primary" onClick={() => handleOpenDialog(chart.id)}>
@@ -257,7 +262,7 @@ const AssignTaskControl: React.FC = () => {
         chartId={currentChart}
       />
       {showKPIAlertSetting && (
-        <KPIAlertSetting onClose={handleCloseAlert} />
+        <KPIAlertSetting onClose={handleCloseAlert} chartName={currentChartName} />
       )}
     </>
   );
