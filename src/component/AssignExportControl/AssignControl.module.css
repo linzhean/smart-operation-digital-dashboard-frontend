@@ -68,6 +68,7 @@
 }
 
 .alertIcon {
-  vertical-align: text-bottom;
+  vertical-align: middle;
   width: 30px;
+  margin: 10px;
 }

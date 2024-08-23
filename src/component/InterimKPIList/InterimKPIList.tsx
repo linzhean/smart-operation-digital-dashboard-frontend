@@ -122,7 +122,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
         <div className={`${styles.theContent} theContent`}>
           <h2 className={styles.h2}>申請記錄 － {selectedStatus}</h2>
           <div className={styles.thePermissionList}>
-            <table className={styles.customScrollbar}>
+            <table>
               <thead>
                 <tr>
                   <th>申請人</th>

@@ -129,7 +129,7 @@ body {
 
 /* 控制滑動滾輪樣式 */
 ::-webkit-scrollbar {
-  width: 0.8em;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
