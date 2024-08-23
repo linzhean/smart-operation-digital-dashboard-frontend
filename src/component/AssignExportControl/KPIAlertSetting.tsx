@@ -65,7 +65,27 @@ export default function KPIAlertSetting({ onClose, chartName }: KPIAlertSettingP
       <h2>{`${chartName}警訊`}</h2>
       <div className={`${styles.descriptionText} ${styles.firstline}`}>若數值超過此區間</div>
       <div className={styles.descriptionText}>系統會發送異常信件通知您</div>
-      <Box sx={{ width: 200 }}>
+      <Box
+        sx={{
+          width: 200,
+          '@media (min-width: 1200px)': {
+            width: '350px',
+            position: 'fixed',
+            top: '57%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            transition: 'all 0.3s ease',
+          },
+          '@media (min-width: 600px) and (max-width: 1199px)': {
+            width: '300px',
+            position: 'fixed',
+            top: '57%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            transition: 'all 0.3s ease',
+          },
+        }}
+      >
         <Slider
           value={value}
           onChange={handleSliderChange}
@@ -114,7 +134,23 @@ export default function KPIAlertSetting({ onClose, chartName }: KPIAlertSettingP
             },
           }}
         />
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, gap: '18px' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            mt: 2,
+            gap: '18px',
+            justifyContent: 'center',
+            '@media (min-width: 1200px)': {
+              marginTop: '22px',
+              gap: '55px',
+
+            },
+            '@media (min-width: 600px) and (max-width: 1199px)': {
+              marginTop: '22px',
+              gap: '40px',
+            },
+          }}
+        >
           <TextField
             label="最低"
             value={value[0]}
