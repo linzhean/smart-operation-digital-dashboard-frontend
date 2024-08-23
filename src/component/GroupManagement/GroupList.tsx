@@ -7,7 +7,7 @@ import UserPickerDialog from './memberControlUserPicker';
 import ChartPickerDialog from './ChartPickerDialog';
 import useGroupList from '../../Hook/useGroupList';
 import styles from './GroupList.module.css';
-import moreInfo from '../../assets/icon/more.svg';
+import moreInfo from '../../assets/icon/more.png';
 
 interface GroupListProps {
   groupId: number;
@@ -79,8 +79,13 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
               aria-haspopup="true"
               onClick={handleMenuOpen}
               className={styles.dropdownButton}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "transparent",
+                },
+              }}
             >
-              <img src={moreInfo} alt="操作" />
+              <img src={moreInfo} className={styles.moreIcon} alt="操作" />
             </IconButton>
             <Menu
               id="long-menu"
@@ -134,7 +139,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                       </tr>
                     ))
                   ) : (
-                    <tr><td colSpan={4}>沒有成員</td></tr>
+                    <tr><td colSpan={4}>查無成員</td></tr>
                   )}
                 </tbody>
 
@@ -152,23 +157,28 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
               新增圖表
             </Button>
             <IconButton
-              aria-label="more"
-              aria-controls="long-menu"
+              aria-label="更多操作"
+              aria-controls="long-menu2"
               aria-haspopup="true"
               onClick={handleMenuOpen}
               className={styles.dropdownButton}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "transparent",
+                },
+              }}
             >
-              <img src={moreInfo} alt="操作" />
+              <img src={moreInfo} className={styles.moreIcon} alt="操作" />
             </IconButton>
             <Menu
-              id="long-menu"
+              id="long-menu2"
               anchorEl={anchorEl}
               keepMounted
               open={isMenuOpen}
               onClose={handleMenuClose}
               className={styles.dropdownMenu}
             >
-              <MenuItem onClick={() => { setShowChartPicker(true); handleMenuClose(); }}>新增成員</MenuItem>
+              <MenuItem onClick={() => { setShowChartPicker(true); handleMenuClose(); }}>新增圖表</MenuItem>
             </Menu>
 
             {showChartPicker && (
@@ -204,7 +214,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                       </tr>
                     ))
                   ) : (
-                    <tr><td colSpan={2}>沒有圖表</td></tr>
+                    <tr><td colSpan={2}>查無圖表</td></tr>
                   )}
                 </tbody>
               </table>

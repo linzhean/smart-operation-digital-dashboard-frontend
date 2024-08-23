@@ -191,7 +191,7 @@ li:hover .editButton {
 }
 
 /* 圖片樣式 */
-.newGroup {
+.theIcon {
   width: 35px;
   height: 35px;
   display: block;
@@ -396,4 +396,51 @@ li:hover .editButton {
 
 .modalSubmit span:hover:after {
   width: 100%;
+}
+
+@media (max-width: 499px) {
+
+  .addButton,
+  .sidebartitle,
+  .noGroupMsg,
+  .editButton {
+    font-size: 1rem !important;
+  }
+
+  .sidebar_inner {
+    width: 200px;
+  }
+
+  .addButton {
+    margin-left: 33px;
+  }
+
+  .close {
+    right: -28%;
+  }
+
+  .modalContent {
+    width: 200px;
+    padding: 10px;
+    padding-bottom: 8px;
+  }
+
+  .closeModal {
+    font-size: 1.2rem;
+  }
+
+  .circleIcon {
+    width: 70px;
+    height: 70px;
+    top: -55px;
+  }
+
+  .theIcon {
+    margin-left: 14.5px;
+    margin-top: 12.5px;
+  }
+
+  .modal {
+    padding: 15px;
+  }
 }

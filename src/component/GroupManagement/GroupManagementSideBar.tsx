@@ -179,7 +179,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onSubmit, title, icon, value, on
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <div className={styles.circleIcon}>
-          <img src={icon} className={styles.newGroup} alt="" />
+          <img src={icon} className={styles.theIcon} alt="" />
         </div>
         <h2>{title}</h2>
         <button onClick={onClose} className={styles.closeModal}>X</button>
