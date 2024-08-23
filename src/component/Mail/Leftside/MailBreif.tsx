@@ -3,6 +3,8 @@ import React from 'react';
 import '../../../styles/mailBreif.css';
 import MailItem from "./MailItem";
 import { Email } from '../../../services/mailService';
+import KPI from '../../../assets/icon/testKPI.svg';
+import '../../../styles/mailItem.css';
 
 interface MailBreifProps {
   onMailClick?: (id: number) => void;

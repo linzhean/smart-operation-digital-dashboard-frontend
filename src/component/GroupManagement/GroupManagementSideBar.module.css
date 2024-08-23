@@ -92,7 +92,7 @@
 
 
 .sidebartitle:hover {
-  background-color: #ACACBE;
+  background-color: #ffffffdb;
   border-radius: 25px;
   color: black;
 }
@@ -111,7 +111,7 @@
 }
 
 .active {
-  background-color: #ACACBE;
+  background-color: #ffffffdb;
   border-radius: 25px;
   color: black;
 }

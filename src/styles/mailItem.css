@@ -14,15 +14,19 @@
 }
 
 .kpiname {
-  position: absolute;
-  top: 13px;
-  left: 12px;
+  margin-top: 3px;
+  margin-bottom: 2px;
+  width: fit-content;
   color: #fff;
   font-size: 1.5em;
   font-weight: bold;
   background-color: rgba(0, 0, 0, 0.3);
   padding: 8px;
   border-radius: 4px;
+}
+
+.leftmail:nth-child(n+2) .kpiname {
+  margin-top: 10px;
 }
 
 .kpi .caption {
@@ -36,7 +40,7 @@
 .kpi .assignor {
   position: absolute;
   bottom: 10%;
-  right: 35%;
+  margin-left: 10px;
   font-size: large;
   font-weight: bold;
 }
