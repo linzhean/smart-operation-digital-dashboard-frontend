@@ -11,7 +11,6 @@ const Pdata: React.FC = () => {
       <PdataSidebar />
       <div className="main_container">
         <div className="theContent" style={{ overflow: 'hidden' }}>
-          {/* <div className="theContent" > */}
           <Routes>
             <Route path="profile" element={<Profile />} />
             <Route path="loginHistory" element={<LoginHistory />} />

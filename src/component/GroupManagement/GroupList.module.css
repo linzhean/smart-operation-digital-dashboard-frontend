@@ -182,7 +182,7 @@
   }
 }
 
-@media (min-width: 491px) {
+@media (min-width: 490px) {
   .dropdownButton {
     display: none !important;
   }
@@ -218,8 +218,7 @@
 
 /* 字體大小設置 */
 
-@media (max-width: 499px) {
-
+@media (max-width: 490px) {
   .theList,
   .filterButton button,
   .addButton,
@@ -227,7 +226,6 @@
   .removeButton {
     font-size: 0.8rem !important;
   }
-
   .removeButton {
     height: 15px !important;
     transition: width 0.3s, height 0.3s !important;
