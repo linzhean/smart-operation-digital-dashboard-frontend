@@ -90,10 +90,24 @@
   cursor: pointer;
 }
 
+
 .sidebartitle:hover {
   background-color: #ACACBE;
   border-radius: 25px;
   color: black;
+}
+
+.noGroupMsg {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 1px;
+  color: rgb(255, 255, 255, 1);
+  font-weight: bold;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 
 .active {
@@ -162,11 +176,7 @@ li:hover .editButton {
   border-radius: 8px;
 }
 
-/* .modalContent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-} */
+/* 包住圖片的白色背景 */
 .circleIcon {
   position: absolute;
   margin: 0;
@@ -180,13 +190,15 @@ li:hover .editButton {
   border: 5.5px solid black;
 }
 
+/* 圖片樣式 */
 .newGroup {
   width: 35px;
-  height: 45px;
+  height: 35px;
   display: block;
   position: absolute;
-  margin-left: 20px;
-  margin-top: 11px;
+  margin-left: 19.5px;
+  margin-top: 17.5px;
+  border: none !important;
 }
 
 .rename {

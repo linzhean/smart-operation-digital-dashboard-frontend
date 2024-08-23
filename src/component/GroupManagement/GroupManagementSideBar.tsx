@@ -4,8 +4,8 @@ import styles from './GroupManagementSideBar.module.css';
 import { fetchGroups, addGroup, updateGroupName } from '../../services/GroupApi';
 import { Group } from '../../services/types/userManagement';
 import editIcon from '../../assets/icon/edit-black.svg';
-import newGroup from '../../assets/icon/newGroup.svg';
-import rename from '../../assets/icon/rename.svg';
+import newGroup from '../../assets/icon/newGroup.png';
+import rename from '../../assets/icon/rename.png';
 
 interface SidebarProps {
   onSelectGroup: (groupId: number) => void;
@@ -31,13 +31,13 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
     };
 
     window.addEventListener('resize', handleResize);
-    
+
     const fetchGroupData = async () => {
       try {
         const fetchedGroups = await fetchGroups();
         setGroups(fetchedGroups);
       } catch (error) {
-        console.error('获取群组信息失败:', error);
+        console.error('獲取群組訊息失敗:', error);
       }
     };
 
@@ -61,12 +61,12 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
         createDate: '',
         modifyDate: '',
       });
-  
+
       setGroups(prevGroups => [...prevGroups, newGroup]);
       setNewGroupName('');
       setIsModalOpen(false);
     } catch (error) {
-      console.error('新增群组失败:', error);
+      console.error('新增群組失敗:', error);
     }
   };
 
@@ -85,7 +85,7 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
         setIsUpdateModalOpen(false);
         setUpdatedGroupName('');
       } catch (error) {
-        console.error('更新群组名称失败:', error);
+        console.error('編輯群組名稱失敗:', error);
       }
     }
   };
@@ -107,12 +107,12 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
             disabled={isDisabled}
           ></button>
           <div className={styles.close} onClick={() => setIsActive(false)}>
-            <img src={closearrow} alt="关闭侧边栏" />
+            <img src={closearrow} alt="關閉側邊欄" />
           </div>
           <ul className={`${styles.sidebar_menu} mostly-customized-scrollbar`}>
             <li>
               <button className={styles.addButton} onClick={() => setIsModalOpen(true)}>
-                新增群组
+                新增群組
               </button>
             </li>
             {groups.length > 0 ? (
@@ -130,7 +130,7 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
                 </li>
               ))
             ) : (
-              <li>暂无群组</li>
+              <li className={`${styles.noGroupMsg}`}>目前查無群組</li>
             )}
           </ul>
         </div>
@@ -140,11 +140,11 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
         <Modal
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleAddGroup}
-          title="新增群组"
+          title="新增群組"
           icon={newGroup}
           value={newGroupName}
           onChange={e => setNewGroupName(e.target.value)}
-          placeholder="请输入群组名称"
+          placeholder="請輸入群組名稱"
         />
       )}
 
@@ -152,11 +152,11 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
         <Modal
           onClose={() => setIsUpdateModalOpen(false)}
           onSubmit={handleConfirmUpdate}
-          title="更新群组名称"
+          title="編輯群組名稱"
           icon={rename}
           value={updatedGroupName}
           onChange={e => setUpdatedGroupName(e.target.value)}
-          placeholder="请输入新的群组名称"
+          placeholder="請輸入新的群組名稱"
         />
       )}
     </div>
@@ -179,7 +179,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onSubmit, title, icon, value, on
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <div className={styles.circleIcon}>
-          <img src={icon} className={styles.icon} alt="" />
+          <img src={icon} className={styles.newGroup} alt="" />
         </div>
         <h2>{title}</h2>
         <button onClick={onClose} className={styles.closeModal}>X</button>
@@ -191,7 +191,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onSubmit, title, icon, value, on
         />
         <div>
           <button onClick={onSubmit} className={styles.modalSubmit}>
-            <span>确定</span>
+            <span>確定</span>
           </button>
         </div>
       </div>

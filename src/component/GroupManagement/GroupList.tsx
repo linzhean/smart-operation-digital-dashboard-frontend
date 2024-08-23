@@ -46,6 +46,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
           className={activeButton === 'memberControl' ? styles.filterActive : ''}
         >
           群組成員
+          <span></span><span></span><span></span><span></span>
         </button>
         <button
           id="graphControl"
@@ -53,50 +54,46 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
           className={activeButton === 'graphControl' ? styles.filterActive : ''}
         >
           群組可視圖表
+          <span></span><span></span><span></span><span></span>
         </button>
       </div>
 
       <div className={styles.theTable}>
         {activeButton === 'memberControl' && (
           <>
-            <div className={styles.buttons}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setShowMemberPicker(true)}
-                className={styles.addButton}
-              >
-                新增成員
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleDeleteGroup}
-                className={styles.deleteGroupButton}
-              >
-                刪除群組
-              </Button>
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={handleMenuOpen}
-                className={styles.dropdownButton}
-              >
-                <img src={moreInfo} alt="操作" />
-              </IconButton>
-              <Menu
-                id="long-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={isMenuOpen}
-                onClose={handleMenuClose}
-                className={styles.dropdownMenu}
-              >
-                <MenuItem onClick={() => { setShowMemberPicker(true); handleMenuClose(); }}>新增成員</MenuItem>
-                <MenuItem onClick={() => { handleDeleteGroup(); handleMenuClose(); }}>刪除群組</MenuItem>
-              </Menu>
-            </div>
+            <Button
+              onClick={() => setShowMemberPicker(true)}
+              className={styles.addButton}
+            >
+              新增成員
+            </Button>
+            <Button
+              onClick={handleDeleteGroup}
+              className={styles.deleteGroupButton}
+            >
+              刪除群組
+            </Button>
+            <IconButton
+              aria-label="more"
+              aria-controls="long-menu"
+              aria-haspopup="true"
+              onClick={handleMenuOpen}
+              className={styles.dropdownButton}
+            >
+              <img src={moreInfo} alt="操作" />
+            </IconButton>
+            <Menu
+              id="long-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={isMenuOpen}
+              onClose={handleMenuClose}
+              className={styles.dropdownMenu}
+            >
+              <MenuItem onClick={() => { setShowMemberPicker(true); handleMenuClose(); }}>新增成員</MenuItem>
+              <MenuItem onClick={() => { handleDeleteGroup(); handleMenuClose(); }}>刪除群組</MenuItem>
+            </Menu>
+
             {showMemberPicker && (
               <UserPickerDialog
                 open={showMemberPicker}
@@ -121,7 +118,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                 <tbody>
                   {memberData.length > 0 ? (
                     memberData.map(member => (
-                      <tr key={member.userId}> {/* 確保 userId 是唯一的 */}
+                      <tr key={member.userId}>
                         <td>{member.userName}</td>
                         <td>{member.department}</td>
                         <td>{member.position || '未指定'}</td>
@@ -129,6 +126,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                           <Button
                             variant="outlined"
                             onClick={() => handleRemove(Number(member.userId), member.userName)}
+                            className={styles.removeButton}
                           >
                             移除
                           </Button>
@@ -144,25 +142,42 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
             </div>
           </>
         )}
+
         {activeButton === 'graphControl' && (
           <>
-            <div className={styles.buttons}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setShowChartPicker(true)}
-                className={styles.addChartButton}
-              >
-                新增圖表
-              </Button>
-            </div>
+            <Button
+              onClick={() => setShowChartPicker(true)}
+              className={styles.addButton}
+            >
+              新增圖表
+            </Button>
+            <IconButton
+              aria-label="more"
+              aria-controls="long-menu"
+              aria-haspopup="true"
+              onClick={handleMenuOpen}
+              className={styles.dropdownButton}
+            >
+              <img src={moreInfo} alt="操作" />
+            </IconButton>
+            <Menu
+              id="long-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={isMenuOpen}
+              onClose={handleMenuClose}
+              className={styles.dropdownMenu}
+            >
+              <MenuItem onClick={() => { setShowChartPicker(true); handleMenuClose(); }}>新增成員</MenuItem>
+            </Menu>
+
             {showChartPicker && (
               <ChartPickerDialog
-              open={showChartPicker}
-              onClose={() => setShowChartPicker(false)}
-              onAdd={handleAddChart}
-              charts={allCharts} // 確保這裡傳遞的是 allCharts
-            />
+                open={showChartPicker}
+                onClose={() => setShowChartPicker(false)}
+                onAdd={handleAddChart}
+                charts={allCharts}
+              />
             )}
             <div className={styles.theList}>
               <table className="custom-scrollbar">
@@ -178,12 +193,13 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                       <tr key={chart.id}>
                         <td>{chart.chartName}</td>
                         <td>
-                          <button
-                            className={styles.deleteButton}
+                          <Button
+                            variant="outlined"
                             onClick={() => handleRemoveChart(chart.id)}
+                            className={styles.removeButton}
                           >
-                            刪除
-                          </button>
+                            移除
+                          </Button>
                         </td>
                       </tr>
                     ))
