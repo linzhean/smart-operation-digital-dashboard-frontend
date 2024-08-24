@@ -3,21 +3,21 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import LineChart from '../../component/Chart/LineChart';
-import BarChart from '../../component/Chart/BarChart';
-import DoughnutChart from '../../component/Chart/DoughnutChart';
 import DashboardSidebar from '../../component/Dashboard/DashboardSidebar';
 import { saveAs } from 'file-saver';
 import { exportData, getExportPermission } from '../../services/exportService';
 import ChartWithDropdown from '../../component/Dashboard/ChartWithDropdown';
 import ChartService from '../../services/ChartService';
 import styles from './Home.module.css';
+import { Dashboard } from '../../services/types/dashboard';
+
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const Home: React.FC = () => {
   const [layout, setLayout] = useState<any[]>([]);
   const [selectedChartData, setSelectedChartData] = useState<any>(null);
   const [selectedDashboard, setSelectedDashboard] = useState<string | null>(null);
-  const [charts, setCharts] = useState<any[]>([]); // 用於追蹤已新增的圖表
+  const [charts, setCharts] = useState<any[]>([]);
 
   useEffect(() => {
     if (selectedDashboard) {
@@ -86,30 +86,30 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleAddChart = () => {
-    if (selectedDashboard) {
-      // 新增圖表到儀表板的邏輯
-      const newChartId = Date.now(); // 替代的新圖表 ID
-      setLayout(prevLayout => [...prevLayout, { i: `chart-${newChartId}`, x: 0, y: 0, w: 4, h: 4 }]);
-      setCharts(prevCharts => [...prevCharts, { id: newChartId, name: `Chart ${newChartId}` }]); // 將新圖表添加到狀態中
-    } else {
-      alert('請先選擇一個儀表板。');
-    }
+  const handleDashboardCreated = (dashboard: Dashboard, newCharts: any[]) => {
+    console.log('Dashboard Created:', dashboard);
+    console.log('New Charts:', newCharts);
+    setSelectedDashboard(dashboard.id.toString());
+    setCharts(newCharts);
+    const newLayout = newCharts.map((chart: any, index: number) => ({
+      i: `chart-${chart.id}`,
+      x: (index * 4) % 12,
+      y: Math.floor(index / 3) * 4,
+      w: 4,
+      h: 4,
+    }));
+    setLayout(newLayout);
   };
 
   return (
     <div className='wrapper'>
       <div className="Home">
-        <DashboardSidebar onSelectDashboard={setSelectedDashboard} />
+        <DashboardSidebar
+          onSelectDashboard={setSelectedDashboard}
+          currentUserId={''}
+        />
         <div className={styles.dashboard_container}>
           <div className='theContent'>
-            <button
-              onClick={handleAddChart}
-              className={styles.addChartButton}
-              disabled={!selectedDashboard} // Disable button if no dashboard is selected
-            >
-              新增圖表
-            </button>
             <ResponsiveGridLayout
               className="layout"
               layouts={{ lg: layout, md: layout, sm: layout, xs: layout, xxs: layout }}
@@ -118,9 +118,14 @@ const Home: React.FC = () => {
             >
               {charts.map(chart => (
                 <div key={`chart-${chart.id}`} className={styles.dataCard}>
-                  <ChartWithDropdown exportData={handleExport} chartId={chart.id} requestData={[]} onChartSelect={handleChartSelect} currentUserId={''}>
-                    {/* 根據圖表類型動態渲染圖表組件 */}
-                    <LineChart data={selectedChartData} /> {/* 根據圖表類型進行調整 */}
+                  <ChartWithDropdown
+                    exportData={handleExport}
+                    chartId={chart.id}
+                    requestData={[]}
+                    onChartSelect={handleChartSelect}
+                    currentUserId={''}
+                  >
+                    <LineChart data={selectedChartData} />
                   </ChartWithDropdown>
                 </div>
               ))}

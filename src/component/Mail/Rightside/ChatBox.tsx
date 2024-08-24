@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import '../../../styles/chatBox.css';
 import { Email, EmailMessage, getEmailDetails, sendMessage } from '../../../services/mailService';
 
@@ -27,7 +27,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
     loadEmail();
   }, [emailId]);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = useCallback(async () => {
     if (newMessage.trim()) { // Ensure message is not empty
       try {
         const newMessageId = Date.now(); // Generate a unique ID
@@ -40,7 +40,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
           modifyId: 'currentUser',
           modifyDate: new Date().toISOString(),
         });
-        setMessages([...messages, newChatMessage]);
+        setMessages(prevMessages => [...prevMessages, newChatMessage]);
         setNewMessage('');
         if (onMessageChange) {
           onMessageChange(newMessage);
@@ -51,7 +51,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
     } else {
       console.error('Message content cannot be empty.');
     }
-  };
+  }, [emailId, newMessage, onMessageChange]);
 
   return (
     <div className="chatContainer">
@@ -71,7 +71,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
             </div>
           ))
         ) : (
-          <p>No messages yet</p>
+          <p>沒有訊息了</p>
         )}
       </div>
       <div className="input-container">

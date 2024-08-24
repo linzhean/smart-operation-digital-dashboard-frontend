@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { User } from '../services/types/userManagement';
 import {
   fetchUsersByGroupId,
@@ -9,7 +9,7 @@ import {
   fetchChartsByGroupId,
   removeChartFromGroup,
 } from '../services/GroupApi';
-import ChartService from '../services/ChartService'; // Import the ChartService
+import ChartService from '../services/ChartService';
 
 interface UseGroupListParams {
   groupId: number;
@@ -26,47 +26,39 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
 
-  useEffect(() => {
-    const fetchGroupData = async () => {
-      try {
-        const [userList, chartsResponse, allChartsResponse] = await Promise.all([
-          fetchUsersByGroupId(groupId),
-          fetchChartsByGroupId(groupId),
-          ChartService.getAllCharts(),
-        ]);
+  const fetchData = useCallback(async () => {
+    try {
+      const [userList, chartsResponse, allChartsResponse] = await Promise.all([
+        fetchUsersByGroupId(groupId),
+        fetchChartsByGroupId(groupId),
+        ChartService.getAllCharts(),
+      ]);
 
-        console.log('Fetched user list:', userList);
-        console.log('Fetched charts response:', chartsResponse);
-        console.log('Fetched all charts response:', allChartsResponse);
-
-        setMemberData(userList);
-        // 更新charts状态以匹配图表名称
-        setCharts(chartsResponse.map(chart => ({
-          id: chart.chartId, // 确保id字段匹配
-          chartName: chart.chartName, // 使用chartName字段
-          chartGroupId: chart.chartGroupId,
-        })));
-        setAllCharts(allChartsResponse.data.map((chart: { id: number; name: string }) => ({
-          id: chart.id,
-          name: chart.name,
-        })));
-
-        console.log('Charts in useGroupList:', chartsResponse);
-      } catch (error) {
-        console.error('Error fetching group data:', error);
-      }
-    };
-
-    fetchGroupData();
+      setMemberData(userList);
+      setCharts(chartsResponse.map(chart => ({
+        id: chart.chartId,
+        chartName: chart.chartName,
+        chartGroupId: chart.chartGroupId,
+      })));
+      setAllCharts(allChartsResponse.data.map((chart: { id: number; name: string }) => ({
+        id: chart.id,
+        name: chart.name,
+      })));
+    } catch (error) {
+      console.error('Error fetching group data:', error);
+    }
   }, [groupId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleAddMember = async (selectedUsers: User[]) => {
     try {
       await Promise.all(
         selectedUsers.map(user => addUserToGroup({ userId: user.userId, groupId }))
       );
-      const updatedMembers = await fetchUsersByGroupId(groupId);
-      setMemberData(updatedMembers);
+      await fetchData(); // Update data after adding members
       setShowMemberPicker(false);
     } catch (error) {
       console.error('Error adding member:', error);
@@ -76,9 +68,13 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   const handleRemove = async (userId: number, userName: string) => {
     if (window.confirm(`確定要移除 ${userName} 嗎？`)) {
       try {
-        await removeUserFromGroup(userId);
-        const updatedMembers = await fetchUsersByGroupId(groupId);
-        setMemberData(updatedMembers);
+        const member = memberData.find(member => Number(member.userId) === userId);
+        if (member && member.userGroupId) {
+          await removeUserFromGroup(member.userGroupId);
+          await fetchData(); // Update data after removing member
+        } else {
+          console.error('無法找到有效的 userGroupId', { member, groupId });
+        }
       } catch (error) {
         console.error('Error removing member:', error);
       }
@@ -90,12 +86,7 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
       await Promise.all(
         selectedCharts.map(chart => updateGroupChartPermissions(groupId, chart.id, true))
       );
-      const updatedCharts = await fetchChartsByGroupId(groupId);
-      setCharts(updatedCharts.map(chart => ({
-        id: chart.chartId, // 确保id字段匹配
-        chartName: chart.chartName, // 使用chartName字段
-        chartGroupId: chart.chartGroupId,
-      })));
+      await fetchData(); // Update data after adding charts
       setShowChartPicker(false);
     } catch (error) {
       console.error('Error adding chart:', error);
@@ -111,13 +102,7 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
         }
 
         await removeChartFromGroup(chart.chartGroupId, chartId);
-
-        const updatedCharts = await fetchChartsByGroupId(groupId);
-        setCharts(updatedCharts.map(chart => ({
-          id: chart.chartId, // 确保id字段匹配
-          chartName: chart.chartName, // 使用chartName字段
-          chartGroupId: chart.chartGroupId,
-        })));
+        await fetchData(); // Update data after removing chart
       } catch (error) {
         console.error('Error removing chart:', error);
       }

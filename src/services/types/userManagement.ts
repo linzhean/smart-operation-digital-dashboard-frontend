@@ -109,3 +109,11 @@ export interface UpdateUserData {
   modifyId: string;
   modifyDate: string;
 }
+
+export interface UserData {
+  userId: string;
+  userName: string;
+  departmentId: string;
+  departmentName: string;
+  position: string;
+}

@@ -20,10 +20,7 @@ const Login: React.FC = () => {
       }
   
       const decodedToken: any = jwtDecode(idToken);
-      const userId = decodedToken.sub;
-  
-      console.log('ID Token:', idToken);
-      console.log('Decoded Token:', decodedToken);
+      const userId = decodedToken.sub;  // 从Google的Token中获取userId
   
       const res = await fetch(`${backendApiUrl}/login`, {
         method: 'POST',
@@ -31,17 +28,14 @@ const Login: React.FC = () => {
           'Content-Type': 'application/json',
           'X-Client-Token': idToken,
         },
-        body: JSON.stringify({ userId, idToken }),
+        body: JSON.stringify({ userId, idToken }),  // 将userId传给后端
       });
-  
-      console.log('Login response:', res);
   
       if (!res.ok) {
         throw new Error(`Failed to login: ${res.statusText}`);
       }
   
       const authToken = res.headers.get('x-auth-token');
-  
       if (authToken) {
         localStorage.setItem('authToken', authToken);
   
@@ -50,8 +44,6 @@ const Login: React.FC = () => {
             'Authorization': `Bearer ${authToken}`
           }
         });
-  
-        console.log('User response:', userResponse);
   
         const userData = await userResponse.json();
   
@@ -62,13 +54,7 @@ const Login: React.FC = () => {
           '管理員': 'ADMIN'
         };
   
-        console.log('Raw identity:', userData.data.identity);
-        console.log('Identity mapping:', identityMapping);
-  
         const mappedIdentity = identityMapping[userData.data.identity] || 'NO_PERMISSION';
-  
-        console.log('Mapped identity:', mappedIdentity);
-  
         setUser({ ...userData.data, identity: mappedIdentity });
   
         switch (mappedIdentity) {
@@ -78,7 +64,6 @@ const Login: React.FC = () => {
           case 'MANAGER':
           case 'EMPLOYEE':
           case 'ADMIN':
-            console.log('Navigating to main');
             navigate('/main');
             break;
           default:
@@ -92,9 +77,8 @@ const Login: React.FC = () => {
       console.error('Error during login request:', error);
       setError('An error occurred during the login request. Please try again.');
     }
-  };
+  };  
   
-
   const onFailure = () => {
     alert("Login failed, please try again later.");
   };

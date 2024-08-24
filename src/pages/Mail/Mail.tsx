@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import '../../styles/mainEmail.css';
 import Filter from '../../component/Mail/Leftside/Filter';
 import MailBreif from '../../component/Mail/Leftside/MailBreif';
@@ -24,22 +24,22 @@ const Mail: React.FC = () => {
 
   useEffect(() => {
       fetchEmails(selectedStatuses);
-  }, [selectedStatuses]);
+  }, [selectedStatuses, fetchEmails]);
 
-  const handleMailItemClick = async (id: number) => {
+  const handleMailItemClick = useCallback(async (id: number) => {
       await selectEmail(id);
       setShowRightSide(true);
-  };
+  }, [selectEmail]);
 
-  const handleBackClick = () => {
+  const handleBackClick = useCallback(() => {
       setShowRightSide(false);
-  };
+  }, []);
 
-  const handleFilterChange = (statuses: string[]) => {
+  const handleFilterChange = useCallback((statuses: string[]) => {
       setSelectedStatuses(statuses);
-  };
+  }, []);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = useCallback(async () => {
       if (selectedEmail) {
           if (chatMessage.trim()) { // Check if chatMessage is not empty
               await sendNewChatMessage(selectedEmail.id, chatMessage);
@@ -48,7 +48,7 @@ const Mail: React.FC = () => {
               console.error('Cannot send empty message');
           }
       }
-  };
+  }, [selectedEmail, chatMessage, sendNewChatMessage]);
 
   return (
       <main className="mainEmailUnique">

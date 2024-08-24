@@ -3,19 +3,18 @@ import styles from './ProfileSetup.module.css';
 import logo from '../../assets/icon/Logo-GIF-crop.gif';
 import { updateUser } from '../../services/userManagementServices';
 import { fetchDropdownData } from '../../services/dropdownServices';
-import { UpdateUserData } from '../../services/types/userManagement';
+import { UpdateUserData, UserData } from '../../services/types/userManagement';
 import { useNavigate } from 'react-router-dom';
 
 const ProfileSetup: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
-    employeeId: '',
-    email: '',
+    jobNumber: '', // 将 employeeId 改为 jobNumber
     department: '',
     jobTitle: '',
     identity: ''
-  });
+  });  
   const [departments, setDepartments] = useState<{ value: string; label: string }[]>([]);
   const [identities, setIdentities] = useState<{ value: string; label: string }[]>([]);
   const [error, setError] = useState('');
@@ -23,11 +22,9 @@ const ProfileSetup: React.FC = () => {
   useEffect(() => {
     const loadDropdownData = async () => {
       try {
-        // 先获取部门数据
         const departmentData = await fetchDropdownData('department');
         setDepartments(departmentData);
-        
-        // 再获取身份数据
+
         const identityData = await fetchDropdownData('identity');
         setIdentities(identityData);
       } catch (error) {
@@ -45,31 +42,23 @@ const ProfileSetup: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const newUser: UpdateUserData = {
-      userId: formData.employeeId,
+    
+    const newUser: UserData = {
+      userId: formData.jobNumber,  // 使用 jobNumber 替换 employeeId
       userName: formData.name,
-      departmentId: '',
-      departmentName: formData.department,
-      googleId: '',
-      gmail: formData.email,
-      identity: formData.identity,
+      departmentId: formData.department,
+      departmentName: departments.find(dept => dept.value === formData.department)?.label || '',
       position: formData.jobTitle,
-      available: false,
-      createId: '',
-      createDate: new Date().toISOString(),
-      modifyId: '',
-      modifyDate: new Date().toISOString()
     };
-
+    
     try {
-      await updateUser('', newUser);
+      await updateUser(formData.jobNumber, newUser); // 使用 jobNumber 更新用户
       navigate('/awaiting-approval');
     } catch (error) {
-      console.error('Failed to add user:', error);
+      console.error('Failed to update user:', error);
       setError('Submission failed, please try again.');
     }
-  };
+  };  
 
   return (
     <div className={styles.profileSetupBody}>
@@ -92,24 +81,13 @@ const ProfileSetup: React.FC = () => {
             />
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="employeeId">員工編號</label>
+            <label htmlFor="jobNumber">員工編號</label>
             <input
               type="text"
-              id="employeeId"
-              name="employeeId"
+              id="jobNumber"
+              name="jobNumber"
               required
-              value={formData.employeeId}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="email">信箱</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              readOnly
-              value={formData.email}
+              value={formData.jobNumber}
               onChange={handleChange}
             />
           </div>
@@ -142,25 +120,6 @@ const ProfileSetup: React.FC = () => {
               value={formData.jobTitle}
               onChange={handleChange}
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="identity">身份</label>
-            <div className={styles.select}>
-              <select
-                id="identity"
-                name="identity"
-                required
-                value={formData.identity}
-                onChange={handleChange}
-              >
-                <option value="">選擇你的身份</option>
-                {identities.map((identity) => (
-                  <option key={identity.value} value={identity.value}>
-                    {identity.label}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
           <button type="submit" className={styles.setupSubmit}>提交</button>
         </form>

@@ -19,11 +19,11 @@ const GroupManagement: React.FC = () => {
   return (
     <div className="wrapper">
       <GroupManagementSidebar
-        onSelectGroup={setSelectedGroupId} // Update the selected group ID
-        groupId={selectedGroupId} // Pass the selected group ID to the sidebar
-        activeButton={''} handleButtonClick={function (buttonId: string): void {
-          throw new Error('Function not implemented.');
-        }} />
+        onSelectGroup={setSelectedGroupId}
+        groupId={selectedGroupId}
+        activeButton={activeButton}
+        handleButtonClick={handleButtonClick}
+      />
       <div className={styles.groupManage_container}>
         <div className="theContent">
           <Routes>

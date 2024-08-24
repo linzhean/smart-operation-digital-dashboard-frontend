@@ -7,20 +7,22 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import DashboardService from '../../services/DashboardService';
 import { fetchAllUsers } from '../../services/UserAccountService';
+import { Dashboard } from '../../services/types/dashboard';
 
 interface MultiStepFormProps {
   onClose: () => void;
-  exportData: (chartId: number, requestData: string[]) => Promise<{ result: boolean; errorCode: string; data: Blob; }>;
+  exportData: () => Promise<void>;
   currentUserId: string;
+  onDashboardCreated: (dashboard: Dashboard, charts: any[]) => void;
 }
 
-const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, currentUserId }) => {
+const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, currentUserId, onDashboardCreated }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [dashboardName, setDashboardName] = useState('');
   const [dashboardDescription, setDashboardDescription] = useState('');
   const [charts, setCharts] = useState<any[]>([]);
   const [selectedKPIs, setSelectedKPIs] = useState<number[]>([]);
-  const [selectedCharts, setSelectedCharts] = useState<{ id: number, name: string }[]>([]);
+  const [selectedCharts, setSelectedCharts] = useState<{ id: number, name: string, observable: boolean }[]>([]);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [requestContent, setRequestContent] = useState('');
@@ -129,12 +131,16 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
           description: dashboardDescription,
         });
         console.log('New Dashboard Created:', newDashboard);
-        onClose();
+  
+        // Update the parent component with the newly created dashboard and charts
+        await exportData(); // 可选，确保父组件得到更新的数据
+        onDashboardCreated(newDashboard, selectedCharts); // Pass data to parent
+        onClose(); // Close form and trigger UI update
       } catch (error) {
         console.error('Failed to create dashboard:', error);
       }
     }
-  };
+  };  
 
   const previousStep = () => {
     setCurrentStep((prevStep) => prevStep - 1);
@@ -178,16 +184,15 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
               </h3>
               <div className={styles.theKPIs}>
                 {charts.map(chart => (
-                  <div key={chart.id} className={styles.checkboxWrapper}>
+                  <div key={chart.id} className={`${styles.checkboxWrapper} ${!chart.observable ? styles.disabled : ''}`}>
                     <input
-
                       type="checkbox"
                       id={`kpi-${chart.id}`}
                       checked={selectedKPIs.includes(chart.id)}
-                      onChange={() => handleKpiSelection(chart.id)}
+                      onChange={() => chart.observable ? handleKpiSelection(chart.id) : {}}
                       className={styles.kpiInputs}
                     />
-                    <label htmlFor={`kpi-${chart.id}`}>{chart.name}</label>
+                    <label htmlFor={`kpi-${chart.id}`} className={chart.observable ? '' : styles.disabledLabel}>{chart.name}</label>
                   </div>
                 ))}
               </div>
@@ -201,12 +206,13 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
           {currentStep === 2 && (
             <fieldset>
               <h2 className={styles.fsTitle}>說明文字</h2>
-              <h3 className={styles.fsSubtitle}>非必填</h3>
-              <textarea
-                className={styles.theTextarea}
-                name="requestContent"
-                value={requestContent}
-                onChange={(e) => setRequestContent(e.target.value)}
+              <h3 className={styles.fsSubtitle}>在這裡填寫儀表板說明文字</h3>
+              <input
+                type="text"
+                name="dashboardDescription"
+                placeholder="請輸入儀表板說明文字"
+                value={dashboardDescription}
+                onChange={(e) => setDashboardDescription(e.target.value)}
                 required
               />
               <div className={styles.buttonGroup}>
@@ -215,77 +221,48 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
               </div>
             </fieldset>
           )}
-        </form>
 
-        {isFormVisible && (
-          <div className={styles.checkFormContainer}>
-            <div className={styles.formOverlay} onClick={handleCloseForm}></div>
-            <div className={styles.checkFormContent}>
-              <h2>申請臨時圖表</h2>
-              <form onSubmit={handleRequestSubmit}>
-                <div className={styles.applyKPIlabelGroup}>
-                  <label htmlFor='guarantor'>保證人</label>
-                  <select
-                    id='guarantor'
-                    value={selectedUser || ''}
-                    onChange={(e) => setSelectedUser(e.target.value)}
-                    required
-                  >
-                    <option value="">請選擇</option>
-                    {users.map(user => (
-                      <option key={user.userId} value={user.userId}>
-                        {user.userName}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className={styles.applyKPIlabelGroup}>
-
-                  <label htmlFor='KPIstartDate'>開始日期</label>
-                  <DatePicker
-                    id='KPIstartDate'
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    dateFormat="yyyy-MM-dd"
-                    placeholderText="選擇開始日期"
-                    required
-                    autoComplete="off"
-                  />
-                </div>
-                <div className={styles.applyKPIlabelGroup}>
-
-                  <label htmlFor='KPIendDate'>結束日期</label>
-                  <DatePicker
-                    id='KPIendDate'
-                    selected={endDate}
-                    onChange={(date) => setEndDate(date)}
-                    dateFormat="yyyy-MM-dd"
-                    placeholderText="選擇結束日期"
-                    required
-                    autoComplete="off"
-                  />
-                </div>
-                <div className={styles.LastapplyKPIlabelGroup}>
-                  <textarea
-                    className={styles.applyKPItextarea}
-                    placeholder='請填寫此次申請理由'
-                    name="applyReason"
-                    value={applyReason}
-                    onChange={(e) => setApplyReason(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className={styles.KPIbuttonGroup}>
-                  <button type="button" onClick={handleCloseForm} className={styles.cancel}>取消</button>
-                  <button type="submit" className={styles.submit}>提交</button>
-
-                </div>
-              </form>
+          {isFormVisible && (
+            <div className={styles.formOverlay} onClick={handleCloseForm}>
+              <div onClick={(e) => e.stopPropagation()} className={styles.formContainer}>
+                <form onSubmit={handleRequestSubmit}>
+                  <h2>請求KPI圖表</h2>
+                  <label>
+                    申請人：
+                    <input type="text" value={currentUserId} readOnly />
+                  </label>
+                  <label>
+                    擔保人：
+                    <select value={selectedUser || ''} onChange={(e) => setSelectedUser(e.target.value)}>
+                      <option value="">請選擇</option>
+                      {users.map(user => (
+                        <option key={user.id} value={user.id}>{user.name}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    開始日期：
+                    <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
+                  </label>
+                  <label>
+                    結束日期：
+                    <DatePicker selected={endDate} onChange={date => setEndDate(date)} />
+                  </label>
+                  <label>
+                    理由：
+                    <textarea value={requestContent} onChange={(e) => setRequestContent(e.target.value)} />
+                  </label>
+                  <div className={styles.buttonGroup}>
+                    <button type="button" className={styles.actionButton} onClick={handleCloseForm}>取消</button>
+                    <button type="submit" className={styles.actionButton}>提交</button>
+                  </div>
+                </form>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </form>
       </div>
-    </div >
+    </div>
   );
 };
 

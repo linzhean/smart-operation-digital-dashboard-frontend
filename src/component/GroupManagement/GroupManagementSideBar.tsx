@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './GroupManagementSideBar.module.css';
 import { fetchGroups, addGroup, updateGroupName } from '../../services/GroupApi';
@@ -32,20 +32,20 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
 
     window.addEventListener('resize', handleResize);
 
-    const fetchGroupData = async () => {
-      try {
-        const fetchedGroups = await fetchGroups();
-        setGroups(fetchedGroups);
-      } catch (error) {
-        console.error('獲取群組訊息失敗:', error);
-      }
-    };
-
-    fetchGroupData();
+    fetchGroupsData();
 
     return () => {
       window.removeEventListener('resize', handleResize);
     };
+  }, []);
+
+  const fetchGroupsData = useCallback(async () => {
+    try {
+      const fetchedGroups = await fetchGroups();
+      setGroups(fetchedGroups);
+    } catch (error) {
+      console.error('獲取群組訊息失敗:', error);
+    }
   }, []);
 
   const handleGroupClick = (groupId: number) => {
@@ -56,15 +56,14 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
   const handleAddGroup = async () => {
     if (!newGroupName) return;
     try {
-      const newGroup = await addGroup({
+      await addGroup({
         name: newGroupName,
         createDate: '',
         modifyDate: '',
       });
-
-      setGroups(prevGroups => [...prevGroups, newGroup]);
       setNewGroupName('');
       setIsModalOpen(false);
+      fetchGroupsData();
     } catch (error) {
       console.error('新增群組失敗:', error);
     }
@@ -78,12 +77,10 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
   const handleConfirmUpdate = async () => {
     if (updatedGroupName && selectedGroupId !== null) {
       try {
-        const updatedGroup = await updateGroupName(selectedGroupId, updatedGroupName);
-        setGroups(prevGroups =>
-          prevGroups.map(group => (group.id === updatedGroup.id ? updatedGroup : group))
-        );
-        setIsUpdateModalOpen(false);
+        await updateGroupName(selectedGroupId, updatedGroupName);
         setUpdatedGroupName('');
+        setIsUpdateModalOpen(false);
+        fetchGroupsData();
       } catch (error) {
         console.error('編輯群組名稱失敗:', error);
       }

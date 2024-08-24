@@ -1,6 +1,6 @@
 import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
-import { User, UpdateUserData } from './types/userManagement';
+import { UpdateUserData, User, UserData } from './types/userManagement';
 
 export const getUsers = async (): Promise<User[]> => {
   try {
@@ -69,10 +69,19 @@ export const getUserDetails = async (userId: number): Promise<User> => {
   }
 };
 
-export const updateUser = async (userId: string, userData: UpdateUserData): Promise<void> => {
+export const updateUser = async (jobNumber: string, userData: UserData): Promise<void> => {
+  const { userName, departmentId, departmentName, position } = userData;
+
   try {
-    const response = await apiClient.patch<Response<void>>(`/user-account`, userData);
+    const response = await apiClient.patch<Response<void>>('/user-account', {
+      userId: jobNumber,  // 使用 jobNumber 作为 userId
+      userName,
+      departmentId,
+      departmentName,
+      position
+    });
     if (!response.data.result) {
+      console.error('Update failed:', response.data.message);
       throw new Error('更新用户失败: ' + response.data.message);
     }
   } catch (error: any) {
@@ -109,10 +118,10 @@ export const toggleUserAvailability = async (userId: number, available: boolean)
   try {
     const response = await apiClient.patch<Response<void>>(`/user-account/able`, { userId, available });
     if (!response.data.result) {
-      throw new Error('切换用户状态失败: ' + response.data.message);
+      throw new Error('Failed to toggle user availability: ' + response.data.message);
     }
   } catch (error: any) {
-    console.error('切换用户状态失败: ', error.message);
-    throw new Error('切换用户状态失败: ' + error.message);
+    console.error('Failed to toggle user availability: ', error.message);
+    throw new Error('Failed to toggle user availability: ' + error.message);
   }
 };

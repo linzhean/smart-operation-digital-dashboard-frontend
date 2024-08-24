@@ -1,9 +1,8 @@
 // src/Hook/useChartWithDropdown.tsx
 import { useState, useEffect } from 'react';
 import ChartService from '../services/ChartService';
-import { createEmail, Email, sendChatMessage } from '../services/mailService';
+import { createEmail, sendChatMessage } from '../services/mailService';
 import { createApplication } from '../services/application';
-import { getAssignedTaskSponsors } from '../services/AssignedTaskService';
 import { fetchAllUsers } from '../services/UserAccountService';
 
 export function useChartWithDropdown(
@@ -29,12 +28,15 @@ export function useChartWithDropdown(
   const [users, setUsers] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [interactiveCharts, setInteractiveCharts] = useState<any[]>([]);
+  const [currentChartId, setCurrentChartId] = useState<number | null>(null);
+  const [kpiRequestChartId, setKpiRequestChartId] = useState<number | null>(null);
 
+  // Fetch all available charts
   useEffect(() => {
     const fetchCharts = async () => {
       try {
         const response = await ChartService.getAvailableCharts();
-        setCharts(response.data);
+        setCharts(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error('Failed to fetch charts:', error);
         alert('Failed to fetch charts. Please try again later.');
@@ -43,6 +45,7 @@ export function useChartWithDropdown(
     fetchCharts();
   }, []);
 
+  // Fetch all users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -88,7 +91,6 @@ export function useChartWithDropdown(
   const closeChartSelectModal = () => setIsChartSelectModalOpen(false);
   const closeRequestKpiModal = () => setIsRequestKpiModalOpen(false);
 
-  // Inside useChartWithDropdown.tsx
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedCharts.length === 0) {
@@ -106,15 +108,14 @@ export function useChartWithDropdown(
         },
       };
 
-      // Create the email with the adjusted body
       const createdEmail = await createEmail(assignedTask);
 
       if (createdEmail && createdEmail.id) {
         await sendChatMessage(createdEmail.id, {
-          mailId: createdEmail.id, // 确保 mailId 是请求体的一部分
-          messageId: Date.now(), // 使用当前时间戳或生成唯一 ID 的方法作为示例
+          mailId: createdEmail.id,
+          messageId: Date.now(),
           content: message,
-          available: "true", // Adjust this if necessary
+          available: "true",
           createId: currentUserId,
           createDate: formatDate(new Date()),
           modifyId: currentUserId,
@@ -130,7 +131,6 @@ export function useChartWithDropdown(
       alert('Failed to submit delegate task. Please try again.');
     }
   };
-
 
   const handleKpiSelection = (kpiId: number) => {
     setSelectedKPIs(prev => {
@@ -152,27 +152,16 @@ export function useChartWithDropdown(
     setIsRequestKpiModalOpen(true);
   };
 
-  const formatDate = (date: Date | null): string => {
-    if (!date) return '';
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  };
-
   const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedCharts.length === 0) {
-      alert('請選擇一個圖表。');
+    if (kpiRequestChartId === null) {
+      alert('Please select a chart.');
       return;
     }
 
     try {
       const requestData = {
-        chartId: selectedCharts[0].id,
+        chartId: kpiRequestChartId,
         applicant: currentUserId,
         guarantor: selectedUser || '',
         startDateStr: formatDate(startDate),
@@ -181,24 +170,23 @@ export function useChartWithDropdown(
       };
       const response = await createApplication(requestData);
       if (response.result) {
-        alert('請求提交成功');
+        alert('Request submitted successfully');
         setIsRequestKpiModalOpen(false);
+        setKpiRequestChartId(null); // Reset after submission
       } else {
-        alert('請求提交失敗：' + response.message);
+        alert('Request submission failed: ' + response.message);
       }
     } catch (error) {
-      console.error('提交 KPI 請求時出錯:', error);
-      alert('提交 KPI 請求失敗。請重試。');
+      console.error('Error submitting KPI request:', error);
+      alert('Failed to submit KPI request. Please try again.');
     }
   };
 
   const handleAdvancedAnalysis = async () => {
     try {
       const response = await ChartService.getAvailableCharts();
-
-      if (response.result) {
-        // Extract data from response
-        setInteractiveCharts(response.data); // Assuming response.data is the array
+      if (Array.isArray(response.data)) {
+        setInteractiveCharts(response.data);
       } else {
         console.error('Failed to fetch interactive charts:', response.message);
         alert('Failed to fetch interactive charts. Please try again later.');
@@ -209,7 +197,16 @@ export function useChartWithDropdown(
     }
   };
 
-
+  const formatDate = (date: Date | null): string => {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
 
   const handleStartDateChange = (date: Date | null) => setStartDate(date);
   const handleEndDateChange = (date: Date | null) => setEndDate(date);
@@ -262,6 +259,10 @@ export function useChartWithDropdown(
     setSelectedUser,
     setInteractiveCharts,
     interactiveCharts,
-    handleAdvancedAnalysis
+    handleAdvancedAnalysis,
+    updateCurrentChartId: setCurrentChartId,
+    currentChartId,
+    kpiRequestChartId,
+    setKpiRequestChartId
   };
 }

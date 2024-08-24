@@ -42,7 +42,7 @@ const ParentComponent: React.FC = () => {
       );
       await Promise.all(addUserPromises);
       console.log('Users successfully added to the group');
-    } catch (error:any) {
+    } catch (error: any) {
       console.error('Failed to add users to the group:', error.message);
     }
   };
@@ -54,13 +54,17 @@ const ParentComponent: React.FC = () => {
 
   return (
     <div>
-      <GroupManagementSidebar onSelectGroup={(groupId) => setSelectedGroupId(groupId)} groupId={0} activeButton={''} handleButtonClick={function (buttonId: string): void {
-        throw new Error('Function not implemented.');
-      } } />
+      <GroupManagementSidebar
+        onSelectGroup={(groupId) => setSelectedGroupId(groupId)}
+        groupId={selectedGroupId}
+        activeButton='memberControl'
+        handleButtonClick={() => { }}
+      />
+
       <GroupList
         groupId={selectedGroupId}
         activeButton='memberControl'
-        handleButtonClick={() => {}}
+        handleButtonClick={() => { }}
         onDeleteGroup={handleDeleteGroup}
       />
       <Button variant="contained" color="primary" onClick={handleOpenDialog}>
