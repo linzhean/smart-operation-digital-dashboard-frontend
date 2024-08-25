@@ -131,16 +131,16 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
           description: dashboardDescription,
         });
         console.log('New Dashboard Created:', newDashboard);
-  
+
         // Update the parent component with the newly created dashboard and charts
-        await exportData(); // 可选，确保父组件得到更新的数据
+        await exportData();
         onDashboardCreated(newDashboard, selectedCharts); // Pass data to parent
         onClose(); // Close form and trigger UI update
       } catch (error) {
         console.error('Failed to create dashboard:', error);
       }
     }
-  };  
+  };
 
   const previousStep = () => {
     setCurrentStep((prevStep) => prevStep - 1);
@@ -205,8 +205,8 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
 
           {currentStep === 2 && (
             <fieldset>
-              <h2 className={styles.fsTitle}>說明文字</h2>
-              <h3 className={styles.fsSubtitle}>在這裡填寫儀表板說明文字</h3>
+              <h2 className={styles.fsTitle}>填寫儀表板說明文字</h2>
+              <h3 className={styles.fsSubtitle}>非必填</h3>
               <input
                 type="text"
                 name="dashboardDescription"
@@ -222,47 +222,81 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
             </fieldset>
           )}
 
-          {isFormVisible && (
-            <div className={styles.formOverlay} onClick={handleCloseForm}>
-              <div onClick={(e) => e.stopPropagation()} className={styles.formContainer}>
-                <form onSubmit={handleRequestSubmit}>
-                  <h2>請求KPI圖表</h2>
-                  <label>
-                    申請人：
-                    <input type="text" value={currentUserId} readOnly />
-                  </label>
-                  <label>
-                    擔保人：
-                    <select value={selectedUser || ''} onChange={(e) => setSelectedUser(e.target.value)}>
-                      <option value="">請選擇</option>
-                      {users.map(user => (
-                        <option key={user.id} value={user.id}>{user.name}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    開始日期：
-                    <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
-                  </label>
-                  <label>
-                    結束日期：
-                    <DatePicker selected={endDate} onChange={date => setEndDate(date)} />
-                  </label>
-                  <label>
-                    理由：
-                    <textarea value={requestContent} onChange={(e) => setRequestContent(e.target.value)} />
-                  </label>
-                  <div className={styles.buttonGroup}>
-                    <button type="button" className={styles.actionButton} onClick={handleCloseForm}>取消</button>
-                    <button type="submit" className={styles.actionButton}>提交</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
         </form>
       </div>
-    </div>
+
+      {isFormVisible && (
+        <div className={styles.checkFormContainer}>
+          <div className={styles.formOverlay} onClick={handleCloseForm}></div>
+          <div onClick={(e) => e.stopPropagation()} className={styles.checkFormContent}>
+            <h2>申請KPI圖表</h2>
+            <form onSubmit={handleRequestSubmit}>
+              <div className={styles.applyKPIlabelGroup}>
+                <label htmlFor='KPIapplicant'>申請人</label>
+                <input
+                  id='KPIapplicant'
+                  type="text"
+                  // value={currentUserId}
+                  value={'梁成恩'}
+                  readOnly
+                  className={styles.KPIapplicant}
+                />
+              </div>
+
+              <div className={styles.applyKPIlabelGroup}>
+                <label htmlFor='KPIguarantor'>保證人</label>
+                <select
+                  id='KPIguarantor'
+                  value={selectedUser || ''}
+                  onChange={(e) => setSelectedUser(e.target.value)}>
+                  <option value="">請選擇</option>
+                  {users.map(user => (
+                    <option key={user.id} value={user.id}>{user.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={styles.applyKPIlabelGroup}>
+                <label htmlFor='KPIstartDate'>開始日期</label>
+                <DatePicker
+                  id='KPIstartDate'
+                  selected={startDate}
+                  onChange={date => setStartDate(date)}
+                  placeholderText="選擇開始日期"
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className={styles.applyKPIlabelGroup}>
+                <label htmlFor='KPIendDate'>結束日期</label>
+                <DatePicker
+                  id='KPIendDate'
+                  placeholderText="選擇結束日期"
+                  selected={endDate}
+                  onChange={date => setEndDate(date)}
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className={styles.LastapplyKPIlabelGroup}>
+                <textarea
+                  className={styles.applyKPItextarea}
+                  placeholder='請填寫此次申請理由'
+                  value={requestContent}
+                  onChange={(e) => setRequestContent(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className={styles.KPIbuttonGroup}>
+                <button type="button" className={styles.cancel} onClick={handleCloseForm}>取消</button>
+                <button type="submit" className={styles.submit}>提交</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div >
   );
 };
 

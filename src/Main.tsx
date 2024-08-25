@@ -22,7 +22,7 @@ const Main: React.FC = () => {
     <div className="App">
       <Navbar />
       <Routes>
-        <Route path="/home" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><Home /></PrivateRoute>} />
+        {/* <Route path="/home" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><Home /></PrivateRoute>} />
         <Route path="/profile/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><Pdata /></PrivateRoute>} />
         <Route path="/GroupManagement/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><GroupManagement /></PrivateRoute>} />
         <Route path="/mail" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><Mail /></PrivateRoute>} />
@@ -30,16 +30,16 @@ const Main: React.FC = () => {
         <Route path="/AssignExportControl/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><AssignExportControl /></PrivateRoute>} />
         <Route path="/UserControl/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><UserControl /></PrivateRoute>} />
         <Route path="/TaskKpiSetting/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><TaskKpiSetting /></PrivateRoute>} />
-        <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+        <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} /> */}
 
-        {/* <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/profile/*" element={<Pdata />} />
         <Route path="/GroupManagement/*" element={<GroupManagement />} />
         <Route path="/mail" element={<Mail />} />
         <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
         <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
         <Route path="/UserControl/*" element={<UserControl />} />
-        <Route path="/TaskKpiSetting/*" element={<TaskKpiSetting />} /> */}
+        <Route path="/TaskKpiSetting/*" element={<TaskKpiSetting />} />
       </Routes>
     </div>
   );
