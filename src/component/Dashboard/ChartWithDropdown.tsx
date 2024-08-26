@@ -15,62 +15,10 @@ interface ChartWithDropdownProps {
   requestData: string[];
   onChartSelect: (chartId: number) => void;
   currentUserId: string;
+  canAssign: boolean; // Add this prop to handle assignment
 }
 
 const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, onChartSelect, currentUserId }) => {
-  // const handleDropdownClick = (event: React.MouseEvent<HTMLDivElement>) => {
-  //   event.stopPropagation();
-  // };
-
-  //console用 
-  // useEffect(() => {
-  //   const handleKeyboardEvent = (event: KeyboardEvent) => {
-  //     console.log(`Received key event: ${event.key}`);
-  //   };
-
-  //   document.addEventListener('keydown', handleKeyboardEvent);
-
-  //   return () => {
-  //     document.removeEventListener('keydown', handleKeyboardEvent);
-  //   };
-  // }, []);
-
-  // try2
-  // const mouseEnterTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  // const mouseLeaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // const handleMouseEnter = () => {
-  //   setIsDropdownOpen(true);
-  // };
-
-  // const handleMouseLeave = () => {
-  //   if (mouseEnterTimeoutRef.current) {
-  //     clearTimeout(mouseEnterTimeoutRef.current);
-  //   }
-  //   mouseLeaveTimeoutRef.current = setTimeout(() => {
-  //     setIsDropdownOpen(false);
-
-  //   }, 2000);
-  // };
-
-  // const handleSimulateClick = () => {
-  //   const targetElement = document.activeElement as HTMLElement | null;
-  //   if (targetElement) {
-  //     const enterEvent = new KeyboardEvent('keydown', {
-  //       key: 'Enter',
-  //       code: 'Enter',
-  //       keyCode: 13,
-  //       charCode: 13,
-  //       bubbles: true,
-  //       cancelable: true,
-  //     });
-
-  //     targetElement.dispatchEvent(enterEvent);
-  //     console.log('被滑鼠點擊了，並模擬鍵盤 Enter 鍵效果');
-  //   } else {
-  //     console.log('未找到焦点元素');
-  //   }
-  // };
 
   const {
     // isDropdownOpen,
@@ -120,7 +68,8 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     setSelectedUser, // Add setSelectedUser method
     interactiveCharts, // Add interactiveCharts state
     setInteractiveCharts, // Add setInteractiveCharts method
-    handleAdvancedAnalysis // Add handleAdvancedAnalysis method
+    handleAdvancedAnalysis, // Add handleAdvancedAnalysis method
+    canAssign,
   } = useChartWithDropdown(exportData, chartId, requestData, currentUserId);
 
   useEffect(() => {
@@ -215,48 +164,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
       </div>
     </>
   )
-
-  // try
-  // const [hoverTime, setHoverTime] = useState(0);
-  // const hoverInterval = useRef<number | null>(null);
-
-  // const hoverMenuTimeout = useRef<number | null>(null);
-  // const closeMenuTimeout = useRef<number | null>(null);
-
-  // const handleMenuMouseEnter = () => {
-  //   if (closeMenuTimeout.current) {
-  //     clearTimeout(closeMenuTimeout.current);
-  //   }
-  //   setHoverTime(0);
-  //   hoverInterval.current = window.setInterval(() => {
-  //     setHoverTime(prev => {
-  //       if (prev < 1.5) {
-  //         return prev + 0.1; // 每0.1秒更新一次進度
-  //       } else {
-  //         clearInterval(hoverInterval.current!);
-  //         toggleDropdown();
-  //         return prev;
-  //       }
-  //     });
-  //   }, 100); // 每100毫秒更新一次進度
-
-  //   hoverMenuTimeout.current = window.setTimeout(() => {
-  //     toggleDropdown();
-  //   }, 1500);
-  // };
-
-  // const handleMenuMouseLeave = () => {
-  //   if (hoverMenuTimeout.current) {
-  //     clearTimeout(hoverMenuTimeout.current);
-  //   }
-  //   if (hoverInterval.current) {
-  //     clearInterval(hoverInterval.current);
-  //   }
-  //   closeMenuTimeout.current = window.setTimeout(() => {
-  //     toggleDropdown();
-  //   }, 1000);
-  // };
-
 
   // 設定Menu
   const [hoverTime, setHoverTime] = useState(0);
@@ -376,12 +283,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             <img src={more} alt="" />
           </button>
           {isDropdownOpen && (
-            // <div className={styles.dropdownMenu}>
-            //   <button onClick={handleExport}>匯出</button>
-            //   <button onClick={handleDelegate}>交辦</button>
-            //   {/* <button onClick={handleChartSelect}>選擇圖表</button> */}
-            //   <button onClick={handleAdvancedAnalysis}>進階分析</button>
-            // </div>
             <div className={styles.dropdownMenu}>
               <div
                 className={styles.buttonContainer}
@@ -400,7 +301,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
                 onMouseEnter={() => handleMouseEnter('delegate', handleDelegate)}
                 onMouseLeave={() => handleMouseLeave('delegate')}
               >
-                <button>交辦</button>
+                <button disabled={!canAssign}>交辦</button>
                 <div
                   className={styles.timerCircle}
                   style={{ '--progress': hoverProgress.delegate } as React.CSSProperties}

@@ -6,8 +6,8 @@ import LineChart from '../../component/Chart/LineChart';
 import DashboardSidebar from '../../component/Dashboard/DashboardSidebar';
 import { saveAs } from 'file-saver';
 import { exportData, getExportPermission } from '../../services/exportService';
-import ChartWithDropdown from '../../component/Dashboard/ChartWithDropdown';
 import ChartService from '../../services/ChartService';
+import ChartWithDropdown from '../../component/Dashboard/ChartWithDropdown';
 import styles from './Home.module.css';
 import { Dashboard } from '../../services/types/dashboard';
 
@@ -18,15 +18,34 @@ const Home: React.FC = () => {
   const [selectedChartData, setSelectedChartData] = useState<any>(null);
   const [selectedDashboard, setSelectedDashboard] = useState<string | null>(null);
   const [charts, setCharts] = useState<any[]>([]);
+  const [availableCharts, setAvailableCharts] = useState<any[]>([]);
+
+  // Fetch available charts
+  useEffect(() => {
+    const fetchAvailableCharts = async () => {
+      try {
+        const response = await ChartService.getAvailableCharts();
+        if (response.result) {
+          setAvailableCharts(response.data);
+        } else {
+          console.error('Failed to fetch available charts:', response.errorCode);
+        }
+      } catch (error) {
+        console.error('Error fetching available charts:', error);
+      }
+    };
+
+    fetchAvailableCharts();
+  }, []);
 
   useEffect(() => {
     if (selectedDashboard) {
       const fetchDashboardCharts = async () => {
         try {
-          const dashboardCharts = await ChartService.getDashboardCharts(Number(selectedDashboard));
-          if (Array.isArray(dashboardCharts)) {
-            setCharts(dashboardCharts);
-            const newLayout = dashboardCharts.map((chart: any, index: number) => ({
+          const response = await ChartService.getDashboardCharts(Number(selectedDashboard));
+          if (response.result && Array.isArray(response.data)) {
+            setCharts(response.data);
+            const newLayout = response.data.map((chart: any, index: number) => ({
               i: `chart-${chart.id}`,
               x: (index * 4) % 12,
               y: Math.floor(index / 3) * 4,
@@ -35,7 +54,7 @@ const Home: React.FC = () => {
             }));
             setLayout(newLayout);
           } else {
-            console.error('Dashboard charts is not an array:', dashboardCharts);
+            console.error('Dashboard charts is not an array:', response);
             setCharts([]);
           }
         } catch (error) {
@@ -81,14 +100,12 @@ const Home: React.FC = () => {
       const chartData = await ChartService.getChartData(chartId);
       setSelectedChartData(chartData.data);
     } catch (error) {
-      console.error('選擇圖表時失敗:', error);
-      alert('選擇圖表時發生錯誤。請再試一次。');
+      console.error('Error selecting chart:', error);
+      alert('An error occurred while selecting the chart. Please try again.');
     }
   };
 
   const handleDashboardCreated = (dashboard: Dashboard, newCharts: any[]) => {
-    console.log('Dashboard Created:', dashboard);
-    console.log('New Charts:', newCharts);
     setSelectedDashboard(dashboard.id.toString());
     setCharts(newCharts);
     const newLayout = newCharts.map((chart: any, index: number) => ({
@@ -101,11 +118,62 @@ const Home: React.FC = () => {
     setLayout(newLayout);
   };
 
+  const handleAddChart = async (chart: any) => {
+    if (!selectedDashboard) {
+      alert('Please select a dashboard first.');
+      return;
+    }
+
+    try {
+      // Prepare the chart data
+      const chartData = {
+        name: chart.name || 'New Chart',
+        scriptFile: '', // You may fill in relevant data here
+        scriptPath: '', // You may fill in relevant data here
+        imageFile: '', // You may fill in relevant data here
+        showcaseImage: '', // You may fill in relevant data here
+        chartImage: '', // You may fill in relevant data here
+        chartHTML: '', // You may fill in relevant data here
+        canAssign: true,
+        observable: true,
+        available: true,
+        createId: 'currentUserId', // Replace with actual user ID
+        createDate: new Date().toISOString(),
+        modifyId: 'currentUserId', // Replace with actual user ID
+        modifyDate: new Date().toISOString(),
+        chartGroupId: Number(selectedDashboard), // Link to the current dashboard
+      };
+
+      // Create the new chart
+      const newChart = await ChartService.createChart(chartData);
+
+      // Fetch the newly added chart data
+      const fetchedChart = await ChartService.getChartData(newChart.id);
+
+      // Update the charts state
+      setCharts(prevCharts => [...prevCharts, fetchedChart]);
+
+      // Update the layout
+      const newLayoutItem = {
+        i: `chart-${fetchedChart.id}`,
+        x: (charts.length * 4) % 12,
+        y: Math.floor(charts.length / 3) * 4,
+        w: 4,
+        h: 4,
+      };
+      setLayout(prevLayout => [...prevLayout, newLayoutItem]);
+    } catch (error) {
+      console.error('Error adding chart:', error);
+      alert('An error occurred while adding the chart.');
+    }
+  };
+
   return (
     <div className='wrapper'>
       <div className="Home">
         <DashboardSidebar
           onSelectDashboard={setSelectedDashboard}
+          onAddChart={handleAddChart}  // Pass function to handle adding charts
           currentUserId={''}
         />
         <div className={styles.dashboard_container}>
@@ -118,15 +186,21 @@ const Home: React.FC = () => {
             >
               {charts.map(chart => (
                 <div key={`chart-${chart.id}`} className={styles.dataCard}>
+                  {/* Display the chart's showcase image */}
+                  <img src={chart.chartImage} alt={chart.name} className={styles.chartImage} />
+
+                  {/* Include ChartWithDropdown for additional functionalities */}
                   <ChartWithDropdown
                     exportData={handleExport}
                     chartId={chart.id}
                     requestData={[]}
-                    onChartSelect={handleChartSelect}
+                    onChartSelect={() => handleChartSelect(chart.id)}
                     currentUserId={''}
+                    canAssign={true}
                   >
-                    <LineChart data={selectedChartData} />
+                    {selectedChartData ? <LineChart data={selectedChartData} /> : <p></p>}
                   </ChartWithDropdown>
+
                 </div>
               ))}
             </ResponsiveGridLayout>

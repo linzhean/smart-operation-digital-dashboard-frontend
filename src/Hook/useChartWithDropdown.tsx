@@ -30,13 +30,23 @@ export function useChartWithDropdown(
   const [interactiveCharts, setInteractiveCharts] = useState<any[]>([]);
   const [currentChartId, setCurrentChartId] = useState<number | null>(null);
   const [kpiRequestChartId, setKpiRequestChartId] = useState<number | null>(null);
+  const [canAssign, setCanAssign] = useState<boolean>(true); // Add this state
 
   // Fetch all available charts
   useEffect(() => {
     const fetchCharts = async () => {
       try {
         const response = await ChartService.getAvailableCharts();
-        setCharts(Array.isArray(response.data) ? response.data : []);
+        if (Array.isArray(response.data)) {
+          setCharts(response.data);
+          // Assuming response.data[0] is the chart we are dealing with for simplicity
+          if (response.data.length > 0) {
+            setCanAssign(response.data[0].canAssign); // Set canAssign based on chart data
+          }
+        } else {
+          console.error('Failed to fetch charts:', response.message);
+          alert('Failed to fetch charts. Please try again later.');
+        }
       } catch (error) {
         console.error('Failed to fetch charts:', error);
         alert('Failed to fetch charts. Please try again later.');
@@ -82,7 +92,7 @@ export function useChartWithDropdown(
     setIsDropdownOpen(false);
   };
 
-  const handleChartSelect = () => {
+  const handleChartSelect = (id?: any) => {
     setIsChartSelectModalOpen(true);
     setIsDropdownOpen(false);
   };
@@ -263,6 +273,7 @@ export function useChartWithDropdown(
     updateCurrentChartId: setCurrentChartId,
     currentChartId,
     kpiRequestChartId,
-    setKpiRequestChartId
+    setKpiRequestChartId,
+    canAssign
   };
 }

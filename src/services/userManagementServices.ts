@@ -2,9 +2,9 @@ import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 import { UpdateUserData, User, UserData } from './types/userManagement';
 
-export const getUsers = async (): Promise<User[]> => {
+export const getUser = async (): Promise<User> => {
   try {
-    const response = await apiClient.get<Response<User[]>>('/user-account');
+    const response = await apiClient.get<Response<User>>('/user-account');
     if (response.data.result && response.data.data) {
       return response.data.data;
     } else {
@@ -69,19 +69,35 @@ export const getUserDetails = async (userId: number): Promise<User> => {
   }
 };
 
-export const updateUser = async (jobNumber: string, userData: UserData): Promise<void> => {
-  const { userName, departmentId, departmentName, position } = userData;
+export const updateUser = async (userId: string, userData: UserData): Promise<void> => {
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+
+  const { userName, departmentId, departmentName, position, jobNumber } = userData;
 
   try {
+    console.log('Sending request to update user with data:', {
+      userId,
+      userName,
+      departmentId,
+      departmentName,
+      position,
+      jobNumber
+    });
+
     const response = await apiClient.patch<Response<void>>('/user-account', {
-      userId: jobNumber,  // 使用 jobNumber 作为 userId
+      userId,
+      jobNumber,
       userName,
       departmentId,
       departmentName,
       position
     });
+
+    console.log('Response received:', response);
+
     if (!response.data.result) {
-      console.error('Update failed:', response.data.message);
       throw new Error('更新用户失败: ' + response.data.message);
     }
   } catch (error: any) {

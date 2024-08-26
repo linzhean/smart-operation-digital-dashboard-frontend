@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './DashBoardSidebar.module.css';
 import DashboardService from '../../services/DashboardService';
+import ChartService from '../../services/ChartService';
 import { Dashboard } from '../../services/types/dashboard';
 import more from '../../assets/icon/homeMore.svg';
 import IconButton from '@mui/material/IconButton';
@@ -11,17 +12,25 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import MultiStepForm from './dashBoardForm';
+import Checkbox from '@mui/material/Checkbox';  // Import Checkbox component
 
-const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => void, currentUserId: string }> = ({ onSelectDashboard, currentUserId }) => {
+const DashboardSidebar: React.FC<{
+  onSelectDashboard: (dashboardId: string) => void,
+  onAddChart: (chart: any) => void,
+  currentUserId: string
+}> = ({ onSelectDashboard, onAddChart, currentUserId }) => {
+  // States
   const [isActive, setIsActive] = useState(false);
   const [isDisabled, setIsDisabled] = useState(window.innerWidth > 1024);
   const [activeDashboard, setActiveDashboard] = useState<string | null>(null);
   const [dashboards, setDashboards] = useState<Dashboard[]>([]);
   const [editingDashboardId, setEditingDashboardId] = useState<string | null>(null);
   const [newDashboardName, setNewDashboardName] = useState<string>('');
+  const [openAddChartDialog, setOpenAddChartDialog] = useState(false);
+  const [availableCharts, setAvailableCharts] = useState<any[]>([]);
+  const [selectedCharts, setSelectedCharts] = useState<Set<string>>(new Set()); // Use a Set to manage selected charts
   const [openDialog, setOpenDialog] = useState(false);
   const [dashboardName, setDashboardName] = useState('');
   const [dashboardDescription, setDashboardDescription] = useState('');
@@ -53,6 +62,17 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
     fetchAllDashboards();
   }, [fetchAllDashboards]);
 
+  // Fetch available charts for adding
+  const fetchAvailableCharts = async () => {
+    try {
+      const response = await ChartService.getAvailableCharts();
+      console.log('Fetched charts:', response.data); // Add this line
+      setAvailableCharts(response.data);
+    } catch (error) {
+      console.error('Failed to fetch available charts:', error);
+    }
+  };  
+  
   const toggleActiveState = () => {
     setIsActive(prev => !prev);
   };
@@ -62,6 +82,35 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
     onSelectDashboard(dashboardId);
   };
 
+  const handleAddChartOpen = async () => {
+    await fetchAvailableCharts(); // Make sure this line is correct
+    setOpenAddChartDialog(true);
+  };  
+
+  const handleAddChartClose = () => {
+    setOpenAddChartDialog(false);
+  };
+
+  const handleChartSelection = (chart: any) => {
+    setSelectedCharts(prev => {
+      const newSelection = new Set(prev);
+      if (newSelection.has(chart.id)) {
+        newSelection.delete(chart.id);
+      } else {
+        newSelection.add(chart.id);
+      }
+      return newSelection;
+    });
+  };
+
+  const handleAddChartConfirm = () => {
+    if (selectedCharts.size > 0) {
+      const chartIdsToAdd = Array.from(selectedCharts);
+      onAddChart(chartIdsToAdd);
+      handleAddChartClose();
+    }
+  };
+  
   const handleAddDashboardOpen = () => {
     setShowMultiStepForm(true);
   };
@@ -69,28 +118,6 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
   const closeForm = () => {
     setShowMultiStepForm(false);
   };
-
-  // Update dashboard description
-  const updateDashboardDescription = useCallback(async (dashboardId: string, newDescription: string) => {
-    try {
-      await DashboardService.patchDashboard(dashboardId, { description: newDescription });
-      setDashboards(prevDashboards =>
-        prevDashboards.map(dashboard =>
-          dashboard.id === dashboardId ? { ...dashboard, description: newDescription } : dashboard
-        )
-      );
-    } catch (error) {
-      console.error('Failed to update dashboard description:', error);
-    }
-  }, []);
-
-  // Edit description
-  const handleEditDescription = useCallback((dashboardId: string, currentDescription: string) => {
-    const newDescription = prompt('請輸入儀表板說明文字（非必填）：', currentDescription);
-    if (newDescription !== null) {
-      updateDashboardDescription(dashboardId, newDescription);
-    }
-  }, [updateDashboardDescription]);
 
   // Add dashboard
   const handleAddDashboardSubmit = useCallback(async () => {
@@ -205,47 +232,48 @@ const DashboardSidebar: React.FC<{ onSelectDashboard: (dashboardId: string) => v
                 >
                   <MenuItem onClick={() => { setEditingDashboardId(dashboard.id); handleMenuClose(dashboard.id); }}>修改名稱</MenuItem>
                   <MenuItem onClick={() => { handleDeleteDashboard(dashboard.id); handleMenuClose(dashboard.id); }}>刪除</MenuItem>
-                  <MenuItem onClick={() => handleEditDescription(dashboard.id, dashboard.description || '')}>編輯說明文字</MenuItem>
+                  <MenuItem onClick={() => handleAddChartOpen()}>新增圖表</MenuItem>
                 </Menu>
               </li>
             ))}
           </ul>
         </div>
       </div>
+
       {showMultiStepForm && (
         <MultiStepForm
           onClose={closeForm}
           exportData={async () => {
-            await fetchAllDashboards(); // Ensure this is an async operation
-          } }
-          currentUserId={currentUserId} onDashboardCreated={function (dashboard: Dashboard, charts: any[]): void {
-            throw new Error('Function not implemented.');
-          } }        />
+            await fetchAllDashboards();
+          }}
+          currentUserId={currentUserId}
+          onDashboardCreated={(dashboard, charts) => {
+            // Handle dashboard creation, if needed
+          }}
+        />
       )}
-      <Dialog open={openDialog} onClose={handleAddDashboardClose}>
-        <DialogTitle>新增儀表板</DialogTitle>
+
+      <Dialog open={openAddChartDialog} onClose={handleAddChartClose}>
+        <DialogTitle>新增圖表</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="儀表板名稱"
-            fullWidth
-            variant="standard"
-            value={dashboardName}
-            onChange={(e) => setDashboardName(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="儀表板說明文字（非必填）"
-            fullWidth
-            variant="standard"
-            value={dashboardDescription}
-            onChange={(e) => setDashboardDescription(e.target.value)}
-          />
+          {availableCharts.map((chart) => (
+            <MenuItem key={chart.id} onClick={() => handleChartSelection(chart)}>
+              <Checkbox
+                checked={selectedCharts.has(chart.id)}
+                onChange={() => handleChartSelection(chart.id)}
+                color="primary"
+              />
+              {chart.name}
+            </MenuItem>
+          ))}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleAddDashboardClose}>取消</Button>
-          <Button onClick={handleAddDashboardSubmit}>新增</Button>
+          <Button onClick={handleAddChartClose} color="primary">
+            取消
+          </Button>
+          <Button onClick={handleAddChartConfirm} color="primary">
+            確定
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

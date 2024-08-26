@@ -116,4 +116,5 @@ export interface UserData {
   departmentId: string;
   departmentName: string;
   position: string;
+  jobNumber:string;
 }

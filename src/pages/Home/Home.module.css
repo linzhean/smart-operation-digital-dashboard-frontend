@@ -76,6 +76,11 @@
   transform: scale(0.95);
 }
 
+.chartImage {
+  max-width: 100%; /* Ensure the image fits within the container */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 10px; /* Optional: add some border radius for aesthetics */
+}
 
 
 @media (max-width: 768px) {

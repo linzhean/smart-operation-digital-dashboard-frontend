@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styles from './ProfileSetup.module.css';
 import logo from '../../assets/icon/Logo-GIF-crop.gif';
-import { updateUser } from '../../services/userManagementServices';
+import { getUser, updateUser } from '../../services/userManagementServices';
 import { fetchDropdownData } from '../../services/dropdownServices';
-import { UpdateUserData, UserData } from '../../services/types/userManagement';
+import { UserData } from '../../services/types/userManagement';
 import { useNavigate } from 'react-router-dom';
 
 const ProfileSetup: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
-    jobNumber: '', // 将 employeeId 改为 jobNumber
+    jobNumber: '', // 將 employeeId 改為 jobNumber
     department: '',
     jobTitle: '',
     identity: ''
@@ -18,7 +18,30 @@ const ProfileSetup: React.FC = () => {
   const [departments, setDepartments] = useState<{ value: string; label: string }[]>([]);
   const [identities, setIdentities] = useState<{ value: string; label: string }[]>([]);
   const [error, setError] = useState('');
+  const [userId, setUserId] = useState<string>('');
 
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const user = await getUser(); // 獲取單一用戶
+        console.log('獲取到的用戶:', user); // 調試輸出
+  
+        if (user && user.id) {
+          setUserId(user.id.toString()); // 將數字轉為字串後設置
+          console.log('用戶 ID 設置為:', user.id); // 調試輸出
+        } else {
+          setError('找不到用戶或用戶ID缺失。');
+        }
+      } catch (error) {
+        console.error('無法獲取用戶ID:', error);
+        setError('加載用戶信息失敗，請稍後再試。');
+      }
+    };
+  
+    fetchUserId();
+  }, []);  
+  
+  
   useEffect(() => {
     const loadDropdownData = async () => {
       try {
@@ -28,7 +51,7 @@ const ProfileSetup: React.FC = () => {
         const identityData = await fetchDropdownData('identity');
         setIdentities(identityData);
       } catch (error) {
-        console.error('Failed to load dropdown data:', error);
+        console.error('無法加載下拉數據:', error);
       }
     };
 
@@ -43,20 +66,28 @@ const ProfileSetup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
+    if (!userId) {
+      setError('用戶ID缺失。');
+      console.log('錯誤: 用戶 ID 缺失'); // 調試輸出
+      return;
+    }
+    
     const newUser: UserData = {
-      userId: formData.jobNumber,  // 使用 jobNumber 替换 employeeId
+      userId,
       userName: formData.name,
       departmentId: formData.department,
       departmentName: departments.find(dept => dept.value === formData.department)?.label || '',
       position: formData.jobTitle,
+      jobNumber: formData.jobNumber,
     };
     
     try {
-      await updateUser(formData.jobNumber, newUser); // 使用 jobNumber 更新用户
+      console.log('提交用戶數據:', newUser); // 調試輸出
+      await updateUser(userId, newUser);
       navigate('/awaiting-approval');
     } catch (error) {
-      console.error('Failed to update user:', error);
-      setError('Submission failed, please try again.');
+      console.error('更新用戶失敗:', error);
+      setError('提交失敗，請重試。');
     }
   };  
 

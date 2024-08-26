@@ -1,4 +1,4 @@
-//src\services\ChartService.ts
+// src/services/ChartService.ts
 import axiosInstance from './axiosConfig';
 
 const ChartService = {
@@ -19,13 +19,25 @@ const ChartService = {
     return response.data;
   },
 
-  createChart: async (dashboardId: number, sponsorList: string[], exporterList: string[], dashboardCharts: number[]) => {
-    const response = await axiosInstance.post('/chart/dashboard', {
-      sponsorList,
-      exporterList,
-      dashboardCharts
-    }, {
-      params: { dashboardId }
+  createChart: async (chartData: {
+    name: string;
+    scriptFile: string;
+    scriptPath: string;
+    imageFile: string;
+    showcaseImage: string;
+    chartImage: string;
+    chartHTML: string;
+    canAssign: boolean;
+    observable: boolean;
+    available: boolean;
+    createId: string;
+    createDate: string;
+    modifyId: string;
+    modifyDate: string;
+    chartGroupId: number;
+  }) => {
+    const response = await axiosInstance.post('/chart', {
+      chartBean: chartData
     });
     return response.data;
   },
