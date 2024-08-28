@@ -217,7 +217,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
               />
               <div className={styles.buttonGroup}>
                 <button type="button" className={styles.actionButton} onClick={previousStep}>上一步</button>
-                <button type="button" className={styles.actionButton} onClick={handleSubmit}>完成</button>
+                <button type="button" className={`${styles.actionButton} ${styles.finish}`} onClick={handleSubmit}>完成</button>
               </div>
             </fieldset>
           )}
@@ -236,8 +236,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                 <input
                   id='KPIapplicant'
                   type="text"
-                  // value={currentUserId}
-                  value={'梁成恩'}
+                  value={currentUserId}
                   readOnly
                   className={styles.KPIapplicant}
                 />

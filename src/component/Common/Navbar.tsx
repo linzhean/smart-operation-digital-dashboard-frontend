@@ -106,7 +106,7 @@ import userDataIcon from '../../assets/icon/userData-icon.svg';
 import AssignExportControlIcon from '../../assets/icon/AssignExportControl.svg';
 import InterimKPIControl from '../../assets/icon/InterimKPIControl.svg';
 import UserControl from '../../assets/icon/UserControl.svg';
-import TaskKpiManagementIcon from '../../assets/icon/targetIcon.svg'
+import ChartAdmin from '../../assets/icon/ChartAdmin.png'
 
 const NavBar: React.FC = () => {
   const location = useLocation();
@@ -133,14 +133,14 @@ const NavBar: React.FC = () => {
         <div className={`collapse navbar-collapse`} id="navbarNavAltMarkup">
           <ul className={`navbar-nav ${styles.navbarNav}`}>
 
-            {/* KPI上下限及交辦事項管理 */}
+            {/* 圖表新增後台 */}
             <li className={`nav-item ${styles.navbarNavItem}`}>
               <Link
-                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/TaskKpiSetting') ? styles.activeNavLink : ''}`}
-                to="/TaskKpiSetting"
+                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/ChartAdmin') ? styles.activeNavLink : ''}`}
+                to="/ChartAdmin"
               >
-                <img className={styles.navbarNavItemImg} src={TaskKpiManagementIcon} alt="TaskKpiSetting" />
-                <span className={`${styles.navbarText} ${activeLink.startsWith('/TaskKpiSettingt') ? styles.activeNavLinkText : ''}`}>任務設定</span>
+                <img className={styles.navbarNavItemImg} src={ChartAdmin} alt="ChartAdmin" />
+                <span className={`${styles.navbarText} ${activeLink.startsWith('/ChartAdmin') ? styles.activeNavLinkText : ''}`}>圖表後台管理</span>
               </Link>
             </li>
 

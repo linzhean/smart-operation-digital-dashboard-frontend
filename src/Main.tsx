@@ -9,7 +9,7 @@ import InterimKPIControl from './pages/InterimKPIControl/InterimKPIControl';
 import AssignExportControl from './pages/AssignExportControl/AssignExportControl';
 import UserControl from './pages/UserControl/UserControl';
 import GroupManagement from './pages/GroupManagement/GroupManagement';
-import TaskKpiSetting from './pages/TaskKpiPage/TaskKpiSetting';
+import ChartAdmin from './pages/ChartAdmin/ChartAdmin';
 import './component/Bootstrap/css/bootstrap.min.css';
 import './styles/Main.css';
 import { useUserContext } from './context/UserContext';
@@ -39,7 +39,7 @@ const Main: React.FC = () => {
         <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
         <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
         <Route path="/UserControl/*" element={<UserControl />} />
-        <Route path="/TaskKpiSetting/*" element={<TaskKpiSetting />} />
+        <Route path="/ChartAdmin" element={<ChartAdmin />} />
       </Routes>
     </div>
   );
