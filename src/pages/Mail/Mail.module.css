@@ -6,21 +6,24 @@
 .leftsideUnique,
 .rightsideUnique {
   overflow: auto;
-  width: 100%;
   background-color: #343541;
   color: #CCCCCC;
   border-radius: 15px;
-  margin: 5px;
-  margin-top: 0px;
+  margin-bottom: 5px;
 }
 
 .leftsideUnique {
+  width: 50%;
   display: flex;
   margin-right: 3px;
   flex-direction: column;
+  margin-left: 3px;
 }
 
 .rightsideUnique {
+  width: 50%;
+  margin-top: 0px;
+  margin-right: 3px;
   margin-left: 3px;
   display: flex;
   flex-direction: column;
@@ -32,9 +35,6 @@
 }
 
 .toggleButtonUnique,
-.create-buttonUnique,
-.update-buttonUnique,
-.delete-buttonUnique,
 .sendButtonUnique {
   background-color: #1E90FF;
   color: #fff;
@@ -75,6 +75,12 @@
 @media (max-width: 767px) {
   .mainEmailUnique {
     flex-direction: column;
+  }
+
+  .leftsideUnique {
+    width: 98.5vw;
+    /* 剩下的1.5是給右邊距的 */
+    margin-left: 3px;
   }
 
   .leftsideUnique,

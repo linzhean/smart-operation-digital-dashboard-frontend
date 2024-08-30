@@ -51,13 +51,14 @@ const Mail: React.FC = () => {
 
     return (
         <main className={styles.mainEmailUnique}>
-            <div className={`${styles.leftsideUnique} ${showRightSide ? '' : styles.hiddenUnique}`}>
-                {loading && <p>Loading...</p>}
+            <div className={`${styles.leftsideUnique} ${showRightSide ? styles.hiddenUnique : ''}`}>
                 {error && <p className={styles.errorMsg}>{error}</p>}
+                {loading && <p>Loading...</p>}
                 <Filter onFilterChange={handleFilterChange} />
                 <MailBreif onMailClick={handleMailItemClick} emails={emails} />
             </div>
-            <div className={`${styles.rightsideUnique} ${!showRightSide ? styles.hiddenUnique : ''}`}>
+
+            <div className={`${styles.rightsideUnique} ${showRightSide ? '' : styles.hiddenUnique}`}>
                 <button className={styles.toggleButtonUnique} onClick={handleBackClick}>返回</button>
                 {selectedEmail && (
                     <div className={styles.chatContainerUnique}>
