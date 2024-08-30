@@ -7,7 +7,6 @@
 .rightsideUnique {
   overflow: auto;
   width: 100%;
-  height: 88%;
   background-color: #343541;
   color: #CCCCCC;
   border-radius: 15px;
@@ -32,36 +31,33 @@
   display: none;
 }
 
-.toggle-buttonUnique,
+.toggleButtonUnique,
 .create-buttonUnique,
 .update-buttonUnique,
 .delete-buttonUnique,
-.send-buttonUnique {
+.sendButtonUnique {
   background-color: #1E90FF;
   color: #fff;
   border: none;
   padding: 5px 10px;
-  /* Adjusted padding to match delete button size */
   cursor: pointer;
   border-radius: 5px;
   margin: 10px;
-  /* Margin can be adjusted based on spacing requirements */
   align-self: flex-end;
-  /* Ensures it aligns to the right in the container */
 }
 
-.chat-containerUnique {
+.chatContainerUnique {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 
-.error {
+.errorMsg {
   color: red;
   font-weight: bold;
 }
 
-/* Media query for responsive design */
+
 @media (min-width: 768px) {
   .mainEmailUnique {
     flex-direction: row;
@@ -71,7 +67,7 @@
     display: block;
   }
 
-  .rightsideUnique .toggle-buttonUnique {
+  .rightsideUnique .toggleButtonUnique {
     display: none;
   }
 }
@@ -86,7 +82,7 @@
     flex: 1;
   }
 
-  .toggle-buttonUnique {
+  .toggleButtonUnique {
     display: block;
   }
 }
