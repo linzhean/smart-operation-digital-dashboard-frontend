@@ -13,7 +13,6 @@ const GroupManagement: React.FC = () => {
   };
 
   const handleDeleteGroup = (groupId: number) => {
-    // Implement group deletion logic if necessary
   };
 
   return (
@@ -24,7 +23,7 @@ const GroupManagement: React.FC = () => {
         activeButton={activeButton}
         handleButtonClick={handleButtonClick}
       />
-      <div className={styles.groupManage_container}>
+      <div className={styles.sideBar250_container}>
         <div className="theContent">
           <Routes>
             <Route

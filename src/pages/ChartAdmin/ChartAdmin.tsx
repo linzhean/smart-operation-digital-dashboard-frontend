@@ -1,37 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ChartAdmin.module.css';
-import ChartList from '../../component/ChartAdmin/ChartList';
+import KPIDetails from '../../component/ChartAdmin/KPIDetails';
+import Sidebar from '../../component/ChartAdmin/ChartAdminSidebar';
 
 const ChartAdmin: React.FC = () => {
-  // const navigate = useNavigate();
-  // const location = useLocation();
-  // const [activeButton, setActiveButton] = useState<string>('KpiSetting');
+  const [selectedStatus, setSelectedStatus] = useState<string>('');
+  const [selectedKPI, setSelectedKPI] = useState<string>('');
 
-  // useEffect(() => {
-  //   if (location.pathname === '/TaskKpiSetting' || location.pathname === '/TaskKpiSetting/') {
-  //     navigate('kpi');
-  //   }
-  // }, [location.pathname, navigate]);
+  const handleStatusChange = (status: string) => {
+    setSelectedStatus(status);
+  };
 
-  // // 按鈕點擊事件
-  // const handleButtonClick = (buttonId: string) => {
-  //   setActiveButton(buttonId);
-  //   if (buttonId === 'TaskCheck') {
-  //     navigate('task');
-  //   } else if (buttonId === 'KpiSetting') {
-  //     navigate('kpi');
-  //   }
-  // };
+  const handleKPISelect = (kpi: string) => {
+    setSelectedKPI(kpi);
+  };
 
   return (
-    <div>
-      <div className="theContent">
-        <div className={styles.filterButton}>
-          <ChartList />
+    <div className="wrapper">
+      <Sidebar
+        onStatusChange={handleStatusChange}
+        selectedStatus={selectedStatus}
+        onKPISelect={handleKPISelect}
+      />
+      <div className="main_container">
+        <div className="theContent">
+          {selectedKPI && <KPIDetails selectedKPI={selectedKPI} />}
         </div>
       </div>
-    </div >
+    </div>
   );
 };
+
 
 export default ChartAdmin;

@@ -10,7 +10,6 @@
   position: fixed;
   padding: 30px;
   border-radius: 20px;
-  /* z-index: 99999999999; */
 }
 
 .KPIapplicant {
@@ -83,7 +82,7 @@
   font-size: 1rem;
 }
 
-.checkboxWrapper label {
+.checkboxWrapper {
   width: 85%;
   border: 2px solid #ACACBE;
   padding: 5px;
@@ -352,7 +351,7 @@
   font-weight: 800;
 }
 
-.theTextarea {
+/* .theTextarea {
   height: 150px;
   resize: none;
   width: 100%;
@@ -363,7 +362,7 @@
   border-radius: 5px;
   font-weight: bold;
   padding: 10px;
-}
+} */
 
 .submit:hover {
   transform: scale(1.2) !important;
@@ -405,7 +404,6 @@
   padding: 5px 10px;
   margin-left: 7px;
 }
-
 
 .applyKPIlabelGroup select {
   font-weight: bold;

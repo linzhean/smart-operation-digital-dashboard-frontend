@@ -1,0 +1,159 @@
+.wrapper {
+  position: relative;
+}
+
+.bg_shadow {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  z-index: 6000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.openbutton {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 65px;
+  height: 65px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 8888;
+}
+
+.sidebar_inner {
+  width: 150px;
+  position: fixed;
+  left: 0;
+  height: 100vh;
+  z-index: 99999;
+  transition: all 0.3s ease;
+}
+
+.siderbar_menu {
+  background-color: black;
+  height: 87%;
+  overflow: auto;
+  padding: 5px;
+}
+
+.siderbar_menu>li>a {
+  padding-bottom: 10px;
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: #3678fb;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.close {
+  position: absolute;
+  top: 40%;
+  right: -33%;
+  font-size: 30px;
+  color: #fff;
+  cursor: pointer;
+  display: none;
+  padding: 25px;
+}
+
+.close img {
+  width: 30px;
+  height: 30px;
+}
+
+.close:hover {
+  opacity: 0.7;
+  transition: transform 0.5s ease;
+  transform: rotate(-180deg);
+}
+
+@media (max-width: 1024px) {
+  .sidebar_inner {
+    left: -115%;
+    transition: all 0.5s ease;
+  }
+
+  .main_container {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .close,
+  .navbar .hamburger {
+    display: block;
+  }
+
+  .wrapper.active .sidebar_inner {
+    left: 0;
+    transition: all 0.5s ease;
+  }
+
+  .wrapper.active .bg_shadow {
+    visibility: visible;
+    opacity: 0.7;
+  }
+
+}
+
+@media (min-width: 1025px) {
+  .openbutton {
+    display: none;
+  }
+}
+
+.addKPIButton {
+  margin-top: -3px;
+  text-align: center;
+  width: 125px;
+  height: 50px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  color: white;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: #2C66DD;
+  border: none;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+}
+
+.addKPIButton:hover {
+  color: black;
+  background: #86a7e9;
+}
+
+.theAccordion {
+  display: flex !important;
+}
+
+.theArrowIcon {
+  margin-left: 40px !important;
+}
+
+/* 高亮效果!!! */
+.activeKPI {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.theKPIs {
+  color: white;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 7px;
+  padding-left: 20px;
+  white-space: nowrap;
+}
