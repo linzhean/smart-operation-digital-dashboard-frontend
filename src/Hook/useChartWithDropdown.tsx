@@ -30,44 +30,67 @@ export function useChartWithDropdown(
   const [interactiveCharts, setInteractiveCharts] = useState<any[]>([]);
   const [currentChartId, setCurrentChartId] = useState<number | null>(null);
   const [kpiRequestChartId, setKpiRequestChartId] = useState<number | null>(null);
-  const [canAssign, setCanAssign] = useState<boolean>(true); // Add this state
+  const [canAssign, setCanAssign] = useState<boolean>(true); // 添加這個狀態
+  const [selectedDashboardId, setSelectedDashboardId] = useState<number | null>(null);
+  const [isAdvancedAnalysisModalOpen, setIsAdvancedAnalysisModalOpen] = useState(false);
+  const [chartHTML, setChartHTML] = useState<string | null>(null);
 
-  // Fetch all available charts
+  // 獲取所有可用的圖表
   useEffect(() => {
     const fetchCharts = async () => {
       try {
         const response = await ChartService.getAvailableCharts();
         if (Array.isArray(response.data)) {
           setCharts(response.data);
-          // Assuming response.data[0] is the chart we are dealing with for simplicity
+          // 假設 response.data[0] 是我們要處理的圖表
           if (response.data.length > 0) {
-            setCanAssign(response.data[0].canAssign); // Set canAssign based on chart data
+            setCanAssign(response.data[0].canAssign); // 根據圖表數據設定 canAssign
           }
         } else {
-          console.error('Failed to fetch charts:', response.message);
-          alert('Failed to fetch charts. Please try again later.');
+          console.error('獲取圖表失敗:', response.message);
+          alert('獲取圖表失敗。請稍後再試。');
         }
       } catch (error) {
-        console.error('Failed to fetch charts:', error);
-        alert('Failed to fetch charts. Please try again later.');
+        console.error('獲取圖表失敗:', error);
+        alert('獲取圖表失敗。請稍後再試。');
       }
     };
     fetchCharts();
   }, []);
 
-  // Fetch all users
+  // 獲取所有用戶
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const userList = await fetchAllUsers();
         setUsers(userList);
       } catch (error) {
-        console.error('Failed to fetch users:', error);
-        alert('Failed to fetch users. Please try again later.');
+        console.error('獲取用戶失敗:', error);
+        alert('獲取用戶失敗。請稍後再試。');
       }
     };
     fetchUsers();
   }, []);
+
+
+  useEffect(() => {
+    const fetchChartHTML = async (id: number) => {
+      try {
+        const response = await ChartService.getChartData(id);
+        if (response.data) {
+          setChartHTML(response.data);
+        } else {
+          console.error('Failed to fetch chart HTML:', response.message);
+        }
+      } catch (error) {
+        console.error('Error fetching chart HTML:', error);
+      }
+    };
+
+    if (chartId) {
+      fetchChartHTML(chartId);
+    }
+  }, [chartId]);
 
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
 
@@ -75,13 +98,13 @@ export function useChartWithDropdown(
     try {
       const result = await exportData(chartId, requestData);
       if (!result.result) {
-        alert(`Export failed: ${result.errorCode}`);
+        alert(`導出失敗: ${result.errorCode}`);
       } else {
-        // Handle successful export, e.g., trigger file download
+        // 處理成功導出的情況，例如觸發文件下載
       }
     } catch (error) {
-      console.error('Error during export:', error);
-      alert('An error occurred during export. Please try again.');
+      console.error('導出過程中發生錯誤:', error);
+      alert('導出過程中發生錯誤。請重試。');
     } finally {
       setIsDropdownOpen(false);
     }
@@ -92,7 +115,8 @@ export function useChartWithDropdown(
     setIsDropdownOpen(false);
   };
 
-  const handleChartSelect = (id?: any) => {
+  const handleChartSelect = (id?: number) => {
+    setCurrentChartId(id || null); // 更新圖表 ID
     setIsChartSelectModalOpen(true);
     setIsDropdownOpen(false);
   };
@@ -103,23 +127,24 @@ export function useChartWithDropdown(
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedCharts.length === 0) {
-      alert('Please select a chart.');
+    if (!chartId) {
+      alert('請先選擇一個圖表。');
       return;
     }
-
+  
     try {
       const assignedTask = {
-        chartId: selectedCharts[0].id,
+        chartId,
         name: subject,
-        receiver: selectedUser || '', // Default to empty string if selectedUser is null
+        receiver: selectedUser || '',
         firstMessage: {
           content: message,
         },
       };
-
+  
       const createdEmail = await createEmail(assignedTask);
-
+      console.log('創建郵件響應:', createdEmail); // 打印響應
+  
       if (createdEmail && createdEmail.id) {
         await sendChatMessage(createdEmail.id, {
           mailId: createdEmail.id,
@@ -132,15 +157,15 @@ export function useChartWithDropdown(
           modifyDate: formatDate(new Date()),
         });
       } else {
-        throw new Error('Failed to create email.');
+        throw new Error('創建郵件失敗。');
       }
-
+  
       setIsModalOpen(false);
     } catch (error) {
-      console.error('Error submitting delegate task:', error);
-      alert('Failed to submit delegate task. Please try again.');
+      console.error('提交委派任務時出錯:', error);
+      alert('提交委派任務失敗。請重試。');
     }
-  };
+  };    
 
   const handleKpiSelection = (kpiId: number) => {
     setSelectedKPIs(prev => {
@@ -165,7 +190,7 @@ export function useChartWithDropdown(
   const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (kpiRequestChartId === null) {
-      alert('Please select a chart.');
+      alert('請選擇一個圖表。');
       return;
     }
 
@@ -180,32 +205,66 @@ export function useChartWithDropdown(
       };
       const response = await createApplication(requestData);
       if (response.result) {
-        alert('Request submitted successfully');
+        alert('請求提交成功');
         setIsRequestKpiModalOpen(false);
-        setKpiRequestChartId(null); // Reset after submission
+        setKpiRequestChartId(null); // 提交後重置
       } else {
-        alert('Request submission failed: ' + response.message);
+        alert('請求提交失敗: ' + response.message);
       }
     } catch (error) {
-      console.error('Error submitting KPI request:', error);
-      alert('Failed to submit KPI request. Please try again.');
+      console.error('提交 KPI 請求時出錯:', error);
+      alert('提交 KPI 請求失敗。請重試。');
     }
   };
 
-  const handleAdvancedAnalysis = async () => {
+  const fetchChartData = async (chartId: number) => {
     try {
-      const response = await ChartService.getAvailableCharts();
-      if (Array.isArray(response.data)) {
-        setInteractiveCharts(response.data);
+      const response = await ChartService.getChartData(chartId);
+      console.log('Fetch Chart Data Response:', response); // Add this line
+      if (response.result) {
+        return response.data;
       } else {
-        console.error('Failed to fetch interactive charts:', response.message);
-        alert('Failed to fetch interactive charts. Please try again later.');
+        console.error('Failed to fetch chart data:', response.message);
+        alert('Failed to fetch chart data. Please try again later.');
       }
     } catch (error) {
-      console.error('Failed to fetch interactive charts:', error);
-      alert('Failed to fetch interactive charts. Please try again later.');
+      console.error('Error fetching chart data:', error);
+      alert('Error fetching chart data. Please try again later.');
     }
+    return null;
   };
+  
+
+  const handleAdvancedAnalysis = async (dashboardId: number) => {
+    try {
+      const dashboardChartsResponse = await ChartService.getDashboardCharts(dashboardId);
+      if (dashboardChartsResponse.result && Array.isArray(dashboardChartsResponse.data)) {
+        const chartsWithData = await Promise.all(
+          dashboardChartsResponse.data.map(async (chart: any) => {
+            const chartData = await fetchChartData(chart.id);
+            return { ...chart, data: chartData };
+          })
+        );
+        setInteractiveCharts(chartsWithData); // 更新状态
+        // 获取图表的 HTML 链接
+        const firstChart = chartsWithData[0]; // 获取第一个图表的 HTML 链接
+        if (firstChart?.data?.chartHTML) {
+          // 新建标签页并打开链接
+          window.open(firstChart.data.chartHTML, '_blank');
+        }
+      } else {
+        console.error('Failed to fetch dashboard charts:', dashboardChartsResponse.message);
+        alert('Failed to fetch dashboard charts. Please try again later.');
+      }
+    } catch (error) {
+      console.error('Error during advanced analysis:', error);
+      alert('Error during advanced analysis. Please try again later.');
+    }
+  };  
+    
+useEffect(() => {
+  console.log('Updated interactiveCharts:', interactiveCharts);
+}, [interactiveCharts]);
 
   const formatDate = (date: Date | null): string => {
     if (!date) return '';
@@ -220,6 +279,8 @@ export function useChartWithDropdown(
 
   const handleStartDateChange = (date: Date | null) => setStartDate(date);
   const handleEndDateChange = (date: Date | null) => setEndDate(date);
+  const openAdvancedAnalysisModal = () => setIsAdvancedAnalysisModalOpen(true);
+const closeAdvancedAnalysisModal = () => setIsAdvancedAnalysisModalOpen(false);
 
   return {
     isDropdownOpen,
@@ -274,6 +335,10 @@ export function useChartWithDropdown(
     currentChartId,
     kpiRequestChartId,
     setKpiRequestChartId,
-    canAssign
+    canAssign,
+    isAdvancedAnalysisModalOpen,
+    setIsAdvancedAnalysisModalOpen, 
+    chartHTML,
+    setChartHTML
   };
 }

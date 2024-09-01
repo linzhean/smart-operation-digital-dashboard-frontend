@@ -81,11 +81,11 @@ const DashboardSidebar: React.FC<{
     setActiveDashboard(dashboardId);
     onSelectDashboard(dashboardId);
   };
-
+  
   const handleAddChartOpen = async () => {
-    await fetchAvailableCharts(); // Make sure this line is correct
+    await fetchAvailableCharts();
     setOpenAddChartDialog(true);
-  };  
+  };   
 
   const handleAddChartClose = () => {
     setOpenAddChartDialog(false);
@@ -103,13 +103,27 @@ const DashboardSidebar: React.FC<{
     });
   };
 
-  const handleAddChartConfirm = () => {
-    if (selectedCharts.size > 0) {
-      const chartIdsToAdd = Array.from(selectedCharts);
-      onAddChart(chartIdsToAdd);
+  const handleAddChartConfirm = async () => {
+    if (activeDashboard && selectedCharts.size > 0) {
+      const selectedChartsData = Array.from(selectedCharts).map(chartId => {
+        const chart = availableCharts.find(c => c.id === chartId);
+        return chart ? { ...chart, id: chartId } : null;
+      }).filter(chart => chart !== null);
+  
+      console.log('Selected Charts Data:', selectedChartsData); // Debug
+      console.log('Active Dashboard:', activeDashboard); // Debug
+  
+      try {
+        await ChartService.addChartsToDashboard(Number(activeDashboard), selectedChartsData.map(chart => chart.id));
+      } catch (error) {
+        console.error('Failed to add charts to dashboard:', error);
+      }
+  
       handleAddChartClose();
+    } else {
+      console.error('Active Dashboard or Selected Charts are missing');
     }
-  };
+  };  
   
   const handleAddDashboardOpen = () => {
     setShowMultiStepForm(true);

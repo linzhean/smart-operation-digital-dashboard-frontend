@@ -1,12 +1,15 @@
+//src\component\Dashboard\ChartWithDropdown.tsx
 import React, { useEffect, useState } from 'react';
 import styles from './ChartWithDropdown.module.css';
 import { useChartWithDropdown } from '../../Hook/useChartWithDropdown'; // Adjust the path as necessary
 import DatePicker from 'react-datepicker';
+import ChartComponent from './ChartComponent'; // 导入图表组件
 import 'react-datepicker/dist/react-datepicker.css';
 import { fetchAllUsers } from '../../services/UserAccountService'; // Adjust the path as necessary
 import more from '../../assets/icon/KPImoreBlue.svg';
 import ReactDOM from 'react-dom';
 import { useRef } from 'react';
+import DOMPurify from 'dompurify';
 
 interface ChartWithDropdownProps {
   children: React.ReactNode;
@@ -16,9 +19,10 @@ interface ChartWithDropdownProps {
   onChartSelect: (chartId: number) => void;
   currentUserId: string;
   canAssign: boolean; // Add this prop to handle assignment
+  selectedDashboardId?: number;
 }
 
-const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, onChartSelect, currentUserId }) => {
+const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, onChartSelect, currentUserId, selectedDashboardId }) => {
 
   const {
     // isDropdownOpen,
@@ -70,7 +74,42 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     setInteractiveCharts, // Add setInteractiveCharts method
     handleAdvancedAnalysis, // Add handleAdvancedAnalysis method
     canAssign,
+    isAdvancedAnalysisModalOpen,
+    setIsAdvancedAnalysisModalOpen,
+    chartHTML,
+    setChartHTML
   } = useChartWithDropdown(exportData, chartId, requestData, currentUserId);
+
+  useEffect(() => {
+    if (interactiveCharts.length > 0) {
+      // Fetch chart HTML content when interactiveCharts are updated
+      const fetchChartHTML = async (url: string) => {
+        try {
+          console.log('Fetching chart HTML from URL:', url);
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'text/html',
+            },
+            mode: 'cors',
+          });
+          console.log('Response status:', response.status);
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const text = await response.text();
+          setChartHTML(text);
+        } catch (error) {
+          console.error('无法获取图表 HTML:', error);
+        }
+      };      
+
+      const chartURL = interactiveCharts[0]?.data?.chartHTML;
+      if (chartURL) {
+        fetchChartHTML(chartURL);
+      }
+    }
+  }, [interactiveCharts]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -85,85 +124,116 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     fetchUsers();
   }, [setUsers]);
 
+  const handleAdvancedAnalysisWrapper = async () => {
+    if (selectedDashboardId) {
+      await handleAdvancedAnalysis(selectedDashboardId);
+    } else {
+      alert("No Dashboard ID selected.");
+    }
+  };  
+
   // 交辦事項
-  const AssignForm = (<>
-    <div className={styles.modalOverlay} onClick={closeModal}></div>
-    <div className={styles.modal}>
-      <form onSubmit={handleSubmit} className={styles.AssignForm}>
-        <h2>撰寫郵件交辦</h2>
-        <div className={styles.labelGroup}>
-          <label htmlFor='AssignFormTitle'>標題</label>
-          <input
-            id='AssignFormTitle'
-            type="text"
-            value={subject}
-            onChange={e => setSubject(e.target.value)}
-            required
-          />
-        </div>
-        <div className={styles.labelGroup}>
-          <label htmlFor='AssignFormPersonInCharge'>指定負責人</label>
-          <div className={styles.select}>
-            <select
-              id='AssignFormPersonInCharge'
-              value={selectedUser || ''}
-              onChange={e => setSelectedUser(e.target.value)}
+  // 在 ChartWithDropdown.tsx 中修改 AssignForm
+  const AssignForm = (
+    <>
+      <div className={styles.modalOverlay} onClick={closeModal}></div>
+      <div className={styles.modal}>
+        <form onSubmit={handleSubmit} className={styles.AssignForm}>
+          <h2>撰寫郵件交辦</h2>
+          <div className={styles.labelGroup}>
+            <label htmlFor='AssignFormTitle'>標題</label>
+            <input
+              id='AssignFormTitle'
+              type="text"
+              value={subject}
+              onChange={e => setSubject(e.target.value)}
               required
-            >
-              <option value=""></option>
-              {users.map(user => (
-                <option key={user.userId} value={user.userId}>
-                  {user.userName}
-                </option>
-              ))}
-            </select>
+            />
           </div>
-        </div>
-        <div className={styles.labelGroup}>
-          <label htmlFor="email">收件人</label>
-          <input
-            id='email'
-            type="text"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className={`${styles.labelGroup} ${styles.lastlabelGroup}`}>
-          <textarea
-            placeholder="請輸入郵件內容..."
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-            required
-          />
-        </div>
-        <div className={styles.buttonGroup}>
-          <button type="button" onClick={closeModal} className={styles.cancel}>取消</button>
-          <button type="submit" className={styles.submit}>提交</button>
-        </div>
-      </form>
-    </div></>)
+          <div className={styles.labelGroup}>
+            <label htmlFor='AssignFormPersonInCharge'>指定負責人</label>
+            <div className={styles.select}>
+              <select
+                id='AssignFormPersonInCharge'
+                value={selectedUser || ''}
+                onChange={e => setSelectedUser(e.target.value)}
+                required
+              >
+                <option value=""></option>
+                {(users || []).map(user => (
+                  <option key={user.userId} value={user.userId}>
+                    {user.userName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className={styles.labelGroup}>
+            <label htmlFor="chartSelection">選擇圖表</label>
+            <div className={styles.select}>
+              <select
+                id='chartSelection'
+                value={chartId || ''}
+                onChange={e => onChartSelect(Number(e.target.value))}
+                required
+              >
+                <option value="">請選擇圖表</option>
+                {(charts || []).map(chart => (
+                  <option key={chart.id} value={chart.id}>
+                    {chart.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className={styles.labelGroup}>
+            <label htmlFor="email">收件人</label>
+            <input
+              id='email'
+              type="text"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className={`${styles.labelGroup} ${styles.lastlabelGroup}`}>
+            <textarea
+              placeholder="請輸入郵件內容..."
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+              required
+            />
+          </div>
+          <div className={styles.buttonGroup}>
+            <button type="button" onClick={closeModal} className={styles.cancel}>取消</button>
+            <button type="submit" className={styles.submit}>提交</button>
+          </div>
+        </form>
+      </div>
+    </>
+  );
 
   // 進階分析 
   const advancedAnalysis = (
     <>
-      <div className={styles.modalOverlay} onClick={closeModal}></div>
+      <div className={styles.modalOverlay} onClick={() => setIsAdvancedAnalysisModalOpen(false)}></div>
       <div className={styles.modal}>
         <div className={styles.advancedAnalysisForm}>
           <h2>進階分析</h2>
-          {interactiveCharts.map(chart => (
-            <div key={chart.id}>
-              <h3>{chart.name}</h3>
-              <img src={chart.interactiveUrl} alt={chart.name} />
-            </div>
-          ))}
+          {chartHTML ? (
+            <div
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(chartHTML) }}
+            />
+          ) : (
+            <p>Loading chart...</p>
+          )}
           <div className={styles.buttonGroup}>
-            <button onClick={() => setInteractiveCharts([])} className={styles.cancel}>關閉</button>
+            <button onClick={() => setIsAdvancedAnalysisModalOpen(false)} className={styles.cancel}>關閉</button>
           </div>
         </div>
       </div>
     </>
-  )
+  );
 
   // 設定Menu
   const [hoverTime, setHoverTime] = useState(0);
@@ -310,7 +380,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
 
               <div
                 className={styles.buttonContainer}
-                onMouseEnter={() => handleMouseEnter('advancedAnalysis', handleAdvancedAnalysis)}
+                onMouseEnter={() => handleMouseEnter('advancedAnalysis', handleAdvancedAnalysisWrapper)}
                 onMouseLeave={() => handleMouseLeave('advancedAnalysis')}
               >
                 <button>進階分析</button>
@@ -325,19 +395,19 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
       </div>
       {children}
 
-      {selectedCharts.map(chart => (
+      {/* {selectedCharts.map(chart => (
         <div key={chart.id} className={styles.selectedChart}>
           <p>Chart ID: {chart.id}</p>
           <p>Chart Name: {chart.name}</p>
         </div>
-      ))}
+      ))} */}
 
       {/* 交辦的表單 */}
       {isModalOpen && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}
       {/* 進階分析 */}
-      {Array.isArray(interactiveCharts) && interactiveCharts.length > 0 && (ReactDOM.createPortal(advancedAnalysis, document.getElementById('portal-root')!))}
+      {isAdvancedAnalysisModalOpen && (interactiveCharts.length > 0) && ReactDOM.createPortal(advancedAnalysis, document.getElementById('portal-root')!)}
 
-      {isChartSelectModalOpen && (
+      {/* {isChartSelectModalOpen && (
         <div className={styles.modal}>
           <h2>選擇圖表</h2>
           {charts.map(chart => (
@@ -395,10 +465,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             <button type="button" onClick={closeRequestKpiModal}>取消</button>
           </form>
         </div>
-      )}
-
-
-
+      )} */}
     </div>
   );
 };

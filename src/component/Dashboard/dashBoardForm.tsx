@@ -30,6 +30,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
   const [users, setUsers] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [selectedChartForApplication, setSelectedChartForApplication] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchCharts = async () => {
@@ -48,6 +49,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
     const fetchUsers = async () => {
       try {
         const userList = await fetchAllUsers();
+        console.log(userList); // 用於檢查 `userList` 的結構
         setUsers(userList);
       } catch (error) {
         console.error('Failed to fetch users:', error);
@@ -58,7 +60,9 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
   }, []);
 
   const handleKpiSelection = (kpiId: number) => {
-    setSelectedKPIs(prev => prev.includes(kpiId) ? prev.filter(id => id !== kpiId) : [...prev, kpiId]);
+    if (charts.find(chart => chart.id === kpiId)?.observable) {
+      setSelectedKPIs(prev => prev.includes(kpiId) ? prev.filter(id => id !== kpiId) : [...prev, kpiId]);
+    }
   };
 
   const confirmChartSelection = () => {
@@ -67,20 +71,21 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
     setCurrentStep(2);
   };
 
-  const handleRequestKpi = () => {
+  const handleRequestKpi = (chartId: number) => {
+    setSelectedChartForApplication(chartId);
     setIsFormVisible(true);
   };
 
   const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedCharts.length === 0) {
-      alert('請選擇一個圖表。');
+    if (!selectedChartForApplication) {
+      alert('請選擇一個圖表進行申請。');
       return;
     }
 
     try {
       const requestData = {
-        chartId: selectedCharts[0].id,
+        chartId: selectedChartForApplication,
         applicant: currentUserId,
         guarantor: selectedUser || '',
         startDateStr: formatDate(startDate),
@@ -121,6 +126,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
 
   const handleCloseForm = () => {
     setIsFormVisible(false);
+    setSelectedChartForApplication(null);
   };
 
   const handleSubmit = async () => {
@@ -189,10 +195,14 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                       type="checkbox"
                       id={`kpi-${chart.id}`}
                       checked={selectedKPIs.includes(chart.id)}
-                      onChange={() => chart.observable ? handleKpiSelection(chart.id) : {}}
+                      onChange={() => handleKpiSelection(chart.id)}
+                      disabled={!chart.observable}
                       className={styles.kpiInputs}
                     />
-                    <label htmlFor={`kpi-${chart.id}`} className={chart.observable ? '' : styles.disabledLabel}>{chart.name}</label>
+                    <label htmlFor={`kpi-${chart.id}`} className={!chart.observable ? styles.disabledLabel : ''}>{chart.name}</label>
+                    {!chart.observable && (
+                      <button type="button" className={styles.applyMore} onClick={() => handleRequestKpi(chart.id)}>申請更多</button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -250,7 +260,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                   onChange={(e) => setSelectedUser(e.target.value)}>
                   <option value="">請選擇</option>
                   {users.map(user => (
-                    <option key={user.id} value={user.id}>{user.name}</option>
+                    <option key={user.id} value={user.id}>{user.userName}</option>
                   ))}
                 </select>
               </div>

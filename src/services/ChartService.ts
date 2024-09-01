@@ -1,4 +1,4 @@
-// src/services/ChartService.ts
+//src\services\ChartService.ts
 import axiosInstance from './axiosConfig';
 
 const ChartService = {
@@ -15,9 +15,9 @@ const ChartService = {
   getDashboardCharts: async (dashboardId: number) => {
     const response = await axiosInstance.get('/chart', {
       params: { dashboardId }
-    });
+    });    
     return response.data;
-  },
+  },  
 
   createChart: async (chartData: {
     name: string;
@@ -36,26 +36,29 @@ const ChartService = {
     modifyDate: string;
     chartGroupId: number;
   }) => {
-    const response = await axiosInstance.post('/chart', {
-      chartBean: chartData
-    });
+    const response = await axiosInstance.post('/chart', chartData);
     return response.data;
   },
 
-  updateChart: async (id: string, chart: any) => {
-    const response = await axiosInstance.put(`/chart/${id}`, chart);
-    return response.data;
-  },
+// ChartService.js
+addChartsToDashboard: async (dashboardId: number, chartIds: number[]) => {
+  const requestBody = {
+    sponsorList: [], // 根据需要填充 sponsorList
+    exporterList: [], // 根据需要填充 exporterList
+    dashboardCharts: chartIds
+  };
 
-  deleteChart: async (id: string) => {
-    const response = await axiosInstance.delete(`/chart/${id}`);
-    return response.data;
-  },
+  const response = await axiosInstance.post('/chart/dashboard', requestBody, {
+    params: { dashboardId } // 将 dashboardId 作为查询参数传递
+  });
+
+  return response.data;
+},
 
   getChartData: async (chartId: number) => {
     const response = await axiosInstance.get(`/chart/${chartId}`);
     return response.data;
-  }
+  },
 };
 
 export default ChartService;

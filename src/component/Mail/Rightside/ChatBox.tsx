@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import '../../../styles/chatBox.css';
-import { Email, EmailMessage, getEmailDetails, sendMessage } from '../../../services/mailService';
+import { Email, EmailMessage, getEmailDetails, sendMessage, deleteEmail } from '../../../services/mailService';
 
 interface ChatBoxProps {
   emailId: number;
@@ -13,24 +13,26 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
   const [newMessage, setNewMessage] = useState<string>('');
   const [email, setEmail] = useState<Email | null>(null);
 
-  useEffect(() => {
-    const loadEmail = async () => {
-      try {
-        const fetchedEmail = await getEmailDetails(emailId);
-        setEmail(fetchedEmail);
-        setMessages(fetchedEmail.messageList);
-      } catch (error) {
-        console.error('Error fetching email details:', error);
-      }
-    };
-
-    loadEmail();
+  // Fetch email details
+  const fetchEmailDetails = useCallback(async () => {
+    try {
+      const fetchedEmail = await getEmailDetails(emailId);
+      setEmail(fetchedEmail);
+      setMessages(fetchedEmail.messageList);
+    } catch (error) {
+      console.error('Error fetching email details:', error);
+    }
   }, [emailId]);
 
+  useEffect(() => {
+    fetchEmailDetails();
+  }, [fetchEmailDetails]);
+
+  // Handle sending a new message
   const handleSendMessage = useCallback(async () => {
-    if (newMessage.trim()) { // Ensure message is not empty
+    if (newMessage.trim()) {
       try {
-        const newMessageId = Date.now(); // Generate a unique ID
+        const newMessageId = Date.now();
         const newChatMessage = await sendMessage(emailId, {
           messageId: newMessageId,
           content: newMessage,
@@ -48,15 +50,23 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
       } catch (error) {
         console.error('Error sending message:', error);
       }
-    } else {
-      console.error('Message content cannot be empty.');
     }
   }, [emailId, newMessage, onMessageChange]);
+
+  // Handle deleting the email
+  const handleDelete = async () => {
+    try {
+      await deleteEmail(emailId);
+      onDelete(); // Notify parent component
+    } catch (error) {
+      console.error('Error deleting email:', error);
+    }
+  };
 
   return (
     <div className="chatContainer">
       <div className="mailTitle">
-        <button className="delete-buttonUnique" onClick={onDelete}>刪除</button>
+        <button className="delete-buttonUnique" onClick={handleDelete}>刪除</button>
         <i className="fa-solid fa-ellipsis"></i>
       </div>
       <div className="chatBox custom-scrollbar">
