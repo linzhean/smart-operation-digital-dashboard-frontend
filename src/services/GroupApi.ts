@@ -128,9 +128,22 @@ export const fetchChartsByGroupId = async (groupId: number): Promise<
     const response = await apiClient.get<Response<{ id: number; name: string; chartGroupId: number }[]>>(
       `${API_URL}/chart/${groupId}`
     );
-    return response.data.data || [];
+
+    // 確認數據格式
+    const data = response.data.data;
+    
+    // 打印數據以調試
+    console.log('Fetched charts data:', data);
+
+    // 如果 `data` 是物件而不是陣列，打印數據以調試
+    if (!Array.isArray(data)) {
+      console.error('Expected an array, but got:', data);
+      return []; // 返回空陣列以避免錯誤
+    }
+    
+    return data;
   } catch (error: any) {
-    console.error('获取群组图表失败:', error);
+    console.error('Error fetching charts by group ID:', error.message);
     throw error;
   }
 };

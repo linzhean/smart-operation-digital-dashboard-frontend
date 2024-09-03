@@ -29,6 +29,7 @@ const Main: React.FC = () => {
         <Route path="/InterimKPIControl" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><InterimKPIControl /></PrivateRoute>} />
         <Route path="/AssignExportControl/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><AssignExportControl /></PrivateRoute>} />
         <Route path="/UserControl/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><UserControl /></PrivateRoute>} />
+        <Route path="/ChartAdmin" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><ChartAdmin /></PrivateRoute>} />
         {/* <Route path="/TaskKpiSetting/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><TaskKpiSetting /></PrivateRoute>} /> */}
         <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} />
 

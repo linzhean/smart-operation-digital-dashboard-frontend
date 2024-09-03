@@ -1,4 +1,3 @@
-//src\component\Mail\Leftside\Filter.tsx
 import React from 'react';
 import "../../../styles/filter.css";
 
@@ -15,38 +14,33 @@ interface FilterProps {
 }
 
 const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
-  // 状态数组
   const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>([]);
 
-  // 处理选中的状态
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, checked } = event.target;
-    const status = Object.keys(statusMapping).find(key => statusMapping[key] === id);
 
-    if (status) {
-      setSelectedStatuses(prevStatuses => {
-        const updatedStatuses = checked
-          ? [...prevStatuses, status]
-          : prevStatuses.filter(item => item !== status);
+    setSelectedStatuses(prevStatuses => {
+      const updatedStatuses = checked
+        ? [...prevStatuses, id]
+        : prevStatuses.filter(statusId => statusId !== id);
 
-        onFilterChange(updatedStatuses); // 调用 onFilterChange 并传递更新后的状态数组
-        return updatedStatuses;
-      });
-    }
+      onFilterChange(updatedStatuses);
+      return updatedStatuses;
+    });
   };
 
   return (
     <div className="filter">
-      {Object.keys(statusMapping).map((label) => (
-        <div className="options" key={statusMapping[label]}>
+      {Object.entries(statusMapping).map(([label, statusCode]) => (
+        <div className="options" key={statusCode}>
           <input 
             type="checkbox" 
             name="taskStatus" 
-            id={statusMapping[label]} 
-            value={statusMapping[label]} 
+            id={statusCode} 
+            value={statusCode} 
             onChange={handleCheckboxChange} 
           />
-          <label htmlFor={statusMapping[label]}>{label}</label>
+          <label htmlFor={statusCode}>{label}</label>
         </div>
       ))}
     </div>

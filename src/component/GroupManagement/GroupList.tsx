@@ -130,7 +130,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                         <td>
                           <Button
                             variant="outlined"
-                            onClick={() => handleRemove(Number(member.userId), member.userName)}
+                            onClick={() => handleRemove(member.userId, member.userName)}
                             className={styles.removeButton}
                           >
                             移除
@@ -201,7 +201,7 @@ const GroupList: React.FC<GroupListProps> = ({ groupId, activeButton, handleButt
                   {charts.length > 0 ? (
                     charts.map(chart => (
                       <tr key={chart.id}>
-                        <td>{chart.chartName}</td>
+                        <td>{chart.name}</td>
                         <td>
                           <Button
                             variant="outlined"

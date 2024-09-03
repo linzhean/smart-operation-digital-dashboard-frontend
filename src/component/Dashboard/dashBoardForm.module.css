@@ -445,3 +445,22 @@
   padding: 5px 15px;
   transition: transform 0.2s ease-out;
 }
+
+.showcaseImage {
+  width: 50px;  /* Set the width you want */
+  height: auto;  /* Auto adjust height according to the aspect ratio */
+  object-fit: contain;  /* Adjust how the image fits within its bounds */
+  margin-top: 10px;  /* Add some margin for spacing */
+}
+
+@media (max-width: 600px) {
+  .showcaseImage {
+    width: 80px;  /* Smaller width for smaller screens */
+  }
+}
+
+@media (min-width: 601px) {
+  .showcaseImage {
+    width: 120px;  /* Larger width for larger screens */
+  }
+}

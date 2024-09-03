@@ -1,3 +1,4 @@
+//src\services\Pdata.ts
 import apiClient from './axiosConfig';
 import { ApiUserData, UpdateUserData } from './types/userManagement';
 import { Response } from './types/Request.type';
@@ -17,7 +18,7 @@ export const fetchUserData = async (): Promise<UpdateUserData> => {
         departmentName: '',
         googleId: '',
         gmail: '',
-        identity: 'NO_PERMISSION', // 设置默认值或根据需要映射
+        identity: '', // 设置默认值或根据需要映射
         position: '', // 设置默认值或根据需要映射
         available: false, // 默认值
         createId: '',
@@ -38,7 +39,11 @@ export const fetchUserData = async (): Promise<UpdateUserData> => {
 // 更新用户数据
 export const updateUserData = async (updatedData: UpdateUserData): Promise<void> => {
   try {
-    const response = await apiClient.patch<Response<null>>('/user-account', updatedData);
+    // 确保删除所有不应发送的字段
+    const { available, googleId, createId, createDate, modifyId, modifyDate, ...filteredData } = updatedData;
+
+    // 发送更新请求
+    const response = await apiClient.patch<Response<null>>('/user-account', filteredData);
     const { result, errorCode, message } = response.data;
 
     if (!result) {
