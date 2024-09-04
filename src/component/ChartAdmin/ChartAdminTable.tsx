@@ -53,8 +53,8 @@ const IOSSwitch = styled(Switch)(({ theme }) => ({
 
 const ChartAdminTable: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isViewFormOpen, setIsViewFormOpen] = useState(false); // 新增狀態來控制查看表單顯示
-  const [viewFormData, setViewFormData] = useState({ chartName: '', chartCodeFile: '', chartImage: '' }); // 管理查看表單的數據
+  const [isViewFormOpen, setIsViewFormOpen] = useState(false);
+  const [viewFormData, setViewFormData] = useState({ chartName: '', chartCodeFile: '', chartImage: '' });
 
   const handleOpenForm = () => {
     setIsFormOpen(true);

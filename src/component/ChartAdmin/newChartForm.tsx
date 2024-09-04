@@ -47,6 +47,7 @@ const NewChartForm: React.FC<NewChartFormProps> = ({ onSubmit, onClose }) => {
           <div className={styles.newKPIlabelGroup}>
             <label htmlFor='newKpiName'>圖表名稱</label>
             <input
+              autoComplete='off'
               placeholder='請輸入新圖表的名稱'
               id='newKpiName'
               type="text"
