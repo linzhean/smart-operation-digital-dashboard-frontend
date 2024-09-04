@@ -23,7 +23,7 @@ const Mail: React.FC = () => {
 
     useEffect(() => {
         fetchEmails(selectedStatuses);
-    }, [selectedStatuses, fetchEmails]);
+    }, [selectedStatuses, fetchEmails]);          
 
     const handleMailItemClick = useCallback(async (id: number) => {
         await selectEmail(id);

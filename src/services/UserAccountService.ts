@@ -59,17 +59,11 @@ export const fetchUsers = async (
   }
 };
 
-export const admitUser = async (userId: string, identity: string): Promise<void> => {
+export const admitUser = async (userId: string): Promise<void> => {
   try {
-    // identity 参数应为 '1' 或 '2'，不应传递 '0' 或 '3'
-    if (identity !== '1' && identity !== '2') {
-      throw new Error('身份参数无效');
-    }
-
     const response = await apiClient.patch<Response<void>>('/user-account/admit', null, {
       params: {
-        userId,
-        identity
+        userId
       }
     });
 
@@ -83,6 +77,7 @@ export const admitUser = async (userId: string, identity: string): Promise<void>
     throw new Error(`Error admitting user: ${error.message}`);
   }
 };
+
 
 
 export const removeUser = async (userId: string): Promise<void> => {

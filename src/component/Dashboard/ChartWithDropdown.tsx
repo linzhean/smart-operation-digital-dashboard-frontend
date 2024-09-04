@@ -102,8 +102,8 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         } catch (error) {
           console.error('无法获取图表 HTML:', error);
         }
-      };      
-
+      };    
+      
       const chartURL = interactiveCharts[0]?.data?.chartHTML;
       if (chartURL) {
         fetchChartHTML(chartURL);
@@ -133,7 +133,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
   };  
 
   // 交辦事項
-  // 在 ChartWithDropdown.tsx 中修改 AssignForm
   const AssignForm = (
     <>
       <div className={styles.modalOverlay} onClick={closeModal}></div>
@@ -188,13 +187,21 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
           </div>
           <div className={styles.labelGroup}>
             <label htmlFor="email">收件人</label>
-            <input
-              id='email'
-              type="text"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-            />
+            <div className={styles.select}>
+              <select
+                id='email'
+                value={email || ''}
+                onChange={e => setEmail(e.target.value)}
+                required
+              >
+                <option value=""></option>
+                {(users || []).map(user => (
+                  <option key={user.email} value={user.email}>
+                    {user.email}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className={`${styles.labelGroup} ${styles.lastlabelGroup}`}>
             <textarea

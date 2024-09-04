@@ -31,6 +31,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [selectedChartForApplication, setSelectedChartForApplication] = useState<number | null>(null);
+  const [selectedChartId, setSelectedChartId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchCharts = async () => {
@@ -76,16 +77,20 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
     setIsFormVisible(true);
   };
 
+  const handleChartChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedChartId(Number(e.target.value));
+  };
+
   const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedChartForApplication) {
+    if (!selectedChartId) {
       alert('請選擇一個圖表進行申請。');
       return;
     }
 
     try {
       const requestData = {
-        chartId: selectedChartForApplication,
+        chartId: selectedChartId,
         applicant: currentUserId,
         guarantor: selectedUser || '',
         startDateStr: formatDate(startDate),
@@ -132,18 +137,30 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
   const handleSubmit = async () => {
     if (dashboardName) {
       try {
+        // 1. 創建新的儀表板
         const newDashboard = await DashboardService.createDashboard({
           name: dashboardName,
           description: dashboardDescription,
         });
         console.log('New Dashboard Created:', newDashboard);
 
-        // Update the parent component with the newly created dashboard and charts
+        // 2. 將新創建的儀表板ID轉換為數字類型
+        const dashboardId: number = Number(newDashboard.id);
+
+        // 3. 將選擇的圖表新增到儀表板
+        const selectedChartIds = selectedCharts.map(chart => chart.id);
+        const response = await ChartService.addChartsToDashboard(dashboardId, selectedChartIds);
+
+        console.log('Charts added to dashboard:', response);
+
+        // 4. 更新父組件並關閉表單
         await exportData();
-        onDashboardCreated(newDashboard, selectedCharts); // Pass data to parent
-        onClose(); // Close form and trigger UI update
+        onDashboardCreated(newDashboard, selectedCharts);
+        onClose();
+
       } catch (error) {
-        console.error('Failed to create dashboard:', error);
+        console.error('Failed to create dashboard or add charts:', error);
+        alert('Failed to create dashboard or add charts. Please try again.');
       }
     }
   };
@@ -199,7 +216,19 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                       disabled={!chart.observable}
                       className={styles.kpiInputs}
                     />
-                    <label htmlFor={`kpi-${chart.id}`} className={!chart.observable ? styles.disabledLabel : ''}>{chart.name}</label>
+                    <label htmlFor={`kpi-${chart.id}`} className={!chart.observable ? styles.disabledLabel : ''}>
+                      {chart.name}
+                    </label>
+                    {chart.showcaseImage && (
+                      <img
+                        src={chart.showcaseImage}
+                        alt={chart.name}
+                        className={styles.showcaseImage}
+                      />
+                    )}
+                    {!chart.observable && (
+                      <span className={styles.noPermission}>無權限</span>
+                    )}
                     {!chart.observable && (
                       <button type="button" className={styles.applyMore} onClick={() => handleRequestKpi(chart.id)}>申請更多</button>
                     )}
@@ -266,13 +295,28 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
               </div>
 
               <div className={styles.applyKPIlabelGroup}>
+                <label htmlFor="chart-select">選擇圖表:</label>
+                <select id="chart-select" value={selectedChartId ?? ''} onChange={handleChartChange}>
+                  <option value="" disabled>請選擇圖表</option>
+                  {charts.map(chart => (
+                    <option key={chart.id} value={chart.id}>
+                      {chart.name} {chart.observable ? '' : '(不可觀察)'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={styles.applyKPIlabelGroup}>
                 <label htmlFor='KPIstartDate'>開始日期</label>
                 <DatePicker
                   id='KPIstartDate'
                   selected={startDate}
                   onChange={date => setStartDate(date)}
-                  placeholderText="選擇開始日期"
-                  autoComplete="off"
+                  placeholderText="選擇開始日期和時間"
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  timeIntervals={15} // 15分钟间隔
+                  dateFormat="yyyy-MM-dd HH:mm"
                 />
               </div>
 
@@ -280,10 +324,13 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                 <label htmlFor='KPIendDate'>結束日期</label>
                 <DatePicker
                   id='KPIendDate'
-                  placeholderText="選擇結束日期"
                   selected={endDate}
                   onChange={date => setEndDate(date)}
-                  autoComplete="off"
+                  placeholderText="選擇結束日期和時間"
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  timeIntervals={15} // 15分钟间隔
+                  dateFormat="yyyy-MM-dd HH:mm"
                 />
               </div>
 

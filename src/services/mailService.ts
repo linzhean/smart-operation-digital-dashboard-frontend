@@ -22,7 +22,6 @@ export interface Email {
     messageList: EmailMessage[];
 }
 
-
 export interface EmailMessage {
     id: number;
     mailId: number;  // 確保 mailId 是必填的
@@ -36,14 +35,14 @@ export interface EmailMessage {
 }
 
 const handleApiResponse = <T>(response: Response<T>): T => {
-    console.log('API Response:', response);
-    if (response.result) {
+  console.log('API Response:', response);
+  if (response.result) {
       return response.data as T;
-    } else {
+  } else {
       console.error('API Error:', response.message || 'Unknown error');
       throw new Error(response.message || 'API Error');
-    }
-  };
+  }
+};
 
 // Get email list based on status
 export const getEmails = async (statuses: string[]): Promise<Email[]> => {

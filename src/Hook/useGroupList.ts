@@ -21,7 +21,7 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   const [showMemberPicker, setShowMemberPicker] = useState(false);
   const [showChartPicker, setShowChartPicker] = useState(false);
   const [allUsers, setAllUsers] = useState<User[]>([]);
-  const [charts, setCharts] = useState<{ id: number; chartName: string; chartGroupId: number }[]>([]);
+  const [charts, setCharts] = useState<{ id: number; name: string; chartGroupId: number }[]>([]);
   const [allCharts, setAllCharts] = useState<{ id: number; name: string }[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -33,13 +33,19 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
         fetchChartsByGroupId(groupId),
         ChartService.getAllCharts(),
       ]);
-
-      setMemberData(userList);
-      setCharts(chartsResponse.map(chart => ({
+    
+      console.log('chartsResponse:', chartsResponse);
+    
+      // 確保 chartsResponse 是陣列
+      setCharts(chartsResponse.map(chart =>  ({
         id: chart.chartId,
-        chartName: chart.chartName,
+        name: chart.chartName,
         chartGroupId: chart.chartGroupId,
-      })));
+      })) );      
+
+      console.log('Fetched users data:', userList);
+    
+      setMemberData(userList);
       setAllCharts(allChartsResponse.data.map((chart: { id: number; name: string }) => ({
         id: chart.id,
         name: chart.name,
@@ -47,7 +53,7 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
     } catch (error) {
       console.error('Error fetching group data:', error);
     }
-  }, [groupId]);
+  }, [groupId]);  
 
   useEffect(() => {
     fetchData();
@@ -65,21 +71,24 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
     }
   };
 
-  const handleRemove = async (userId: number, userName: string) => {
+  const handleRemove = async (userId: string, userName: string) => {
     if (window.confirm(`確定要移除 ${userName} 嗎？`)) {
       try {
-        const member = memberData.find(member => Number(member.userId) === userId);
+        console.log("Attempting to remove:", { userId, memberData });
+        const member = memberData.find(member => member.userId === userId);
         if (member && member.userGroupId) {
+          console.log("Found member:", member);
           await removeUserFromGroup(member.userGroupId);
           await fetchData(); // Update data after removing member
         } else {
           console.error('無法找到有效的 userGroupId', { member, groupId });
+          alert('無法找到有效的 userGroupId，無法移除該成員');
         }
       } catch (error) {
         console.error('Error removing member:', error);
       }
     }
-  };
+  };   
 
   const handleAddChart = async (selectedCharts: { id: number; name: string }[]) => {
     try {

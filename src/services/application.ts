@@ -36,7 +36,6 @@ export const createApplication = async (
 };
 
 // 更新申请状态
-// 更新申请状态
 export const updateApplication = async (
   id: number,
   applicationData: Partial<ApplicationData>
@@ -52,7 +51,6 @@ export const updateApplication = async (
     throw new Error(`Failed to update application: ${errorMsg}`);
   }
 };
-
 
 // 关闭申请
 export const closeApplication = async (id: number): Promise<Response<string>> => {

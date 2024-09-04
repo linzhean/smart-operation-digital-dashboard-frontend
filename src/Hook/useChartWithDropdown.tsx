@@ -48,11 +48,9 @@ export function useChartWithDropdown(
           }
         } else {
           console.error('獲取圖表失敗:', response.message);
-          alert('獲取圖表失敗。請稍後再試。');
         }
       } catch (error) {
         console.error('獲取圖表失敗:', error);
-        alert('獲取圖表失敗。請稍後再試。');
       }
     };
     fetchCharts();
@@ -66,12 +64,10 @@ export function useChartWithDropdown(
         setUsers(userList);
       } catch (error) {
         console.error('獲取用戶失敗:', error);
-        alert('獲取用戶失敗。請稍後再試。');
       }
     };
     fetchUsers();
-  }, []);
-
+  }, [setUsers]);  
 
   useEffect(() => {
     const fetchChartHTML = async (id: number) => {
@@ -104,7 +100,6 @@ export function useChartWithDropdown(
       }
     } catch (error) {
       console.error('導出過程中發生錯誤:', error);
-      alert('導出過程中發生錯誤。請重試。');
     } finally {
       setIsDropdownOpen(false);
     }
@@ -163,7 +158,6 @@ export function useChartWithDropdown(
       setIsModalOpen(false);
     } catch (error) {
       console.error('提交委派任務時出錯:', error);
-      alert('提交委派任務失敗。請重試。');
     }
   };    
 

@@ -51,12 +51,12 @@ const UserApplyTable: React.FC = () => {
     setPage(prevPage => prevPage + 1);
   };
 
-  const admitUserHandler = async (index: number, identity: string) => {
+  const admitUserHandler = async (index: number) => {
     setErrorMessage('');
     try {
       const user = users[index];
       if (user.userId) {
-        await admitUser(user.userId, identity);
+        await admitUser(user.userId);
         setUsers(prevUsers => prevUsers.filter((_, i) => i !== index));
         addUser({
           id: user.userId,
@@ -70,7 +70,7 @@ const UserApplyTable: React.FC = () => {
     } catch (error) {
       console.error('Error admitting user:', error);
       const errorMessage = (error as Error).message || '未知錯誤';
-      setErrorMessage(`無法將用戶設為經理或員工。錯誤訊息：${errorMessage}`);
+      setErrorMessage(`無法開通用戶。錯誤訊息：${errorMessage}`);
     }
   };
 
@@ -130,8 +130,7 @@ const UserApplyTable: React.FC = () => {
                     <td>{user.gmail}</td>
                     <td>{user.position}</td>
                     <td>
-                      <button className={styles.approveButton} onClick={() => admitUserHandler(index, '1')}>設為高階主管</button>
-                      <button className={styles.approveButton} onClick={() => admitUserHandler(index, '2')}>設為員工</button>
+                      <button className={styles.approveButton} onClick={() => admitUserHandler(index)}>開通</button>
                       <button className={styles.disapproveButton} onClick={() => removeUserHandler(index)}>刪除</button>
                     </td>
                   </tr>
