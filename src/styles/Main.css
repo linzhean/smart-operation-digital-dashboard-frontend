@@ -77,8 +77,9 @@ body {
 
 .theContent {
   background-color: #343541;
-  height: 87.5vh;
+  height: 88vh;
   margin-right: 5px;
+  margin-left: 5px;
   border-radius: 15px;
   flex-wrap: wrap;
   padding: 10px;

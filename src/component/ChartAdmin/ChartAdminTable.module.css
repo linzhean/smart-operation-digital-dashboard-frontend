@@ -1,0 +1,316 @@
+.theList {
+  color: #CCCCCC;
+  font-size: 1rem;
+  font-weight: 600;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.theTable {
+  position: relative;
+  border-radius: 10px;
+}
+
+/* 右側上方操作按鈕 addButton 新增成員 + 新增圖表 / deleteGroupButton 刪除群組  */
+.addButton {
+  font-size: 1rem !important;
+  color: #CCCCCC !important;
+  background-color: rgba(255, 255, 255, 0) !important;
+  border: 2px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: 5px !important;
+  padding: 0.5rem !important;
+  font-weight: bolder !important;
+  position: absolute !important;
+  top: -60px;
+  right: 10px;
+  z-index: 10;
+}
+
+.addButton:hover {
+  background-color: #1E90FF !important;
+  color: black !important;
+}
+
+.deleteGroupButton {
+  font-size: 1rem !important;
+  color: #CCCCCC !important;
+  background-color: rgba(255, 255, 255, 0) !important;
+  border: 2px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: 5px !important;
+  padding: 0.5rem !important;
+  font-weight: bolder !important;
+  position: absolute !important;
+  top: -60px;
+  right: 105px;
+  z-index: 10;
+}
+
+.deleteGroupButton:hover {
+  background-color: #c9302c !important;
+}
+
+/* 表格樣式 */
+.theTable table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: auto;
+  line-height: 2.5 !important;
+}
+
+.theTable th,
+.theTable td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.theTable th {
+  background-color: #444;
+  color: white;
+}
+
+.theTable tr:nth-child(even) {
+  background-color: #444;
+}
+
+/* 左上角導航按鈕 */
+.filterButton {
+  display: flex;
+  width: 100%;
+  height: fit-content;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.filterButton button {
+  margin-right: 0.5rem;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  min-width: 50px;
+  background: #FFFFFF;
+  border: 2px solid #1E90FF;
+  border-radius: 4px;
+  color: black;
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  overflow: hidden;
+  transition: 0.5s;
+  padding: 7px 17px;
+}
+
+.filterButton button span {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+  background-color: #1E90FF;
+  transform: translateY(150%);
+  border-radius: 50%;
+  left: calc((var(--n) - 1) * 25%);
+  transition: 0.5s;
+  transition-delay: calc((var(--n) - 1) * 0.07s);
+  z-index: -1;
+}
+
+.filterButton button:hover,
+.filterButton button:focus {
+  color: black;
+}
+
+.filterButton button:hover span {
+  transform: translateY(0) scale(2);
+}
+
+.filterButton button span:nth-child(1) {
+  --n: 1;
+}
+
+.filterButton button span:nth-child(2) {
+  --n: 2;
+}
+
+.filterButton button span:nth-child(3) {
+  --n: 3;
+}
+
+.filterButton button span:nth-child(4) {
+  --n: 4;
+}
+
+.filterActive {
+  background: #1E90FF !important;
+}
+
+/* 移除按鈕(移除成員及移除表格) */
+.removeButton {
+  width: 65px !important;
+  height: 35px !important;
+  background-color: #f61f19 !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 2px 10px !important;
+  cursor: pointer !important;
+  border-radius: 5px !important;
+  transition: background-color 0.3s !important;
+  font-weight: 700 !important;
+}
+
+.removeButton:hover {
+  background-color: #f1413b !important;
+  color: black !important;
+  border: none !important;
+  font-size: 1.1rem !important;
+}
+
+/* 操作按鈕的 */
+@media (max-width: 490px) {
+
+  .addButton,
+  .deleteGroupButton {
+    display: none !important;
+  }
+
+  .dropdownButton {
+    display: block !important;
+  }
+}
+
+@media (min-width: 490px) {
+  .dropdownButton {
+    display: none !important;
+  }
+}
+
+/* 打開按鈕 */
+.dropdownButton {
+  portion: absolute !important;
+  top: -65px;
+  right: 6px;
+  width: 50px;
+  height: 50px;
+  border: none !important;
+  border-radius: 50px;
+}
+
+/* 打開後overlay樣式 */
+.dropdownMenu {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* 更多操作 下拉表單按鈕 */
+.moreIcon {
+  width: 45px;
+  height: 45px;
+  transition: width 0.3s, height 0.3s;
+}
+
+.moreIcon:hover {
+  width: 48px;
+  height: 48px;
+}
+
+/* 字體大小設置 */
+
+@media (max-width: 490px) {
+
+  .theList,
+  .filterButton button,
+  .addButton,
+  .deleteButton,
+  .removeButton {
+    font-size: 0.8rem !important;
+  }
+
+  .removeButton {
+    height: 15px !important;
+    transition: width 0.3s, height 0.3s !important;
+    padding: 13px !important;
+  }
+
+}
+
+.theTitle {
+  font-size: 1.3rem;
+}
+
+.addKPIButton {
+  text-align: center;
+  width: 125px;
+  height: 50px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  color: white;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: #2C66DD;
+  border: none;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+}
+
+.addKPIButton:hover {
+  color: black;
+  background: #86a7e9;
+}
+
+.theAccordion {
+  display: flex !important;
+  font-size: 1.2rem;
+  color: #1E90FF;
+  font-weight: 800;
+}
+
+.theArrowIcon {
+  margin-left: 10px !important;
+}
+
+.theStatuses {
+  color: white;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 7px;
+  white-space: nowrap;
+}
+
+.activeStatus {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.theFilter {
+  border: 3px solid #acacbe54;
+  padding: 5px;
+  border-radius: 15px;
+}
+
+.theFilter a {
+  margin-left: 5px;
+}
+
+.ChartAdminMenu {
+  display: flex;
+  overflow: hidden;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 3px;
+}
+
+.MenuOpen {
+  margin-bottom: 18px;
+}
+
+.theToggle {
+  display: flex;
+  justify-content: center;
+  margin-left: 30px;
+}

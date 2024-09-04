@@ -170,3 +170,11 @@
   font-weight: 700;
   color: white;
 }
+
+.viewChartImg {
+  max-width: 180px;
+  max-height: 180px;
+  border: none;
+  border-radius: 10px;
+  display: block;
+}

@@ -1,33 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ChartAdmin.module.css';
-import KPIDetails from '../../component/ChartAdmin/KPIDetails';
-import Sidebar from '../../component/ChartAdmin/ChartAdminSidebar';
+// import KPIDetails from '../../component/ChartAdmin/KPIDetails';
+// import Sidebar from '../../component/ChartAdmin/ChartAdminSidebar';
+import ChartAdminTable from '../../component/ChartAdmin/ChartAdminTable';
 
 const ChartAdmin: React.FC = () => {
-  const [selectedStatus, setSelectedStatus] = useState<string>('');
-  const [selectedKPI, setSelectedKPI] = useState<string>('');
 
-  const handleStatusChange = (status: string) => {
-    setSelectedStatus(status);
-  };
-
-  const handleKPISelect = (kpi: string) => {
-    setSelectedKPI(kpi);
-  };
 
   return (
     <div className="wrapper">
-      <Sidebar
-        onStatusChange={handleStatusChange}
-        selectedStatus={selectedStatus}
-        onKPISelect={handleKPISelect}
-      />
-      <div className="main_container">
-        <div className="theContent">
-          {selectedKPI && <KPIDetails selectedKPI={selectedKPI} />}
-        </div>
+      <div className="theContent">
+        <ChartAdminTable />
+
       </div>
     </div>
+
   );
 };
 

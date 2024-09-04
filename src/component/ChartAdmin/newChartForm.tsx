@@ -1,16 +1,18 @@
-// NewChartForm.tsx
 import React, { useState } from 'react';
 import styles from './newChartForm.module.css';
-import { Button, IconButton, Avatar, Stack, Typography } from '@mui/material';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import ImgIcon from '../../assets/icon/image.png'
+import { Avatar, Stack } from '@mui/material';
+import ImgIcon from '../../assets/icon/image.png';
+import PythonIcon from '../../assets/icon/code.png';
+
 interface NewChartFormProps {
-  onSubmit: (chartName: string, chartCode: string, chartImage: string) => void;
+  onSubmit: (chartName: string, chartCode: File | null, chartImage: string | null) => void;
   onClose: () => void;
 }
 
 const NewChartForm: React.FC<NewChartFormProps> = ({ onSubmit, onClose }) => {
   const [image, setImage] = useState<string | null>(null);
+  const [chartName, setChartName] = useState('');
+  const [newCodeFile, setNewCodeFile] = useState<File | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -25,13 +27,14 @@ const NewChartForm: React.FC<NewChartFormProps> = ({ onSubmit, onClose }) => {
     }
   };
 
+  const handleNewCodeFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    setNewCodeFile(file);
+  };
 
-  const [chartName, setChartName] = useState('');
-  const [chartCode, setChartCode] = useState('');
-  const [chartImage, setChartImage] = useState('');
-
-  const handleSubmit = () => {
-    onSubmit(chartName, chartCode, chartImage);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(chartName, newCodeFile, image);
     onClose();
   };
 
@@ -44,6 +47,7 @@ const NewChartForm: React.FC<NewChartFormProps> = ({ onSubmit, onClose }) => {
           <div className={styles.newKPIlabelGroup}>
             <label htmlFor='newKpiName'>圖表名稱</label>
             <input
+              placeholder='請輸入新圖表的名稱'
               id='newKpiName'
               type="text"
               value={chartName}
@@ -52,29 +56,59 @@ const NewChartForm: React.FC<NewChartFormProps> = ({ onSubmit, onClose }) => {
             />
           </div>
 
-          <div className={styles.newKPIlabelGroup}>
-            <label htmlFor='newKpiCode'>圖表程式碼</label>
-            <textarea
-              className={styles.newKpiCode}
-              placeholder='請輸入程式碼'
-              id='newKpiCode'
-              required
-              value={chartCode}
-              onChange={(e) => setChartCode(e.target.value)}
-            />
+          <div className={styles.newKpiCodeGroup}>
+            <Stack id='newKpiCode'>
+              {newCodeFile ? (
+                <>
+                  <p
+                    className={styles.newCodeFile}
+                    onClick={() => document.getElementById('newKpiCodeuploadButton')?.click()}
+                  >
+                    {newCodeFile.name}
+                  </p>
+                  <input
+                    accept=".py"
+                    id="newKpiCodeuploadButton"
+                    type="file"
+                    style={{ display: 'none' }}
+                    onChange={handleNewCodeFileChange}
+                  />
+                </>
+              ) : (
+                <div className={styles.newCodeContainer}>
+                  <label htmlFor="newKpiCodeuploadButton">圖表程式碼上傳</label>
+                  <label htmlFor="newKpiCodeuploadButton" style={{ cursor: 'pointer' }}>
+                    <input
+                      accept=".py"
+                      id="newKpiCodeuploadButton"
+                      type="file"
+                      style={{ display: 'none' }}
+                      onChange={handleNewCodeFileChange}
+                    />
+                    <img src={PythonIcon} className={styles.CodeIcon} alt="程式碼圖標" />
+                  </label>
+                </div>
+              )}
+            </Stack>
           </div>
 
           <div className={styles.newKpiImgGroup}>
-            <label htmlFor="uploadButton">圖表示意圖上傳</label>
             <Stack id='newKpiImg'>
               {image ? (
-                <Avatar
-                  alt="上傳示意圖"
-                  src={image}
-                  sx={{ width: 100, height: 100, border: '2px solid #1976d2' }}
-                />
-              ) : (
-                <label htmlFor="uploadButton" style={{ cursor: 'pointer' }}>
+                <>
+                  <Avatar
+                    alt="上傳示意圖"
+                    src={image}
+                    sx={{
+                      width: 180,
+                      height: 180,
+                      border: 'none',
+                      borderRadius: '10px',
+                      display: 'block',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => document.getElementById('uploadButton')?.click()}
+                  />
                   <input
                     accept="image/*"
                     id="uploadButton"
@@ -82,16 +116,28 @@ const NewChartForm: React.FC<NewChartFormProps> = ({ onSubmit, onClose }) => {
                     style={{ display: 'none' }}
                     onChange={handleImageChange}
                   />
-                  <img src={ImgIcon} className={styles.ImgIcon} alt="" />
-                </label>
+                </>
+              ) : (
+                <div className={styles.newImgContainer}>
+                  <label htmlFor="uploadButton">圖表示意圖上傳</label>
+                  <label htmlFor="uploadButton" style={{ cursor: 'pointer' }}>
+                    <input
+                      accept="image/*"
+                      id="uploadButton"
+                      type="file"
+                      style={{ display: 'none' }}
+                      onChange={handleImageChange}
+                    />
+                    <img src={ImgIcon} className={styles.ImgIcon} alt="圖片圖標" />
+                  </label>
+                </div>
               )}
             </Stack>
           </div>
 
-
           <div className={styles.newKPIbuttonGroup}>
-            <button onClick={onClose} className={styles.cancel}>取消</button>
-            <button onClick={handleSubmit} className={styles.submit}>提交</button>
+            <button type="button" onClick={onClose} className={styles.cancel}>取消</button>
+            <button type="submit" className={styles.submit}>提交</button>
           </div>
         </form>
       </div>
