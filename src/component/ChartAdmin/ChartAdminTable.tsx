@@ -168,7 +168,7 @@ const ChartAdminTable: React.FC = () => {
                   </div>
                 </td>
                 <td>
-                  <span onClick={() => handleViewChart('圖表名稱', 'chart-code.js', 'chart-preview.png')}>
+                  <span onClick={() => handleViewChart('生產率', 'chart-code.js', 'chart-preview.png')}>
                     查看
                   </span>
                 </td>
