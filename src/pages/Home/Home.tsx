@@ -119,29 +119,20 @@ const Home: React.FC = () => {
       alert('Please select a dashboard first.');
       return;
     }
-
+  
     try {
       const newCharts = await Promise.all(chartsToAdd.map(async (chart: any) => {
         const chartData = {
           name: chart.name || 'New Chart',
-          scriptFile: '',
-          scriptPath: '',
-          imageFile: '',
-          showcaseImage: '',
-          chartImage: '',
-          chartHTML: '',
-          canAssign: true,
-          observable: true,
-          available: true,
-          createId: 'currentUserId', // Replace with actual user ID
-          createDate: new Date().toISOString(),
-          modifyId: 'currentUserId', // Replace with actual user ID
-          modifyDate: new Date().toISOString(),
-          chartGroupId: Number(selectedDashboard),
+          scriptFile: null, // Provide or adjust as necessary
+          imageFile: null,  // Provide or adjust as necessary
         };
-        return await ChartService.createChart(chartData);
+        return await ChartService.createChart(chartData.name, chartData.scriptFile, chartData.imageFile);
       }));
-
+  
+      const chartIds = newCharts.map((chart: any) => chart.id);
+      await ChartService.addChartsToDashboard(Number(selectedDashboard), chartIds);
+  
       setCharts(prevCharts => [...prevCharts, ...newCharts]);
       const newLayout = newCharts.map((chart: any, index: number) => ({
         i: `chart-${chart.id}`,
@@ -151,12 +142,13 @@ const Home: React.FC = () => {
         h: 4,
       }));
       setLayout(prevLayout => [...prevLayout, ...newLayout]);
-
+  
     } catch (error) {
       console.error('Error adding chart:', error);
       alert('An error occurred while adding the chart.');
     }
   };
+  
 
   return (
     <div className='wrapper'>

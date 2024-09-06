@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './ChartAdminTable.module.css';
 import NewChartForm from './newChartForm';
 import ViewChartForm from './ViewChartForm';
@@ -6,7 +6,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Collapse, Switch, FormControlLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
+import ChartService from '../../services/ChartService';
 
 const IOSSwitch = styled(Switch)(({ theme }) => ({
   width: 60,
@@ -55,6 +55,43 @@ const ChartAdminTable: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isViewFormOpen, setIsViewFormOpen] = useState(false);
   const [viewFormData, setViewFormData] = useState({ chartName: '', chartCodeFile: '', chartImage: '' });
+  const [charts, setCharts] = useState<any[]>([]);
+  const [openStatus, setOpenStatus] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState('篩選狀態');
+
+  useEffect(() => {
+    const fetchCharts = async (available: boolean | null) => {
+      try {
+        const response = await ChartService.getCharts(available === null ? false : available);
+        const chartsData = response.data; // 假设返回数据在 `data` 字段
+        if (Array.isArray(chartsData)) {
+          // 根据 selectedStatus 过滤数据
+          const filteredCharts = chartsData.filter(chart => {
+            if (selectedStatus === '全部') {
+              return true;
+            }
+            if (selectedStatus === '啟用中') {
+              return chart.available === true;
+            }
+            if (selectedStatus === '停用中') {
+              return chart.available === false;
+            }
+            return true;
+          });
+          setCharts(filteredCharts);
+        } else {
+          console.error('Fetched data is not an array:', chartsData);
+        }
+      } catch (error) {
+        console.error('Error fetching charts:', error);
+        alert('查詢圖表狀態失敗');
+      }
+    };      
+
+    // 根据 selectedStatus 来决定是传递 true 还是 false，或者 null 表示全部
+    const isAvailable = selectedStatus === '啟用中' ? true : (selectedStatus === '停用中' ? false : null);
+    fetchCharts(isAvailable);
+  }, [selectedStatus]);
 
   const handleOpenForm = () => {
     setIsFormOpen(true);
@@ -64,12 +101,27 @@ const ChartAdminTable: React.FC = () => {
     setIsFormOpen(false);
   };
 
-  const handleFormSubmit = (chartName: string, chartCode: string, chartImage: string) => {
-    console.log('新增圖表:', chartName, chartCode, chartImage);
+  const urlToFile = (dataUrl: string): Promise<File> => {
+    return fetch(dataUrl)
+      .then(res => res.blob())
+      .then(blob => new File([blob], 'image.png', { type: 'image/png' }));
   };
 
-  const [openStatus, setOpenStatus] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState('篩選狀態');
+  const handleFormSubmit = async (chartName: string, chartCode: File | null, chartImage: string | null) => {
+    try {
+      const imageFile = chartImage ? await urlToFile(chartImage) : null;
+      await ChartService.createChart(chartName, chartCode, imageFile);
+      alert('圖表新增成功');
+      handleCloseForm();
+      // 刷新图表列表
+      const isAvailable = selectedStatus === '啟用中';
+      const fetchedCharts = await ChartService.getCharts(isAvailable);
+      setCharts(fetchedCharts);
+    } catch (error) {
+      console.error('新增圖表失敗:', error);
+      alert('圖表新增失敗');
+    }
+  };
 
   const handleMenuItemClick = () => {
     setOpenStatus(!openStatus);
@@ -80,18 +132,23 @@ const ChartAdminTable: React.FC = () => {
     setOpenStatus(false);
   };
 
-  const [selected, setSelected] = useState(false);
-
-  const handleToggle = async (event: React.ChangeEvent<HTMLInputElement>, newAlignment: boolean) => {
-    if (newAlignment !== null) {
-      const userConfirmed = window.confirm(`確定要${newAlignment ? '啟用' : '停用'}這個功能嗎？`);
-      if (userConfirmed) {
-        setSelected(newAlignment);
-        alert(`功能已${newAlignment ? '啟用' : '停用'}`);
+  const handleToggle = async (chartId: number, currentStatus: boolean) => {
+    const newStatus = !currentStatus;
+    const userConfirmed = window.confirm(`確定要${newStatus ? '啟用' : '停用'}這個功能嗎？`);
+    if (userConfirmed) {
+      try {
+        await ChartService.updateChartAvailability(chartId, newStatus);
+        // 刷新图表列表
+        const isAvailable = selectedStatus === '啟用中';
+        const fetchedCharts = await ChartService.getCharts(isAvailable);
+        setCharts(fetchedCharts);
+        alert(`圖表已${newStatus ? '啟用' : '停用'}`);
+      } catch (error) {
+        console.error('Error updating chart availability:', error);
+        alert('更新圖表狀態失敗');
       }
     }
-  };
-
+  };  
 
   const handleViewChart = (chartName: string, chartCodeFile: string, chartImage: string) => {
     setViewFormData({ chartName, chartCodeFile, chartImage });
@@ -105,8 +162,7 @@ const ChartAdminTable: React.FC = () => {
   return (
     <>
       <div className={styles.ChartAdminMenu}>
-        <div className={`${styles.theFilter} ${openStatus ? styles.MenuOpen : ''}`}
-        >
+        <div className={`${styles.theFilter} ${openStatus ? styles.MenuOpen : ''}`}>
           <a
             type="button"
             onClick={handleMenuItemClick}
@@ -157,23 +213,24 @@ const ChartAdminTable: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>生產率</td>
-                <td>
-                  <div className={styles.theToggle}>
-                    <FormControlLabel
-                      control={<IOSSwitch checked={selected} onChange={(e) => handleToggle(e, (e.target as HTMLInputElement).checked)} />}
-                      label=""
-                    />
-                  </div>
-                </td>
-                <td>
-                  <span onClick={() => handleViewChart('生產率', 'chart-code.js', 'chart-preview.png')}>
-                    查看
-                  </span>
-                </td>
-              </tr>
-
+              {charts.map((chart) => (
+                <tr key={chart.id}>
+                  <td>{chart.name}</td>
+                  <td>
+                    <div className={styles.theToggle}>
+                      <FormControlLabel
+                        control={<IOSSwitch checked={chart.available} onChange={() => handleToggle(chart.id, chart.available)} />}
+                        label=""
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <span onClick={() => handleViewChart(chart.name, chart.codeFile, chart.image)}>
+                      查看
+                    </span>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

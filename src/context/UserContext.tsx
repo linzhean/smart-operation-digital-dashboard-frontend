@@ -49,7 +49,8 @@ const initialState: State = {
     createId: '',
     createDate: '',
     modifyId: '',
-    modifyDate: ''
+    modifyDate: '',
+    jobNumber: ''
   },
   loading: false,
   editable: false,

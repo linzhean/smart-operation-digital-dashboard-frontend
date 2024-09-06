@@ -55,10 +55,21 @@ const Pdata: React.FC = () => {
   };
 
   const handleInputChange = (id: string, value: string) => {
+    if (id === 'departmentName') {
+      const selectedDepartment = departments.find(dept => dept.value === value);
+      if (selectedDepartment) {
+        dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'departmentId', value: selectedDepartment.value } });
+      }
+    }
     dispatch({ type: 'UPDATE_FORM_DATA', payload: { id, value } });
   };
 
   const handleSaveClick = async () => {
+    if (!state.formData.departmentId) {
+      alert('请选择所属部门');
+      return;
+    }
+
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
       await updateUserData(state.formData as UpdateUserData);
@@ -133,8 +144,8 @@ const Pdata: React.FC = () => {
               <input
                 type="text"
                 className="form-control"
-                id="userId"
-                value={state.formData.userId}
+                id="jobNumber"
+                value={state.formData.jobNumber}
                 required
                 disabled={!state.editable}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}

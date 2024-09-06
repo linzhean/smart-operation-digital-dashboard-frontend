@@ -92,11 +92,13 @@ export type ApiUserData = {
   name: string;
   isAdmin: boolean;
   charAuths: any[]; // 根据实际的 charAuths 结构进行调整
+  jobNumber: string;
 };
 
 export interface UpdateUserData {
   userId: string;
   userName: string;
+  jobNumber: string;
   departmentId: string;
   departmentName: string;
   googleId: string;

@@ -34,6 +34,9 @@ export function useChartWithDropdown(
   const [selectedDashboardId, setSelectedDashboardId] = useState<number | null>(null);
   const [isAdvancedAnalysisModalOpen, setIsAdvancedAnalysisModalOpen] = useState(false);
   const [chartHTML, setChartHTML] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
+  const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
 
   // 獲取所有可用的圖表
   useEffect(() => {
@@ -255,7 +258,27 @@ export function useChartWithDropdown(
       alert('Error during advanced analysis. Please try again later.');
     }
   };  
-    
+
+  const handleAIAnalysis = async () => {
+    if (chartId === null) {
+      alert('Chart ID is not selected.');
+      return;
+    }
+  
+    if (selectedDashboardId === null) {
+      alert('Dashboard ID is not selected.');
+      return;
+    }
+  
+    try {
+      const suggestion = await ChartService.getAIAnalysis(chartId, selectedDashboardId);
+      setAiSuggestion(suggestion);
+      setShowAIAnalysisModal(true); // Update this line to show the modal
+    } catch (error) {
+      console.error('Failed to get AI analysis:', error);
+    }
+  };
+  
 useEffect(() => {
   console.log('Updated interactiveCharts:', interactiveCharts);
 }, [interactiveCharts]);
@@ -333,6 +356,13 @@ const closeAdvancedAnalysisModal = () => setIsAdvancedAnalysisModalOpen(false);
     isAdvancedAnalysisModalOpen,
     setIsAdvancedAnalysisModalOpen, 
     chartHTML,
-    setChartHTML
+    setChartHTML,
+    showModal,
+    aiSuggestion,
+    setShowModal,
+    setAiSuggestion,
+    showAIAnalysisModal,
+    setShowAIAnalysisModal,
+    handleAIAnalysis
   };
 }

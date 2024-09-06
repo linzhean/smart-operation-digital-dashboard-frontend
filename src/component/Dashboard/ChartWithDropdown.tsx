@@ -29,49 +29,21 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     toggleDropdown,
     handleExport,
     handleDelegate,
-    handleChartSelect,
     isModalOpen,
     closeModal,
     handleSubmit,
-    isChartSelectModalOpen,
-    closeChartSelectModal,
-    handleKpiSelection,
-    confirmChartSelection,
-    handleRequestKpi,
-    isRequestKpiModalOpen,
-    closeRequestKpiModal,
-    handleRequestSubmit,
-    handleStartDateChange,
-    handleEndDateChange,
-    startDate,
-    endDate,
-    sponsor,
-    requestContent,
     email, // Maintain the email state for UI, but not for backend submission
     subject,
     message,
     charts,
-    selectedCharts,
-    selectedKPIs,
     setEmail,
     setSubject,
     setMessage,
-    // setIsDropdownOpen,
-    setSelectedCharts,
-    setSelectedKPIs,
-    setRequestContent,
-    setSponsor,
-    setStartDate,
-    setEndDate,
-    setIsModalOpen,
-    setIsChartSelectModalOpen,
-    setIsRequestKpiModalOpen,
     users, // Add users state
     setUsers, // Add setUsers method
     selectedUser, // Add selectedUser state
     setSelectedUser, // Add setSelectedUser method
     interactiveCharts, // Add interactiveCharts state
-    setInteractiveCharts, // Add setInteractiveCharts method
     handleAdvancedAnalysis, // Add handleAdvancedAnalysis method
     canAssign,
     isAdvancedAnalysisModalOpen,
@@ -402,77 +374,10 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
       </div>
       {children}
 
-      {/* {selectedCharts.map(chart => (
-        <div key={chart.id} className={styles.selectedChart}>
-          <p>Chart ID: {chart.id}</p>
-          <p>Chart Name: {chart.name}</p>
-        </div>
-      ))} */}
-
       {/* 交辦的表單 */}
       {isModalOpen && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}
       {/* 進階分析 */}
       {isAdvancedAnalysisModalOpen && (interactiveCharts.length > 0) && ReactDOM.createPortal(advancedAnalysis, document.getElementById('portal-root')!)}
-
-      {/* {isChartSelectModalOpen && (
-        <div className={styles.modal}>
-          <h2>選擇圖表</h2>
-          {charts.map(chart => (
-            <div key={chart.id}>
-              <input
-                type="checkbox"
-                checked={selectedKPIs.includes(chart.id)}
-                onChange={() => handleKpiSelection(chart.id)}
-              />
-              <span>{chart.name}</span>
-            </div>
-          ))}
-          <button onClick={confirmChartSelection}>確認</button>
-          <button onClick={handleRequestKpi}>請求 KPI</button>
-          <button onClick={closeChartSelectModal}>取消</button>
-        </div>
-      )}
-
-      {isRequestKpiModalOpen && (
-        <div className={styles.modal}>
-          <form onSubmit={handleRequestSubmit}>
-            <h2>請求 KPI</h2>
-            <label>
-              開始日期:
-              <DatePicker selected={startDate} onChange={handleStartDateChange} />
-            </label>
-            <label>
-              結束日期:
-              <DatePicker selected={endDate} onChange={handleEndDateChange} />
-            </label>
-            <label>
-              保證人:
-              <select
-                value={selectedUser || ''}
-                onChange={e => setSelectedUser(e.target.value)}
-                required
-              >
-                <option value="">選擇保證人</option>
-                {users.map(user => (
-                  <option key={user.userId} value={user.userId}>
-                    {user.userName}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              請求內容:
-              <textarea
-                value={requestContent}
-                onChange={e => setRequestContent(e.target.value)}
-                required
-              />
-            </label>
-            <button type="submit">提交</button>
-            <button type="button" onClick={closeRequestKpiModal}>取消</button>
-          </form>
-        </div>
-      )} */}
     </div>
   );
 };
