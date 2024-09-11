@@ -541,7 +541,7 @@ const ChartAdminTable: React.FC = () => {
 
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={10000}
+        autoHideDuration={15000}
         onClose={handleSnackbarClose}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         sx={{ zIndex: 999999999999 }}
@@ -578,7 +578,7 @@ const ChartAdminTable: React.FC = () => {
 
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <ErrorIcon style={{ marginRight: '12px', color: 'black', verticalAlign: 'middle' }} />
-            <span style={{ verticalAlign: 'middle' }}>{error}</span>
+            <span style={{ verticalAlign: 'middle', fontSize: '1.2rem' }}>{error}</span>
           </div>
 
           <Button
@@ -590,6 +590,7 @@ const ChartAdminTable: React.FC = () => {
               backgroundColor: '#FFD700',
               color: '#000000',
               fontWeight: '900',
+              fontSize: '1rem',
               borderRadius: '8px',
               border: '2px solid #000000',
               '&:hover': {
