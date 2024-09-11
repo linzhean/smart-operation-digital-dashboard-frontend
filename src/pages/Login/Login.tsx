@@ -20,7 +20,7 @@ const Login: React.FC = () => {
       }
   
       const decodedToken: any = jwtDecode(idToken);
-      const userId = decodedToken.sub;  // 从Google的Token中获取userId
+      const userId = decodedToken.sub;  
   
       const res = await fetch(`${backendApiUrl}/login`, {
         method: 'POST',
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
           'Content-Type': 'application/json',
           'X-Client-Token': idToken,
         },
-        body: JSON.stringify({ userId, idToken }),  // 将userId传给后端
+        body: JSON.stringify({ userId, idToken }),  
       });
   
       if (!res.ok) {

@@ -7,7 +7,6 @@
   flex-wrap: wrap;
   padding: 10px;
   overflow: auto;
-  /* white-space: nowrap; */
 }
 
 .h2 {
@@ -140,13 +139,6 @@
   box-shadow: 2.5px 2.5px 2.5px rgba(255, 255, 255, 0.3);
 }
 
-/* @media (max-width: 768px) {
-  .checkFormContent {
-    width: 80%;
-  }
-
-} */
-
 @media (max-width: 768px) {
   .checkFormContent {
     width: clamp(60%, 75vw, 80%);
@@ -227,23 +219,5 @@
 }
 
 .hiddenForm {
-  display: none;
-}
-
-::-webkit-scrollbar {
-  width: 0.8em;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #ACACBE;
-  border: 0.1em solid #343541;
-  border-radius: 100vw;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(204, 204, 204, 0.5);
-}
-
-::-webkit-scrollbar-button {
   display: none;
 }

@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { Button, Snackbar, Alert } from '@mui/material';
 import styles from './UserApplyTable.module.css';
 import { fetchUsers, admitUser, removeUser, fetchTotalPages } from '../../services/UserAccountService';
 import { UserAccountBean } from '../../services/types/userManagement';
 import NumberOfPages from './NumberOfPages';
 import { useUserStatus } from '../../context/UserStatusContext';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import ErrorIcon from '@mui/icons-material/Error';
 
 const UserApplyTable: React.FC = () => {
   const { addUser } = useUserStatus();
@@ -13,7 +17,8 @@ const UserApplyTable: React.FC = () => {
   const [page, setPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
 
   useEffect(() => {
     loadInitialData();
@@ -21,7 +26,7 @@ const UserApplyTable: React.FC = () => {
 
   const loadInitialData = async () => {
     setLoading(true);
-    setErrorMessage('');
+    setError(null);
     try {
       const [userResponse, pageResponse] = await Promise.all([
         fetchUsers(page, undefined, undefined, '0'),
@@ -33,11 +38,13 @@ const UserApplyTable: React.FC = () => {
         setTotalPages(pageResponse);
         setHasMore(userResponse.length > 0 && page < pageResponse - 1);
       } else {
-        console.error('錯誤：FetchUsers 沒有返回數組。');
+        throw new Error('FetchUsers 沒有返回數組');
       }
     } catch (error) {
       console.error('加載初始數據時出錯：', error);
-      setErrorMessage('加載數據時出錯，請稍後重新嘗試。');
+      setError('加載數據時出錯，請稍後重新嘗試。');
+      setSnackbarOpen(true);
+      setHasMore(false);
     } finally {
       setLoading(false);
     }
@@ -52,7 +59,7 @@ const UserApplyTable: React.FC = () => {
   };
 
   const admitUserHandler = async (index: number) => {
-    setErrorMessage('');
+    setError(null);
     try {
       const user = users[index];
       if (user.userId) {
@@ -70,12 +77,13 @@ const UserApplyTable: React.FC = () => {
     } catch (error) {
       console.error('Error admitting user:', error);
       const errorMessage = (error as Error).message || '未知錯誤';
-      setErrorMessage(`無法開通用戶。錯誤訊息：${errorMessage}`);
+      setError(`無法開通用戶。錯誤訊息：${errorMessage}`);
+      setSnackbarOpen(true);
     }
   };
 
   const removeUserHandler = async (index: number) => {
-    setErrorMessage('');
+    setError(null);
     try {
       const user = users[index];
       if (user.userId) {
@@ -85,7 +93,8 @@ const UserApplyTable: React.FC = () => {
     } catch (error) {
       console.error('Error removing user:', error);
       const errorMessage = (error as Error).message || '未知錯誤';
-      setErrorMessage(`無法刪除用戶。錯誤信息：${errorMessage}`);
+      setError(`無法刪除用戶。錯誤訊息：${errorMessage}`);
+      setSnackbarOpen(true);
     }
   };
 
@@ -93,21 +102,33 @@ const UserApplyTable: React.FC = () => {
     setPage(newPage);
   };
 
+  const handleSnackbarClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
+  const handleRetry = () => {
+    loadInitialData();
+  };
+
   return (
     <>
       <div className={styles.tableTitle}><h2>待審核帳號列表</h2></div>
       <div id="scrollableDiv" className={styles.thePermissionList}>
         {loading ? (
-          <div className={styles.loaderMsg}>加載中...</div>
-        ) : errorMessage ? (
-          <div className={styles.errorMsg}>{errorMessage}</div>
+          <div className={`loadingMsg`}></div>
+        ) : error ? (
+          // <div className={styles.errorMsg}>請重新嘗試</div>
+          <></>
         ) : (
           <InfiniteScroll
             dataLength={users.length}
             next={fetchMoreData}
             hasMore={hasMore}
-            loader={<h4 className={styles.loaderMsg}>加載中...</h4>}
-            endMessage={<p className={styles.endMsg}>沒有更多了</p>}
+            loader={<div className={`loadingMsg`}></div>}
+            endMessage={!error && users.length > 0 && <p className={styles.endMsg}>沒有更多了</p>}
             scrollableTarget="scrollableDiv"
           >
             <table className={styles.thePermissionList}>
@@ -139,7 +160,7 @@ const UserApplyTable: React.FC = () => {
             </table>
           </InfiniteScroll>
         )}
-        {totalPages > 1 && (
+        {!loading && !error && totalPages > 1 && (
           <NumberOfPages
             count={totalPages * 10}
             page={page}
@@ -148,6 +169,122 @@ const UserApplyTable: React.FC = () => {
           />
         )}
       </div>
+      {/* 
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={10000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        sx={{
+          zIndex: 999999999999
+        }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="error"
+          variant="filled"
+          sx={{
+            width: '400px',
+            minHeight: '100px',
+            backgroundColor: '#f8d7da',
+            color: '#721c24',
+            '& .MuiAlert-icon': {
+              color: '#721c24'
+            },
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            padding: '16px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            borderRadius: '8px',
+          }}
+        >
+          <div style={{ marginBottom: '12px' }}>{error}</div>
+          <Button
+            color="inherit"
+            size="small"
+            onClick={handleRetry}
+            sx={{
+              alignSelf: 'flex-end',
+              backgroundColor: '#721c24',
+              color: '#ffffff',
+              '&:hover': {
+                backgroundColor: '#5c171d',
+              },
+              padding: '6px 12px',
+              borderRadius: '4px',
+            }}
+          >
+            重新嘗試
+          </Button>
+        </Alert>
+      </Snackbar> */}
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={10000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        sx={{ zIndex: 999999999999 }}
+      >
+        <Alert
+          severity="error"
+          variant="filled"
+          icon={false}
+          sx={{
+            width: '400px',
+            backgroundColor: '#F5F5F5',
+            color: '#000000',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            padding: '16px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            borderRadius: '8px',
+            position: 'relative',
+          }}
+        >
+          {/* 關閉按鈕 */}
+          <IconButton
+            aria-label="close"
+            onClick={handleSnackbarClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: 'black',
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <ErrorIcon style={{ marginRight: '12px', color: 'black', verticalAlign: 'middle' }} />
+            <span style={{ verticalAlign: 'middle' }}>{error}</span>
+          </div>
+
+          <Button
+            color="inherit"
+            size="small"
+            onClick={handleRetry}
+            sx={{
+              width: '100%',
+              backgroundColor: '#FFD700',
+              color: '#000000',
+              fontWeight: '900',
+              borderRadius: '8px',
+              border: '2px solid #000000',
+              '&:hover': {
+                backgroundColor: '#F0E68C',
+              },
+              padding: '8px 0',
+              marginTop: '12px',
+            }}
+          >
+            重新嘗試
+          </Button>
+        </Alert>
+      </Snackbar>
     </>
   );
 };

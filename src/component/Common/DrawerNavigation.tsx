@@ -33,10 +33,10 @@ const DrawerNavigation: React.FC<DrawerNavigationProps> = ({
         <InfiniteScroll
           dataLength={tabs.length}
           next={fetchMoreData}
-          hasMore={true} // 是否还有更多数据
-          loader={<h4>Loading...</h4>} // 加载时显示的组件
-          scrollThreshold={0.9} // 触发加载更多的滚动阈值
-          className="tabs" // 自定义类名
+          hasMore={true}
+          loader={<div className={`loadingMsg`}></div>}
+          scrollThreshold={0.9}
+          className="tabs"
         >
           <h3>標籤</h3>
           <ul>

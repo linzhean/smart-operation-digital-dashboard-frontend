@@ -34,7 +34,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ data }) => {
     }
   }, [data]);
 
-  if (!chartData || !chartData.datasets) return <div>Loading...</div>;
+  if (!chartData || !chartData.datasets) return <div className={`loadingMsg`}></div>;
 
   return <Doughnut data={chartData} />;
 };

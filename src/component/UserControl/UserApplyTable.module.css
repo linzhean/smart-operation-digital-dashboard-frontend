@@ -96,24 +96,6 @@
   }
 }
 
-::-webkit-scrollbar {
-  width: 0.8em;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #ACACBE;
-  border: 0.1em solid #343541;
-  border-radius: 100vw;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(204, 204, 204, 0.5);
-}
-
-::-webkit-scrollbar-button {
-  display: none;
-}
-
 @keyframes colorChange {
   0% {
     color: red;
@@ -128,8 +110,64 @@
   }
 }
 
-.errorMsg {
+.loaderMsg::after {
+  content: "";
+  font-weight: 600;
+  font-size: 114px;
+  color: rgb(186, 216, 240);
+  animation-name: loadingMsg;
+  animation-duration: 1200ms;
+  animation-iteration-count: infinite;
+}
+
+@keyframes laodingMsg {
+  0% {
+    content: "L";
+  }
+
+  10% {
+    content: "Lo";
+  }
+
+  20% {
+    content: "Loa";
+  }
+
+  30% {
+    content: "Load";
+  }
+
+  40% {
+    content: "Loadi";
+  }
+
+  50% {
+    content: "Loadin";
+  }
+
+  60% {
+    content: "Loading";
+  }
+
+  70% {
+    content: "Loading.";
+  }
+
+  80% {
+    content: "Loading..";
+  }
+
+  90% {
+    content: "Loading...";
+  }
+
+  100% {
+    content: "Loading....";
+  }
+}
+
+/* .errorMsg {
   margin: 10px;
   font-size: 1rem;
   animation: colorChange 5s infinite;
-}
+} */

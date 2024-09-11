@@ -111,13 +111,13 @@ const UserStatusControl: React.FC = () => {
           <option value="sales">銷售部門</option>
           <option value="materials">物料部門</option>
         </select>
-        <input type="search" placeholder="搜尋..." className={styles.searchInput} />
+        <input type="search" placeholder="搜尋" className={styles.searchInput} />
       </div>
       <InfiniteScroll
         dataLength={sortedUsers.length}
         next={fetchMoreData}
         hasMore={hasMore}
-        loader={<h4 className={styles.loaderMsg}>載入中</h4>}
+        loader={<div className={`loadingMsg`}></div>}
         endMessage={<p className={styles.endMsg}>沒有更多用戶</p>}
         scrollableTarget="scrollableDiv"
       >

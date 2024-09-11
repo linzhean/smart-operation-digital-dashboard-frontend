@@ -38,7 +38,7 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
     }
   }, [data]);
 
-  if (!chartData || !chartData.datasets) return <div>Loading...</div>;
+  if (!chartData || !chartData.datasets) return <div className={`loadingMsg`}></div>;
 
   return <Line data={chartData} />;
 };

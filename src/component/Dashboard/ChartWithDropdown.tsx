@@ -204,7 +204,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(chartHTML) }}
             />
           ) : (
-            <p>Loading chart...</p>
+            <div className={`loadingMsg`}></div>
           )}
           <div className={styles.buttonGroup}>
             <button onClick={() => setIsAdvancedAnalysisModalOpen(false)} className={styles.cancel}>關閉</button>

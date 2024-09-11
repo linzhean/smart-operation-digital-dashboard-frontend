@@ -503,7 +503,7 @@ const NewForm: React.FC = () => {
           {loading && (
             <div className={classes.loaderMsg}>
               <CircularProgress />
-              <div>加載中...</div>
+              <div className={`loadingMsg`}></div>
             </div>
           )}
           {!loading && employees.length === 0 && (

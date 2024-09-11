@@ -27,4 +27,5 @@ root.render(
     </ChartProvider>
   </UserProvider>
   // </React.StrictMode>
+
 );

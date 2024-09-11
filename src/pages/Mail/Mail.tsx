@@ -23,7 +23,7 @@ const Mail: React.FC = () => {
 
     useEffect(() => {
         fetchEmails(selectedStatuses);
-    }, [selectedStatuses, fetchEmails]);          
+    }, [selectedStatuses, fetchEmails]);
 
     const handleMailItemClick = useCallback(async (id: number) => {
         await selectEmail(id);
@@ -53,7 +53,7 @@ const Mail: React.FC = () => {
         <main className={styles.mainEmailUnique}>
             <div className={`${styles.leftsideUnique} ${showRightSide ? styles.hiddenUnique : ''}`}>
                 {error && <p className={styles.errorMsg}>{error}</p>}
-                {loading && <p>Loading...</p>}
+                {loading && <div className={`loadingMsg`}></div>}
                 <Filter onFilterChange={handleFilterChange} />
                 <MailBreif onMailClick={handleMailItemClick} emails={emails} />
             </div>

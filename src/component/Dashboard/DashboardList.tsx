@@ -33,7 +33,7 @@ const DashboardList: React.FC = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <div className={`loadingMsg`}></div>;
   if (error) return <p>{error}</p>;
 
   return (

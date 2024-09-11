@@ -36,7 +36,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
     }
   }, [data]);
 
-  if (!chartData || !chartData.datasets) return <div>Loading...</div>;
+  if (!chartData || !chartData.datasets) return <div className={`loadingMsg`}></div>;
 
   return <Bar data={chartData} />;
 };
