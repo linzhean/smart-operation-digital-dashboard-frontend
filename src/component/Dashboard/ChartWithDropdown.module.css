@@ -157,6 +157,31 @@
   width: 100%;
 }
 
+.aiAnalysisForm{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.aiAnalysisForm h3 {
+  font-size: 1.2rem;
+  font-weight: 900;
+  background-color: aliceblue;
+  color: black;
+  margin-bottom: 1rem;
+  border-radius: 15px;
+  padding: 10px;
+  display: ruby-text;
+}
+
+.aiAnalysisForm h2 {
+  width: 100%;
+  font-weight: bold;
+  margin: 0px !important;
+  margin-bottom: 1.5rem !important;
+  text-align: center;
+}
+
 /* 交辦表單樣式 */
 .AssignForm h2 {
   width: 100%;

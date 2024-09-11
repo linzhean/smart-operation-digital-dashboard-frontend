@@ -347,7 +347,7 @@ const IOSSwitch = styled(Switch)(({ theme }) => ({
 const ChartAdminTable: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isViewFormOpen, setIsViewFormOpen] = useState(false);
-  const [viewFormData, setViewFormData] = useState({ chartName: '', chartCodeFile: '', chartImage: '' });
+  const [viewFormData, setViewFormData] = useState({ chartName: '', chartCodeFile: '', chartImage: '', showcaseImage: '' });
   const [charts, setCharts] = useState<any[]>([]);
   const [openStatus, setOpenStatus] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState('篩選狀態');
@@ -437,10 +437,23 @@ const ChartAdminTable: React.FC = () => {
     }
   };
 
-  const handleViewChart = (chartName: string, chartCodeFile: string, chartImage: string) => {
-    setViewFormData({ chartName, chartCodeFile, chartImage });
-    setIsViewFormOpen(true);
-  };
+  const handleViewChart = async (chartName: string, chartCodeFile: string, chartImage: string, showcaseImage: string) => {
+    try {
+      const availableCharts = await ChartService.getAvailableCharts();
+      const selectedChart = availableCharts.find((chart: { name: string; }) => chart.name === chartName);
+    
+      if (selectedChart) {
+        const showcaseImage = selectedChart.showcaseImage; // 从返回的图表数据中获取示意图 URL
+        setViewFormData({ chartName, chartCodeFile, chartImage, showcaseImage });
+        setIsViewFormOpen(true);
+      } else {
+        alert('未找到示意圖');
+      }
+    } catch (error) {
+      console.error('Error fetching chart data:', error);
+      alert('获取图表信息失败');
+    }
+  };  
 
   const handleCloseViewForm = () => setIsViewFormOpen(false);
 
@@ -515,7 +528,7 @@ const ChartAdminTable: React.FC = () => {
                     </div>
                   </td>
                   <td>
-                    <span onClick={() => handleViewChart(chart.name, chart.codeFile, chart.image)}>
+                    <span onClick={() => handleViewChart(chart.name, chart.codeFile, chart.image,chart.showcaseImage)}>
                       查看
                     </span>
                   </td>
@@ -536,6 +549,7 @@ const ChartAdminTable: React.FC = () => {
           chartCodeFile={viewFormData.chartCodeFile}
           chartImage={viewFormData.chartImage}
           onClose={handleCloseViewForm}
+            showcaseImage={viewFormData.showcaseImage}
         />
       )}
 

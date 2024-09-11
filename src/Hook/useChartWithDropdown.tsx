@@ -231,7 +231,6 @@ export function useChartWithDropdown(
     return null;
   };
   
-
   const handleAdvancedAnalysis = async (dashboardId: number) => {
     try {
       const dashboardChartsResponse = await ChartService.getDashboardCharts(dashboardId);
@@ -259,25 +258,45 @@ export function useChartWithDropdown(
     }
   };  
 
-  const handleAIAnalysis = async () => {
-    if (chartId === null) {
-      alert('Chart ID is not selected.');
-      return;
-    }
-  
-    if (selectedDashboardId === null) {
-      alert('Dashboard ID is not selected.');
-      return;
-    }
-  
+  const handleAIAnalysis = async (dashboardId: number, chartId: number) => {
     try {
-      const suggestion = await ChartService.getAIAnalysis(chartId, selectedDashboardId);
-      setAiSuggestion(suggestion);
-      setShowAIAnalysisModal(true); // Update this line to show the modal
+      const dashboardChartsResponse = await ChartService.getDashboardCharts(dashboardId);
+  
+      if (dashboardChartsResponse.result && Array.isArray(dashboardChartsResponse.data)) {
+        const firstChart = dashboardChartsResponse.data[0];
+  
+        if (firstChart && firstChart.id) {
+          const aiResponse = await ChartService.getAIAnalysis(firstChart.id, dashboardId);
+  
+          if (aiResponse.result) {
+            // Extract the suggestion from the data object
+            const suggestionText = aiResponse.data.suggestion;
+  
+            // Optional: Attempt to handle or sanitize suggestionText if it contains unprintable characters
+            const sanitizedSuggestion = sanitizeText(suggestionText);
+  
+            setAiSuggestion(sanitizedSuggestion); // Save the suggestion text to state
+            setShowAIAnalysisModal(true); // Show the modal
+          } else {
+            alert(`Failed to get AI analysis: ${aiResponse.message}`);
+          }
+        } else {
+          alert('No charts found in the dashboard.');
+        }
+      } else {
+        console.error('Failed to fetch dashboard charts:', dashboardChartsResponse.message);
+        alert('Failed to fetch dashboard charts. Please try again later.');
+      }
     } catch (error) {
       console.error('Failed to get AI analysis:', error);
+      alert('Error during AI analysis. Please try again later.');
     }
   };
+  
+  // A simple function to sanitize or replace unprintable characters
+  const sanitizeText = (text: string): string => {
+    return text.replace(/[\x00-\x1F\x7F-\x9F]/g, ''); // Remove control characters
+  };  
   
 useEffect(() => {
   console.log('Updated interactiveCharts:', interactiveCharts);
@@ -297,7 +316,7 @@ useEffect(() => {
   const handleStartDateChange = (date: Date | null) => setStartDate(date);
   const handleEndDateChange = (date: Date | null) => setEndDate(date);
   const openAdvancedAnalysisModal = () => setIsAdvancedAnalysisModalOpen(true);
-const closeAdvancedAnalysisModal = () => setIsAdvancedAnalysisModalOpen(false);
+  const closeAdvancedAnalysisModal = () => setIsAdvancedAnalysisModalOpen(false);
 
   return {
     isDropdownOpen,
@@ -363,6 +382,6 @@ const closeAdvancedAnalysisModal = () => setIsAdvancedAnalysisModalOpen(false);
     setAiSuggestion,
     showAIAnalysisModal,
     setShowAIAnalysisModal,
-    handleAIAnalysis
+    handleAIAnalysis,
   };
 }
