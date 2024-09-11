@@ -94,144 +94,98 @@
 
 // export default NavBar;
 
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styles from './NavBar.module.css';
 
+// Import statements for icons remain the same
 import burgerMenuIcon from '../../assets/icon/burgerMenu-icon.svg';
 import dashBoardIcon from '../../assets/icon/dashBoard-icon.svg';
 import groupIcon from '../../assets/icon/group-icon.svg';
 import emailIcon from '../../assets/icon/email-icon.svg';
 import userDataIcon from '../../assets/icon/userData-icon.svg';
 import AssignExportControlIcon from '../../assets/icon/AssignExportControl.svg';
-import InterimKPIControl from '../../assets/icon/InterimKPIControl.svg';
-import UserControl from '../../assets/icon/UserControl.svg';
-import ChartAdmin from '../../assets/icon/ChartAdmin.png'
+import InterimKPIControlIcon from '../../assets/icon/InterimKPIControl.svg';
+import UserControlIcon from '../../assets/icon/UserControl.svg';
+import ChartAdminIcon from '../../assets/icon/ChartAdmin.png';
 
 const NavBar: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const activeLink = location.pathname;
+  const [isNavVisible, setIsNavVisible] = useState(false);
+  const [isNavHidden, setIsNavHidden] = useState(true);
+
+  useEffect(() => {
+    if (isNavVisible) {
+      setIsNavVisible(false);
+    }
+  }, [location]);
+
+  const toggleNav = () => {
+    if (isNavVisible) {
+      setIsNavVisible(false);
+      setTimeout(() => setIsNavHidden(true), 300);
+    } else {
+      setIsNavHidden(false);
+      setTimeout(() => setIsNavVisible(true), 10);
+    }
+  };
+
+  const handleNavClick = (path: string) => {
+    navigate(path);
+    toggleNav();
+  };
+
+  const navItems = [
+    { path: '/ChartAdmin', icon: ChartAdminIcon, text: '圖表後台管理' },
+    { path: '/AssignExportControl', icon: AssignExportControlIcon, text: '權限管理' },
+    { path: '/UserControl/userApply', icon: UserControlIcon, text: '使用者管理' },
+    { path: '/InterimKPIControl', icon: InterimKPIControlIcon, text: '臨時KPI審核' },
+    { path: '/GroupManagement', icon: groupIcon, text: '群組管理' },
+    { path: '/home', icon: dashBoardIcon, text: '儀表板' },
+    { path: '/mail', icon: emailIcon, text: '信件' },
+    { path: '/profile', icon: userDataIcon, text: '個人資料' },
+  ];
 
   return (
     <nav className={`navbar navbar-expand-md ${styles.bgBodyTertiary}`}>
       <div className={`container-fluid ${styles.containerfluid}`}>
-        <a className={`brand ${styles.navbarHamburger}`} id='hamburger' href="#">
+        <a className={`brand ${styles.navbarHamburger}`} id='hamburger' href="#" onClick={toggleNav}>
           <img className={`brandImg ${styles.brandImg}`} src={burgerMenuIcon} alt="menu" />
         </a>
         <button
-          onClick={() => console.log('clicked!!!!')}
           className={`navbar-toggler ${styles.navbarToggler}`}
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavAltMarkup"
           aria-controls="navbarNavAltMarkup"
-          aria-expanded="false"
+          aria-expanded={isNavVisible}
           aria-label="Toggle navigation"
+          onClick={toggleNav}
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className={`collapse navbar-collapse`} id="navbarNavAltMarkup">
+        <div 
+          className={`navbar-collapse ${styles.navbarCollapse} ${isNavVisible ? styles.show : ''} ${isNavHidden ? styles.hidden : ''}`}
+        >
           <ul className={`navbar-nav ${styles.navbarNav}`}>
-
-            {/* 圖表新增後台 */}
-            <li className={`nav-item ${styles.navbarNavItem}`}>
-              <Link
-                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/ChartAdmin') ? styles.activeNavLink : ''}`}
-                to="/ChartAdmin"
-              >
-                <img className={styles.navbarNavItemImg} src={ChartAdmin} alt="ChartAdmin" />
-                <span className={`${styles.navbarText} ${activeLink.startsWith('/ChartAdmin') ? styles.activeNavLinkText : ''}`}>圖表後台管理</span>
-              </Link>
-            </li>
-
-            {/* 權限管理 */}
-            <li className={`nav-item ${styles.navbarNavItem}`}>
-              <Link
-                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/AssignExportControl') ? styles.activeNavLink : ''}`}
-                to="/AssignExportControl"
-              >
-                <img className={styles.navbarNavItemImg} src={AssignExportControlIcon} alt="graphManage" />
-                <span className={`${styles.navbarText} ${activeLink.startsWith('/AssignExportControl') ? styles.activeNavLinkText : ''}`}>權限管理</span>
-              </Link>
-            </li>
-
-            {/* 使用者管理 */}
-            <li className={`nav-item ${styles.navbarNavItem}`}>
-              <Link
-                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/UserControl') ? styles.activeNavLink : ''}`}
-                to="/UserControl/userApply"
-              >
-                <img className={styles.navbarNavItemImg} src={UserControl} alt="UserControl" />
-                <span className={`${styles.navbarText} ${activeLink.startsWith('/UserControl') ? styles.activeNavLinkText : ''}`}>使用者管理</span>
-              </Link>
-            </li>
-
-            {/* ＫＰＩ審核 */}
-            <li className={`nav-item ${styles.navbarNavItem}`}>
-              <Link
-                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/InterimKPIControl') ? styles.activeNavLink : ''}`}
-                to="/InterimKPIControl"
-              >
-                <img className={styles.navbarNavItemImg} src={InterimKPIControl} alt="graphManage" />
-                <span className={`${styles.navbarText} ${activeLink.startsWith('/InterimKPIControl') ? styles.activeNavLinkText : ''}`}>臨時KPI審核</span>
-              </Link>
-            </li>
-
-            {/* 群組管理 */}
-            {/* <li className={`nav-item ${styles.navbarNavItem}`}>
-              <Link
-                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/group') ? styles.activeNavLink : ''}`}
-                to="/group"
-              >
-                <img className={styles.navbarNavItemImg} src={groupIcon} alt="group" />
-                <span className={`${styles.navbarText} ${activeLink.startsWith('/group') ? styles.activeNavLinkText : ''}`}>群組</span>
-              </Link>
-            </li> */}
-
-            {/* 群組管理2 */}
-            <li className={`nav-item ${styles.navbarNavItem}`}>
-              <Link
-                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/GroupManagement') ? styles.activeNavLink : ''}`}
-                to="/GroupManagement"
-              >
-                <img className={styles.navbarNavItemImg} src={groupIcon} alt="GroupManagement" />
-                <span className={`${styles.navbarText} ${activeLink.startsWith('/GroupManagement') ? styles.activeNavLinkText : ''}`}>群組管理</span>
-              </Link>
-            </li>
-
-            {/* 首頁－儀表板 */}
-            <li className={`nav-item ${styles.navbarNavItem}`}>
-              <Link
-                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/home') ? styles.activeNavLink : ''}`}
-                to="/home"
-              >
-                <img className={styles.navbarNavItemImg} src={dashBoardIcon} alt="home" />
-                <span className={`${styles.navbarText} ${activeLink.startsWith('/home') ? styles.activeNavLinkText : ''}`}>儀表板</span>
-              </Link>
-            </li>
-
-
-            {/* 信件 */}
-            <li className={`nav-item ${styles.navbarNavItem}`}>
-              <Link
-                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/mail') ? styles.activeNavLink : ''}`}
-                to="/mail"
-              >
-                <img className={`${styles.navbarNavItemImg} ${styles.navbarNavItemMail}`} src={emailIcon} alt="mail" />
-                <span className={`${styles.navbarText} ${activeLink.startsWith('/mail') ? styles.activeNavLinkText : ''}`}>信件</span>
-              </Link>
-            </li>
-
-            {/* 個人資料 */}
-            <li className={`nav-item ${styles.navbarNavItem}`}>
-              <Link
-                className={`nav-link ${styles.navLink} ${activeLink.startsWith('/profile') ? styles.activeNavLink : ''}`}
-                to="/profile"
-              >
-                <img className={styles.navbarNavItemImg} src={userDataIcon} alt="profile" />
-                <span className={`${styles.navbarText} ${activeLink.startsWith('/profile') ? styles.activeNavLinkText : ''}`}>個人資料</span>
-              </Link>
-            </li>
+            {navItems.map((item) => (
+              <li key={item.path} className={`nav-item ${styles.navbarNavItem}`}>
+                <Link
+                  className={`nav-link ${styles.navLink} ${activeLink.startsWith(item.path) ? styles.activeNavLink : ''}`}
+                  to={item.path}
+                  onClick={() => handleNavClick(item.path)}
+                >
+                  <img 
+                    className={`${styles.navbarNavItemImg} ${item.path === '/mail' ? styles.navbarNavItemMail : ''}`} 
+                    src={item.icon} 
+                    alt={item.text} 
+                  />
+                  <span className={`${styles.navbarText} ${activeLink.startsWith(item.path) ? styles.activeNavLinkText : ''}`}>
+                    {item.text}
+                  </span>
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

@@ -32,7 +32,7 @@ apiClient.interceptors.response.use(
         localStorage.removeItem('authToken');
         window.location.href = '/login'; // 導向登錄頁面
       } else {
-        alert(message || '發生錯誤，請稍後再試');
+        alert(message || '發生錯誤，請稍後再試!');
       }
     }
     return Promise.reject(error);

@@ -13,7 +13,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
   const [newMessage, setNewMessage] = useState<string>('');
   const [email, setEmail] = useState<Email | null>(null);
 
-  // Fetch email details
   const fetchEmailDetails = useCallback(async () => {
     try {
       const fetchedEmail = await getEmailDetails(emailId);
@@ -28,7 +27,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
     fetchEmailDetails();
   }, [fetchEmailDetails]);
 
-  // Handle sending a new message
   const handleSendMessage = useCallback(async () => {
     if (newMessage.trim()) {
       try {

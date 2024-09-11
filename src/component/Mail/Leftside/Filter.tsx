@@ -1,7 +1,6 @@
 import React from 'react';
 import "../../../styles/filter.css";
 
-// 状态映射
 const statusMapping: Record<string, string> = {
   "交辦": "0",
   "被交辦": "1",
@@ -33,12 +32,12 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
     <div className="filter">
       {Object.entries(statusMapping).map(([label, statusCode]) => (
         <div className="options" key={statusCode}>
-          <input 
-            type="checkbox" 
-            name="taskStatus" 
-            id={statusCode} 
-            value={statusCode} 
-            onChange={handleCheckboxChange} 
+          <input
+            type="checkbox"
+            name="taskStatus"
+            id={statusCode}
+            value={statusCode}
+            onChange={handleCheckboxChange}
           />
           <label htmlFor={statusCode}>{label}</label>
         </div>
