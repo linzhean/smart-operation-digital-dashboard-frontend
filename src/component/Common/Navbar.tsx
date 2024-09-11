@@ -94,11 +94,10 @@
 
 // export default NavBar;
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styles from './NavBar.module.css';
 
-// Import statements for icons remain the same
 import burgerMenuIcon from '../../assets/icon/burgerMenu-icon.svg';
 import dashBoardIcon from '../../assets/icon/dashBoard-icon.svg';
 import groupIcon from '../../assets/icon/group-icon.svg';
@@ -115,12 +114,8 @@ const NavBar: React.FC = () => {
   const activeLink = location.pathname;
   const [isNavVisible, setIsNavVisible] = useState(false);
   const [isNavHidden, setIsNavHidden] = useState(true);
-
-  useEffect(() => {
-    if (isNavVisible) {
-      setIsNavVisible(false);
-    }
-  }, [location]);
+  const navRef = useRef<HTMLDivElement>(null);
+  const burgerMenuRef = useRef<HTMLAnchorElement>(null);
 
   const toggleNav = () => {
     if (isNavVisible) {
@@ -131,6 +126,28 @@ const NavBar: React.FC = () => {
       setTimeout(() => setIsNavVisible(true), 10);
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        navRef.current && !navRef.current.contains(event.target as Node) &&
+        burgerMenuRef.current && !burgerMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsNavVisible(false);
+        setTimeout(() => setIsNavHidden(true), 300);
+      }
+    };
+
+    if (isNavVisible) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isNavVisible]);
 
   const handleNavClick = (path: string) => {
     navigate(path);
@@ -151,7 +168,13 @@ const NavBar: React.FC = () => {
   return (
     <nav className={`navbar navbar-expand-md ${styles.bgBodyTertiary}`}>
       <div className={`container-fluid ${styles.containerfluid}`}>
-        <a className={`brand ${styles.navbarHamburger}`} id='hamburger' href="#" onClick={toggleNav}>
+        <a
+          className={`brand ${styles.navbarHamburger}`}
+          id='hamburger'
+          href="#"
+          onClick={toggleNav}
+          ref={burgerMenuRef}
+        >
           <img className={`brandImg ${styles.brandImg}`} src={burgerMenuIcon} alt="menu" />
         </a>
         <button
@@ -164,7 +187,8 @@ const NavBar: React.FC = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div 
+        <div
+          ref={navRef}
           className={`navbar-collapse ${styles.navbarCollapse} ${isNavVisible ? styles.show : ''} ${isNavHidden ? styles.hidden : ''}`}
         >
           <ul className={`navbar-nav ${styles.navbarNav}`}>
@@ -175,10 +199,10 @@ const NavBar: React.FC = () => {
                   to={item.path}
                   onClick={() => handleNavClick(item.path)}
                 >
-                  <img 
-                    className={`${styles.navbarNavItemImg} ${item.path === '/mail' ? styles.navbarNavItemMail : ''}`} 
-                    src={item.icon} 
-                    alt={item.text} 
+                  <img
+                    className={`${styles.navbarNavItemImg} ${item.path === '/mail' ? styles.navbarNavItemMail : ''}`}
+                    src={item.icon}
+                    alt={item.text}
                   />
                   <span className={`${styles.navbarText} ${activeLink.startsWith(item.path) ? styles.activeNavLinkText : ''}`}>
                     {item.text}
