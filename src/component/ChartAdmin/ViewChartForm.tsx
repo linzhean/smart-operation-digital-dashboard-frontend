@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './ViewChartForm.module.css';
+import styles from './ChartAdminForm.module.css';
 import { Stack } from '@mui/material';
 
 //   chartCodeFile: string; 錯誤

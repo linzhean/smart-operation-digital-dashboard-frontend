@@ -1,4 +1,5 @@
 .checkFormContent {
+  overflow-x: hidden;
   height: 77%;
   overflow: auto;
   width: clamp(45%, 20%, 80%);
@@ -30,6 +31,7 @@
 .checkFormContent form label {
   font-weight: bold;
   font-size: 1.2rem;
+  white-space: nowrap;
 }
 
 .checkFormContent input {
@@ -169,4 +171,98 @@
   font-size: 1.3rem;
   font-weight: 700;
   color: white;
+}
+
+.viewChartImg {
+  max-width: 180px;
+  max-height: 180px;
+  border: none;
+  border-radius: 10px;
+  display: block;
+}
+
+/* 手機 */
+@media (max-width: 480px) {
+  .checkFormContent {
+    width: clamp(60%, 75vw, 80%);
+    padding: 15px;
+    overflow-x: hidden;
+
+  }
+
+  .newKPIbuttonGroup {
+    right: 20px;
+    bottom: 20px;
+  }
+
+  .checkFormContent h2 {
+    font-size: 1.5rem;
+  }
+
+  .checkFormContent form label,
+  .checkFormContent input {
+    font-size: 1rem;
+    margin: 0;
+    padding: 2px;
+    padding-left: 5px;
+  }
+
+  .checkFormContent .submit,
+  .checkFormContent .cancel {
+    font-size: 0.9rem;
+    padding: 4px 12px;
+  }
+
+  .newKPIlabelGroup select,
+  .newCodeFile {
+    font-size: 0.9rem;
+  }
+
+  .newKPIlabelGroup,
+  .newKpiCodeGroup,
+  .newKpiImgGroup {
+    padding: 5px;
+  }
+
+  .checkFormContent input::placeholder {
+    content: 'Small Screen Placeholder';
+  }
+
+  .ImgIcon,
+  .CodeIcon {
+    height: 20px;
+    width: 20px;
+  }
+
+  .viewChartImg {
+    max-width: 150px;
+    max-height: 150px;
+  }
+
+}
+
+/* iPad */
+@media (min-width: 769px) and (max-width:1024px) {
+  .checkFormContent {
+    width: 60%;
+    padding: 20px;
+  }
+
+  .newKPIbuttonGroup {
+    right: 25px;
+    bottom: 25px;
+  }
+}
+
+/* 電腦桌面 */
+@media (min-width: 1025px) {
+  .checkFormContent {
+    width: 40%;
+    padding: 30px;
+  }
+
+  .newKPIbuttonGroup {
+    right: 40px;
+    bottom: 40px;
+  }
 }

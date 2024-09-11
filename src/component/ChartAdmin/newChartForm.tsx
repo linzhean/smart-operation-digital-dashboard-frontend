@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import styles from './newChartForm.module.css';
+import styles from './ChartAdminForm.module.css';
 import { Avatar, Stack } from '@mui/material';
 import ImgIcon from '../../assets/icon/image.png';
 import PythonIcon from '../../assets/icon/code.png';
+import { useEffect } from 'react';
+import { useRef } from 'react';
 
 interface NewChartFormProps {
   onSubmit: (chartName: string, chartCode: File | null, chartImage: string | null) => void;
@@ -38,6 +40,31 @@ const NewChartForm: React.FC<NewChartFormProps> = ({ onSubmit, onClose }) => {
     onClose();
   };
 
+
+  // 螢幕太小的時候把InputPlaceHolder換掉
+  const newKpiNameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const updateNewKpiNamePlaceholder = () => {
+      if (newKpiNameInputRef.current) {
+        if (window.innerWidth < 365) {
+          newKpiNameInputRef.current.placeholder = '新圖表名稱';
+        } else {
+          newKpiNameInputRef.current.placeholder = '請輸入新圖表的名稱';
+        }
+      } else {
+        console.error('鉤子函數沒勾到');
+      }
+    };
+
+    updateNewKpiNamePlaceholder();
+    window.addEventListener('resize', updateNewKpiNamePlaceholder);
+
+    return () => {
+      window.removeEventListener('resize', updateNewKpiNamePlaceholder);
+    };
+  }, []);
+
   return (
     <div>
       <div className={styles.formOverlay} onClick={onClose}></div>
@@ -47,7 +74,8 @@ const NewChartForm: React.FC<NewChartFormProps> = ({ onSubmit, onClose }) => {
           <div className={styles.newKPIlabelGroup}>
             <label htmlFor='newKpiName'>圖表名稱</label>
             <input
-              autoComplete=''
+              ref={newKpiNameInputRef}
+              autoComplete='off'
               placeholder='請輸入新圖表的名稱'
               id='newKpiName'
               type="text"

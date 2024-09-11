@@ -9,9 +9,8 @@ const ChartAdmin: React.FC = () => {
 
   return (
     <div className="wrapper">
-      <div className="theContent">
+      <div className="theContent" style={{ minWidth: '350px' }}>
         <ChartAdminTable />
-
       </div>
     </div>
 

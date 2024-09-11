@@ -169,56 +169,6 @@ const UserApplyTable: React.FC = () => {
           />
         )}
       </div>
-      {/* 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={10000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{
-          zIndex: 999999999999
-        }}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity="error"
-          variant="filled"
-          sx={{
-            width: '400px',
-            minHeight: '100px',
-            backgroundColor: '#f8d7da',
-            color: '#721c24',
-            '& .MuiAlert-icon': {
-              color: '#721c24'
-            },
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            padding: '16px',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            borderRadius: '8px',
-          }}
-        >
-          <div style={{ marginBottom: '12px' }}>{error}</div>
-          <Button
-            color="inherit"
-            size="small"
-            onClick={handleRetry}
-            sx={{
-              alignSelf: 'flex-end',
-              backgroundColor: '#721c24',
-              color: '#ffffff',
-              '&:hover': {
-                backgroundColor: '#5c171d',
-              },
-              padding: '6px 12px',
-              borderRadius: '4px',
-            }}
-          >
-            重新嘗試
-          </Button>
-        </Alert>
-      </Snackbar> */}
 
       <Snackbar
         open={snackbarOpen}
