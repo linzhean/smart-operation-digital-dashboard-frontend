@@ -63,9 +63,8 @@ const ChartAdminTable: React.FC = () => {
     const fetchCharts = async (available: boolean | null) => {
       try {
         const response = await ChartService.getCharts(available === null ? false : available);
-        const chartsData = response.data; // 假设返回数据在 `data` 字段
+        const chartsData = response.data; 
         if (Array.isArray(chartsData)) {
-          // 根据 selectedStatus 过滤数据
           const filteredCharts = chartsData.filter(chart => {
             if (selectedStatus === '全部') {
               return true;
@@ -86,9 +85,8 @@ const ChartAdminTable: React.FC = () => {
         console.error('Error fetching charts:', error);
         alert('查詢圖表狀態失敗');
       }
-    };      
+    };
 
-    // 根据 selectedStatus 来决定是传递 true 还是 false，或者 null 表示全部
     const isAvailable = selectedStatus === '啟用中' ? true : (selectedStatus === '停用中' ? false : null);
     fetchCharts(isAvailable);
   }, [selectedStatus]);
@@ -105,7 +103,7 @@ const ChartAdminTable: React.FC = () => {
     return fetch(dataUrl)
       .then(res => res.blob())
       .then(blob => new File([blob], 'image.png', { type: 'image/png' }));
-  };
+  }
 
   const handleFormSubmit = async (chartName: string, chartCode: File | null, chartImage: string | null) => {
     try {
@@ -113,7 +111,6 @@ const ChartAdminTable: React.FC = () => {
       await ChartService.createChart(chartName, chartCode, imageFile);
       alert('圖表新增成功');
       handleCloseForm();
-      // 刷新图表列表
       const isAvailable = selectedStatus === '啟用中';
       const fetchedCharts = await ChartService.getCharts(isAvailable);
       setCharts(fetchedCharts);
@@ -138,7 +135,6 @@ const ChartAdminTable: React.FC = () => {
     if (userConfirmed) {
       try {
         await ChartService.updateChartAvailability(chartId, newStatus);
-        // 刷新图表列表
         const isAvailable = selectedStatus === '啟用中';
         const fetchedCharts = await ChartService.getCharts(isAvailable);
         setCharts(fetchedCharts);
@@ -148,7 +144,7 @@ const ChartAdminTable: React.FC = () => {
         alert('更新圖表狀態失敗');
       }
     }
-  };  
+  };
 
   const handleViewChart = (chartName: string, chartCodeFile: string, chartImage: string) => {
     setViewFormData({ chartName, chartCodeFile, chartImage });

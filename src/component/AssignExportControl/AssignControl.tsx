@@ -12,7 +12,33 @@ import { UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './AssignControl.module.css';
 import KPIAlertSetting from './KPIAlertSetting';
-import alertIcon from '../../assets/icon/alertSetting.svg'
+import alertIcon from '../../assets/icon/alertSetting.png'
+import { colors, Tooltip } from '@mui/material';
+import { TooltipProps } from '@mui/material/Tooltip';
+import { styled } from '@mui/system';
+
+
+const LargeTooltip = styled(({ className, ...props }: TooltipProps & { className?: string }) => (
+  <Tooltip {...props} classes={{ popper: className }} arrow />
+))(({ theme }) => ({
+  [`& .MuiTooltip-tooltip`]: {
+    fontSize: '1.1rem',
+    fontWeight: 'bold',
+    padding: '6px 12px',
+    backgroundColor: 'yellow',
+    color: 'black',
+    border: '1px solid black',
+    transition: 'opacity 0.3s ease',
+    opacity: 0,
+  },
+  [`& .MuiTooltip-arrow`]: {
+    color: 'yellow',
+  },
+  [`&.MuiTooltip-open .MuiTooltip-tooltip`]: {
+    opacity: 1,
+  },
+}));
+
 
 const useStyles = makeStyles({
   dialogPaper: {
@@ -22,6 +48,7 @@ const useStyles = makeStyles({
     maxWidth: '80%',
   },
 });
+
 
 interface User extends UserAccountBean {
   selected?: boolean;
@@ -224,6 +251,20 @@ const AssignTaskControl: React.FC = () => {
     permissions: ['create_task', 'update_task'],
   };
 
+
+  const [alertSettingTooltipOpen, setAlertSettingTooltipOpen] = useState(false);
+
+  useEffect(() => {
+    setAlertSettingTooltipOpen(true);
+
+    const timer = setTimeout(() => {
+      setAlertSettingTooltipOpen(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+
   return (
     <>
       <div className={styles.theTable}>
@@ -238,7 +279,16 @@ const AssignTaskControl: React.FC = () => {
             <tbody>
               {charts.map((chart) => (
                 <tr key={chart.id}>
-                  <td onClick={() => handleSetAlert(chart.name)}>{chart.name} <img src={alertIcon} className={styles.alertIcon} alt="" /></td>
+                  <td onClick={() => handleSetAlert(chart.name)}>
+                    {chart.name}
+
+                    <LargeTooltip title="點擊可以設定警訊上下限" open={alertSettingTooltipOpen} placement="right" arrow>
+                      <img src={alertIcon} className={styles.alertIcon} alt="" />
+                    </LargeTooltip>
+
+                    {/* <img src={alertIcon} className={styles.alertIcon} alt="" /> */}
+                    {/* <p>警訊設置</p> */}
+                  </td>
 
                   <td>
                     {currentUser.permissions.includes('create_task') || currentUser.permissions.includes('update_task') ? (

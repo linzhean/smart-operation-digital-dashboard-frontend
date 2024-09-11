@@ -14,14 +14,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import MultiStepForm from './dashBoardForm';
-import Checkbox from '@mui/material/Checkbox';  // Import Checkbox component
+import Checkbox from '@mui/material/Checkbox'; 
 
 const DashboardSidebar: React.FC<{
   onSelectDashboard: (dashboardId: string) => void,
   onAddChart: (chart: any) => void,
   currentUserId: string
 }> = ({ onSelectDashboard, onAddChart, currentUserId }) => {
-  // States
   const [isActive, setIsActive] = useState(false);
   const [isDisabled, setIsDisabled] = useState(window.innerWidth > 1024);
   const [activeDashboard, setActiveDashboard] = useState<string | null>(null);

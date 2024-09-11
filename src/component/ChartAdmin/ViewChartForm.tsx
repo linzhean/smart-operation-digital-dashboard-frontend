@@ -1,8 +1,8 @@
-//src\component\ChartAdmin\ViewChartForm.tsx
 import React from 'react';
 import styles from './ViewChartForm.module.css';
 import { Stack } from '@mui/material';
 
+//   chartCodeFile: string; 錯誤
 interface ViewChartFormProps {
   chartName: string;
   chartCodeFile: string;
@@ -15,13 +15,13 @@ const ViewChartForm: React.FC<ViewChartFormProps> = ({ chartName, chartCodeFile,
     <div>
       <div className={styles.formOverlay} onClick={onClose}></div>
       <div className={styles.checkFormContent}>
-        <h2>新增圖表</h2>
+        <h2>查看圖表</h2>
         <form>
 
           <div className={styles.newKPIlabelGroup}>
             <label htmlFor='newKpiName'>圖表名稱</label>
             <input
-              placeholder='請輸入新圖表的名稱'
+              placeholder='圖表名稱'
               id='newKpiName'
               type="text"
               value={chartName}
@@ -34,7 +34,7 @@ const ViewChartForm: React.FC<ViewChartFormProps> = ({ chartName, chartCodeFile,
               <p
                 className={styles.newCodeFile}
               >
-                {chartCodeFile}
+                圖表程式碼 {chartCodeFile}
               </p>
             </Stack>
           </div>

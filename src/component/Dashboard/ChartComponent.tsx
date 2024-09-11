@@ -18,7 +18,7 @@ interface ChartComponentProps {
 
 const ChartComponent: React.FC<ChartComponentProps> = ({ chartData }) => {
   if (!chartData) {
-    return <p>没有图表数据可用</p>;
+    return <p>沒有圖表數據可以使用</p>;
   }
 
   const data = {

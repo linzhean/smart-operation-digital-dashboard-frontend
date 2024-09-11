@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import DashboardService from '../../services/DashboardService';
 import { fetchAllUsers } from '../../services/UserAccountService';
 import { Dashboard } from '../../services/types/dashboard';
+import Tooltip from '@mui/material/Tooltip';
 
 interface MultiStepFormProps {
   onClose: () => void;
@@ -177,7 +178,15 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
             <img src={closeIcon} alt="關閉表單" />
           </div>
           <ul id={styles.progressbar}>
-            <li className={currentStep >= 0 ? styles.active : ''}>設定名稱</li>
+            <Tooltip
+              title="無權限"
+              arrow
+              placement="top"
+              leaveDelay={300}
+            >
+              <li className={currentStep >= 0 ? styles.active : ''}>設定名稱</li>
+            </Tooltip>
+
             <li className={currentStep >= 1 ? styles.active : ''}>選擇圖表</li>
             <li className={currentStep >= 2 ? styles.active : ''}>說明文字</li>
           </ul>
@@ -192,6 +201,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                 value={dashboardName}
                 onChange={(e) => setDashboardName(e.target.value)}
                 required
+                autoComplete='off'
               />
               <button className={`${styles.actionButton} ${styles.next} ${styles.firstNext}`} type="button" onClick={() => setCurrentStep(1)}>下一步</button>
             </fieldset>
@@ -208,30 +218,32 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
               <div className={styles.theKPIs}>
                 {charts.map(chart => (
                   <div key={chart.id} className={`${styles.checkboxWrapper} ${!chart.observable ? styles.disabled : ''}`}>
-                    <input
-                      type="checkbox"
-                      id={`kpi-${chart.id}`}
-                      checked={selectedKPIs.includes(chart.id)}
-                      onChange={() => handleKpiSelection(chart.id)}
-                      disabled={!chart.observable}
-                      className={styles.kpiInputs}
-                    />
-                    <label htmlFor={`kpi-${chart.id}`} className={!chart.observable ? styles.disabledLabel : ''}>
-                      {chart.name}
-                    </label>
-                    {chart.showcaseImage && (
-                      <img
-                        src={chart.showcaseImage}
-                        alt={chart.name}
-                        className={styles.showcaseImage}
+                    <div className={styles.LabelImgContainer}>
+                      <input
+                        type="checkbox"
+                        id={`kpi-${chart.id}`}
+                        checked={selectedKPIs.includes(chart.id)}
+                        onChange={() => handleKpiSelection(chart.id)}
+                        disabled={!chart.observable}
+                        className={styles.kpiInputs}
                       />
-                    )}
-                    {!chart.observable && (
+                      <label htmlFor={`kpi-${chart.id}`} className={!chart.observable ? styles.disabledLabel : ''}>
+                        {chart.name}
+                      </label>
+                      {chart.showcaseImage && (
+                        <img
+                          src={chart.showcaseImage}
+                          alt={chart.name}
+                          className={styles.showcaseImage}
+                        />
+                      )}
+                    </div>
+                    {/* {!chart.observable && (
                       <span className={styles.noPermission}>無權限</span>
                     )}
                     {!chart.observable && (
                       <button type="button" className={styles.applyMore} onClick={() => handleRequestKpi(chart.id)}>申請更多</button>
-                    )}
+                    )} */}
                   </div>
                 ))}
               </div>
@@ -329,7 +341,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                   placeholderText="選擇結束日期和時間"
                   showTimeSelect
                   timeFormat="HH:mm"
-                  timeIntervals={15} // 15分钟间隔
+                  timeIntervals={15}
                   dateFormat="yyyy-MM-dd HH:mm"
                 />
               </div>

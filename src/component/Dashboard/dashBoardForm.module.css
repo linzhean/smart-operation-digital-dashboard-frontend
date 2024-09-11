@@ -1,6 +1,6 @@
 #msform {
   top: 50%;
-  width: 95%;
+  width: 45%;
   background-color: #333;
   right: 50%;
   top: 50%;
@@ -182,6 +182,9 @@
   overflow: auto;
   overflow-x: hidden;
   max-height: 235px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .fsTitle {
@@ -230,17 +233,6 @@
   margin: 0 auto 5px auto;
 }
 
-#progressbar li:after {
-  content: '';
-  width: 95%;
-  height: 2px;
-  background: #545454;
-  position: absolute;
-  left: -43%;
-  top: 9px;
-  z-index: -1;
-}
-
 #progressbar li:first-child:after {
   content: none;
 }
@@ -251,15 +243,45 @@
   color: white;
 }
 
-@media (min-width: 850px) {
+/* 標準樣式 */
+#progressbar li:after {
+  content: '';
+  width: 89%;
+  height: 2px;
+  background: #545454;
+  position: absolute;
+  left: -41%;
+  top: 9px;
+  z-index: -1;
+}
+
+
+/* 當螢幕寬度小於 768px 時 */
+@media (max-width: 768px) {
   #msform {
-    width: 45%;
+    width: 75%;
   }
 }
 
-@media (max-width: 400px) {
-  .fsTitle {
-    font-size: 1rem;
+/* 當螢幕寬度小於 480px 時 */
+@media (max-width: 480px) {
+  #msform {
+    width: 95%;
+  }
+}
+
+/* 樣式的那根進度條會明顯凸出來，這是細度的媒體查詢修改 */
+@media (min-width: 480px) and (max-width: 860px) {
+  #progressbar li:after {
+    left: -44.8%;
+    width: 95%;
+  }
+}
+
+@media (min-width: 1286px) {
+  #progressbar li:after {
+    left: -45.5%;
+    width: 95%;
   }
 }
 
@@ -447,20 +469,38 @@
 }
 
 .showcaseImage {
-  width: 50px;  /* Set the width you want */
-  height: auto;  /* Auto adjust height according to the aspect ratio */
-  object-fit: contain;  /* Adjust how the image fits within its bounds */
-  margin-top: 10px;  /* Add some margin for spacing */
+  width: 50px;
+  height: auto;
+  object-fit: contain;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 @media (max-width: 600px) {
   .showcaseImage {
-    width: 80px;  /* Smaller width for smaller screens */
+    width: 80px;
+    /* Smaller width for smaller screens */
   }
 }
 
 @media (min-width: 601px) {
   .showcaseImage {
-    width: 120px;  /* Larger width for larger screens */
+    width: 120px;
+    /* Larger width for larger screens */
   }
+}
+
+.LabelImgContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.disabled {
+  background-color: #a2a2a2eb;
+}
+
+.MuiTooltip-popper {
+  z-index: 9999999999999999999999999999999;
 }

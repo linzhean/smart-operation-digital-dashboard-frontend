@@ -72,10 +72,10 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
           const text = await response.text();
           setChartHTML(text);
         } catch (error) {
-          console.error('无法获取图表 HTML:', error);
+          console.error('無法獲取圖表 HTML:', error);
         }
-      };    
-      
+      };
+
       const chartURL = interactiveCharts[0]?.data?.chartHTML;
       if (chartURL) {
         fetchChartHTML(chartURL);
@@ -102,7 +102,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     } else {
       alert("No Dashboard ID selected.");
     }
-  };  
+  };
 
   // 交辦事項
   const AssignForm = (

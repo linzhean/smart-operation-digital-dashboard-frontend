@@ -26,7 +26,7 @@ const Pdata: React.FC = () => {
         dispatch({ type: 'SET_FORM_DATA', payload: userData });
         setInitialData(userData);
       } catch (error) {
-        console.error('加载用户数据时出错:', error);
+        console.error('載入用戶數據時出錯:', error);
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
@@ -34,15 +34,13 @@ const Pdata: React.FC = () => {
 
     const loadDropdownData = async () => {
       try {
-        // 加载部门数据
         const departmentData = await fetchDropdownData('department');
         setDepartments(departmentData);
 
-        // 加载身份数据
         const identityData = await fetchDropdownData('identity');
         setIdentities(identityData);
       } catch (error) {
-        console.error('加载下拉选项时出错:', error);
+        console.error('加載下拉選項時出錯:', error);
       }
     };
 
@@ -66,7 +64,7 @@ const Pdata: React.FC = () => {
 
   const handleSaveClick = async () => {
     if (!state.formData.departmentId) {
-      alert('请选择所属部门');
+      alert('請選擇您所屬部門！');
       return;
     }
 
@@ -74,10 +72,10 @@ const Pdata: React.FC = () => {
     try {
       await updateUserData(state.formData as UpdateUserData);
       dispatch({ type: 'SET_EDITABLE', payload: false });
-      alert('用户数据更新成功！');
+      alert('您的資料更新成功！');
     } catch (error) {
-      console.error('更新用户数据时出错:', error);
-      alert('无法更新用户数据，请重试。');
+      console.error('更新資料錯誤:', error);
+      alert('無法更新資料，請重新嘗試');
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
