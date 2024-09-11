@@ -42,7 +42,7 @@ const UserApplyTable: React.FC = () => {
       }
     } catch (error) {
       console.error('加載初始數據時出錯：', error);
-      setError('加載數據時出錯，請稍後重新嘗試。');
+      setError('加載數據時出錯');
       setSnackbarOpen(true);
       setHasMore(false);
     } finally {
@@ -194,7 +194,7 @@ const UserApplyTable: React.FC = () => {
             position: 'relative',
           }}
         >
-          {/* 關閉按鈕 */}
+
           <IconButton
             aria-label="close"
             onClick={handleSnackbarClose}
@@ -210,7 +210,7 @@ const UserApplyTable: React.FC = () => {
 
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <ErrorIcon style={{ marginRight: '12px', color: 'black', verticalAlign: 'middle' }} />
-            <span style={{ verticalAlign: 'middle' }}>{error}</span>
+            <span style={{ verticalAlign: 'middle', fontSize: '1.2rem' }}>{error}</span>
           </div>
 
           <Button
@@ -218,6 +218,7 @@ const UserApplyTable: React.FC = () => {
             size="small"
             onClick={handleRetry}
             sx={{
+              fontSize: '1rem',
               width: '100%',
               backgroundColor: '#FFD700',
               color: '#000000',
