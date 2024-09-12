@@ -9,7 +9,7 @@
   top: 0;
   left: 0;
   background: #000;
-  z-index: 6000;
+  z-index: 7777777;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
@@ -19,12 +19,12 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 65px;
-  height: 65px;
+  width: 55px;
+  height: 45px;
   background-color: transparent;
   border: none;
   cursor: pointer;
-  z-index: 8888;
+  z-index: 111;
 }
 
 .sidebar_inner {
@@ -32,7 +32,7 @@
   position: fixed;
   left: 0;
   height: 100vh;
-  z-index: 9999;
+  z-index: 888888888;
   transition: all 0.3s ease;
 }
 

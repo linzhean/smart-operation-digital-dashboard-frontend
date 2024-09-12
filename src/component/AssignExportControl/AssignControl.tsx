@@ -285,8 +285,6 @@ const AssignTaskControl: React.FC = () => {
                       <img src={alertIcon} className={styles.alertIcon} alt="" />
                     </LargeTooltip>
 
-                    {/* <img src={alertIcon} className={styles.alertIcon} alt="" /> */}
-                    {/* <p>警訊設置</p> */}
                   </td>
 
                   <td>

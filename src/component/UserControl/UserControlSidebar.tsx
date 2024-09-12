@@ -32,14 +32,16 @@ const Sidebar: React.FC = () => {
       <div className={styles.sidebar}>
         <div className={styles.bg_shadow} onClick={() => setIsActive(false)}></div>
         <div className={styles.sidebar_inner}>
-          <button
-            className={styles.openbutton}
-            onClick={() => {
-              console.log('我被點擊了');
-              handleSidebarToggle();
-            }}
-            disabled={isDisabled}
-          ></button>
+
+          {!isDisabled && (
+            <div
+              className={styles.openbutton}
+              onClick={() => {
+                handleSidebarToggle();
+              }}
+            >
+            </div>
+          )}
 
           <div className={styles.close} onClick={() => setIsActive(false)}>
             <img src={closearrow} alt="Click to close sidebar" />
