@@ -22,12 +22,11 @@ const LargeTooltip = styled(({ className, ...props }: TooltipProps & { className
   <Tooltip {...props} classes={{ popper: className }} arrow />
 ))(({ theme }) => ({
   [`& .MuiTooltip-tooltip`]: {
-    fontSize: '1.1rem',
-    fontWeight: 'bold',
-    padding: '6px 12px',
+    fontSize: '0.8rem',
+    fontWeight: '800',
+    padding: '6px 10px',
     backgroundColor: 'yellow',
     color: 'black',
-    border: '1px solid black',
     transition: 'opacity 0.3s ease',
     opacity: 0,
   },
@@ -35,7 +34,7 @@ const LargeTooltip = styled(({ className, ...props }: TooltipProps & { className
     color: 'yellow',
   },
   [`&.MuiTooltip-open .MuiTooltip-tooltip`]: {
-    opacity: 1,
+    opacity: 0.8,
   },
 }));
 

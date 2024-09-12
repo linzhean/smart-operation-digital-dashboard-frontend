@@ -1,5 +1,5 @@
 .navbarToggler {
-  z-index: 999 !important;
+  z-index: 99999 !important;
   background-color: #ACACBE !important;
 }
 
@@ -30,11 +30,11 @@
 .navbarNav {
   margin-left: auto;
   align-items: center;
+  transition: transform 0.2s ease;
 }
 
 .navbarNavItem {
   margin-left: 0.5vw;
-  transition: transform 0.3s ease;
 }
 
 .navbarNavItem:hover {
@@ -61,21 +61,7 @@
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 
-.navbarCollapse {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  opacity: 0;
-  transform: translateY(-20px);
-}
-
-.navbarCollapse.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.navbarCollapse.hidden {
-  display: none;
-}
-
+/* 768px 是根據 navbar-expand-md 設定的 */
 @media (max-width: 769px) {
   .navbarNavItemImg {
     display: none;
@@ -91,37 +77,8 @@
     font-size: 1.2rem;
   }
 
+  /* 希望他可以作用但他沒有== */
   .navbar>.container-fluid {
-    min-height: 10vh;
-  }
-
-  .navbarCollapse {
-    background-color: rgba(0, 0, 0, 0.9);
-    position: fixed;
-    top: 56px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    flex-direction: column;
-    justify-content: center;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    opacity: 0;
-    transform: translateY(-100%);
-  }
-
-  .navbarCollapse.show {
-    opacity: 1;
-    transform: translateY(0);
-    overflow: auto;
-  }
-
-  .navbarNav {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .navbarNavItem {
-    margin: 5px 0;
+    height: 10vh !important;
   }
 }
