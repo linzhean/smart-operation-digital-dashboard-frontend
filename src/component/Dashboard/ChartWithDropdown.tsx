@@ -133,9 +133,9 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
                 onChange={e => setSelectedUser(e.target.value)}
                 required
               >
-                <option value=""></option>
+                <option value="" className={styles.applyKpiGroupOption}></option>
                 {(users || []).map(user => (
-                  <option key={user.userId} value={user.userId}>
+                  <option key={user.userId} value={user.userId} className={styles.applyKpiGroupOption}>
                     {user.userName}
                   </option>
                 ))}
@@ -151,9 +151,9 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
                 onChange={e => onChartSelect(Number(e.target.value))}
                 required
               >
-                <option value="">請選擇圖表</option>
+                <option value="" className={styles.applyKpiGroupOption}>請選擇圖表</option>
                 {(charts || []).map(chart => (
-                  <option key={chart.id} value={chart.id}>
+                  <option key={chart.id} value={chart.id} className={styles.applyKpiGroupOption}>
                     {chart.name}
                   </option>
                 ))}
@@ -169,9 +169,9 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
                 onChange={e => setEmail(e.target.value)}
                 required
               >
-                <option value=""></option>
+                <option value="" className={styles.applyKpiGroupOption}></option>
                 {(users || []).map(user => (
-                  <option key={user.email} value={user.email}>
+                  <option key={user.email} value={user.email} className={styles.applyKpiGroupOption}>
                     {user.email}
                   </option>
                 ))}
@@ -230,7 +230,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         </div>
       </div>
     </>
-  );   
+  );
 
   // 設定Menu
   const [hoverTime, setHoverTime] = useState(0);
@@ -413,7 +413,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
       {isModalOpen && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}
       {/* 進階分析 */}
       {isAdvancedAnalysisModalOpen && (interactiveCharts.length > 0) && ReactDOM.createPortal(advancedAnalysis, document.getElementById('portal-root')!)}
-       {/* AI 分析對話框 */}
+      {/* AI 分析對話框 */}
       {showAIAnalysisModal && ReactDOM.createPortal(aiAnalysisModal, document.getElementById('portal-root')!)}
     </div>
   );

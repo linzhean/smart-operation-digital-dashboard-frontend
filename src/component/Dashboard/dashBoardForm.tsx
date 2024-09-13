@@ -299,10 +299,12 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                   id='KPIguarantor'
                   value={selectedUser || ''}
                   onChange={(e) => setSelectedUser(e.target.value)}>
-                  <option value="">請選擇</option>
+
+                  <option>請選擇</option>
                   {users.map(user => (
                     <option key={user.id} value={user.id}>{user.userName}</option>
                   ))}
+
                 </select>
               </div>
 
@@ -327,7 +329,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                   placeholderText="選擇開始日期和時間"
                   showTimeSelect
                   timeFormat="HH:mm"
-                  timeIntervals={15} // 15分钟间隔
+                  timeIntervals={15}
                   dateFormat="yyyy-MM-dd HH:mm"
                 />
               </div>

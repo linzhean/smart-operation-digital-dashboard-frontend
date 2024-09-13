@@ -193,7 +193,7 @@ body {
 
 /* 控制滑動滾輪樣式 */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -216,4 +216,3 @@ body {
 /* 打開的側邊欄 / 導航欄 > 8888888 */
 /* OverLay > 7777777 */
 /* 打開按鈕 > 1111 */
-
