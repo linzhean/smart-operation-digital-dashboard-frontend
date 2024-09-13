@@ -22,6 +22,9 @@ const Home: React.FC = () => {
   const [selectedCharts, setSelectedCharts] = useState<{ id: number, name: string }[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [canAssign, setCanAssign] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+
 
   useEffect(() => {
     const fetchAvailableCharts = async () => {
@@ -38,6 +41,8 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (selectedDashboard) {
       const fetchDashboardCharts = async () => {
+        setLoading(true);
+        setError(false);
         try {
           const response = await ChartService.getDashboardCharts(Number(selectedDashboard));
           if (response.result && Array.isArray(response.data)) {
@@ -114,12 +119,14 @@ const Home: React.FC = () => {
     }
   };
 
+
   const handleAddChart = async (chartsToAdd: any[]) => {
     if (!selectedDashboard) {
       alert('Please select a dashboard first.');
       return;
     }
 
+    setLoading(true);
     try {
       const newCharts = await Promise.all(chartsToAdd.map(async (chart: any) => {
         const chartData = {
@@ -146,9 +153,10 @@ const Home: React.FC = () => {
     } catch (error) {
       console.error('Error adding chart:', error);
       alert('An error occurred while adding the chart.');
+    } finally {
+      setLoading(false);
     }
   };
-
 
   return (
     <div className='wrapper'>
@@ -160,6 +168,8 @@ const Home: React.FC = () => {
         />
 
         <div className={styles.dashboard_container}>
+        {loading && <div className={styles.loadingMsg}></div>}
+        {error && <div className={styles.errorMsg}>{error}</div>}
           <div className='theContent'>
             <ResponsiveGridLayout
               className="layout"

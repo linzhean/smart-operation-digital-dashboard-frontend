@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import '../../../styles/chatBox.css';
-import { Email, EmailMessage, getEmailDetails, sendMessage, deleteEmail } from '../../../services/mailService';
+import styles from './chatBox.module.css';
+import { Email, EmailMessage, getEmailDetails, sendMessage } from '../../../services/mailService';
 
 interface ChatBoxProps {
   emailId: number;
-  onDelete: () => void;
   onMessageChange?: (message: string) => void;
 }
 
-const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange }) => {
+const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onMessageChange }) => {
   const [messages, setMessages] = useState<EmailMessage[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
   const [email, setEmail] = useState<Email | null>(null);
@@ -51,38 +50,27 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
     }
   }, [emailId, newMessage, onMessageChange]);
 
-  // Handle deleting the email
-  const handleDelete = async () => {
-    try {
-      await deleteEmail(emailId);
-      onDelete(); // Notify parent component
-    } catch (error) {
-      console.error('Error deleting email:', error);
-    }
-  };
-
   return (
-    <div className="chatContainer">
-      <div className="mailTitle">
-        <button className="delete-buttonUnique" onClick={handleDelete}>刪除</button>
-        <i className="fa-solid fa-ellipsis"></i>
+    <div className={styles.chatContainer}>
+      <div className={styles.mailTitle}>
+        <i className={`${styles.faSolid} fa-solid fa-ellipsis`}></i>
       </div>
-      <div className="chatBox custom-scrollbar">
+      <div className={`${styles.chatBox} custom-scrollbar`}>
         {messages.length > 0 ? (
           messages.map((message) => (
-            <div key={message.messageId} className="chatMessage">
-              <div className="messageContent">
-                <span className="sender">{message.createId}</span>
-                <span className="content">{message.content}</span>
+            <div key={message.messageId} className={styles.chatMessage}>
+              <div className={styles.messageContent}>
+                <span className={styles.sender}>{message.createId}</span>
+                <span className={styles.content}> {message.content}</span>
               </div>
-              <span className="timestamp">{new Date(message.createDate).toLocaleString()}</span>
+              <span className={styles.timestamp}> {new Date(message.createDate).toLocaleString()} </span>
             </div>
           ))
         ) : (
           <p>沒有訊息了</p>
         )}
       </div>
-      <div className="input-container">
+      <div className={styles.inputContainer}>
         <textarea
           value={newMessage}
           onChange={(e) => {
@@ -93,7 +81,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onDelete, onMessageChange })
           }}
           placeholder="輸入你的内容..."
         />
-        <i className="fa fa-arrow-right arrow-icon" onClick={handleSendMessage}></i>
+        <i className={`fa fa-arrow-right arrow-icon ${styles.arrowIcon}`} onClick={handleSendMessage}></i>
       </div>
     </div>
   );

@@ -53,6 +53,10 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     aiSuggestion,      // AI 建议内容
     showAIAnalysisModal, // 是否显示 AI 建议对话框
     setShowAIAnalysisModal, // 控制 AI 建议对话框
+    setLoading,
+    loading,
+    handleExportWrapper,
+    handleDelegateWrapper,
   } = useChartWithDropdown(exportData, chartId, requestData, currentUserId);
 
   useEffect(() => {
@@ -101,9 +105,16 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
 
   const handleAdvancedAnalysisWrapper = async () => {
     if (selectedDashboardId) {
-      await handleAdvancedAnalysis(selectedDashboardId);
+      setLoading(true);
+      try {
+        await handleAdvancedAnalysis(selectedDashboardId);
+      } catch (error) {
+        console.error('Error with advanced analysis:', error);
+      } finally {
+        setLoading(false);
+      }
     } else {
-      alert("No Dashboard ID selected.");
+      alert('No Dashboard ID selected.');
     }
   };
 
@@ -332,6 +343,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
 
   return (
     <div className={styles.chartContainer}>
+      {loading && <div className={`loadingMsg`}></div>} 
       <div className={styles.chartHeader}>
         <div
           className={styles.dropdownContainer}
@@ -353,7 +365,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             <div className={styles.dropdownMenu}>
               <div
                 className={styles.buttonContainer}
-                onMouseEnter={() => handleMouseEnter('export', handleExport)}
+                onMouseEnter={() => handleMouseEnter('export', handleExportWrapper)}
                 onMouseLeave={() => handleMouseLeave('export')}
               >
                 <button>匯出</button>
@@ -365,7 +377,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
 
               <div
                 className={styles.buttonContainer}
-                onMouseEnter={() => handleMouseEnter('delegate', handleDelegate)}
+                onMouseEnter={() => handleMouseEnter('delegate', handleDelegateWrapper)}
                 onMouseLeave={() => handleMouseLeave('delegate')}
               >
                 <button disabled={!canAssign}>交辦</button>

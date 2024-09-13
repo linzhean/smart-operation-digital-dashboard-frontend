@@ -37,6 +37,7 @@ export function useChartWithDropdown(
   const [showModal, setShowModal] = useState(false);
   const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
   const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // 獲取所有可用的圖表
   useEffect(() => {
@@ -93,6 +94,17 @@ export function useChartWithDropdown(
 
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
 
+  const handleExportWrapper = async () => {
+    setLoading(true);
+    try {
+      await handleExport();
+    } catch (error) {
+      console.error('Error exporting data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleExport = async () => {
     try {
       const result = await exportData(chartId, requestData);
@@ -105,6 +117,17 @@ export function useChartWithDropdown(
       console.error('導出過程中發生錯誤:', error);
     } finally {
       setIsDropdownOpen(false);
+    }
+  };
+
+  const handleDelegateWrapper = async () => {
+    setLoading(true);
+    try {
+      await handleDelegate();
+    } catch (error) {
+      console.error('Error delegating task:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -259,6 +282,12 @@ export function useChartWithDropdown(
   };  
 
   const handleAIAnalysis = async (dashboardId: number, chartId: number) => {
+    if (!dashboardId) {
+      alert('Dashboard ID is undefined.');
+      return;
+    }
+  
+    setLoading(true); // Set loading to true when operation starts
     try {
       const dashboardChartsResponse = await ChartService.getDashboardCharts(dashboardId);
   
@@ -290,8 +319,10 @@ export function useChartWithDropdown(
     } catch (error) {
       console.error('Failed to get AI analysis:', error);
       alert('Error during AI analysis. Please try again later.');
+    } finally {
+      setLoading(false); // Set loading to false after operation
     }
-  };
+  };  
   
   // A simple function to sanitize or replace unprintable characters
   const sanitizeText = (text: string): string => {
@@ -383,5 +414,9 @@ useEffect(() => {
     showAIAnalysisModal,
     setShowAIAnalysisModal,
     handleAIAnalysis,
+    setLoading,
+    loading,
+    handleExportWrapper,
+    handleDelegateWrapper,
   };
 }

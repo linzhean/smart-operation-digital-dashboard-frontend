@@ -166,3 +166,15 @@ export const sendMessage = async (emailId: number, message: {
     throw error;
   }
 };
+
+export const updateEmailStatus = async (id: number, status: number): Promise<void> => {
+  try {
+    const response = await apiClient.patch(`/mail/message/status/${id}`, null, {
+      params: { status },
+    });
+    handleApiResponse<void>(response.data);
+  } catch (error: any) {
+    console.error(`Failed to update email status: ${error.response?.data || error.message}`);
+    throw error;
+  }
+};

@@ -34,6 +34,8 @@ const DashboardSidebar: React.FC<{
   const [dashboardName, setDashboardName] = useState('');
   const [dashboardDescription, setDashboardDescription] = useState('');
   const [showMultiStepForm, setShowMultiStepForm] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Handle window resize
   useEffect(() => {
@@ -63,12 +65,16 @@ const DashboardSidebar: React.FC<{
 
   // Fetch available charts for adding
   const fetchAvailableCharts = async () => {
+    setLoading(true);
     try {
       const response = await ChartService.getAvailableCharts();
       console.log('Fetched charts:', response.data); // Add this line
       setAvailableCharts(response.data);
     } catch (error) {
       console.error('Failed to fetch available charts:', error);
+      setError('Failed to fetch available charts.');
+    } finally {
+      setLoading(false);
     }
   };  
   
@@ -192,6 +198,8 @@ const DashboardSidebar: React.FC<{
   return (
     <div className={`${styles.wrapper} ${isActive ? styles.active : ''}`}>
       <div className={styles.sidebar}>
+      {loading && <div className={styles.loadingMsg}></div>}
+      {error && <div className={styles.errorMsg}>{error}</div>}
         <div className={styles.bg_shadow} onClick={() => setIsActive(false)}></div>
         <div className={styles.sidebar_inner}>
           <button className={styles.openbutton} onClick={toggleActiveState} disabled={isDisabled}></button>

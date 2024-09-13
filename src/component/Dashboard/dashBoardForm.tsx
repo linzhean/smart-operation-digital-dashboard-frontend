@@ -302,7 +302,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
 
                   <option>請選擇</option>
                   {users.map(user => (
-                    <option key={user.id} value={user.id}>{user.userName}</option>
+                    <option key={user.id} value={user.id} className={styles.applyKpiOption}>{user.userName}</option>
                   ))}
 
                 </select>
@@ -311,7 +311,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
               <div className={styles.applyKPIlabelGroup}>
                 <label htmlFor="chart-select">選擇圖表:</label>
                 <select id="chart-select" value={selectedChartId ?? ''} onChange={handleChartChange}>
-                  <option value="" disabled>請選擇圖表</option>
+                  <option value="" disabled className={styles.applyKpiOption}>請選擇圖表</option>
                   {charts.map(chart => (
                     <option key={chart.id} value={chart.id}>
                       {chart.name} {chart.observable ? '' : '(不可觀察)'}

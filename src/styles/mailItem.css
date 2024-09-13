@@ -1,3 +1,4 @@
+/* src\styles\mailItem.css */
 .kpi {
   display: flex;
   position: relative;
@@ -92,4 +93,31 @@
     font-size: small;
     margin-bottom: 5px;
   }
+}
+
+.complete-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.complete-btn:hover {
+  background-color: #218838;
+}
+
+.delete-btn {
+  background-color: transparent;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.delete-btn img {
+  width: 100px;
 }

@@ -1,3 +1,4 @@
+/* src\component\Mail\Rightside\chatBox.module.css */
 .chatContainer {
   background-color: #343541;
   border-radius: 15px;
@@ -12,14 +13,14 @@
 
 .mailTitle {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   border-bottom: 1px solid #acacbe;
   padding-bottom: 5px;
 }
 
-.mailTitle .delete-buttonUnique {
-  background-color: #FF6347;
+.mailTitle .deleteButton {
+  background-color: transparent;
   color: #fff;
   border: none;
   padding: 5px;
@@ -27,7 +28,13 @@
   border-radius: 5px;
 }
 
-.mailTitle .fa-solid {
+
+.mailTitle .deleteButton img{
+width: 25px;
+}
+
+
+.mailTitle .faSolid {
   font-size: 1.5em;
   cursor: pointer;
 }
@@ -36,7 +43,7 @@
   flex-grow: 1;
   padding: 10px;
   margin-bottom: 10px;
-  max-height: 500px; /* Adjust this value as needed */
+  max-height: 500px; 
   overflow-y: auto;
 }
 
@@ -44,7 +51,7 @@
   margin-top: 10px;
   display: flex;
   flex-direction: column;
-  word-wrap: break-word; /* Ensure long words wrap to the next line */
+  word-wrap: break-word; 
 }
 
 .messageContent {
@@ -68,7 +75,7 @@
   align-self: flex-end;
 }
 
-.input-container {
+.inputContainer {
   display: flex;
   align-items: center;
   background-color: #343541;
@@ -77,7 +84,7 @@
   padding: 10px;
 }
 
-.input-container textarea {
+.inputContainer textarea {
   flex-grow: 1;
   border: none;
   background: none;
@@ -90,36 +97,13 @@
   max-height: 150px;
 }
 
-.input-container textarea::placeholder {
+.inputContainer textarea::placeholder {
   color: #aaa;
 }
 
-.input-container .arrow-icon {
+.inputContainer .arrowIcon {
   font-size: 20px;
   color: #aaa;
   cursor: pointer;
   margin-left: 10px;
-}
-
-.custom-scrollbar {
-  height: auto;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #343541;
-  border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #000;
-  border: 2px solid #343541;
-  border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(204, 204, 204, 0.5);
 }
