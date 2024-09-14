@@ -39,26 +39,33 @@ export function useChartWithDropdown(
   const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // 獲取所有可用的圖表
-  useEffect(() => {
-    const fetchCharts = async () => {
-      try {
-        const response = await ChartService.getAvailableCharts();
-        if (Array.isArray(response.data)) {
-          setCharts(response.data);
-          // 假設 response.data[0] 是我們要處理的圖表
-          if (response.data.length > 0) {
-            setCanAssign(response.data[0].canAssign); // 根據圖表數據設定 canAssign
-          }
-        } else {
-          console.error('獲取圖表失敗:', response.message);
+// 獲取所有可用的圖表
+useEffect(() => {
+  const fetchCharts = async () => {
+    try {
+      const response = await ChartService.getAvailableCharts();
+      if (Array.isArray(response.data)) {
+        setCharts(response.data);
+        // 假設 response.data[0] 是我們要處理的圖表
+        if (response.data.length > 0) {
+          setCanAssign(response.data[0].canAssign); // 根據圖表數據設定 canAssign
         }
-      } catch (error) {
-        console.error('獲取圖表失敗:', error);
+      } else {
+        console.error('獲取圖表失敗:', response.message);
       }
-    };
+    } catch (error) {
+      console.error('獲取圖表失敗:', error);
+    }
+  };
+
+  fetchCharts(); // 初始获取一次
+
+  const intervalId = setInterval(() => {
     fetchCharts();
-  }, []);
+  }, 10 * 60 * 1000); // 每 10 分钟执行一次
+
+  return () => clearInterval(intervalId); // 清除定时器
+}, []);
 
   // 獲取所有用戶
   useEffect(() => {
@@ -70,8 +77,16 @@ export function useChartWithDropdown(
         console.error('獲取用戶失敗:', error);
       }
     };
-    fetchUsers();
-  }, [setUsers]);  
+
+    fetchUsers(); // 初始获取一次
+
+    const intervalId = setInterval(() => {
+      fetchUsers();
+    }, 10 * 60 * 1000); // 每 10 分钟执行一次
+
+    return () => clearInterval(intervalId); // 清除定时器
+  }, []);
+
 
   useEffect(() => {
     const fetchChartHTML = async (id: number) => {
@@ -88,7 +103,13 @@ export function useChartWithDropdown(
     };
 
     if (chartId) {
-      fetchChartHTML(chartId);
+      fetchChartHTML(chartId); // 初始获取一次
+
+      const intervalId = setInterval(() => {
+        fetchChartHTML(chartId);
+      }, 10 * 60 * 1000); // 每 10 分钟执行一次
+
+      return () => clearInterval(intervalId); // 清除定时器
     }
   }, [chartId]);
 
@@ -152,7 +173,7 @@ export function useChartWithDropdown(
       alert('請先選擇一個圖表。');
       return;
     }
-  
+
     try {
       const assignedTask = {
         chartId,
@@ -162,10 +183,10 @@ export function useChartWithDropdown(
           content: message,
         },
       };
-  
+
       const createdEmail = await createEmail(assignedTask);
       console.log('創建郵件響應:', createdEmail); // 打印響應
-  
+
       if (createdEmail && createdEmail.id) {
         await sendChatMessage(createdEmail.id, {
           mailId: createdEmail.id,
@@ -180,12 +201,12 @@ export function useChartWithDropdown(
       } else {
         throw new Error('創建郵件失敗。');
       }
-  
+
       setIsModalOpen(false);
     } catch (error) {
       console.error('提交委派任務時出錯:', error);
     }
-  };    
+  };
 
   const handleKpiSelection = (kpiId: number) => {
     setSelectedKPIs(prev => {
@@ -253,7 +274,7 @@ export function useChartWithDropdown(
     }
     return null;
   };
-  
+
   const handleAdvancedAnalysis = async (dashboardId: number) => {
     try {
       const dashboardChartsResponse = await ChartService.getDashboardCharts(dashboardId);
@@ -279,31 +300,31 @@ export function useChartWithDropdown(
       console.error('Error during advanced analysis:', error);
       alert('Error during advanced analysis. Please try again later.');
     }
-  };  
+  };
 
   const handleAIAnalysis = async (dashboardId: number, chartId: number) => {
     if (!dashboardId) {
       alert('Dashboard ID is undefined.');
       return;
     }
-  
+
     setLoading(true); // Set loading to true when operation starts
     try {
       const dashboardChartsResponse = await ChartService.getDashboardCharts(dashboardId);
-  
+
       if (dashboardChartsResponse.result && Array.isArray(dashboardChartsResponse.data)) {
         const firstChart = dashboardChartsResponse.data[0];
-  
+
         if (firstChart && firstChart.id) {
           const aiResponse = await ChartService.getAIAnalysis(firstChart.id, dashboardId);
-  
+
           if (aiResponse.result) {
             // Extract the suggestion from the data object
             const suggestionText = aiResponse.data.suggestion;
-  
+
             // Optional: Attempt to handle or sanitize suggestionText if it contains unprintable characters
             const sanitizedSuggestion = sanitizeText(suggestionText);
-  
+
             setAiSuggestion(sanitizedSuggestion); // Save the suggestion text to state
             setShowAIAnalysisModal(true); // Show the modal
           } else {
@@ -322,16 +343,16 @@ export function useChartWithDropdown(
     } finally {
       setLoading(false); // Set loading to false after operation
     }
-  };  
-  
+  };
+
   // A simple function to sanitize or replace unprintable characters
   const sanitizeText = (text: string): string => {
-    return text.replace(/[\x00-\x1F\x7F-\x9F]/g, ''); // Remove control characters
-  };  
-  
-useEffect(() => {
-  console.log('Updated interactiveCharts:', interactiveCharts);
-}, [interactiveCharts]);
+    return text.replace(/[\x00-\x1F\x7F-\x9F]/g, ''); 
+  };
+
+  useEffect(() => {
+    console.log('Updated interactiveCharts:', interactiveCharts);
+  }, [interactiveCharts]);
 
   const formatDate = (date: Date | null): string => {
     if (!date) return '';
@@ -404,7 +425,7 @@ useEffect(() => {
     setKpiRequestChartId,
     canAssign,
     isAdvancedAnalysisModalOpen,
-    setIsAdvancedAnalysisModalOpen, 
+    setIsAdvancedAnalysisModalOpen,
     chartHTML,
     setChartHTML,
     showModal,

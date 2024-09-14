@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './ChartWithDropdown.module.css';
 import { useChartWithDropdown } from '../../Hook/useChartWithDropdown'; // Adjust the path as necessary
 import DatePicker from 'react-datepicker';
+import ReactMarkdown from 'react-markdown';
 import 'react-datepicker/dist/react-datepicker.css';
 import { fetchAllUsers } from '../../services/UserAccountService'; // Adjust the path as necessary
 import more from '../../assets/icon/KPImoreBlue.svg';
@@ -234,7 +235,13 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
       <div className={styles.modal}>
         <div className={styles.aiAnalysisForm}>
           <h2>AI 分析建議</h2>
-          <p>{typeof aiSuggestion === 'string' ? aiSuggestion : '正在獲取 AI 建議...'}</p>
+          <div className={styles.aiSuggestionContent}>
+            {typeof aiSuggestion === 'string' ? (
+              <ReactMarkdown>{aiSuggestion}</ReactMarkdown>
+            ) : (
+              '正在獲取 AI 建議...'
+            )}
+          </div>
           <div className={styles.buttonGroup}>
             <button onClick={() => setShowAIAnalysisModal(false)} className={styles.cancel}>關閉</button>
           </div>
@@ -343,7 +350,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
 
   return (
     <div className={styles.chartContainer}>
-      {loading && <div className={`loadingMsg`}></div>} 
+      {loading && <div className={`loadingMsg`}></div>}
       <div className={styles.chartHeader}>
         <div
           className={styles.dropdownContainer}

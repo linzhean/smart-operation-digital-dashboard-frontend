@@ -20,12 +20,11 @@ const Home: React.FC = () => {
   const [availableCharts, setAvailableCharts] = useState<any[]>([]);
   const [currentChartId, setCurrentChartId] = useState<number | null>(null);
   const [selectedCharts, setSelectedCharts] = useState<{ id: number, name: string }[]>([]);
-  const [users, setUsers] = useState<any[]>([]);
   const [canAssign, setCanAssign] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
-
+  // Fetch available charts when the component is mounted
   useEffect(() => {
     const fetchAvailableCharts = async () => {
       try {
@@ -38,46 +37,55 @@ const Home: React.FC = () => {
     fetchAvailableCharts();
   }, []);
 
-  useEffect(() => {
+  // Fetch dashboard charts when a dashboard is selected
+  const fetchDashboardCharts = async () => {
     if (selectedDashboard) {
-      const fetchDashboardCharts = async () => {
-        setLoading(true);
-        setError(false);
-        try {
-          const response = await ChartService.getDashboardCharts(Number(selectedDashboard));
-          if (response.result && Array.isArray(response.data)) {
-            setCharts(response.data);
-            setSelectedCharts(response.data.map((chart: any) => ({
-              id: chart.id,
-              name: chart.name,
-            })));
-            const newLayout = response.data.map((chart: any, index: number) => ({
-              i: `chart-${chart.id}`,
-              x: (index * 4) % 12,
-              y: Math.floor(index / 3) * 4,
-              w: 4,
-              h: 4,
-            }));
-            setLayout(newLayout);
-            if (response.data.length > 0) {
-              setCurrentChartId(response.data[0].id);
-            }
-          } else {
-            setCharts([]);
-            setSelectedCharts([]);
+      setLoading(true);
+      setError(false);
+      try {
+        const response = await ChartService.getDashboardCharts(Number(selectedDashboard));
+        if (response.result && Array.isArray(response.data)) {
+          setCharts(response.data);
+          setSelectedCharts(response.data.map((chart: any) => ({
+            id: chart.id,
+            name: chart.name,
+          })));
+          const newLayout = response.data.map((chart: any, index: number) => ({
+            i: `chart-${chart.id}`,
+            x: (index * 4) % 12,
+            y: Math.floor(index / 3) * 4,
+            w: 4,
+            h: 4,
+          }));
+          setLayout(newLayout);
+          if (response.data.length > 0) {
+            setCurrentChartId(response.data[0].id);
           }
-        } catch (error) {
-          console.error('Failed to fetch dashboard charts:', error);
+        } else {
           setCharts([]);
           setSelectedCharts([]);
         }
-      };
-      fetchDashboardCharts();
-    } else {
-      setLayout([]);
-      setCharts([]);
-      setSelectedCharts([]);
+      } catch (error) {
+        console.error('Failed to fetch dashboard charts:', error);
+        setCharts([]);
+        setSelectedCharts([]);
+      } finally {
+        setLoading(false);
+      }
     }
+  };
+
+  useEffect(() => {
+    fetchDashboardCharts();
+  }, [selectedDashboard]);
+
+  // Setup a polling mechanism to fetch dashboard charts every 10 minutes
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchDashboardCharts();
+    }, 600000); // 600000 milliseconds = 10 minutes
+
+    return () => clearInterval(intervalId); // Clear the interval on component unmount
   }, [selectedDashboard]);
 
   const handleExport = async (chartId: number, requestData: string[]) => {
@@ -118,7 +126,6 @@ const Home: React.FC = () => {
       });
     }
   };
-
 
   const handleAddChart = async (chartsToAdd: any[]) => {
     if (!selectedDashboard) {
@@ -166,10 +173,9 @@ const Home: React.FC = () => {
           onAddChart={handleAddChart}
           currentUserId={''}
         />
-
         <div className={styles.dashboard_container}>
-        {loading && <div className={styles.loadingMsg}></div>}
-        {error && <div className={styles.errorMsg}>{error}</div>}
+          {loading && <div className={styles.loadingMsg}></div>}
+          {error && <div className={styles.errorMsg}>{error}</div>}
           <div className='theContent'>
             <ResponsiveGridLayout
               className="layout"
@@ -202,5 +208,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-
-
