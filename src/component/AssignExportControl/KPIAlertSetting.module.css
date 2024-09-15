@@ -76,10 +76,8 @@
   transition: transform 0.2s ease-out;
 }
 
-/* 小型手機 (Mobile) */
-@media (max-width: 599px) {
-  /* 本來就是 我們針對放大後的效果去響應的 */
-}
+/* 手機 */
+@media (max-width: 599px) {}
 
 @media (min-width: 600px) and (max-width: 1199px) {
   .settingAlert {
@@ -87,16 +85,10 @@
   }
 }
 
-/* 大型桌面電腦 (Large Desktop) */
+/* 桌面電腦 */
 @media (min-width: 1200px) {
   .settingAlert {
     width: 470px;
   }
 
-  /* .settingAlert h2 {
-    font-size: 2rem
-  }
-  .descriptionText {
-    font-size: 1.2rem;
-  } */
 }

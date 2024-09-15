@@ -33,7 +33,7 @@
   width: 15px;
   height: 15px;
   border: 1px solid #000;
-  background: conic-gradient(#1E90FF calc(var(--progress) * 360deg),
+  background: conic-gradient(black calc(var(--progress) * 360deg),
       #e6f0ff 0deg);
   border-radius: 50%;
   transform: translate(-50%, -50%);
@@ -43,7 +43,6 @@
 
 
 .chart {
-  /* position: relative; */
   width: 100%;
   height: 100%;
 }
@@ -69,7 +68,7 @@
 }
 
 .dropdownMenu {
-  background-color: #007bff;
+  background-color: black;
   display: block;
   position: absolute;
   border-radius: 15px;
@@ -157,7 +156,7 @@
   width: 100%;
 }
 
-.aiAnalysisForm{
+.aiAnalysisForm {
   display: flex;
   flex-direction: column;
   align-items: center;

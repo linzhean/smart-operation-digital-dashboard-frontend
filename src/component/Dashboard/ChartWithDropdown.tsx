@@ -1,12 +1,11 @@
-//src\component\Dashboard\ChartWithDropdown.tsx
 import React, { useEffect, useState } from 'react';
 import styles from './ChartWithDropdown.module.css';
-import { useChartWithDropdown } from '../../Hook/useChartWithDropdown'; // Adjust the path as necessary
+import { useChartWithDropdown } from '../../Hook/useChartWithDropdown';
 import DatePicker from 'react-datepicker';
 import ReactMarkdown from 'react-markdown';
 import 'react-datepicker/dist/react-datepicker.css';
-import { fetchAllUsers } from '../../services/UserAccountService'; // Adjust the path as necessary
-import more from '../../assets/icon/KPImoreBlue.svg';
+import { fetchAllUsers } from '../../services/UserAccountService';
+import more from '../../assets/icon/KPImoreBlack.png';
 import ReactDOM from 'react-dom';
 import { useRef } from 'react';
 import DOMPurify from 'dompurify';
@@ -25,26 +24,25 @@ interface ChartWithDropdownProps {
 const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, onChartSelect, currentUserId, selectedDashboardId }) => {
 
   const {
-    // isDropdownOpen,
     toggleDropdown,
     handleExport,
     handleDelegate,
     isModalOpen,
     closeModal,
     handleSubmit,
-    email, // Maintain the email state for UI, but not for backend submission
+    email,
     subject,
     message,
     charts,
     setEmail,
     setSubject,
     setMessage,
-    users, // Add users state
-    setUsers, // Add setUsers method
-    selectedUser, // Add selectedUser state
-    setSelectedUser, // Add setSelectedUser method
-    interactiveCharts, // Add interactiveCharts state
-    handleAdvancedAnalysis, // Add handleAdvancedAnalysis method
+    users,
+    setUsers,
+    selectedUser,
+    setSelectedUser,
+    interactiveCharts,
+    handleAdvancedAnalysis,
     canAssign,
     isAdvancedAnalysisModalOpen,
     setIsAdvancedAnalysisModalOpen,
