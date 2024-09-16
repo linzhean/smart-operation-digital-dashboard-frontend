@@ -14,8 +14,8 @@ const AdvancedSmartAnalysis: React.FC = () => {
 
   useEffect(() => {
     if (chartId && dashboardId) {
-      // 调用 fetchChartData 方法获取图表数据
-      const fetchChartDataForAdvancedAnalysis = async () => {
+      // 获取图表数据
+      const fetchChartData = async () => {
         try {
           const response = await ChartService.getChartData(Number(chartId));
           if (response.result) {
@@ -28,14 +28,12 @@ const AdvancedSmartAnalysis: React.FC = () => {
         }
       };
 
-      // 调用 getAIAnalysis 方法获取 AI 分析建议
+      // 获取 AI 分析和建议
       const fetchAIAnalysisAndSuggestion = async () => {
         try {
-          // Fetch AI analysis first
           const aiResponse = await ChartService.getAIAnalysis(Number(chartId), Number(dashboardId));
           if (aiResponse.result) {
             console.log('AI analysis fetched');
-            // After AI analysis, fetch the AI suggestion
             const suggestionResponse = await ChartService.getAISuggestion(Number(chartId), Number(dashboardId));
             if (suggestionResponse.result) {
               setAiSuggestion(suggestionResponse.data.suggestion);
@@ -50,8 +48,18 @@ const AdvancedSmartAnalysis: React.FC = () => {
         }
       };
 
-      fetchChartDataForAdvancedAnalysis();
-      fetchAIAnalysisAndSuggestion();  // 调用同时获取 AI 分析和建议
+      // 初次加载数据
+      fetchChartData();
+      fetchAIAnalysisAndSuggestion();
+
+      // 每 10 分钟刷新一次数据
+      const intervalId = setInterval(() => {
+        fetchChartData();
+        fetchAIAnalysisAndSuggestion();
+      }, 10 * 60 * 1000); // 每 10 分钟刷新
+
+      // 清除 interval，防止内存泄漏
+      return () => clearInterval(intervalId);
     }
   }, [chartId, dashboardId]);
 
