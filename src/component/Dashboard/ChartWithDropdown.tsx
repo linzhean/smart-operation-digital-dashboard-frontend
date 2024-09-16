@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './ChartWithDropdown.module.css';
 import { useChartWithDropdown } from '../../Hook/useChartWithDropdown';
 import DatePicker from 'react-datepicker';
-import ReactMarkdown from 'react-markdown';
+// import ReactMarkdown from 'react-markdown';
 import 'react-datepicker/dist/react-datepicker.css';
 import { fetchAllUsers } from '../../services/UserAccountService';
 import more from '../../assets/icon/KPImoreBlack.png';
@@ -235,11 +235,11 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         <div className={styles.aiAnalysisForm}>
           <h2>AI 分析建議</h2>
           <div className={styles.aiSuggestionContent}>
-            {typeof aiSuggestion === 'string' ? (
+            {/* {typeof aiSuggestion === 'string' ? (
               <ReactMarkdown>{aiSuggestion}</ReactMarkdown>
             ) : (
               '正在獲取 AI 建議...'
-            )}
+            )} */}
           </div>
           <div className={styles.buttonGroup}>
             <button onClick={() => setShowAIAnalysisModal(false)} className={styles.cancel}>關閉</button>
@@ -365,7 +365,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             }}
             className={styles.dropdownButton}
           >
-            <img src={more} alt="" />
+            <img src={more} alt="" className={styles.moreIcon} />
           </button>
           {isDropdownOpen && (
             <div className={styles.dropdownMenu}>
