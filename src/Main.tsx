@@ -48,7 +48,7 @@
 
 // export default Main; 
 
-
+//src\Main.tsx
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';

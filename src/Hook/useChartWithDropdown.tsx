@@ -4,6 +4,7 @@ import ChartService from '../services/ChartService';
 import { createEmail, sendChatMessage } from '../services/mailService';
 import { createApplication } from '../services/application';
 import { fetchAllUsers } from '../services/UserAccountService';
+import { useNavigate } from 'react-router-dom';
 
 export function useChartWithDropdown(
   exportData: (chartId: number, requestData: string[]) => Promise<{ result: boolean; errorCode: string; data: Blob; }>,
@@ -286,11 +287,13 @@ useEffect(() => {
           })
         );
         setInteractiveCharts(chartsWithData); // 更新状态
+        
         // 获取图表的 HTML 链接
         const firstChart = chartsWithData[0]; // 获取第一个图表的 HTML 链接
         if (firstChart?.data?.chartHTML) {
           // 新建标签页并打开链接
-          window.open(firstChart.data.chartHTML, '_blank');
+          const url = `/advanced-analysis?dashboardId=${dashboardId}&chartId=${firstChart.id}`;
+          window.open(url, '_blank');
         }
       } else {
         console.error('Failed to fetch dashboard charts:', dashboardChartsResponse.message);
@@ -300,7 +303,7 @@ useEffect(() => {
       console.error('Error during advanced analysis:', error);
       alert('Error during advanced analysis. Please try again later.');
     }
-  };
+  };  
 
   const handleAIAnalysis = async (dashboardId: number, chartId: number) => {
     if (!dashboardId) {

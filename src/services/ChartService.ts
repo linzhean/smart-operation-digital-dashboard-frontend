@@ -1,3 +1,4 @@
+//src\services\ChartService.ts
 import axiosInstance from './axiosConfig';
 
 const ChartService = {
@@ -58,17 +59,17 @@ const ChartService = {
     return response.data;
   },
 
-  getAIAnalysis: async (id: number, dashboardId: number) => {
+  getAIAnalysis: async (chartId: number, dashboardId: number) => {
     try {
-      const response = await axiosInstance.get('/chart/ai', {
-        params: { id, dashboardId }
+      const response = await axiosInstance.get('/ai', {
+        params: { chartId, dashboardId }
       });
       return response.data;
     } catch (error) {
       console.error('Error fetching AI analysis:', error);
       throw error;
     }
-  },
+  },  
 
   getCharts: async (available: boolean) => {
     try {
@@ -92,7 +93,30 @@ const ChartService = {
       console.error('Error updating chart availability:', error);
       throw error;
     }
-  }
+  },
+  deleteAIAnalysis: async (chartId: number) => {
+    try {
+      const response = await axiosInstance.delete('/ai', {
+        params: { chartId }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting AI analysis:', error);
+      throw error;
+    }
+  },
+
+  getAISuggestion: async (chartId: number, dashboardId: number) => {
+    try {
+      const response = await axiosInstance.get('/ai/suggestion', {
+        params: { chartId, dashboardId }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching AI suggestion:', error);
+      throw error;
+    }
+  }  
 };
 
 export default ChartService;
