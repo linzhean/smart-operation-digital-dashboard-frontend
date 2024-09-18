@@ -1,5 +1,5 @@
 import React from 'react';
-import "../../../styles/filter.css";
+import styles from "./filter.module.css";
 
 const statusMapping: Record<string, string> = {
   "交辦": "0",
@@ -29,9 +29,9 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="filter">
+    <div className={styles.EmailFilter}>
       {Object.entries(statusMapping).map(([label, statusCode]) => (
-        <div className="options" key={statusCode}>
+        <div className={styles.EmailFilterOptions} key={statusCode}>
           <input
             type="checkbox"
             name="taskStatus"

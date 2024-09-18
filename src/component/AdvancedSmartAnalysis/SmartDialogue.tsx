@@ -51,7 +51,7 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId }) 
 
   // 新增刪除 AI 分析對話的功能
   const handleDeleteAIAnalysis = async () => {
-    if (window.confirm('確定要刪除 AI 分析嗎？')) {
+    if (window.confirm('您確定要刪除 AI 分析紀錄嗎？')) {
       try {
         const response = await ChartService.deleteAIAnalysis(chartId);
         setMessages([]); // 清空消息

@@ -51,21 +51,21 @@ const Mail: React.FC = () => {
 
   const handleDeleteEmail = useCallback(async (id: number) => {
     await deleteExistingEmail(id);
-    // Optionally, refresh the emails list after deletion
     fetchEmails(selectedStatuses);
   }, [deleteExistingEmail, fetchEmails, selectedStatuses]);
 
   return (
     <main className={styles.mainEmailUnique}>
       <div className={`${styles.leftsideUnique} ${showRightSide ? styles.hiddenUnique : ''}`}>
-        {error && <p className={styles.errorMsg}>{error}</p>}
-        {loading && <div className={`loadingMsg`}></div>}
         <Filter onFilterChange={handleFilterChange} />
         <MailBreif
           onMailClick={handleMailItemClick}
           emails={emails}
-          onDeleteEmail={handleDeleteEmail} // 传递删除处理程序
+          onDeleteEmail={handleDeleteEmail}
         />
+        {loading && <div className={`loadingMsg`}></div>}
+        {error && <p className={styles.errorMsg}>{error}</p>}
+
       </div>
 
       <div className={`${styles.rightsideUnique} ${showRightSide ? '' : styles.hiddenUnique}`}>

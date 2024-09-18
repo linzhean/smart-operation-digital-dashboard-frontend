@@ -258,8 +258,8 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
             <fieldset>
               <h2 className={styles.fsTitle}>填寫儀表板說明文字</h2>
               <h3 className={styles.fsSubtitle}>非必填</h3>
-              <input
-                type="text"
+              <textarea
+                className={styles.dashboardDescription}
                 name="dashboardDescription"
                 placeholder="請輸入儀表板說明文字"
                 value={dashboardDescription}
@@ -326,7 +326,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                   id='KPIstartDate'
                   selected={startDate}
                   onChange={date => setStartDate(date)}
-                  placeholderText="選擇開始日期和時間"
+                  placeholderText="請選擇開始時間"
                   showTimeSelect
                   timeFormat="HH:mm"
                   timeIntervals={15}
@@ -340,7 +340,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                   id='KPIendDate'
                   selected={endDate}
                   onChange={date => setEndDate(date)}
-                  placeholderText="選擇結束日期和時間"
+                  placeholderText="請選擇結束時間"
                   showTimeSelect
                   timeFormat="HH:mm"
                   timeIntervals={15}

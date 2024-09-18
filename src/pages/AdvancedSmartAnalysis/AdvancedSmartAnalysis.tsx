@@ -14,7 +14,6 @@ const AdvancedSmartAnalysis: React.FC = () => {
 
   useEffect(() => {
     if (chartId && dashboardId) {
-      // 获取图表数据
       const fetchChartData = async () => {
         try {
           const response = await ChartService.getChartData(Number(chartId));
@@ -28,7 +27,6 @@ const AdvancedSmartAnalysis: React.FC = () => {
         }
       };
 
-      // 获取 AI 分析和建议
       const fetchAIAnalysisAndSuggestion = async () => {
         try {
           const aiResponse = await ChartService.getAIAnalysis(Number(chartId), Number(dashboardId));
@@ -48,17 +46,14 @@ const AdvancedSmartAnalysis: React.FC = () => {
         }
       };
 
-      // 初次加载数据
       fetchChartData();
       fetchAIAnalysisAndSuggestion();
 
-      // 每 10 分钟刷新一次数据
       const intervalId = setInterval(() => {
         fetchChartData();
         fetchAIAnalysisAndSuggestion();
-      }, 10 * 60 * 1000); // 每 10 分钟刷新
+      }, 10 * 60 * 1000); 
 
-      // 清除 interval，防止内存泄漏
       return () => clearInterval(intervalId);
     }
   }, [chartId, dashboardId]);
