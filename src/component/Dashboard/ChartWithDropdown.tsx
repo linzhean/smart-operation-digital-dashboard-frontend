@@ -49,10 +49,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     setIsAdvancedAnalysisModalOpen,
     chartHTML,
     setChartHTML,
-    handleAIAnalysis,  // 新增的 AI 分析处理函数
-    aiSuggestion,      // AI 建议内容
-    showAIAnalysisModal, // 是否显示 AI 建议对话框
-    setShowAIAnalysisModal, // 控制 AI 建议对话框
     setLoading,
     loading,
     handleExportWrapper,
@@ -228,27 +224,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     </>
   );
 
-  // const aiAnalysisModal = (
-  //   <>
-  //     <div className={styles.modalOverlay} onClick={() => setShowAIAnalysisModal(false)}></div>
-  //     <div className={styles.modal}>
-  //       <div className={styles.aiAnalysisForm}>
-  //         <h2>AI 分析建議</h2>
-  //         <div className={styles.aiSuggestionContent}>
-  //           {typeof aiSuggestion === 'string' ? (
-  //             <ReactMarkdown>{aiSuggestion}</ReactMarkdown>
-  //           ) : (
-  //             '正在獲取 AI 建議...'
-  //           )}
-  //         </div>
-  //         <div className={styles.buttonGroup}>
-  //           <button onClick={() => setShowAIAnalysisModal(false)} className={styles.cancel}>關閉</button>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </>
-  // );
-
   // 設定Menu
   const [hoverTime, setHoverTime] = useState(0);
   const hoverInterval = useRef<number | null>(null);
@@ -410,24 +385,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
                     style={{ '--progress': hoverProgress.advancedAnalysis } as React.CSSProperties}
                   />
                 </div>
-
-                {/* <div
-                className={styles.buttonContainer}
-                onMouseEnter={() => {
-                  if (selectedDashboardId !== undefined) {
-                    handleMouseEnter('aiAnalysis', () => handleAIAnalysis(selectedDashboardId, chartId));
-                  } else {
-                    alert("Dashboard ID is undefined.");
-                  }
-                }}
-                onMouseLeave={() => handleMouseLeave('aiAnalysis')}
-              >
-                <button>AI分析</button>
-                <div
-                  className={styles.timerCircle}
-                  style={{ '--progress': hoverProgress.aiAnalysis } as React.CSSProperties}
-                />
-              </div> */}
               </div>
             )}
           </div>
@@ -437,8 +394,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         {isModalOpen && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}
         {/* 進階分析 */}
         {isAdvancedAnalysisModalOpen && (interactiveCharts.length > 0) && ReactDOM.createPortal(advancedAnalysis, document.getElementById('portal-root')!)}
-        {/* AI 分析對話框 */}
-        {/* {showAIAnalysisModal && ReactDOM.createPortal(aiAnalysisModal, document.getElementById('portal-root')!)} */}
       </div>
     </>
   );

@@ -23,6 +23,7 @@ const Home: React.FC = () => {
   const [canAssign, setCanAssign] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [syncTime, setSyncTime] = useState<string>(''); 
 
   // Fetch available charts when the component is mounted
   useEffect(() => {
@@ -78,6 +79,21 @@ const Home: React.FC = () => {
   useEffect(() => {
     fetchDashboardCharts();
   }, [selectedDashboard]);
+
+  useEffect(() => {
+    const fetchSyncTime = async () => {
+      try {
+        const response = await ChartService.getSyncTime();
+        if (response.data && response.data.lastSyncTime) {
+          setSyncTime(response.data.lastSyncTime); // Extract and set the lastSyncTime
+        }
+      } catch (error) {
+        console.error('Failed to fetch sync time:', error);
+      }
+    };    
+
+    fetchSyncTime();
+  }, []);
 
   // Setup a polling mechanism to fetch dashboard charts every 10 minutes
   useEffect(() => {
@@ -200,6 +216,9 @@ const Home: React.FC = () => {
                 </div>
               ))}
             </ResponsiveGridLayout>
+            <div className={styles.syncTime}>
+              {syncTime ? `最後同步時間: ${new Date(syncTime).toLocaleString()}` : 'Fetching sync time...'}
+            </div>
           </div>
         </div>
       </div>

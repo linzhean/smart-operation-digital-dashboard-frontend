@@ -82,6 +82,19 @@
   border-radius: 10px; /* Optional: add some border radius for aesthetics */
 }
 
+.syncTime {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 12px;
+  color: #ffffff;
+  background-color: #333;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
 
 @media (max-width: 768px) {
   .dataCard {

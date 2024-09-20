@@ -209,56 +209,6 @@ useEffect(() => {
     }
   };
 
-  const handleKpiSelection = (kpiId: number) => {
-    setSelectedKPIs(prev => {
-      if (prev.includes(kpiId)) {
-        return prev.filter(id => id !== kpiId);
-      } else {
-        return [...prev, kpiId];
-      }
-    });
-  };
-
-  const confirmChartSelection = () => {
-    const selectedChartsData = charts.filter(chart => selectedKPIs.includes(chart.id));
-    setSelectedCharts(selectedChartsData);
-    setIsChartSelectModalOpen(false);
-  };
-
-  const handleRequestKpi = () => {
-    setIsRequestKpiModalOpen(true);
-  };
-
-  const handleRequestSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (kpiRequestChartId === null) {
-      alert('請選擇一個圖表。');
-      return;
-    }
-
-    try {
-      const requestData = {
-        chartId: kpiRequestChartId,
-        applicant: currentUserId,
-        guarantor: selectedUser || '',
-        startDateStr: formatDate(startDate),
-        endDateStr: formatDate(endDate),
-        reason: requestContent,
-      };
-      const response = await createApplication(requestData);
-      if (response.result) {
-        alert('請求提交成功');
-        setIsRequestKpiModalOpen(false);
-        setKpiRequestChartId(null); // 提交後重置
-      } else {
-        alert('請求提交失敗: ' + response.message);
-      }
-    } catch (error) {
-      console.error('提交 KPI 請求時出錯:', error);
-      alert('提交 KPI 請求失敗。請重試。');
-    }
-  };
-
   const fetchChartData = async (chartId: number) => {
     try {
       const response = await ChartService.getChartData(chartId);
@@ -384,12 +334,8 @@ useEffect(() => {
     handleSubmit,
     isChartSelectModalOpen,
     closeChartSelectModal,
-    handleKpiSelection,
-    confirmChartSelection,
-    handleRequestKpi,
     isRequestKpiModalOpen,
     closeRequestKpiModal,
-    handleRequestSubmit,
     handleStartDateChange,
     handleEndDateChange,
     startDate,
