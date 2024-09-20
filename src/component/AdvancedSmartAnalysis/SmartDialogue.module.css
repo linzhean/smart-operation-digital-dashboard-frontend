@@ -49,7 +49,7 @@
 .messages {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* 增加消息之间的间距 */
+  gap: 10px;
 }
 
 .message {
@@ -64,17 +64,17 @@
 }
 
 .user {
-  align-self: flex-end; /* 用户消息靠右对齐 */
-  background-color: #007aff; /* 蓝色背景代表用户消息 */
+  align-self: flex-end;
+  background-color: #afafaf1c;
   color: white;
-  border-radius: 15px 15px 0 15px; /* 消息气泡右上角圆角 */
+  border-radius: 15px 15px 0 15px;
 }
 
 .ai {
-  align-self: flex-start; /* AI 消息靠左对齐 */
+  align-self: flex-start;
   background-color: #444654;
   color: white;
-  border-radius: 15px 15px 15px 0; /* 消息气泡左上角圆角 */
+  border-radius: 15px 15px 15px 0;
 }
 
 .messageContent {
@@ -130,7 +130,6 @@
   transform: scale(1.2);
 }
 
-/* Mobile */
 @media (max-width: 599px) {
   .message {
     padding: 10px 2px;

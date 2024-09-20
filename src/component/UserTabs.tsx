@@ -1,6 +1,5 @@
-// src/components/UserTabs/UserTabs.tsx
 import React from 'react';
-import '../styles/UserTabs.css';
+import styles from './UserTabs.module.css';
 
 interface UserTabsProps {
   tabs: string[];
@@ -10,14 +9,14 @@ interface UserTabsProps {
 
 const UserTabs: React.FC<UserTabsProps> = ({ tabs, addTab, deleteTab }) => {
   return (
-    <div className="tabs">
+    <div className={styles.tabs}>
       {tabs.map((tab, index) => (
-        <div className="tab" key={index}>
+        <div className={styles.tab} key={index}>
           {tab}
-          <button className="delete-button" onClick={() => deleteTab(index)}>X</button>
+          <button className={styles.deleteButton} onClick={() => deleteTab(index)}>X</button>
         </div>
       ))}
-      <button className="add-user-button" onClick={addTab}>新增</button>
+      <button className={styles.addUserButton} onClick={addTab}>新增</button>
     </div>
   );
 };
