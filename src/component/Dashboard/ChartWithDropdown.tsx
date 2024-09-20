@@ -189,7 +189,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
               </select>
             </div>
           </div>
-          <div className={`${styles.labelGroup} ${styles.lastlabelGroup}`}>
+          <div className={`${styles.labelGroup} ${styles.lastlabelGroup} ${styles.noBorderBottom}`}>
             <textarea
               placeholder="請輸入郵件內容..."
               value={message}
@@ -228,26 +228,26 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     </>
   );
 
-  const aiAnalysisModal = (
-    <>
-      <div className={styles.modalOverlay} onClick={() => setShowAIAnalysisModal(false)}></div>
-      <div className={styles.modal}>
-        <div className={styles.aiAnalysisForm}>
-          <h2>AI 分析建議</h2>
-          <div className={styles.aiSuggestionContent}>
-            {/* {typeof aiSuggestion === 'string' ? (
-              <ReactMarkdown>{aiSuggestion}</ReactMarkdown>
-            ) : (
-              '正在獲取 AI 建議...'
-            )} */}
-          </div>
-          <div className={styles.buttonGroup}>
-            <button onClick={() => setShowAIAnalysisModal(false)} className={styles.cancel}>關閉</button>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+  // const aiAnalysisModal = (
+  //   <>
+  //     <div className={styles.modalOverlay} onClick={() => setShowAIAnalysisModal(false)}></div>
+  //     <div className={styles.modal}>
+  //       <div className={styles.aiAnalysisForm}>
+  //         <h2>AI 分析建議</h2>
+  //         <div className={styles.aiSuggestionContent}>
+  //           {typeof aiSuggestion === 'string' ? (
+  //             <ReactMarkdown>{aiSuggestion}</ReactMarkdown>
+  //           ) : (
+  //             '正在獲取 AI 建議...'
+  //           )}
+  //         </div>
+  //         <div className={styles.buttonGroup}>
+  //           <button onClick={() => setShowAIAnalysisModal(false)} className={styles.cancel}>關閉</button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </>
+  // );
 
   // 設定Menu
   const [hoverTime, setHoverTime] = useState(0);
@@ -348,63 +348,70 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
   };
 
   return (
-    <div className={styles.chartContainer}>
-      {loading && <div className={`loadingMsg`}></div>}
-      <div className={styles.chartHeader}>
-        <div
-          className={styles.dropdownContainer}
-          onMouseEnter={handleMenuMouseEnter}
-          onMouseLeave={handleMenuMouseLeave}
-        >
-          {hoverTime > 0 && (
-            <div className={styles.MenuTimerCircle} style={{ '--progress': hoverTime / 1 } as React.CSSProperties} />
-          )}
-          <button
-            onClick={() => {
-              toggleDropdown();
-            }}
-            className={styles.dropdownButton}
+    <>
+      <div className={styles.chartContainer}>
+        <div className={styles.chartHeader}>
+          <div
+            className={styles.dropdownContainer}
+            onMouseEnter={handleMenuMouseEnter}
+            onMouseLeave={handleMenuMouseLeave}
           >
-            <img src={more} alt="" className={styles.moreIcon} />
-          </button>
-          {isDropdownOpen && (
-            <div className={styles.dropdownMenu}>
-              <div
-                className={styles.buttonContainer}
-                onMouseEnter={() => handleMouseEnter('export', handleExportWrapper)}
-                onMouseLeave={() => handleMouseLeave('export')}
-              >
-                <button>匯出</button>
-                <div
-                  className={styles.timerCircle}
-                  style={{ '--progress': hoverProgress.export } as React.CSSProperties}
-                />
+            {hoverTime > 0 && (
+              <div className={styles.MenuTimerCircle} style={{ '--progress': hoverTime / 1 } as React.CSSProperties} />
+            )}
+            <button
+              onClick={() => {
+                toggleDropdown();
+              }}
+              className={styles.dropdownButton}
+            >
+              <div className={styles.ballcontainer}>
+                <div className={`${styles.load} ${loading && styles.nowLoading}`}>
+                  <div className={styles.ball}></div>
+                  <div className={styles.ball}></div>
+                  <div className={styles.ball}></div>
+                </div>
               </div>
+            </button>
+            {isDropdownOpen && (
+              <div className={styles.dropdownMenu}>
+                <div
+                  className={styles.buttonContainer}
+                  onMouseEnter={() => handleMouseEnter('export', handleExportWrapper)}
+                  onMouseLeave={() => handleMouseLeave('export')}
+                >
+                  <button>匯出</button>
+                  <div
+                    className={styles.timerCircle}
+                    style={{ '--progress': hoverProgress.export } as React.CSSProperties}
+                  />
+                </div>
 
-              <div
-                className={styles.buttonContainer}
-                onMouseEnter={() => handleMouseEnter('delegate', handleDelegateWrapper)}
-                onMouseLeave={() => handleMouseLeave('delegate')}
-              >
-                <button disabled={!canAssign}>交辦</button>
                 <div
-                  className={styles.timerCircle}
-                  style={{ '--progress': hoverProgress.delegate } as React.CSSProperties}
-                />
-              </div>
+                  className={styles.buttonContainer}
+                  onMouseEnter={() => handleMouseEnter('delegate', handleDelegateWrapper)}
+                  onMouseLeave={() => handleMouseLeave('delegate')}
+                >
+                  <button disabled={!canAssign}>交辦</button>
+                  <div
+                    className={styles.timerCircle}
+                    style={{ '--progress': hoverProgress.delegate } as React.CSSProperties}
+                  />
+                </div>
 
-              <div
-                className={styles.buttonContainer}
-                onMouseEnter={() => handleMouseEnter('advancedAnalysis', handleAdvancedAnalysisWrapper)}
-                onMouseLeave={() => handleMouseLeave('advancedAnalysis')}
-              >
-                <button>進階分析</button>
                 <div
-                  className={styles.timerCircle}
-                  style={{ '--progress': hoverProgress.advancedAnalysis } as React.CSSProperties}
-                />
-              </div>
-              <div
+                  className={styles.buttonContainer}
+                  onMouseEnter={() => handleMouseEnter('advancedAnalysis', handleAdvancedAnalysisWrapper)}
+                  onMouseLeave={() => handleMouseLeave('advancedAnalysis')}
+                >
+                  <button>進階分析</button>
+                  <div
+                    className={styles.timerCircle}
+                    style={{ '--progress': hoverProgress.advancedAnalysis } as React.CSSProperties}
+                  />
+                </div>
+
+                {/* <div
                 className={styles.buttonContainer}
                 onMouseEnter={() => {
                   if (selectedDashboardId !== undefined) {
@@ -420,20 +427,20 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
                   className={styles.timerCircle}
                   style={{ '--progress': hoverProgress.aiAnalysis } as React.CSSProperties}
                 />
+              </div> */}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
+        {children}
+        {/* 交辦的表單 */}
+        {isModalOpen && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}
+        {/* 進階分析 */}
+        {isAdvancedAnalysisModalOpen && (interactiveCharts.length > 0) && ReactDOM.createPortal(advancedAnalysis, document.getElementById('portal-root')!)}
+        {/* AI 分析對話框 */}
+        {/* {showAIAnalysisModal && ReactDOM.createPortal(aiAnalysisModal, document.getElementById('portal-root')!)} */}
       </div>
-      {children}
-
-      {/* 交辦的表單 */}
-      {isModalOpen && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}
-      {/* 進階分析 */}
-      {isAdvancedAnalysisModalOpen && (interactiveCharts.length > 0) && ReactDOM.createPortal(advancedAnalysis, document.getElementById('portal-root')!)}
-      {/* AI 分析對話框 */}
-      {showAIAnalysisModal && ReactDOM.createPortal(aiAnalysisModal, document.getElementById('portal-root')!)}
-    </div>
+    </>
   );
 };
 
