@@ -48,7 +48,6 @@
 
 // export default Main; 
 
-//src\Main.tsx
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
@@ -65,7 +64,7 @@ import './styles/Main.css';
 import { useUserContext } from './context/UserContext';
 import AdvancedSmartAnalysis from './pages/AdvancedSmartAnalysis/AdvancedSmartAnalysis';
 import PrivateRoute from './component/PrivateRoute';
-
+import NotFound from './pages/NotFound/NotFound';
 
 const Main: React.FC = () => {
   const { isAuthenticated } = useUserContext();
@@ -98,6 +97,10 @@ const Main: React.FC = () => {
           <Route path="/UserControl/*" element={<UserControl />} />
           <Route path="/ChartAdmin" element={<ChartAdmin />} />
         </Route>
+
+        <Route path="/404" element={<NotFound />} />
+
+        <Route path="*" element={<Navigate to="/404" />} />
       </Routes>
     </div>
   );
