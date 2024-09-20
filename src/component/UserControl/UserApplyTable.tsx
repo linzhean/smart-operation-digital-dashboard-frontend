@@ -103,9 +103,6 @@ const UserApplyTable: React.FC = () => {
   };
 
   const handleSnackbarClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
     setSnackbarOpen(false);
   };
 

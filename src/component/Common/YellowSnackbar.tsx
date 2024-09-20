@@ -74,7 +74,7 @@ const YellowSnackbar: React.FC<YellowSnackbarProps> = ({
               borderRadius: '8px',
               border: '2px solid #000000',
               '&:hover': {
-                backgroundColor: '#F0E68C',
+                backgroundColor: '#F0E68C !important',
               },
               padding: '8px 0',
               marginTop: '12px',
