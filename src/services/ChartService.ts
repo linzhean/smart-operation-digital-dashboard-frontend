@@ -116,7 +116,11 @@ const ChartService = {
       console.error('Error fetching AI suggestion:', error);
       throw error;
     }
-  }  
+  },
+  getSyncTime: async () => {
+    const response = await axiosInstance.get('/dashboard/sync-time');
+    return response.data;
+  }
 };
 
 export default ChartService;
