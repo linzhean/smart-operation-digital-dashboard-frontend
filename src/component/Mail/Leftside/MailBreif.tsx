@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../styles/mailBreif.css';
+import styles from './mailBreif.module.css';
 import MailItem from "./MailItem";
 import { Email } from '../../../services/mailService';
 
@@ -11,7 +11,7 @@ interface MailBreifProps {
 
 const MailBreif: React.FC<MailBreifProps> = ({ onMailClick, emails, onDeleteEmail }) => {
   return (
-    <div className="mailBreif">
+    <div className={styles.mailBreif}>
       {emails.map((email) => (
         <MailItem
           key={email.id}

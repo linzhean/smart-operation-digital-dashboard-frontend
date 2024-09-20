@@ -30,8 +30,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, PingFangSC-Regular, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   color: #333;
-  min-width: 390px;
-  min-height: 884px;
+  /* min-height: 884px; */
 }
 
 img {
@@ -58,7 +57,6 @@ html {
   padding: 0;
   overflow: hidden;
   display: flex;
-  min-width: 300px;
 }
 
 body {
@@ -216,3 +214,12 @@ body {
 /* 打開的側邊欄 / 導航欄 > 8888888 */
 /* OverLay > 7777777 */
 /* 打開按鈕 > 1111 */
+
+html,
+body {
+  min-width: 360px !important;
+}
+
+#root {
+  min-width: 360px !important;
+}
