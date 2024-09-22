@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import styles from './SmartDialogue.module.css';
 import send from '../../assets/icon/send.png';
 import clear from '../../assets/icon/clear.png';
-import ChartService from '../../services/ChartService';
+import ChartService from '../../services/ChartService'; // Import ChartService
 import ReactMarkdown from 'react-markdown';
 
 interface SmartDialogueProps {
   aiSuggestion: string;
   chartId: number;
-  isLoading: boolean;  // Add isLoading prop
+  isLoading: boolean;
 }
 
 const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, isLoading }) => {
@@ -44,15 +44,26 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
     }
   }, [isLoading]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
-      setMessages((prev) => [...prev, { role: 'user', content: input }, { role: 'ai', content: 'LOADING' }]);
+      const userMessage = input;
+      setMessages((prev) => [...prev, { role: 'user', content: userMessage }, { role: 'ai', content: 'LOADING' }]);
       setInput('');
 
-      setTimeout(() => {
-        setMessages((prev) => [...prev.slice(0, -1), { role: 'ai', content: `Response to "${input}"` }]);
-      }, 1000);
+      try {
+        // Call the POST /ai/chat API
+        const response = await ChartService.sendMessage({
+          chartId: chartId,  // Pass the chartId prop
+          content: userMessage,
+        });
+
+        // Update the message with the AI's response
+        setMessages((prev) => [...prev.slice(0, -1), { role: 'ai', content: String(response.data) }]);
+      } catch (error) {
+        console.error('Failed to send message:', error);
+        setMessages((prev) => [...prev.slice(0, -1), { role: 'ai', content: 'Error occurred. Please try again.' }]);
+      }
     }
   };
 
@@ -83,7 +94,7 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
             <div key={index} className={`${styles.message} ${styles[msg.role]}`}>
               <div className={styles.messageContent}>
                 {msg.role === 'ai' ? (
-                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  <ReactMarkdown>{typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content)}</ReactMarkdown>
                 ) : (
                   msg.content
                 )}

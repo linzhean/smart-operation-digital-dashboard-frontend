@@ -15,6 +15,7 @@ export interface AssignedTask {
 }
 
 export interface GetAssignedTaskSponsorsResponse {
+  [x: string]: any;
   sponsorList: string[];
 }
 
