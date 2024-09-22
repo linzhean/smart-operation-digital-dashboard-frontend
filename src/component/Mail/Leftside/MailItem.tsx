@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './mailItem.module.css';
 import KPI from '../../../assets/icon/testKPI.svg';
-import { Email, updateEmailStatus, deleteEmail } from '../../../services/mailService';
+import { Email, updateEmailStatus, deleteEmail,getEmailDetails } from '../../../services/mailService';
 import trash from '../../../assets/icon/trashBin.png';
 
 interface MailItemProps {
@@ -41,9 +41,22 @@ const MailItem: React.FC<MailItemProps> = ({ email, onClick, onDelete }) => {
     }
   };
 
+  const refreshEmailStatus = async (id: number) => {
+    const emailDetails = await getEmailDetails(id);
+    return emailDetails.status;
+  };
+  
   const handleDeleteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
-
+  
+    // 刪除前重新獲取郵件狀態
+    const currentStatus = await refreshEmailStatus(email.id);
+  
+    if (currentStatus !== '已完成') {
+      alert('郵件非已完成狀態，無法刪除');
+      return;
+    }
+  
     if (window.confirm('確定要刪除此郵件嗎？')) {
       try {
         await deleteEmail(email.id);
@@ -55,7 +68,7 @@ const MailItem: React.FC<MailItemProps> = ({ email, onClick, onDelete }) => {
         alert('無法刪除郵件，請稍後再試');
       }
     }
-  };
+  };  
 
   return (
     <div className={styles.leftmail} onClick={onClick}>

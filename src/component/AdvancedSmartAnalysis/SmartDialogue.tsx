@@ -8,9 +8,10 @@ import ReactMarkdown from 'react-markdown';
 interface SmartDialogueProps {
   aiSuggestion: string;
   chartId: number;
+  isLoading: boolean;  // Add isLoading prop
 }
 
-const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId }) => {
+const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, isLoading }) => {
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
   const [input, setInput] = useState('');
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -37,6 +38,12 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId }) 
     }
   }, [aiSuggestion]);
 
+  useEffect(() => {
+    if (isLoading) {
+      setMessages((prev) => [...prev, { role: 'ai', content: 'AI is generating the suggestion, please wait...' }]);
+    }
+  }, [isLoading]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
@@ -44,7 +51,7 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId }) 
       setInput('');
 
       setTimeout(() => {
-        setMessages((prev) => [...prev.slice(0, -1), { role: 'ai', content: `假回覆"${input}"` }]);
+        setMessages((prev) => [...prev.slice(0, -1), { role: 'ai', content: `Response to "${input}"` }]);
       }, 1000);
     }
   };

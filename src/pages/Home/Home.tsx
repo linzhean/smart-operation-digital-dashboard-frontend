@@ -23,9 +23,32 @@ const Home: React.FC = () => {
   const [canAssign, setCanAssign] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-  const [syncTime, setSyncTime] = useState<string>(''); 
+  const [syncTime, setSyncTime] = useState<string>('');
 
-  // Fetch available charts when the component is mounted
+  // Calculate chart layout dynamically based on screen size
+  const calculateLayout = (charts: any[]) => {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    const columns = 12; // Fixed 12-column grid
+    const chartWidth = 6; // 每个图表的宽度设置为4个网格单位
+    const maxChartsPerRow = Math.floor(columns / chartWidth); // 每行最多放置的图表数
+
+    return charts.map((chart: any, index: number) => {
+      const layoutItem = {
+        i: `chart-${chart.id}`,
+        x: (index % maxChartsPerRow) * chartWidth, // 确保这始终是一个数字
+        y: Math.floor(index / maxChartsPerRow),
+        w: chartWidth,
+        h: 1.9,
+      };
+      console.log(layoutItem); // 日志验证
+      return layoutItem;
+    });
+  };
+
+
+  // Fetch available charts on component mount
   useEffect(() => {
     const fetchAvailableCharts = async () => {
       try {
@@ -47,17 +70,8 @@ const Home: React.FC = () => {
         const response = await ChartService.getDashboardCharts(Number(selectedDashboard));
         if (response.result && Array.isArray(response.data)) {
           setCharts(response.data);
-          setSelectedCharts(response.data.map((chart: any) => ({
-            id: chart.id,
-            name: chart.name,
-          })));
-          const newLayout = response.data.map((chart: any, index: number) => ({
-            i: `chart-${chart.id}`,
-            x: (index * 4) % 12,
-            y: Math.floor(index / 3) * 4,
-            w: 4,
-            h: 4,
-          }));
+          setSelectedCharts(response.data.map((chart: any) => ({ id: chart.id, name: chart.name })));
+          const newLayout = calculateLayout(response.data);
           setLayout(newLayout);
           if (response.data.length > 0) {
             setCurrentChartId(response.data[0].id);
@@ -80,55 +94,57 @@ const Home: React.FC = () => {
     fetchDashboardCharts();
   }, [selectedDashboard]);
 
+  // Fetch sync time
   useEffect(() => {
     const fetchSyncTime = async () => {
       try {
         const response = await ChartService.getSyncTime();
         if (response.data && response.data.lastSyncTime) {
-          setSyncTime(response.data.lastSyncTime); // Extract and set the lastSyncTime
+          setSyncTime(response.data.lastSyncTime);
         }
       } catch (error) {
         console.error('Failed to fetch sync time:', error);
       }
-    };    
+    };
 
     fetchSyncTime();
   }, []);
 
-  // Setup a polling mechanism to fetch dashboard charts every 10 minutes
+  // Setup polling to fetch dashboard charts every 10 minutes
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchDashboardCharts();
-    }, 600000); // 600000 milliseconds = 10 minutes
+    }, 600000); // 10 minutes
 
-    return () => clearInterval(intervalId); // Clear the interval on component unmount
+    return () => clearInterval(intervalId);
   }, [selectedDashboard]);
 
-  const handleExport = async (chartId: number, requestData: string[]) => {
+  // Handle chart export
+  const handleExport = async (chartId: number, requestData: string[]): Promise<{ result: boolean; errorCode: string; data: Blob }> => {
     try {
-      const permissionResponse = await getExportPermission(chartId);
-      if (!permissionResponse.result) {
-        alert(`無法獲取匯出權限: ${permissionResponse.errorCode}`);
-        return { result: false, errorCode: permissionResponse.errorCode, data: new Blob() };
-      }
+        const permissionResponse = await getExportPermission(chartId);
+        if (!permissionResponse.result) {
+            return { result: false, errorCode: permissionResponse.errorCode, data: new Blob() }; // Return a Blob to match the type
+        }
 
-      const exportResponse = await exportData(chartId, { exporterList: requestData, dashboardCharts: [chartId] });
-      if (!exportResponse.result) {
-        alert(`匯出數據失敗: ${exportResponse.errorCode}`);
-        return { result: false, errorCode: exportResponse.errorCode, data: new Blob() };
-      }
+        const exportResponse = await exportData(chartId, { exporterList: requestData, dashboardCharts: [chartId] });
+        if (!exportResponse.result) {
+            return { result: false, errorCode: exportResponse.errorCode, data: new Blob() }; // Return a Blob to match the type
+        }
 
-      const blob = new Blob([exportResponse.data], { type: 'application/octet-stream' });
-      saveAs(blob, 'exported_data.csv');
-      alert('數據匯出成功！');
-      return { result: true, errorCode: '', data: blob };
+        const blob = new Blob([exportResponse.data], { type: 'application/octet-stream' });
+        saveAs(blob, 'exported_data.csv');
+        alert('數據匯出成功！');
+
+        return { result: true, errorCode: '', data: blob }; // Return the blob as data
     } catch (error) {
-      console.error('匯出錯誤:', error);
-      alert('匯出過程中發生錯誤。請再試一次。');
-      return { result: false, errorCode: 'unknown', data: new Blob() };
+        console.error('匯出錯誤:', error);
+        alert('匯出過程中發生錯誤。請再試一次。');
+        return { result: false, errorCode: 'EXPORT_ERROR', data: new Blob() }; // Return an error code and a Blob
     }
-  };
+};
 
+  // Handle chart selection
   const handleChartSelect = (chartId: number) => {
     setCurrentChartId(chartId);
     const chartData = charts.find(chart => chart.id === chartId);
@@ -143,6 +159,7 @@ const Home: React.FC = () => {
     }
   };
 
+  // Handle adding a new chart
   const handleAddChart = async (chartsToAdd: any[]) => {
     if (!selectedDashboard) {
       alert('Please select a dashboard first.');
@@ -164,15 +181,9 @@ const Home: React.FC = () => {
       await ChartService.addChartsToDashboard(Number(selectedDashboard), chartIds);
 
       setCharts(prevCharts => [...prevCharts, ...newCharts]);
-      const newLayout = newCharts.map((chart: any, index: number) => ({
-        i: `chart-${chart.id}`,
-        x: (charts.length * 4 + index * 4) % 12,
-        y: Math.floor((charts.length + index) / 3) * 4,
-        w: 4,
-        h: 4,
-      }));
+      const newLayout = calculateLayout(newCharts);
+      console.log(newLayout);
       setLayout(prevLayout => [...prevLayout, ...newLayout]);
-
     } catch (error) {
       console.error('Error adding chart:', error);
       alert('An error occurred while adding the chart.');
@@ -181,6 +192,27 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleLayoutChange = (layout: any[]) => {
+    setLayout(layout);
+  };
+
+  // 处理图表大小调整后停止的事件
+  const handleResizeStop = (layout: any[]) => {
+    setLayout(layout);
+    const updatedCharts = charts.map(chart => {
+      const item = layout.find(l => l.i === `chart-${chart.id}`);
+      if (item) {
+        const newWidth = (item.w / 12) * 100; // Convert grid units to percentage
+        return {
+          ...chart,
+          width: newWidth,
+        };
+      }
+      return chart;
+    });
+    setCharts(updatedCharts);
+  };
+  
   return (
     <div className='wrapper'>
       <div className="Home">
@@ -194,13 +226,14 @@ const Home: React.FC = () => {
           {error && <div className={styles.errorMsg}>{error}</div>}
           <div className='theContent'>
             <ResponsiveGridLayout
-              className="layout"
               layouts={{ lg: layout, md: layout, sm: layout, xs: layout, xxs: layout }}
               breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-              cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+              cols={{ lg: 12, md: 12, sm: 8, xs: 6, xxs: 2 }}  // Maintain a grid with 12 columns on large screens
+              onLayoutChange={handleLayoutChange}
+              onResizeStop={handleResizeStop} // 添加此事件处理函数
             >
               {charts.map(chart => (
-                <div key={`chart-${chart.id}`} className={styles.dataCard} data-grid={{ i: `chart-${chart.id}`, x: 0, y: 0, w: 4, h: 4 }}>
+               <div key={`chart-${chart.id}`} className={styles.dataCard} data-grid={{ i: `chart-${chart.id}`, ...layout.find(l => l.i === `chart-${chart.id}`) }}>
                   <img src={chart.chartImage} alt={chart.name} className={styles.chartImage} />
                   <ChartWithDropdown
                     exportData={handleExport}
@@ -209,7 +242,7 @@ const Home: React.FC = () => {
                     onChartSelect={() => handleChartSelect(chart.id)}
                     currentUserId={''} // Replace with actual user ID
                     canAssign={canAssign} // Update based on your logic
-                    selectedDashboardId={selectedDashboard ? Number(selectedDashboard) : undefined} // Pass selectedDashboardId correctly
+                    selectedDashboardId={selectedDashboard ? Number(selectedDashboard) : undefined}
                   >
                     {selectedChartData ? <LineChart data={selectedChartData} /> : <p></p>}
                   </ChartWithDropdown>
