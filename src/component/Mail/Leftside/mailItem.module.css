@@ -76,17 +76,47 @@
     font-size: small;
     margin-bottom: 5px;
   }
+  .completeButton {
+    position: absolute;
+    right: 90px; /* 固定在左側 */
+    bottom: 15px; /* 固定距離底部 */
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .completeButton:hover {
+    background-color: #218838;
+  }
+  
+  .deleteButton {
+    position: absolute;
+    right: 10px; /* 固定在右側 */
+    bottom: 10px; /* 固定距離底部 */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  .deleteButton img {
+    width: 20px;
+  }
 }
 
 .completeButton {
+  position: absolute;
+  right: 90px; /* 固定在左側 */
+  bottom: 15px; /* 固定距離底部 */
   background-color: #28a745;
   color: white;
   border: none;
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
-  margin-right: 10px;
 }
 
 .completeButton:hover {
@@ -94,11 +124,13 @@
 }
 
 .deleteButton {
+  position: absolute;
+  right: 10px; /* 固定在右側 */
+  bottom: 10px; /* 固定距離底部 */
   background-color: transparent;
   border: none;
-  padding: 5px;
   cursor: pointer;
-  border-radius: 5px;
+  padding: 5px;
 }
 
 .deleteButton img {

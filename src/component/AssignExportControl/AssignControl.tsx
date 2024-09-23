@@ -94,7 +94,7 @@ const UserPickerDialog: React.FC<{
       getAssignedTaskSponsors(chartId)
         .then((response) => {
           if (response && response.data) {
-            const sponsorList = response.data.sponsorList || [];
+            const sponsorList = response.data.map((sponsor: any) => sponsor.sponsorId);
             const selectedUsers = users.filter((user) =>
               sponsorList.includes(user.userId)
             );
@@ -116,29 +116,25 @@ const UserPickerDialog: React.FC<{
     onClose();
   };
 
-  const classes = useStyles();
-
   return (
-    <Dialog open={open} onClose={onClose} style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }} classes={{ paper: classes.dialogPaper }}>
-      <DialogTitle style={{ color: 'black', fontSize: '1.5rem', fontWeight: 'bold', width: 'auto', padding: '10px 24px 0px 24px' }}>
-        交辦事項權限設置
-      </DialogTitle>
-      <DialogContent style={{ paddingTop: '15px' }}>
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>交辦事項權限設置</DialogTitle>
+      <DialogContent>
         <Autocomplete
           multiple
           options={users}
           getOptionLabel={(option) => `${option.userId} ${option.userName}`}
+          value={selectedUsers}
           onChange={(event, newValue) => {
             setSelectedUsers(newValue as User[]);
           }}
-          value={selectedUsers}
           renderOption={(props, option) => (
             <li {...props}>
               {option.userId} {option.userName}
             </li>
           )}
           renderInput={(params) => (
-            <TextField {...params} variant="outlined" label="選擇用戶" placeholder="或輸入文字以查找..." />
+            <TextField {...params} variant="outlined" label="選擇用戶" />
           )}
         />
       </DialogContent>

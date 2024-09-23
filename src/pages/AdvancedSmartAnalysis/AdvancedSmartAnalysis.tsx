@@ -11,6 +11,7 @@ const AdvancedSmartAnalysis: React.FC = () => {
   const chartId = searchParams.get('chartId');
   const [chartHTML, setChartHTML] = useState<string>('');
   const [aiSuggestion, setAiSuggestion] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);  // Loading state
 
   useEffect(() => {
     if (chartId && dashboardId) {
@@ -29,9 +30,9 @@ const AdvancedSmartAnalysis: React.FC = () => {
 
       const fetchAIAnalysisAndSuggestion = async () => {
         try {
+          setIsLoading(true);  // Set loading state
           const aiResponse = await ChartService.getAIAnalysis(Number(chartId), Number(dashboardId));
           if (aiResponse.result) {
-            console.log('AI analysis fetched');
             const suggestionResponse = await ChartService.getAISuggestion(Number(chartId), Number(dashboardId));
             if (suggestionResponse.result) {
               setAiSuggestion(suggestionResponse.data.suggestion);
@@ -43,6 +44,8 @@ const AdvancedSmartAnalysis: React.FC = () => {
           }
         } catch (error) {
           console.error('Error fetching AI analysis or suggestion:', error);
+        } finally {
+          setIsLoading(false);  // End loading state
         }
       };
 
@@ -61,7 +64,7 @@ const AdvancedSmartAnalysis: React.FC = () => {
   return (
     <div className={styles.SmartAnalysisContainer}>
       <SmartHTML chartHTML={chartHTML} />
-      {chartId && <SmartDialogue aiSuggestion={aiSuggestion} chartId={Number(chartId)} />}  {/* 傳遞 chartId 和 aiSuggestion */}
+      {chartId && <SmartDialogue aiSuggestion={aiSuggestion} chartId={Number(chartId)} isLoading={isLoading} />} 
     </div>
   );
 };

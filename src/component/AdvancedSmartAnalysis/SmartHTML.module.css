@@ -15,6 +15,20 @@
   border: none;
 }
 
+.syncTime {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  font-size: 12px;
+  color: #ffffff;
+  background-color: #333;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
 @media (max-width: 599px) {
   .iFrameContainer {
     margin-top: 7px;

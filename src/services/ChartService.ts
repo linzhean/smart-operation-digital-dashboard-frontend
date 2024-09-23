@@ -120,7 +120,20 @@ const ChartService = {
   getSyncTime: async () => {
     const response = await axiosInstance.get('/dashboard/sync-time');
     return response.data;
-  }
+  },
+  
+  sendMessage: async (data: { chartId: number; content: string }) => {
+    try {
+      const response = await axiosInstance.post('/ai/chat', {
+        chartId: data.chartId,
+        content: data.content,
+      });
+      return response;
+    } catch (error) {
+      console.error('Error sending message to AI:', error);
+      throw error;
+    }
+  },
 };
 
 export default ChartService;
