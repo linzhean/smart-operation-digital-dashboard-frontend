@@ -3,11 +3,11 @@
   color: #CCCCCC;
   height: 100vh;
   margin-left: 250px;
-  width: calc(100% - 250px);  /* Adjust width considering the sidebar */
+  width: calc(100% - 250px);
   transition: all 0.3s ease;
-  padding: 20px;  /* Add some padding for better appearance */
+  padding: 20px;
   margin-bottom: 10px;
-  overflow-y: auto;  /* Allow scrolling if the content exceeds the height */
+  overflow-y: auto;
 }
 
 @media (max-width: 1024px) {
@@ -24,8 +24,8 @@
 }
 
 .dataCard {
-  width: 100%; /* 使卡片占满全宽 */
-  height: auto; /* 根据内容自动调整高度 */
+  width: 100%;
+  height: auto;
   background-color: #ffffff;
   border-radius: 0.5em;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -34,14 +34,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px; /* 图表之间的间距 */
-  position: relative; /* 相对定位以适应绝对定位的元素 */
-  z-index: 10;
+  margin-bottom: 20px;
+  position: relative;
 }
 
 .dataCard img {
   width: 100%;
-  height: 100%; /* 确保图表图像的高度与容器一致 */
+  height: 100%;
 }
 
 .dataCard button {
@@ -89,22 +88,22 @@
 }
 
 .chartImage {
-  object-fit: contain;  /* 确保图像保持比例 */
+  object-fit: contain;
   border-radius: 10px;
-  width: 100%;  /* 保持图像占满父容器宽度 */
-  height: auto;  /* 高度根据宽度自动调整 */
+  width: 100%;
+  height: auto;
 }
 
 @media (max-width: 1024px) {
   .chartImage {
-    width: 90%; /* 中等屏幕上稍微减小图像大小 */
+    width: 90%;
     height: auto;
   }
 }
 
 @media (max-width: 768px) {
   .chartImage {
-    width: 100%; /* 移动设备上全宽 */
+    width: 100%;
     height: auto;
   }
 }

@@ -5,7 +5,6 @@ import { useChartWithDropdown } from '../../Hook/useChartWithDropdown';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { fetchAllUsers } from '../../services/UserAccountService';
-import more from '../../assets/icon/KPImoreBlack.png';
 import ReactDOM from 'react-dom';
 import { useRef } from 'react';
 import DOMPurify from 'dompurify';

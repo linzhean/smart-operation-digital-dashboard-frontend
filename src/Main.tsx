@@ -88,7 +88,8 @@ const Main: React.FC = () => {
           <Route path="/ChartAdmin" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><ChartAdmin /></PrivateRoute>} />
           <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} />
 
-          {/* <Route path="/home" element={<Home />} />
+          {/* 
+          <Route path="/home" element={<Home />} />
           <Route path="/profile/*" element={<Pdata />} />
           <Route path="/GroupManagement/*" element={<GroupManagement />} />
           <Route path="/mail" element={<Mail />} />

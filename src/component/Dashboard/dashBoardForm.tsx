@@ -51,7 +51,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
     const fetchUsers = async () => {
       try {
         const userList = await fetchAllUsers();
-        console.log(userList); // 用於檢查 `userList` 的結構
+        console.log(userList);
         setUsers(userList);
       } catch (error) {
         console.error('Failed to fetch users:', error);
