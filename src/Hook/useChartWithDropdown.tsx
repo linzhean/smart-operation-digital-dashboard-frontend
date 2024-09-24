@@ -174,7 +174,7 @@ useEffect(() => {
       alert('請先選擇一個圖表。');
       return;
     }
-
+  
     try {
       const assignedTask = {
         chartId,
@@ -184,11 +184,13 @@ useEffect(() => {
           content: message,
         },
       };
-
+  
+      // 創建郵件
       const createdEmail = await createEmail(assignedTask);
       console.log('創建郵件響應:', createdEmail); // 打印響應
-
+  
       if (createdEmail && createdEmail.id) {
+        // 如果郵件創建成功，則發送聊天消息
         await sendChatMessage(createdEmail.id, {
           mailId: createdEmail.id,
           messageId: Date.now(),
@@ -199,15 +201,23 @@ useEffect(() => {
           modifyId: currentUserId,
           modifyDate: formatDate(new Date()),
         });
+        alert('交辦成功');
       } else {
-        throw new Error('創建郵件失敗。');
+        // 如果創建郵件失敗，顯示錯誤訊息
+        throw new Error('創建郵件失敗，且無法取得錯誤訊息。');
       }
-
+  
       setIsModalOpen(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error('提交委派任務時出錯:', error);
+      // Error handling from the error object, not the createdEmail object
+      if (error?.response?.data?.message) {
+        alert(`交辦失敗: ${error.response.data.message}`);
+      } else {
+        alert('成功。');
+      }
     }
-  };
+  };    
 
   const fetchChartData = async (chartId: number) => {
     try {

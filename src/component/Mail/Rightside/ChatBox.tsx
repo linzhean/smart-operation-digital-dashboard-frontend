@@ -11,6 +11,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onMessageChange }) => {
   const [messages, setMessages] = useState<EmailMessage[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
   const [email, setEmail] = useState<Email | null>(null);
+  const [isSending, setIsSending] = useState<boolean>(false);
 
   const fetchEmailDetails = useCallback(async () => {
     try {
@@ -27,11 +28,29 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onMessageChange }) => {
   }, [fetchEmailDetails]);
 
   const handleSendMessage = useCallback(async () => {
-    if (newMessage.trim()) {
+    if (newMessage.trim() && !isSending) {
+      const tempMessageId = Date.now(); // 使用临时ID
+      const newChatMessage: EmailMessage = {
+        id: tempMessageId, // 添加id属性
+        messageId: tempMessageId,
+        mailId: emailId,
+        content: newMessage,
+        available: 'true',
+        createId: 'currentUser',
+        createDate: new Date().toISOString(),
+        modifyId: 'currentUser',
+        modifyDate: new Date().toISOString(),
+      };
+  
+      // 立即更新状态，显示临时消息
+      setMessages((prevMessages) => [...prevMessages, newChatMessage]);
+      setNewMessage('');
+      setIsSending(true);
+  
       try {
-        const newMessageId = Date.now();
-        const newChatMessage = await sendMessage(emailId, {
-          messageId: newMessageId,
+        // 发送消息到服务器
+        const sentMessage = await sendMessage(emailId, {
+          messageId: tempMessageId,
           content: newMessage,
           available: 'true',
           createId: 'currentUser',
@@ -39,16 +58,29 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onMessageChange }) => {
           modifyId: 'currentUser',
           modifyDate: new Date().toISOString(),
         });
-        setMessages(prevMessages => [...prevMessages, newChatMessage]);
-        setNewMessage('');
-        if (onMessageChange) {
-          onMessageChange(newMessage);
-        }
+  
+        // 更新状态，使用服务器返回的消息替换临时消息
+        setMessages((prevMessages) =>
+          prevMessages.map((msg) =>
+            msg.messageId === tempMessageId ? sentMessage : msg
+          )
+        );
       } catch (error) {
         console.error('Error sending message:', error);
+  
+        // 发送失败时，移除临时消息
+        setMessages((prevMessages) =>
+          prevMessages.filter((msg) => msg.messageId !== tempMessageId)
+        );
+      } finally {
+        setIsSending(false);
+      }
+  
+      if (onMessageChange) {
+        onMessageChange(newMessage);
       }
     }
-  }, [emailId, newMessage, onMessageChange]);
+  }, [emailId, newMessage, onMessageChange, isSending]);    
 
   return (
     <div className={styles.chatContainer}>
