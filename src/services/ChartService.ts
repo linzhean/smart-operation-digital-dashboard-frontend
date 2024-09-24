@@ -122,11 +122,12 @@ const ChartService = {
     return response.data;
   },
   
-  sendMessage: async (data: { chartId: number; content: string }) => {
+  sendMessage: async (data: { chartId: number; content: string; messageId: number }) => {
     try {
       const response = await axiosInstance.post('/ai/chat', {
         chartId: data.chartId,
         content: data.content,
+        messageId: data.messageId,
       });
       return response;
     } catch (error) {

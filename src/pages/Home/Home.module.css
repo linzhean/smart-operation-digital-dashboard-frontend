@@ -36,6 +36,7 @@
   justify-content: center;
   margin-bottom: 20px; /* 图表之间的间距 */
   position: relative; /* 相对定位以适应绝对定位的元素 */
+  z-index: 10;
 }
 
 .dataCard img {
@@ -134,4 +135,9 @@
     width: 100%;
     height: auto;
   }
+}
+
+.chart-dropdown {
+  position: absolute; /* 改为绝对定位 */
+  z-index: 10000;     /* 提高 z-index 以确保在其他元素之上 */
 }

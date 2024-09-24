@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import styles from './ChartWithDropdown.module.css';
 import { useChartWithDropdown } from '../../Hook/useChartWithDropdown';
 import DatePicker from 'react-datepicker';
-// import ReactMarkdown from 'react-markdown';
 import 'react-datepicker/dist/react-datepicker.css';
 import { fetchAllUsers } from '../../services/UserAccountService';
 import more from '../../assets/icon/KPImoreBlack.png';

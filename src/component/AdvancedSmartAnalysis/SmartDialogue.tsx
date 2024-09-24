@@ -12,9 +12,10 @@ interface SmartDialogueProps {
 }
 
 const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, isLoading }) => {
-  const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
+  const [messages, setMessages] = useState<{ id: number; role: 'user' | 'ai'; content: string }[]>([]);
   const [input, setInput] = useState('');
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const [nextId, setNextId] = useState(0); // 用于生成消息 ID
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
@@ -34,13 +35,15 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
 
   useEffect(() => {
     if (aiSuggestion) {
-      setMessages((prev) => [...prev, { role: 'ai', content: aiSuggestion }]);
+      setMessages((prev) => [...prev, { id: nextId, role: 'ai', content: aiSuggestion }]);
+      setNextId(nextId + 1);
     }
   }, [aiSuggestion]);
 
   useEffect(() => {
     if (isLoading) {
-      setMessages((prev) => [...prev, { role: 'ai', content: 'AI is generating the suggestion, please wait...' }]);
+      setMessages((prev) => [...prev, { id: nextId, role: 'ai', content: 'AI is generating the suggestion, please wait...' }]);
+      setNextId(nextId + 1);
     }
   }, [isLoading]);
 
@@ -48,21 +51,37 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
     e.preventDefault();
     if (input.trim()) {
       const userMessage = input;
-      setMessages((prev) => [...prev, { role: 'user', content: userMessage }, { role: 'ai', content: 'LOADING' }]);
+      const userMessageId = nextId; // 获取新的消息 ID
+      setMessages((prev) => [
+        ...prev,
+        { id: userMessageId, role: 'user', content: userMessage },
+        { id: nextId + 1, role: 'ai', content: 'LOADING' } // AI 消息 ID 递增
+      ]);
       setInput('');
-
+      setNextId(nextId + 2); // 更新下一个 ID
+  
       try {
-        // Call the POST /ai/chat API
+        // 获取上条消息的 ID
+        const lastMessageId = userMessageId;
+  
         const response = await ChartService.sendMessage({
-          chartId: chartId,  // Pass the chartId prop
+          chartId: chartId,
           content: userMessage,
+          messageId: lastMessageId, // 传递 messageId
         });
-
-        // Update the message with the AI's response
-        setMessages((prev) => [...prev.slice(0, -1), { role: 'ai', content: String(response.data) }]);
+  
+        // 更新消息为 AI 的响应
+        const newChat = response.data.data.newChat; // 获取 response 中的 newChat
+        setMessages((prev) => [
+          ...prev.slice(0, -1), // 删除 LOADING
+          { id: nextId, role: 'ai', content: newChat } // 添加 newChat
+        ]);
       } catch (error) {
         console.error('Failed to send message:', error);
-        setMessages((prev) => [...prev.slice(0, -1), { role: 'ai', content: 'Error occurred. Please try again.' }]);
+        setMessages((prev) => [
+          ...prev.slice(0, -1), 
+          { id: nextId, role: 'ai', content: 'Error occurred. Please try again.' }
+        ]);
       }
     }
   };

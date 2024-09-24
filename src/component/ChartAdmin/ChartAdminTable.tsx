@@ -94,16 +94,19 @@ const ChartAdminTable: React.FC = () => {
   };
 
   const fetchCharts = async (available: boolean | null) => {
+    const actualAvailable = available !== null ? available : true; // Handle null by providing a default value
     try {
-      const response = await ChartService.getCharts(available === null ? false : available);
+      const response = await ChartService.getCharts(actualAvailable); // Pass the actual boolean value
       const chartsData = response.data;
+  
       if (Array.isArray(chartsData)) {
         const filteredCharts = chartsData.filter(chart => {
-          if (selectedStatus === '全部') return true;
+          if (selectedStatus === '全部') return true; // No filtering, show all
           if (selectedStatus === '啟用中') return chart.available === true;
           if (selectedStatus === '停用中') return chart.available === false;
           return true;
         });
+  
         setCharts(filteredCharts);
         setError('');
       } else {
@@ -113,11 +116,11 @@ const ChartAdminTable: React.FC = () => {
       console.error('獲取圖表時出錯:', error);
       handleError('查詢圖表狀態失敗', () => fetchCharts(available));
     }
-  };
+  };  
 
   useEffect(() => {
-    const isAvailable = selectedStatus === '啟用中' ? true : (selectedStatus === '停用中' ? false : null);
-    fetchCharts(isAvailable);
+    const isAvailable = selectedStatus === '啟用中' ? true : (selectedStatus === '停用中' ? false : true);
+    fetchCharts(isAvailable); // 如果 selectedStatus 是 "全部"，則 available 會是 null
   }, [selectedStatus]);
 
   const handleOpenForm = () => setIsFormOpen(true);
