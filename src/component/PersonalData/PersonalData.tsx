@@ -28,11 +28,12 @@ const Pdata: React.FC = () => {
     const loadUserData = async () => {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
+        // 获取用户数据（包括详细信息）
         const userData = await fetchUserData();
         dispatch({ type: 'SET_FORM_DATA', payload: userData });
-        setInitialData(userData);
+        setInitialData(userData);  // 设置初始数据
       } catch (error) {
-        console.error('載入用戶數據時出錯:', error);
+        console.error('加载用户数据时出错:', error);
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
@@ -46,12 +47,12 @@ const Pdata: React.FC = () => {
         const identityData = await fetchDropdownData('identity');
         setIdentities(identityData);
       } catch (error) {
-        console.error('加載下拉選項時出錯:', error);
+        console.error('加载下拉选项时出错:', error);
       }
     };
 
-    loadUserData();
-    loadDropdownData();
+    loadUserData();  // 加载用户数据
+    loadDropdownData();  // 加载部门和身份数据
   }, [dispatch]);
 
   const handleEditClick = () => {
@@ -142,23 +143,6 @@ const Pdata: React.FC = () => {
                 className="form-control"
                 id="userName"
                 value={state.formData.userName}
-                required
-                disabled={!state.editable}
-                onChange={(e) => handleInputChange(e.target.id, e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col-12">
-              <label htmlFor="userId" className={styles.formLabel}>
-                員工編號
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="jobNumber"
-                value={state.formData.jobNumber}
                 required
                 disabled={!state.editable}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}

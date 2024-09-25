@@ -122,27 +122,27 @@ const Home: React.FC = () => {
   // Handle chart export
   const handleExport = async (chartId: number, requestData: string[]): Promise<{ result: boolean; errorCode: string; data: Blob }> => {
     try {
-        const permissionResponse = await getExportPermission(chartId);
-        if (!permissionResponse.result) {
-            return { result: false, errorCode: permissionResponse.errorCode, data: new Blob() }; // Return a Blob to match the type
-        }
+      const permissionResponse = await getExportPermission(chartId);
+      if (!permissionResponse.result) {
+        return { result: false, errorCode: permissionResponse.errorCode, data: new Blob() }; // Return a Blob to match the type
+      }
 
-        const exportResponse = await exportData(chartId, { exporterList: requestData, dashboardCharts: [chartId] });
-        if (!exportResponse.result) {
-            return { result: false, errorCode: exportResponse.errorCode, data: new Blob() }; // Return a Blob to match the type
-        }
+      const exportResponse = await exportData(chartId, { exporterList: requestData, dashboardCharts: [chartId] });
+      if (!exportResponse.result) {
+        return { result: false, errorCode: exportResponse.errorCode, data: new Blob() }; // Return a Blob to match the type
+      }
 
-        const blob = new Blob([exportResponse.data], { type: 'application/octet-stream' });
-        saveAs(blob, 'exported_data.csv');
-        alert('數據匯出成功！');
+      const blob = new Blob([exportResponse.data], { type: 'application/octet-stream' });
+      saveAs(blob, 'exported_data.csv');
+      alert('數據匯出成功！');
 
-        return { result: true, errorCode: '', data: blob }; // Return the blob as data
+      return { result: true, errorCode: '', data: blob }; // Return the blob as data
     } catch (error) {
-        console.error('匯出錯誤:', error);
-        alert('匯出過程中發生錯誤。請再試一次。');
-        return { result: false, errorCode: 'EXPORT_ERROR', data: new Blob() }; // Return an error code and a Blob
+      console.error('匯出錯誤:', error);
+      alert('匯出過程中發生錯誤。請再試一次。');
+      return { result: false, errorCode: 'EXPORT_ERROR', data: new Blob() }; // Return an error code and a Blob
     }
-};
+  };
 
   // Handle chart selection
   const handleChartSelect = (chartId: number) => {
@@ -202,17 +202,33 @@ const Home: React.FC = () => {
     const updatedCharts = charts.map(chart => {
       const item = layout.find(l => l.i === `chart-${chart.id}`);
       if (item) {
-        const newWidth = (item.w / 12) * 100; // Convert grid units to percentage
+        const newWidth = (item.w / 12) * 100; // Convert grid units to percentage for width
+        const newHeight = item.h * 100; // Calculate height based on layout height
         return {
           ...chart,
           width: newWidth,
+          height: newHeight, // Add height update here
         };
       }
       return chart;
     });
     setCharts(updatedCharts);
+    updatedCharts.forEach(chart => {
+      const iframe = document.getElementById(`iframe-${chart.id}`) as HTMLIFrameElement; // 確保 iframe 有唯一 ID
+      if (iframe) {
+        sendResizeMessage(iframe, updatedCharts.find(c => c.id === chart.id).width, updatedCharts.find(c => c.id === chart.id).height);
+      }
+    });
   };
-  
+
+  const sendResizeMessage = (iframe: HTMLIFrameElement, width: number, height: number) => {
+    iframe.contentWindow?.postMessage({
+      type: 'resizeChart',
+      width,
+      height,
+    }, '*');
+  };
+
   return (
     <div className='wrapper'>
       <div className="Home">
@@ -233,8 +249,14 @@ const Home: React.FC = () => {
               onResizeStop={handleResizeStop} // 添加此事件处理函数
             >
               {charts.map(chart => (
-               <div key={`chart-${chart.id}`} className={styles.dataCard} data-grid={{ i: `chart-${chart.id}`, ...layout.find(l => l.i === `chart-${chart.id}`) }}>
-                  <img src={chart.chartImage} alt={chart.name} className={styles.chartImage} />
+                <div key={`chart-${chart.id}`} className={styles.dataCard} data-grid={{ i: `chart-${chart.id}`, ...layout.find(l => l.i === `chart-${chart.id}`) }}>
+                  <iframe
+                    id={`iframe-${chart.id}`} // 為 iframe 添加唯一 ID
+                    src={chart.chartImage}
+                    title={chart.name}
+                    className={styles.chartIframe}
+                    frameBorder="0"
+                  />
                   <ChartWithDropdown
                     exportData={handleExport}
                     chartId={currentChartId || 0}

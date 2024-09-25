@@ -90,9 +90,18 @@ export interface AddUserToGroupRequest {
 export type ApiUserData = {
   id: string;
   name: string;
-  isAdmin: boolean;
-  charAuths: any[]; // 根据实际的 charAuths 结构进行调整
-  jobNumber: string;
+  departmentId?: string;   // Add departmentId field
+  departmentName?: string; // Add departmentName field
+  googleId?: string;       // Add googleId field
+  gmail?: string;          // Add gmail field
+  identity?: string;       // Add identity field
+  position?: string;       // Add position field
+  available?: boolean;     // Add available field
+  createId?: string;       // Add createId field
+  createDate?: string;     // Add createDate field
+  modifyId?: string;       // Add modifyId field
+  modifyDate?: string;     // Add modifyDate field
+  jobNumber?: string;      // Add jobNumber field
 };
 
 export interface UpdateUserData {

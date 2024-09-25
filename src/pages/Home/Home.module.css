@@ -87,22 +87,24 @@
   transform: scale(0.95);
 }
 
-.chartImage {
+.chartIframe {
   object-fit: contain;
   border-radius: 10px;
-  width: 100%;
-  height: auto;
+  width: 100%; /* 保持填滿寬度 */
+  height: 100%; /* 保持填滿高度 */
+  max-height: 600px; /* 根據需要設置最大高度 */
+  display: block;
 }
 
 @media (max-width: 1024px) {
-  .chartImage {
+  .chartIframe {
     width: 90%;
     height: auto;
   }
 }
 
 @media (max-width: 768px) {
-  .chartImage {
+  .chartIframe {
     width: 100%;
     height: auto;
   }
