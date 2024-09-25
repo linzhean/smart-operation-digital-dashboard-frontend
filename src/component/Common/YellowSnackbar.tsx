@@ -2,6 +2,7 @@ import React from 'react';
 import { Snackbar, Alert, AlertProps, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorIcon from '@mui/icons-material/Error';
+import ReactDOM from 'react-dom';
 
 interface YellowSnackbarProps {
   open: boolean;
@@ -18,12 +19,15 @@ const YellowSnackbar: React.FC<YellowSnackbarProps> = ({
   onRetry,
   severity = 'error'
 }) => {
-  return (
+  return ReactDOM.createPortal(
     <Snackbar
       open={open}
       autoHideDuration={10000}
       onClose={onClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      sx={{
+        zIndex: 88888889,
+      }}
     >
       <Alert
         severity={severity}
@@ -40,6 +44,7 @@ const YellowSnackbar: React.FC<YellowSnackbarProps> = ({
           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
           borderRadius: '8px',
           position: 'relative',
+          zIndex: 1301, // 提高 z-index
         }}
       >
         <IconButton
@@ -84,7 +89,8 @@ const YellowSnackbar: React.FC<YellowSnackbarProps> = ({
           </Button>
         )}
       </Alert>
-    </Snackbar>
+    </Snackbar>,
+    document.getElementById('portal-root') as HTMLElement
   );
 };
 

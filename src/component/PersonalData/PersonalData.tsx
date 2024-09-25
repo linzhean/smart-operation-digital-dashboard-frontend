@@ -7,6 +7,7 @@ import { UpdateUserData } from '../../services/types/userManagement';
 import { useNavigate } from 'react-router-dom';
 import { Snackbar, Alert, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import YellowSnackbar from '../Common/YellowSnackbar';
 
 interface DropdownOption {
   value: string;
@@ -242,37 +243,13 @@ const Pdata: React.FC = () => {
           </div>
         </form>
       </div>
-
-      {/* Snackbar */}
-      <Snackbar
+      <YellowSnackbar
         open={snackbarOpen}
-        autoHideDuration={4000}
+        message={snackbarMessage}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert
-          severity={snackbarSeverity}
-          variant="filled"
+        severity={snackbarSeverity}
+      />
 
-          sx={{
-            width: '400px',
-            backgroundColor: snackbarSeverity === 'error' ? '#F5F5F5' : '#DFF0D8',
-            color: '#000000',
-            padding: '16px',
-            borderRadius: '8px',
-            position: 'relative',
-          }}
-        >
-          <IconButton
-            aria-label="close"
-            onClick={handleSnackbarClose}
-            sx={{ position: 'absolute', right: 8, top: 8, color: 'black' }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <div style={{ fontSize: '1.2rem' }}>{snackbarMessage}</div>
-        </Alert>
-      </Snackbar>
     </main>
   );
 };

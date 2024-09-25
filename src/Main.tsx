@@ -78,7 +78,7 @@ const Main: React.FC = () => {
 
         {/* 有 Navbar  */}
         <Route element={<NavbarRoute />}>
-          <Route path="/home" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><Home /></PrivateRoute>} />
+          {/* <Route path="/home" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><Home /></PrivateRoute>} />
           <Route path="/profile/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><Pdata /></PrivateRoute>} />
           <Route path="/GroupManagement/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><GroupManagement /></PrivateRoute>} />
           <Route path="/mail" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><Mail /></PrivateRoute>} />
@@ -86,9 +86,9 @@ const Main: React.FC = () => {
           <Route path="/AssignExportControl/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><AssignExportControl /></PrivateRoute>} />
           <Route path="/UserControl/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><UserControl /></PrivateRoute>} />
           <Route path="/ChartAdmin" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><ChartAdmin /></PrivateRoute>} />
-          <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+          <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} /> */}
 
-          {/* 
+
           <Route path="/home" element={<Home />} />
           <Route path="/profile/*" element={<Pdata />} />
           <Route path="/GroupManagement/*" element={<GroupManagement />} />
@@ -96,7 +96,7 @@ const Main: React.FC = () => {
           <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
           <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
           <Route path="/UserControl/*" element={<UserControl />} />
-          <Route path="/ChartAdmin" element={<ChartAdmin />} /> */}
+          <Route path="/ChartAdmin" element={<ChartAdmin />} />
         </Route>
 
         <Route path="/404" element={<NotFound />} />
