@@ -217,7 +217,10 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
               </h3>
               <div className={styles.theKPIs}>
                 {charts.map(chart => (
-                  <div key={chart.id} className={`${styles.checkboxWrapper} ${!chart.observable ? styles.disabled : ''}`}>
+                  <div
+                    key={chart.id}
+                    className={`${styles.checkboxWrapper} ${!chart.observable ? styles.disabled : ''} ${selectedKPIs.includes(chart.id) ? styles.selected : ''}`}
+                  >
                     <div className={styles.LabelImgContainer}>
                       <input
                         type="checkbox"
@@ -238,14 +241,9 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                         />
                       )}
                     </div>
-                    {/* {!chart.observable && (
-                      <span className={styles.noPermission}>無權限</span>
-                    )}
-                    {!chart.observable && (
-                      <button type="button" className={styles.applyMore} onClick={() => handleRequestKpi(chart.id)}>申請更多</button>
-                    )} */}
                   </div>
                 ))}
+
               </div>
               <div className={styles.buttonGroup}>
                 <button type="button" className={styles.actionButton} onClick={previousStep}>上一步</button>

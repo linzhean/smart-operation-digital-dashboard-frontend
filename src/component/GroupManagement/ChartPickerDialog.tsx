@@ -148,7 +148,7 @@ const ChartPickerDialog: React.FC<ChartPickerDialogProps> = ({ open, onClose, on
             )}
           </Box>
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'center', gap: '5px' }}>
+        <DialogActions sx={{ gap: '5px', paddingBottom: '15px', paddingRight: '15px' }}>
           <Button onClick={onClose} sx={{ color: 'white', borderRadius: '20px', fontWeight: '700' }}>
             取消
           </Button>

@@ -107,6 +107,11 @@
   border: none;
 }
 
+.selected {
+  background-color: #1E90FF;
+}
+
+
 .applyMore {
   border: none;
   background: none;
