@@ -76,7 +76,7 @@ const Mail: React.FC = () => {
               emailId={selectedEmail.id}
               onMessageChange={setChatMessage}
             />
-            <button className={styles.sendButtonUnique} onClick={handleSendMessage}>发送</button>
+            <button className={styles.sendButtonUnique} onClick={handleSendMessage}>發送</button>
           </div>
         )}
       </div>

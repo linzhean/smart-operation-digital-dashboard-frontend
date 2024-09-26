@@ -20,6 +20,7 @@ export interface Email {
     content: string;
   };
   messageList: EmailMessage[];
+  message?: string;
 }
 
 export interface EmailMessage {

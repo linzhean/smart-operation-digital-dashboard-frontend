@@ -1,3 +1,4 @@
+//src\services\types\userManagement.ts
 import { ReactNode } from 'react';
 
 export interface Group {
@@ -50,6 +51,7 @@ export interface ApplicationData {
 }
 
 export interface UserAccountBean {
+  [x: string]: any;
   userId: string;
   userName: string;
   departmentId: string;
@@ -90,18 +92,18 @@ export interface AddUserToGroupRequest {
 export type ApiUserData = {
   id: string;
   name: string;
-  departmentId?: string;   // Add departmentId field
-  departmentName?: string; // Add departmentName field
-  googleId?: string;       // Add googleId field
-  gmail?: string;          // Add gmail field
-  identity?: string;       // Add identity field
-  position?: string;       // Add position field
-  available?: boolean;     // Add available field
-  createId?: string;       // Add createId field
-  createDate?: string;     // Add createDate field
-  modifyId?: string;       // Add modifyId field
-  modifyDate?: string;     // Add modifyDate field
-  jobNumber?: string;      // Add jobNumber field
+  departmentId?: string;   
+  departmentName?: string; 
+  googleId?: string;       
+  gmail?: string;          
+  identity?: string;       
+  position?: string;       
+  available?: boolean;     
+  createId?: string;       
+  createDate?: string;     
+  modifyId?: string;       
+  modifyDate?: string;     
+  jobNumber?: string;      
 };
 
 export interface UpdateUserData {

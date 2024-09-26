@@ -5,7 +5,7 @@ import 'react-resizable/css/styles.css';
 import LineChart from '../../component/Chart/LineChart';
 import DashboardSidebar from '../../component/Dashboard/DashboardSidebar';
 import { saveAs } from 'file-saver';
-import { exportData, getExportPermission } from '../../services/exportService';
+import { exportData, getExportPermission, setExportPermission } from '../../services/exportService';
 import ChartService from '../../services/ChartService';
 import ChartWithDropdown from '../../component/Dashboard/ChartWithDropdown';
 import styles from './Home.module.css';
@@ -24,31 +24,24 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [syncTime, setSyncTime] = useState<string>('');
+  const [exportMessage, setExportMessage] = useState<string | null>(null);
 
-  // Calculate chart layout dynamically based on screen size
+  // 计算图表布局
   const calculateLayout = (charts: any[]) => {
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-
-    const columns = 12; // Fixed 12-column grid
-    const chartWidth = 6; // 每个图表的宽度设置为4个网格单位
+    const columns = 12; // 固定 12 列网格
+    const chartWidth = 6; // 每个图表宽度设置为 6 个网格单位
     const maxChartsPerRow = Math.floor(columns / chartWidth); // 每行最多放置的图表数
 
-    return charts.map((chart: any, index: number) => {
-      const layoutItem = {
-        i: `chart-${chart.id}`,
-        x: (index % maxChartsPerRow) * chartWidth, // 确保这始终是一个数字
-        y: Math.floor(index / maxChartsPerRow),
-        w: chartWidth,
-        h: 1.9,
-      };
-      console.log(layoutItem); // 日志验证
-      return layoutItem;
-    });
+    return charts.map((chart: any, index: number) => ({
+      i: `chart-${chart.id}`,
+      x: (index % maxChartsPerRow) * chartWidth,
+      y: Math.floor(index / maxChartsPerRow),
+      w: chartWidth,
+      h: 1.9,
+    }));
   };
 
-
-  // Fetch available charts on component mount
+  // 获取可用图表
   useEffect(() => {
     const fetchAvailableCharts = async () => {
       try {
@@ -61,7 +54,7 @@ const Home: React.FC = () => {
     fetchAvailableCharts();
   }, []);
 
-  // Fetch dashboard charts when a dashboard is selected
+  // 获取仪表盘图表
   const fetchDashboardCharts = async () => {
     if (selectedDashboard) {
       setLoading(true);
@@ -94,7 +87,7 @@ const Home: React.FC = () => {
     fetchDashboardCharts();
   }, [selectedDashboard]);
 
-  // Fetch sync time
+  // 获取同步时间
   useEffect(() => {
     const fetchSyncTime = async () => {
       try {
@@ -110,11 +103,11 @@ const Home: React.FC = () => {
     fetchSyncTime();
   }, []);
 
-  // Setup polling to fetch dashboard charts every 10 minutes
+  // 设置轮询以获取仪表盘图表
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchDashboardCharts();
-    }, 600000); // 10 minutes
+    }, 600000); // 每 10 分钟
 
     return () => clearInterval(intervalId);
   }, [selectedDashboard]);
@@ -122,27 +115,41 @@ const Home: React.FC = () => {
   // Handle chart export
   const handleExport = async (chartId: number, requestData: string[]): Promise<{ result: boolean; errorCode: string; data: Blob }> => {
     try {
+      // 1. 檢查匯出權限
       const permissionResponse = await getExportPermission(chartId);
       if (!permissionResponse.result) {
-        return { result: false, errorCode: permissionResponse.errorCode, data: new Blob() }; // Return a Blob to match the type
+        setExportMessage(`匯出失敗: ${permissionResponse.message}`);
+        return { result: false, errorCode: permissionResponse.errorCode, data: new Blob() };
       }
-
+  
+      const setPermissionResponse = await setExportPermission(chartId, { 
+        sponsorList: [], 
+        exporterList: requestData, 
+        dashboardCharts: [chartId] 
+      });
+      if (!setPermissionResponse.result) {
+        setExportMessage(`匯出失敗: ${setPermissionResponse.message}`);
+        return { result: false, errorCode: setPermissionResponse.errorCode, data: new Blob() };
+      }
+  
+      // 2. 發送匯出請求並處理 Blob 回應
       const exportResponse = await exportData(chartId, { exporterList: requestData, dashboardCharts: [chartId] });
       if (!exportResponse.result) {
-        return { result: false, errorCode: exportResponse.errorCode, data: new Blob() }; // Return a Blob to match the type
+        return { result: false, errorCode: exportResponse.errorCode, data: new Blob() };
       }
-
-      const blob = new Blob([exportResponse.data], { type: 'application/octet-stream' });
-      saveAs(blob, 'exported_data.csv');
+  
+      // 3. 使用 Blob 保存 XLSX 文件
+      const blob = new Blob([exportResponse.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, `exported_data_${chartId}.xlsx`);
+  
       alert('數據匯出成功！');
-
-      return { result: true, errorCode: '', data: blob }; // Return the blob as data
+      return { result: true, errorCode: '', data: blob };
     } catch (error) {
       console.error('匯出錯誤:', error);
       alert('匯出過程中發生錯誤。請再試一次。');
-      return { result: false, errorCode: 'EXPORT_ERROR', data: new Blob() }; // Return an error code and a Blob
+      return { result: false, errorCode: 'EXPORT_ERROR', data: new Blob() };
     }
-  };
+  };  
 
   // Handle chart selection
   const handleChartSelect = (chartId: number) => {
@@ -196,38 +203,38 @@ const Home: React.FC = () => {
     setLayout(layout);
   };
 
-  // 处理图表大小调整后停止的事件
-  const handleResizeStop = (layout: any[]) => {
-    setLayout(layout);
-    const updatedCharts = charts.map(chart => {
-      const item = layout.find(l => l.i === `chart-${chart.id}`);
-      if (item) {
-        const newWidth = (item.w / 12) * 100; // Convert grid units to percentage for width
-        const newHeight = item.h * 100; // Calculate height based on layout height
-        return {
-          ...chart,
-          width: newWidth,
-          height: newHeight, // Add height update here
-        };
-      }
-      return chart;
-    });
-    setCharts(updatedCharts);
-    updatedCharts.forEach(chart => {
-      const iframe = document.getElementById(`iframe-${chart.id}`) as HTMLIFrameElement; // 確保 iframe 有唯一 ID
-      if (iframe) {
-        sendResizeMessage(iframe, updatedCharts.find(c => c.id === chart.id).width, updatedCharts.find(c => c.id === chart.id).height);
-      }
-    });
-  };
+// 处理图表大小调整
+const handleResizeStop = (layout: any[]) => {
+  setLayout(layout);
+  const updatedCharts = charts.map(chart => {
+    const item = layout.find(l => l.i === `chart-${chart.id}`);
+    if (item) {
+      const newWidth = (item.w / 12) * 100; // 将网格单位转换为百分比宽度
+      const newHeight = item.h * 100; // 根据布局高度计算新的高度
+      return {
+        ...chart,
+        width: newWidth,
+        height: newHeight,
+      };
+    }
+    return chart;
+  });
+  setCharts(updatedCharts);
+  updatedCharts.forEach(chart => {
+    const iframe = document.getElementById(`iframe-${chart.id}`) as HTMLIFrameElement;
+    if (iframe) {
+      sendResizeMessage(iframe, updatedCharts.find(c => c.id === chart.id).width, updatedCharts.find(c => c.id === chart.id).height);
+    }
+  });
+};
 
-  const sendResizeMessage = (iframe: HTMLIFrameElement, width: number, height: number) => {
-    iframe.contentWindow?.postMessage({
-      type: 'resizeChart',
-      width,
-      height,
-    }, '*');
-  };
+const sendResizeMessage = (iframe: HTMLIFrameElement, width: number, height: number) => {
+  iframe.contentWindow?.postMessage({
+    type: 'resizeChart',
+    width,
+    height,
+  }, '*');
+};
 
   return (
     <div className='wrapper'>
@@ -240,6 +247,7 @@ const Home: React.FC = () => {
         <div className={styles.dashboard_container}>
           {loading && <div className={styles.loadingMsg}></div>}
           {error && <div className={styles.errorMsg}>{error}</div>}
+          {exportMessage && <div className={styles.exportMessage}>{exportMessage}</div>}
           <div className='theContent'>
             <ResponsiveGridLayout
               layouts={{ lg: layout, md: layout, sm: layout, xs: layout, xxs: layout }}

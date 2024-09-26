@@ -51,6 +51,9 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     loading,
     handleExportWrapper,
     handleDelegateWrapper,
+    sponsorList,
+    loadingSponsors,
+    responseMessage,
   } = useChartWithDropdown(exportData, chartId, requestData, currentUserId);
 
   useEffect(() => {
@@ -119,6 +122,9 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
       <div className={styles.modal}>
         <form onSubmit={handleSubmit} className={styles.AssignForm}>
           <h2>撰寫郵件交辦</h2>
+          <div>
+            {responseMessage && <p className={styles.responseMessage}>{responseMessage}</p>}
+          </div>
           <div className={styles.labelGroup}>
             <label htmlFor='AssignFormTitle'>標題</label>
             <input

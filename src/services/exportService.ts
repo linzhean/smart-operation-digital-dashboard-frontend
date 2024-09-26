@@ -1,3 +1,4 @@
+//src\services\exportService.ts
 import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 
@@ -62,8 +63,9 @@ export const exportData = async (chartId: number, requestData: { exporterList: s
   try {
     const response = await apiClient.post(`/export/export`, requestData, {
       params: { chartId },
+      responseType: 'blob', // 設置 responseType 為 'blob'
     });
-    return response.data;
+    return { result: true, errorCode: '', data: response.data }; // 返回 Blob 數據
   } catch (error) {
     if (isAxiosError(error)) {
       return {

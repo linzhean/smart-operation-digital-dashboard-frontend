@@ -6,23 +6,23 @@ import { Response } from './types/Request.type';
 // 获取用户数据
 export const fetchUserData = async (): Promise<UpdateUserData> => {
   try {
-    // 第一次请求 /user-account 获取基本数据
+    // 第一次請求 /user-account 獲取基本資料
     const userResponse = await apiClient.get<Response<ApiUserData>>('/user-account');
     const { result: userResult, data: userData } = userResponse.data;
 
     if (!userResult || !userData?.id) {
-      throw new Error('获取用户数据失败: 无法获取用户 ID');
+      throw new Error('獲取用戶資料失敗: 無法獲取用戶 ID');
     }
 
-    // 第二次请求 /user-account/{userId} 获取详细数据
+    // 第二次請求 /user-account/{userId} 獲取詳細資料
     const detailedResponse = await apiClient.get<Response<ApiUserData>>(`/user-account/${userData.id}`);
     const { result: detailedResult, data: detailedData } = detailedResponse.data;
 
     if (!detailedResult || !detailedData) {
-      throw new Error('获取用户详情失败');
+      throw new Error('獲取用戶詳細失敗');
     }
 
-    // 返回获取的用户详情数据
+    // 確保返回的資料包含必要屬性
     return {
       userId: detailedData.id || '',
       userName: detailedData.name || '',
@@ -37,13 +37,14 @@ export const fetchUserData = async (): Promise<UpdateUserData> => {
       createDate: detailedData.createDate || '',
       modifyId: detailedData.modifyId || '',
       modifyDate: detailedData.modifyDate || '',
-      jobNumber: detailedData.jobNumber || '',  // 确保从详细数据中获取 jobNumber
+      jobNumber: detailedData.jobNumber || '',
     };
   } catch (error) {
-    console.error('获取用户数据时发生错误:', error);
+    console.error('獲取用戶資料時發生錯誤:', error);
     throw error;
   }
 };
+
 
 // 更新用户数据
 export const updateUserData = async (updatedData: UpdateUserData): Promise<void> => {

@@ -2,12 +2,15 @@
 import { useState, useEffect } from 'react';
 import ChartService from '../services/ChartService';
 import { createEmail, sendChatMessage } from '../services/mailService';
+import { getAssignedTaskSponsors } from '../services/AssignedTaskService';
 import { createApplication } from '../services/application';
 import { fetchAllUsers } from '../services/UserAccountService';
 import { useNavigate } from 'react-router-dom';
 
 export function useChartWithDropdown(
-  exportData: (chartId: number, requestData: string[]) => Promise<{ result: boolean; errorCode: string; data: Blob; }>,
+  exportData: (chartId: number, requestData: string[]) => Promise<{
+    [x: string]: any; result: boolean; errorCode: string; data: Blob; 
+}>,
   chartId: number,
   requestData: string[],
   currentUserId: string
@@ -39,6 +42,9 @@ export function useChartWithDropdown(
   const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
   const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [sponsorList, setSponsorList] = useState<string[]>([]);
+  const [loadingSponsors, setLoadingSponsors] = useState<boolean>(true);
+  const [responseMessage, setResponseMessage] = useState<string | null>(null);
 
 // 獲取所有可用的圖表
 useEffect(() => {
@@ -114,9 +120,32 @@ useEffect(() => {
     }
   }, [chartId]);
 
+  useEffect(() => {
+    const fetchSponsors = async () => {
+      setLoadingSponsors(true);
+      try {
+        const response = await getAssignedTaskSponsors(chartId);
+        // Check if response.data is defined and has sponsorList
+        if (response.data && response.data.sponsorList) {
+          setSponsorList(response.data.sponsorList);
+        } else {
+          console.warn('Sponsor list is not available in the response:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching sponsors:', error);
+      } finally {
+        setLoadingSponsors(false);
+      }
+    };
+  
+    if (chartId) {
+      fetchSponsors();
+    }
+  }, [chartId]);  
+
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
 
-  const handleExportWrapper = async () => {
+  const handleExportWrapper = async (currentChartId?: any, requestData?: string[]) => {
     setLoading(true);
     try {
       await handleExport();
@@ -131,16 +160,16 @@ useEffect(() => {
     try {
       const result = await exportData(chartId, requestData);
       if (!result.result) {
-        alert(`導出失敗: ${result.errorCode}`);
+        alert(`導出失敗: ${result.message}`); // Use message instead of errorCode
       } else {
-        // 處理成功導出的情況，例如觸發文件下載
+        // Handle successful export, e.g., trigger file download
       }
     } catch (error) {
       console.error('導出過程中發生錯誤:', error);
     } finally {
       setIsDropdownOpen(false);
     }
-  };
+  };  
 
   const handleDelegateWrapper = async () => {
     setLoading(true);
@@ -187,7 +216,7 @@ useEffect(() => {
   
       // 創建郵件
       const createdEmail = await createEmail(assignedTask);
-      console.log('創建郵件響應:', createdEmail); // 打印響應
+      console.log('創建郵件響應:', createdEmail);
   
       if (createdEmail && createdEmail.id) {
         // 如果郵件創建成功，則發送聊天消息
@@ -201,23 +230,22 @@ useEffect(() => {
           modifyId: currentUserId,
           modifyDate: formatDate(new Date()),
         });
-        alert('交辦成功');
+        
+        // 设置响应消息
+        setResponseMessage(createdEmail.message|| null); // 假设 createdEmail.message 是响应中的消息
+        setIsModalOpen(false);
       } else {
-        // 如果創建郵件失敗，顯示錯誤訊息
         throw new Error('創建郵件失敗，且無法取得錯誤訊息。');
       }
-  
-      setIsModalOpen(false);
     } catch (error: any) {
       console.error('提交委派任務時出錯:', error);
-      // Error handling from the error object, not the createdEmail object
       if (error?.response?.data?.message) {
         alert(`交辦失敗: ${error.response.data.message}`);
       } else {
         alert('成功。');
       }
     }
-  };    
+  };      
 
   const fetchChartData = async (chartId: number) => {
     try {
@@ -398,5 +426,8 @@ useEffect(() => {
     loading,
     handleExportWrapper,
     handleDelegateWrapper,
+    sponsorList, 
+    loadingSponsors,
+    responseMessage,
   };
 }

@@ -1,3 +1,4 @@
+//src\context\UserContext.tsx
 import React, { createContext, useReducer, ReactNode, useContext, useEffect, useState } from 'react';
 import { fetchWithAuth } from '../utils/fetchWithAuth';
 import { backendApiUrl } from '../services/LoginApi';
@@ -38,12 +39,12 @@ type Action =
 const initialState: State = {
   formData: {
     userId: '',
-    userName: '',
+    userName: '',  
     departmentId: '',
     departmentName: '',
     googleId: '',
     gmail: '',
-    identity: '',
+    identity: '', 
     position: '',
     available: false,
     createId: '',
@@ -56,6 +57,7 @@ const initialState: State = {
   editable: false,
   isAuthenticated: false
 };
+
 
 const userReducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -99,6 +101,10 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       dispatch({ type: 'CLEAR_USER' });
     }
   };
+
+  useEffect(() => {
+    console.log('Form data:', state.formData);
+  }, [state.formData]);  
 
   useEffect(() => {
     const authToken = localStorage.getItem('authToken');

@@ -10,8 +10,8 @@ interface User {
   name: string;
   id: string;
   department: string;
-  email: string;
-  position: string;
+  email: string; // 保持 email 字段
+  position: string; // 保持 position 字段
   status: string; // 用户状态（啟用中 或 停用）
 }
 
@@ -36,10 +36,11 @@ const UserStatusControl: React.FC = () => {
         name: employee.userName,
         id: employee.userId,
         department: employee.departmentName,
-        email: employee.gmail,
-        position: employee.position,
-        status: employee.available === true ? '啟用中' : '停用' // Handle available as number
+        email: employee.email, // 使用 gmail 字段作为电子邮箱
+        position: employee.identity, // 使用 identity 字段作为职称
+        status: employee.available === true ? '啟用中' : '停用' // 处理 available
       }));
+      
       setUsers(formattedData);
       setHasMore(page < totalPages - 1);
     } catch (error) {

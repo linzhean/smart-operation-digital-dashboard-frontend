@@ -42,7 +42,7 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
 
   useEffect(() => {
     if (isLoading) {
-      setMessages((prev) => [...prev, { id: nextId, role: 'ai', content: 'AI is generating the suggestion, please wait...' }]);
+      setMessages((prev) => [...prev, { id: nextId, role: 'ai', content: 'AI建議正在生成中' }]);
       setNextId(nextId + 1);
     }
   }, [isLoading]);
@@ -55,7 +55,7 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
       setMessages((prev) => [
         ...prev,
         { id: userMessageId, role: 'user', content: userMessage },
-        { id: nextId + 1, role: 'ai', content: 'LOADING' } // AI 消息 ID 递增
+        { id: nextId + 1, role: 'ai', content: '加載中' } // AI 消息 ID 递增
       ]);
       setInput('');
       setNextId(nextId + 2); // 更新下一个 ID

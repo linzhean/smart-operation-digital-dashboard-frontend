@@ -1,3 +1,4 @@
+//src\component\PersonalData\PersonalData.tsx
 import React, { useEffect, useState } from 'react';
 import styles from './PersonalData.module.css';
 import { useUserContext } from '../../context/UserContext';
@@ -28,17 +29,17 @@ const Pdata: React.FC = () => {
     const loadUserData = async () => {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
-        // 获取用户数据（包括详细信息）
         const userData = await fetchUserData();
+        console.log('Loaded user data:', userData);
         dispatch({ type: 'SET_FORM_DATA', payload: userData });
-        setInitialData(userData);  // 设置初始数据
+        setInitialData(userData);  // 設置初始數據
       } catch (error) {
         console.error('加载用户数据时出错:', error);
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
-    };
-
+    };  
+    
     const loadDropdownData = async () => {
       try {
         const departmentData = await fetchDropdownData('department');
