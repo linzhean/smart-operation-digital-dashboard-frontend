@@ -1,4 +1,3 @@
-//src\context\UserContext.tsx
 import React, { createContext, useReducer, ReactNode, useContext, useEffect, useState } from 'react';
 import { fetchWithAuth } from '../utils/fetchWithAuth';
 import { backendApiUrl } from '../services/LoginApi';
@@ -39,12 +38,12 @@ type Action =
 const initialState: State = {
   formData: {
     userId: '',
-    userName: '',  
+    userName: '',
     departmentId: '',
     departmentName: '',
     googleId: '',
     gmail: '',
-    identity: '', 
+    identity: '',
     position: '',
     available: false,
     createId: '',
@@ -93,18 +92,55 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [state, dispatch] = useReducer(userReducer, initialState);
   const [user, setUserState] = useState<User | null>(null);
 
-  const setUser = (user: User | null) => {
-    setUserState(user);
-    if (user) {
-      dispatch({ type: 'SET_USER', payload: user });
+  // const setUser = (user: User | null) => {
+  //   setUserState(user);
+  //   if (user) {
+  //     dispatch({ type: 'SET_USER', payload: user });
+  //   } else {
+  //     dispatch({ type: 'CLEAR_USER' });
+  //   }
+  // };
+
+  // const setUser = (userData: any) => {
+  //   if (userData) {
+  //     const userForContext: User = {
+  //       id: userData.userId || '',
+  //       name: userData.userName || '',
+  //       email: userData.gmail || '',
+  //       role: userData.position || '',
+  //       identity: userData.identity || '',
+  //     };
+  //     setUserState(userForContext);
+  //     dispatch({ type: 'SET_USER', payload: userForContext });
+  //   } else {
+  //     setUserState(null);
+  //     dispatch({ type: 'CLEAR_USER' });
+  //   }
+  // };
+
+  const setUser = (userData: any) => {
+    if (userData) {
+      const userForContext: User = {
+        id: userData.id || '',
+        name: userData.name || '',
+        email: userData.gmail || '',
+        role: userData.position || '',
+        identity: userData.identity || '',
+      };
+      console.log('Setting user data:', userForContext);
+      setUserState(userForContext);
+      dispatch({ type: 'SET_USER', payload: userForContext });
     } else {
+      console.log('Clearing user data');
+      setUserState(null);
       dispatch({ type: 'CLEAR_USER' });
     }
   };
 
+
   useEffect(() => {
     console.log('Form data:', state.formData);
-  }, [state.formData]);  
+  }, [state.formData]);
 
   useEffect(() => {
     const authToken = localStorage.getItem('authToken');

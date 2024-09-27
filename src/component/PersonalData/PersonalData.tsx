@@ -6,8 +6,6 @@ import { fetchUserData, updateUserData } from '../../services/Pdata';
 import { fetchDropdownData } from '../../services/dropdownServices';
 import { UpdateUserData } from '../../services/types/userManagement';
 import { useNavigate } from 'react-router-dom';
-import { Snackbar, Alert, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import YellowSnackbar from '../Common/YellowSnackbar';
 
 interface DropdownOption {
@@ -17,6 +15,8 @@ interface DropdownOption {
 
 const Pdata: React.FC = () => {
   const { state, dispatch } = useUserContext();
+  const { user } = useUserContext();
+
   const navigate = useNavigate();
   const [initialData, setInitialData] = useState<UpdateUserData | null>(null);
   const [departments, setDepartments] = useState<DropdownOption[]>([]);
@@ -34,12 +34,12 @@ const Pdata: React.FC = () => {
         dispatch({ type: 'SET_FORM_DATA', payload: userData });
         setInitialData(userData);  // 設置初始數據
       } catch (error) {
-        console.error('加载用户数据时出错:', error);
+        console.error('載入用戶數據出錯:', error);
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
-    };  
-    
+    };
+
     const loadDropdownData = async () => {
       try {
         const departmentData = await fetchDropdownData('department');
@@ -48,12 +48,12 @@ const Pdata: React.FC = () => {
         const identityData = await fetchDropdownData('identity');
         setIdentities(identityData);
       } catch (error) {
-        console.error('加载下拉选项时出错:', error);
+        console.error('載入選項時發生錯誤:', error);
       }
     };
 
-    loadUserData();  // 加载用户数据
-    loadDropdownData();  // 加载部门和身份数据
+    loadUserData();
+    loadDropdownData();
   }, [dispatch]);
 
   const handleEditClick = () => {
@@ -143,7 +143,7 @@ const Pdata: React.FC = () => {
                 type="text"
                 className="form-control"
                 id="userName"
-                value={state.formData.userName}
+                value={user?.name}
                 required
                 disabled={!state.editable}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
@@ -161,6 +161,7 @@ const Pdata: React.FC = () => {
                 className="form-control"
                 id="gmail"
                 value={state.formData.gmail}
+                // value={user?.email}
                 required
                 disabled={!state.editable}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
@@ -198,7 +199,8 @@ const Pdata: React.FC = () => {
                 type="text"
                 className="form-control"
                 id="position"
-                value={state.formData.position}
+                // value={state.formData.position}
+                value={user?.role}
                 required
                 disabled={!state.editable}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
@@ -214,7 +216,8 @@ const Pdata: React.FC = () => {
               <select
                 className="form-control"
                 id="identity"
-                value={state.formData.identity}
+                // value={state.formData.identity}
+                value={user?.identity}
                 disabled={!state.editable}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
               >

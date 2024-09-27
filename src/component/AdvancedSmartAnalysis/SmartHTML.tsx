@@ -44,3 +44,4 @@ const SmartHTML: React.FC<SmartHTMLProps> = ({ chartHTML }) => {
 };
 
 export default SmartHTML;
+
