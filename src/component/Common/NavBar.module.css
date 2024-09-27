@@ -3,8 +3,14 @@
   background-color: #ACACBE !important;
 }
 
-
 .brandImg {
+  width: 40px;
+  visibility: hidden;
+  cursor: default;
+}
+
+.showBurgerIcon {
+  visibility: visible;
   width: 40px;
 }
 
@@ -56,13 +62,13 @@
 
 .bgBodyTertiary {
   background-color: black !important;
+  padding: 5px 0px 5px 0px !important;
 }
 
 .navbar {
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 
-/* 768px 是根據 navbar-expand-md 設定的 */
 @media (max-width: 769px) {
   .navbarNavItemImg {
     display: none;
@@ -78,7 +84,6 @@
     font-size: 1.2rem;
   }
 
-  /* 希望他可以作用但他沒有== */
   .navbar>.container-fluid {
     height: 10vh !important;
   }

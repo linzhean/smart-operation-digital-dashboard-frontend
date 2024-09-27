@@ -107,8 +107,37 @@ import AssignExportControlIcon from '../../assets/icon/AssignExportControl.svg';
 import InterimKPIControl from '../../assets/icon/InterimKPIControl.svg';
 import UserControl from '../../assets/icon/UserControl.svg';
 import ChartAdmin from '../../assets/icon/ChartAdmin.png'
-import LOGO from '../../assets/icon/Logo-GIF-crop.gif'
+import { Tooltip } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { BorderBottom } from '@mui/icons-material';
+
+
+
 const NavBar: React.FC = () => {
+
+  const WhiteTooltip = styled(({ className, ...props }: any) => (
+    <Tooltip {...props} classes={{ popper: className }} PopperProps={{
+      modifiers: [
+        {
+          name: 'offset',
+          options: {
+            offset: [0, -12],
+          },
+        },
+      ],
+    }} />
+  ))(() => ({
+    [`& .MuiTooltip-tooltip`]: {
+      backgroundColor: '#ffffff',
+      color: '#000000',
+      boxShadow: '0px 3px 5px rgba(0, 0, 0, 0.2)',
+      fontSize: '0.8rem',
+      fontWeight: '700',
+      border: '1px solid #000000',
+    }
+  }));
+
+
   const location = useLocation();
   const activeLink = location.pathname;
 
@@ -128,6 +157,9 @@ const NavBar: React.FC = () => {
     setIsNavBarExpanded(!isNavBarExpanded);
   };
 
+  const SidebarPaths = ['/UserControl', '/InterimKPIControl', '/GroupManagement', '/home', '/profile'];
+  const ShowBurgerIcon = SidebarPaths.some((path) => activeLink.startsWith(path));
+
   return (
     <>
       {isNavBarExpanded && (
@@ -136,8 +168,9 @@ const NavBar: React.FC = () => {
 
       <nav className={`navbar navbar-expand-md ${styles.bgBodyTertiary}`}>
         <div className={`container-fluid ${styles.containerfluid}`}>
-          <a className={`brand ${styles.navbarHamburger}`} id='hamburger' href="#">
-            <img className={`brandImg ${styles.brandImg}`} src={burgerMenuIcon} alt="menu" />
+
+          <a className={`brand ${styles.navbarHamburger} `} id='hamburger' href="#">
+            <img className={`brandImg ${styles.brandImg} ${ShowBurgerIcon ? styles.showBurgerIcon : ''}`} src={burgerMenuIcon} alt="menu" />
           </a>
 
           <button
@@ -152,6 +185,7 @@ const NavBar: React.FC = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
+
           <div className={`collapse navbar-collapse  ${styles.controlZindex}  ${isNavBarExpanded ? 'show' : ''}`} id="navbarNavAltMarkup">
             <ul className={`navbar-nav ${styles.navbarNav}`}>
 
@@ -161,7 +195,9 @@ const NavBar: React.FC = () => {
                   className={`nav-link ${styles.navLink} ${activeLink.startsWith('/ChartAdmin') ? styles.activeNavLink : ''}`}
                   to="/ChartAdmin"
                 >
-                  <img className={styles.navbarNavItemImg} src={ChartAdmin} alt="ChartAdmin" />
+                  <WhiteTooltip title="圖表後台管理" enterDelay={700} leaveDelay={100} >
+                    <img className={styles.navbarNavItemImg} src={ChartAdmin} alt="ChartAdmin" onClick={() => console.log(activeLink)} />
+                  </WhiteTooltip>
                   <span className={`${styles.navbarText} ${activeLink.startsWith('/ChartAdmin') ? styles.activeNavLinkText : ''}`}>圖表後台管理</span>
                 </Link>
               </li>
@@ -172,7 +208,9 @@ const NavBar: React.FC = () => {
                   className={`nav-link ${styles.navLink} ${activeLink.startsWith('/AssignExportControl') ? styles.activeNavLink : ''}`}
                   to="/AssignExportControl"
                 >
-                  <img className={styles.navbarNavItemImg} src={AssignExportControlIcon} alt="graphManage" />
+                  <WhiteTooltip title="權限管理" enterDelay={700} leaveDelay={100} >
+                    <img className={styles.navbarNavItemImg} src={AssignExportControlIcon} alt="graphManage" />
+                  </WhiteTooltip>
                   <span className={`${styles.navbarText} ${activeLink.startsWith('/AssignExportControl') ? styles.activeNavLinkText : ''}`}>權限管理</span>
                 </Link>
               </li>
@@ -183,7 +221,9 @@ const NavBar: React.FC = () => {
                   className={`nav-link ${styles.navLink} ${activeLink.startsWith('/UserControl') ? styles.activeNavLink : ''}`}
                   to="/UserControl/userApply"
                 >
-                  <img className={styles.navbarNavItemImg} src={UserControl} alt="UserControl" />
+                  <WhiteTooltip title="使用者管理" enterDelay={700} leaveDelay={100} >
+                    <img className={styles.navbarNavItemImg} src={UserControl} alt="UserControl" />
+                  </WhiteTooltip>
                   <span className={`${styles.navbarText} ${activeLink.startsWith('/UserControl') ? styles.activeNavLinkText : ''}`}>使用者管理</span>
                 </Link>
               </li>
@@ -194,7 +234,9 @@ const NavBar: React.FC = () => {
                   className={`nav-link ${styles.navLink} ${activeLink.startsWith('/InterimKPIControl') ? styles.activeNavLink : ''}`}
                   to="/InterimKPIControl"
                 >
-                  <img className={styles.navbarNavItemImg} src={InterimKPIControl} alt="graphManage" />
+                  <WhiteTooltip title="臨時KPI審核" enterDelay={700} leaveDelay={100} >
+                    <img className={styles.navbarNavItemImg} src={InterimKPIControl} alt="graphManage" />
+                  </WhiteTooltip>
                   <span className={`${styles.navbarText} ${activeLink.startsWith('/InterimKPIControl') ? styles.activeNavLinkText : ''}`}>臨時KPI審核</span>
                 </Link>
               </li>
@@ -205,7 +247,10 @@ const NavBar: React.FC = () => {
                   className={`nav-link ${styles.navLink} ${activeLink.startsWith('/GroupManagement') ? styles.activeNavLink : ''}`}
                   to="/GroupManagement"
                 >
-                  <img className={styles.navbarNavItemImg} src={groupIcon} alt="GroupManagement" />
+                  <WhiteTooltip title="群組管理" enterDelay={700} leaveDelay={100} >
+                    <img className={styles.navbarNavItemImg} src={groupIcon} alt="GroupManagement" />
+                  </WhiteTooltip>
+
                   <span className={`${styles.navbarText} ${activeLink.startsWith('/GroupManagement') ? styles.activeNavLinkText : ''}`}>群組管理</span>
                 </Link>
               </li>
@@ -216,7 +261,9 @@ const NavBar: React.FC = () => {
                   className={`nav-link ${styles.navLink} ${activeLink.startsWith('/home') ? styles.activeNavLink : ''}`}
                   to="/home"
                 >
-                  <img className={styles.navbarNavItemImg} src={dashBoardIcon} alt="home" />
+                  <WhiteTooltip title="儀表板" enterDelay={700} leaveDelay={100} >
+                    <img className={styles.navbarNavItemImg} src={dashBoardIcon} alt="home" />
+                  </WhiteTooltip>
                   <span className={`${styles.navbarText} ${activeLink.startsWith('/home') ? styles.activeNavLinkText : ''}`}>儀表板</span>
                 </Link>
               </li>
@@ -228,7 +275,9 @@ const NavBar: React.FC = () => {
                   className={`nav-link ${styles.navLink} ${activeLink.startsWith('/mail') ? styles.activeNavLink : ''}`}
                   to="/mail"
                 >
-                  <img className={`${styles.navbarNavItemImg} ${styles.navbarNavItemMail}`} src={emailIcon} alt="mail" />
+                  <WhiteTooltip title="信件" enterDelay={700} leaveDelay={100} >
+                    <img className={`${styles.navbarNavItemImg} ${styles.navbarNavItemMail}`} src={emailIcon} alt="mail" />
+                  </WhiteTooltip>
                   <span className={`${styles.navbarText} ${activeLink.startsWith('/mail') ? styles.activeNavLinkText : ''}`}>信件</span>
                 </Link>
               </li>
@@ -239,7 +288,10 @@ const NavBar: React.FC = () => {
                   className={`nav-link ${styles.navLink} ${activeLink.startsWith('/profile') ? styles.activeNavLink : ''}`}
                   to="/profile"
                 >
-                  <img className={styles.navbarNavItemImg} src={userDataIcon} alt="profile" />
+                  <WhiteTooltip title="個人資料" enterDelay={700} leaveDelay={100} >
+                    <img className={styles.navbarNavItemImg} src={userDataIcon} alt="profile" />
+                  </WhiteTooltip>
+
                   <span className={`${styles.navbarText} ${activeLink.startsWith('/profile') ? styles.activeNavLinkText : ''}`}>個人資料</span>
                 </Link>
               </li>
