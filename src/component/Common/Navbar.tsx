@@ -309,7 +309,7 @@ const NavBar: React.FC = () => {
                   </WhiteTooltip> */}
                   <WhiteTooltip title="個人資料" enterDelay={700} leaveDelay={100} >
                     <div className={`${styles.theUserName} ${activeLink.startsWith('/profile') ? styles.activeUserName : ''}`}>
-                      {user?.name ? user.name : '訪客'}  {/* 正確的 JSX 表達式 */}
+                      {user?.name ? user.name : (user?.id ? user.id : '訪客')}
                     </div>
                   </WhiteTooltip>
                   {/* <span className={`${styles.navbarText} ${activeLink.startsWith('/profile') ? styles.activeNavLinkText : ''}`}>個人資料</span> */}
