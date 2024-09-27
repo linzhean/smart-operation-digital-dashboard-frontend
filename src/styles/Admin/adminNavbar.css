@@ -5,7 +5,7 @@
   width: 100%; /* 全宽 */
   z-index: 1000; /* 确保在其他内容之上 */
   top: 0; /* 定位于顶部 */
-  left: 0; /* 确保在页面左侧 */
+  left: 0; 
 }
 
 .admin-navbar .container-fluid {

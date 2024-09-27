@@ -6,7 +6,7 @@ import { Group } from '../../services/types/userManagement';
 import editIcon from '../../assets/icon/edit-black.svg';
 import newGroup from '../../assets/icon/newGroup.png';
 import rename from '../../assets/icon/rename.png';
-
+import closeX from '../../assets/icon/X.svg'
 interface SidebarProps {
   onSelectGroup: (groupId: number) => void;
   groupId: number;
@@ -179,7 +179,9 @@ const Modal: React.FC<ModalProps> = ({ onClose, onSubmit, title, icon, value, on
           <img src={icon} className={styles.theIcon} alt="" />
         </div>
         <h2>{title}</h2>
-        <button onClick={onClose} className={styles.closeModal}>X</button>
+        <button onClick={onClose} className={styles.closeModal}>
+          <img src={closeX} alt="關閉" />
+        </button>
         <input
           type="text"
           value={value}

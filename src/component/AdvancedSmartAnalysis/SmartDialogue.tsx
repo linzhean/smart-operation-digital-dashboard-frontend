@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styles from './SmartDialogue.module.css';
 import send from '../../assets/icon/send.png';
 import clear from '../../assets/icon/clear.png';
-import ChartService from '../../services/ChartService'; // Import ChartService
+import ChartService from '../../services/ChartService';
 import ReactMarkdown from 'react-markdown';
 
 interface SmartDialogueProps {
@@ -15,7 +15,7 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
   const [messages, setMessages] = useState<{ id: number; role: 'user' | 'ai'; content: string }[]>([]);
   const [input, setInput] = useState('');
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const [nextId, setNextId] = useState(0); // 用于生成消息 ID
+  const [nextId, setNextId] = useState(0);
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
@@ -51,35 +51,35 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
     e.preventDefault();
     if (input.trim()) {
       const userMessage = input;
-      const userMessageId = nextId; // 获取新的消息 ID
+      const userMessageId = nextId;
       setMessages((prev) => [
         ...prev,
         { id: userMessageId, role: 'user', content: userMessage },
-        { id: nextId + 1, role: 'ai', content: '加載中' } // AI 消息 ID 递增
+        { id: nextId + 1, role: 'ai', content: '加載中' }
       ]);
       setInput('');
-      setNextId(nextId + 2); // 更新下一个 ID
-  
+      setNextId(nextId + 2);
+
       try {
-        // 获取上条消息的 ID
+
         const lastMessageId = userMessageId;
-  
+
         const response = await ChartService.sendMessage({
           chartId: chartId,
           content: userMessage,
-          messageId: lastMessageId, // 传递 messageId
+          messageId: lastMessageId,
         });
-  
-        // 更新消息为 AI 的响应
-        const newChat = response.data.data.newChat; // 获取 response 中的 newChat
+
+
+        const newChat = response.data.data.newChat;
         setMessages((prev) => [
-          ...prev.slice(0, -1), // 删除 LOADING
-          { id: nextId, role: 'ai', content: newChat } // 添加 newChat
+          ...prev.slice(0, -1),
+          { id: nextId, role: 'ai', content: newChat }
         ]);
       } catch (error) {
         console.error('Failed to send message:', error);
         setMessages((prev) => [
-          ...prev.slice(0, -1), 
+          ...prev.slice(0, -1),
           { id: nextId, role: 'ai', content: 'Error occurred. Please try again.' }
         ]);
       }

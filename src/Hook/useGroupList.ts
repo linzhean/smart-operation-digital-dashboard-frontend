@@ -10,6 +10,7 @@ import {
   removeChartFromGroup,
 } from '../services/GroupApi';
 import ChartService from '../services/ChartService';
+import YellowConfirmDialog from '../component/Common/YellowConfirmDialog';
 
 interface UseGroupListParams {
   groupId: number;
@@ -24,6 +25,9 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   const [charts, setCharts] = useState<{ id: number; name: string; chartGroupId: number }[]>([]);
   const [allCharts, setAllCharts] = useState<{ id: number; name: string }[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmDialogMessage, setConfirmDialogMessage] = useState('');
+  const [onConfirm, setOnConfirm] = useState<(() => void) | null>(null);
   const isMenuOpen = Boolean(anchorEl);
 
   const fetchData = useCallback(async () => {
@@ -33,18 +37,18 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
         fetchChartsByGroupId(groupId),
         ChartService.getAllCharts(),
       ]);
-    
+
       console.log('chartsResponse:', chartsResponse);
-    
+
       // 確保 chartsResponse 是陣列
-      setCharts(chartsResponse.map(chart =>  ({
+      setCharts(chartsResponse.map(chart => ({
         id: chart.chartId,
         name: chart.chartName,
         chartGroupId: chart.chartGroupId,
-      })) );      
+      })));
 
       console.log('Fetched users data:', userList);
-    
+
       setMemberData(userList);
       setAllCharts(allChartsResponse.data.map((chart: { id: number; name: string }) => ({
         id: chart.id,
@@ -53,11 +57,17 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
     } catch (error) {
       console.error('Error fetching group data:', error);
     }
-  }, [groupId]);  
+  }, [groupId]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const openConfirmDialog = (message: string, onConfirmCallback: () => void) => {
+    setConfirmDialogMessage(message);
+    setOnConfirm(() => onConfirmCallback);
+    setConfirmDialogOpen(true);
+  };
 
   const handleAddMember = async (selectedUsers: User[]) => {
     try {
@@ -72,14 +82,14 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   };
 
   const handleRemove = async (userId: string, userName: string) => {
-    if (window.confirm(`確定要移除 ${userName} 嗎？`)) {
+    openConfirmDialog(`確定要移除 ${userName} 嗎？`, async () => {
       try {
         console.log("Attempting to remove:", { userId, memberData });
         const member = memberData.find(member => member.userId === userId);
         if (member && member.userGroupId) {
           console.log("Found member:", member);
           await removeUserFromGroup(member.userGroupId);
-          await fetchData(); // Update data after removing member
+          await fetchData();
         } else {
           console.error('無法找到有效的 userGroupId', { member, groupId });
           alert('無法找到有效的 userGroupId，無法移除該成員');
@@ -87,15 +97,15 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
       } catch (error) {
         console.error('Error removing member:', error);
       }
-    }
-  };   
+    });
+  };
 
   const handleAddChart = async (selectedCharts: { id: number; name: string }[]) => {
     try {
       await Promise.all(
         selectedCharts.map(chart => updateGroupChartPermissions(groupId, chart.id, true))
       );
-      await fetchData(); // Update data after adding charts
+      await fetchData();
       setShowChartPicker(false);
     } catch (error) {
       console.error('Error adding chart:', error);
@@ -103,7 +113,7 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   };
 
   const handleRemoveChart = async (chartId: number) => {
-    if (window.confirm('確定要刪除此圖表嗎？')) {
+    openConfirmDialog('確定要刪除此圖表嗎？', async () => {
       try {
         const chart = charts.find(c => c.id === chartId);
         if (!chart) {
@@ -111,22 +121,22 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
         }
 
         await removeChartFromGroup(chart.chartGroupId, chartId);
-        await fetchData(); // Update data after removing chart
+        await fetchData();
       } catch (error) {
         console.error('Error removing chart:', error);
       }
-    }
+    });
   };
 
   const handleDeleteGroup = async () => {
-    if (window.confirm('確定要刪除此群組嗎？')) {
+    openConfirmDialog('確定要刪除此群組嗎？', async () => {
       try {
         await deleteGroup(groupId);
         onDeleteGroup(groupId);
       } catch (error) {
         console.error('Error deleting group:', error);
       }
-    }
+    });
   };
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -155,6 +165,10 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
     handleMenuClose,
     showChartPicker,
     setShowChartPicker,
+    confirmDialogOpen,
+    confirmDialogMessage,
+    setConfirmDialogOpen,
+    onConfirm,
   };
 };
 

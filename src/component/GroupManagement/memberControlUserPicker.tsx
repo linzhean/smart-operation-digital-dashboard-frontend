@@ -154,7 +154,7 @@ const UserPickerDialog: React.FC<UserPickerDialogProps> = ({
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const fetchedUsers = await getAllUsers(); // Fetch all users from API
+        const fetchedUsers = await getAllUsers();
         setLocalUsers(fetchedUsers);
       } catch (error: any) {
         console.error('Unable to fetch users:', error.message);

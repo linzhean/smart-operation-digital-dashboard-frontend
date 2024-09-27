@@ -48,7 +48,6 @@ const ParentComponent: React.FC = () => {
   };
 
   const handleDeleteGroup = async (groupId: number) => {
-    // Logic to delete group
     console.log('Group deleted:', groupId);
   };
 

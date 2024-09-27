@@ -16,7 +16,7 @@ interface ChartWithDropdownProps {
   requestData: string[];
   onChartSelect: (chartId: number) => void;
   currentUserId: string;
-  canAssign: boolean; // Add this prop to handle assignment
+  canAssign: boolean; 
   selectedDashboardId?: number;
 }
 
@@ -58,7 +58,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
 
   useEffect(() => {
     if (interactiveCharts.length > 0) {
-      // Fetch chart HTML content when interactiveCharts are updated
       const fetchChartHTML = async (url: string) => {
         try {
           console.log('Fetching chart HTML from URL:', url);

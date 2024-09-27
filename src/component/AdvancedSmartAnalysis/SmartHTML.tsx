@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './SmartHTML.module.css';
-import ChartService from '../../services/ChartService';  // 导入 ChartService 以获取同步时间
+import ChartService from '../../services/ChartService';
 
 interface SmartHTMLProps {
   chartHTML: string;
@@ -33,9 +33,9 @@ const SmartHTML: React.FC<SmartHTMLProps> = ({ chartHTML }) => {
           className={styles.iframe}
         ></iframe>
       ) : (
-        <p>Loading...</p>
+        <div className='loadingMsg'></div>
       )}
-      {/* 添加同步时间显示 */}
+
       <div className={styles.syncTime}>
         {syncTime ? `最後同步時間: ${new Date(syncTime).toLocaleString()}` : 'Fetching sync time...'}
       </div>

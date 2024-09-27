@@ -75,7 +75,7 @@ body {
 
 .theContent {
   background-color: #343541;
-  height: 88vh;
+  height: 88.5vh;
   margin-right: 5px;
   margin-left: 5px;
   border-radius: 15px;
@@ -122,7 +122,7 @@ body {
 /* 螢幕縮放後navbar收起會有高度落差 直接讓灰底高度增加補足 */
 @media (max-width: 768px) {
   .theContent {
-    height: 91.5vh;
+    height: 92.2vh;
   }
 }
 
