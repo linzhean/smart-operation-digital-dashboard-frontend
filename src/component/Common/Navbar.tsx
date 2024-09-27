@@ -109,11 +109,10 @@ import UserControl from '../../assets/icon/UserControl.svg';
 import ChartAdmin from '../../assets/icon/ChartAdmin.png'
 import { Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { BorderBottom } from '@mui/icons-material';
-
-
+import { useUserContext } from '../../context/UserContext';
 
 const NavBar: React.FC = () => {
+  const { user } = useUserContext();
 
   const WhiteTooltip = styled(({ className, ...props }: any) => (
     <Tooltip {...props} classes={{ popper: className }} PopperProps={{
@@ -268,7 +267,6 @@ const NavBar: React.FC = () => {
                 </Link>
               </li>
 
-
               {/* 信件 */}
               <li className={`nav-item ${styles.navbarNavItem}`}>
                 <Link
@@ -283,7 +281,7 @@ const NavBar: React.FC = () => {
               </li>
 
               {/* 個人資料 */}
-              <li className={`nav-item ${styles.navbarNavItem}`}>
+              {/* <li className={`nav-item ${styles.navbarNavItem}`}>
                 <Link
                   className={`nav-link ${styles.navLink} ${activeLink.startsWith('/profile') ? styles.activeNavLink : ''}`}
                   to="/profile"
@@ -291,10 +289,33 @@ const NavBar: React.FC = () => {
                   <WhiteTooltip title="個人資料" enterDelay={700} leaveDelay={100} >
                     <img className={styles.navbarNavItemImg} src={userDataIcon} alt="profile" />
                   </WhiteTooltip>
-
                   <span className={`${styles.navbarText} ${activeLink.startsWith('/profile') ? styles.activeNavLinkText : ''}`}>個人資料</span>
                 </Link>
+              </li> */}
+
+              {/* 分隔線 */}
+              <div className={styles.thePartition}></div>
+
+              <li className={`nav-item ${styles.navbarNavItem}`}>
+                <Link
+                  className={`nav-link ${styles.navLink} ${activeLink.startsWith('/profile') ? styles.activeNavLink : ''}`}
+                  to="/profile"
+                >
+                  {/* <WhiteTooltip title="個人資料" enterDelay={700} leaveDelay={100} >
+                    <div className={`${styles.theUserName} ${activeLink.startsWith('/profile') ? styles.activeUserName : ''}`}>
+                      {state.formData.userName ? state.formData.userName : '訪客'}
+                    </div>
+
+                  </WhiteTooltip> */}
+                  <WhiteTooltip title="個人資料" enterDelay={700} leaveDelay={100} >
+                    <div className={`${styles.theUserName} ${activeLink.startsWith('/profile') ? styles.activeUserName : ''}`}>
+                      {user?.name ? user.name : '訪客'}  {/* 正確的 JSX 表達式 */}
+                    </div>
+                  </WhiteTooltip>
+                  {/* <span className={`${styles.navbarText} ${activeLink.startsWith('/profile') ? styles.activeNavLinkText : ''}`}>個人資料</span> */}
+                </Link>
               </li>
+
             </ul>
           </div>
         </div>

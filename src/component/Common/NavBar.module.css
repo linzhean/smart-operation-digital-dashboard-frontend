@@ -38,6 +38,7 @@
   margin-left: auto;
   align-items: center;
   transition: transform 0.2s ease;
+  flex-direction: column-reverse;
 }
 
 .navbarNavItem {
@@ -45,7 +46,7 @@
 }
 
 .navbarNavItem:hover {
-  transform: scale(1.2);
+  transform: scale(1.15);
 }
 
 .navbarNavItemImg {
@@ -87,6 +88,14 @@
   .navbar>.container-fluid {
     height: 10vh !important;
   }
+
+  .thePartition {
+    display: none;
+  }
+
+  .theUserName {
+    font-size: 1rem !important;
+  }
 }
 
 .navbarOverlay {
@@ -101,4 +110,38 @@
 
 .controlZindex {
   z-index: 8888888 !important;
+}
+
+/* .theUserName {
+  color: white;
+  text-align: center;
+  font-weight: 800;
+  padding-right: 10px;
+} */
+
+.theUserName {
+  color: #ACACBE;
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.2rem;
+  padding: 3px 10px 3px 10px;
+  border-radius: 25px;
+  border: 2px solid #ACACBE;
+  margin-left: -5px;
+  margin-right: -5px;
+}
+
+.thePartition {
+  width: 3px;
+  height: 38px;
+  background-color: #7c7c7d;
+  border-radius: 25px;
+  margin-left: 9px;
+  margin-right: 4px;
+}
+
+.activeUserName {
+  color: black;
+  background-color: #acacbed5;
+  border: 2px solid black;
 }
