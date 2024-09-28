@@ -55,6 +55,11 @@ const Pdata: React.FC = () => {
     loadUserData();
     loadDropdownData();
   }, [dispatch]);
+  
+  useEffect(() => {
+    console.log('state.formData:', state.formData);
+  }, [state.formData]);
+  
 
   const handleEditClick = () => {
     dispatch({ type: 'SET_EDITABLE', payload: !state.editable });
@@ -199,8 +204,8 @@ const Pdata: React.FC = () => {
                 type="text"
                 className="form-control"
                 id="position"
-                // value={state.formData.position}
-                value={user?.role}
+                value={state.formData.position}
+                // value={user?.role}
                 required
                 disabled={!state.editable}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}

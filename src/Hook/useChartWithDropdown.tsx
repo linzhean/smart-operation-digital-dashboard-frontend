@@ -183,6 +183,10 @@ useEffect(() => {
   };
 
   const handleDelegate = () => {
+    if (!canAssign) {
+      alert('您沒有權限交辦提交出去');
+      return;
+    }
     setIsModalOpen(true);
     setIsDropdownOpen(false);
   };

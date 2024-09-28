@@ -1,3 +1,4 @@
+//src\pages\Home\Home.tsx
 import React, { useState, useEffect } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
@@ -37,7 +38,7 @@ const Home: React.FC = () => {
       x: (index % maxChartsPerRow) * chartWidth,
       y: Math.floor(index / maxChartsPerRow),
       w: chartWidth,
-      h: 1.9,
+      h: 2.5,
     }));
   };
 
@@ -68,6 +69,14 @@ const Home: React.FC = () => {
           setLayout(newLayout);
           if (response.data.length > 0) {
             setCurrentChartId(response.data[0].id);
+            
+            // Check for `canAssign` in the first chart's data
+            const firstChart = response.data[0];
+            if (firstChart.canAssign === null) {
+              setCanAssign(false);
+            } else {
+              setCanAssign(true);
+            }
           }
         } else {
           setCharts([]);
@@ -82,7 +91,7 @@ const Home: React.FC = () => {
       }
     }
   };
-
+  
   useEffect(() => {
     fetchDashboardCharts();
   }, [selectedDashboard]);
@@ -210,7 +219,7 @@ const handleResizeStop = (layout: any[]) => {
     const item = layout.find(l => l.i === `chart-${chart.id}`);
     if (item) {
       const newWidth = (item.w / 12) * 100; // 将网格单位转换为百分比宽度
-      const newHeight = item.h * 100; // 根据布局高度计算新的高度
+      const newHeight = item.h * 50; // 根据布局高度计算新的高度
       return {
         ...chart,
         width: newWidth,
@@ -220,6 +229,8 @@ const handleResizeStop = (layout: any[]) => {
     return chart;
   });
   setCharts(updatedCharts);
+
+  // 调整 iframe 大小
   updatedCharts.forEach(chart => {
     const iframe = document.getElementById(`iframe-${chart.id}`) as HTMLIFrameElement;
     if (iframe) {
@@ -228,6 +239,7 @@ const handleResizeStop = (layout: any[]) => {
   });
 };
 
+// 父窗口发送调整大小消息
 const sendResizeMessage = (iframe: HTMLIFrameElement, width: number, height: number) => {
   iframe.contentWindow?.postMessage({
     type: 'resizeChart',
@@ -235,6 +247,18 @@ const sendResizeMessage = (iframe: HTMLIFrameElement, width: number, height: num
     height,
   }, '*');
 };
+
+window.addEventListener('message', (event) => {
+  if (event.data.type === 'resizeChart') {
+    const { width, height } = event.data;
+    // 假設你想調整圖表的大小
+    const chart = document.getElementById('chart');
+    if (chart) {
+      chart.style.width = `${width}px`;
+      chart.style.height = `${height}px`;
+    }
+  }
+});
 
   return (
     <div className='wrapper'>

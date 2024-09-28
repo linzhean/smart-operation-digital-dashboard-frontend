@@ -16,11 +16,11 @@ interface ChartWithDropdownProps {
   requestData: string[];
   onChartSelect: (chartId: number) => void;
   currentUserId: string;
-  canAssign: boolean; 
+  canAssign: boolean;
   selectedDashboardId?: number;
 }
 
-const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, onChartSelect, currentUserId, selectedDashboardId }) => {
+const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, canAssign, onChartSelect, currentUserId, selectedDashboardId }) => {
 
   const {
     toggleDropdown,
@@ -42,7 +42,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     setSelectedUser,
     interactiveCharts,
     handleAdvancedAnalysis,
-    canAssign,
     isAdvancedAnalysisModalOpen,
     setIsAdvancedAnalysisModalOpen,
     chartHTML,
@@ -370,7 +369,13 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
                   onMouseEnter={() => handleMouseEnter('delegate', handleDelegateWrapper)}
                   onMouseLeave={() => handleMouseLeave('delegate')}
                 >
-                  <button disabled={!canAssign}>交辦</button>
+                  <button
+                    className={styles.delegateButton}
+                    onClick={canAssign ? handleDelegateWrapper : () => alert('您沒有權限')}
+                    disabled={!canAssign}
+                  >
+                    交辦
+                  </button>
                   <div
                     className={styles.timerCircle}
                     style={{ '--progress': hoverProgress.delegate } as React.CSSProperties}

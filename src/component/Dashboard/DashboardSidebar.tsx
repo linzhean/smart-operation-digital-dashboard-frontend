@@ -49,19 +49,26 @@ const DashboardSidebar: React.FC<{
     };
   }, []);
 
-  // Fetch dashboards
-  const fetchAllDashboards = useCallback(async () => {
-    try {
-      const fetchedDashboards = await DashboardService.getAllDashboards();
-      setDashboards(fetchedDashboards);
-    } catch (error) {
-      console.error('Failed to fetch dashboards:', error);
-    }
-  }, []);
+// 修改 fetchAllDashboards 函數
+const fetchAllDashboards = useCallback(async () => {
+  try {
+    const fetchedDashboards = await DashboardService.getAllDashboards();
+    setDashboards(fetchedDashboards);
 
-  useEffect(() => {
-    fetchAllDashboards();
-  }, [fetchAllDashboards]);
+    // 如果沒有活動的儀表板，且獲取的儀表板不為空，則自動選中第一個儀表板
+    if (fetchedDashboards.length > 0 && !activeDashboard) {
+      const firstDashboard = fetchedDashboards[0];
+      setActiveDashboard(firstDashboard.id);
+      onSelectDashboard(firstDashboard.id);
+    }
+  } catch (error) {
+    console.error('Failed to fetch dashboards:', error);
+  }
+}, [activeDashboard, onSelectDashboard]);
+
+useEffect(() => {
+  fetchAllDashboards();
+}, [fetchAllDashboards]);
 
   // Fetch available charts for adding
   const fetchAvailableCharts = async () => {
