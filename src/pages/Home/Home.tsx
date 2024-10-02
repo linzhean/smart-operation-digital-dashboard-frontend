@@ -38,7 +38,7 @@ const Home: React.FC = () => {
       x: (index % maxChartsPerRow) * chartWidth,
       y: Math.floor(index / maxChartsPerRow),
       w: chartWidth,
-      h: 2.5,
+      h: 1.9,
     }));
   };
 
@@ -55,46 +55,50 @@ const Home: React.FC = () => {
     fetchAvailableCharts();
   }, []);
 
-  // 获取仪表盘图表
-  const fetchDashboardCharts = async () => {
-    if (selectedDashboard) {
-      setLoading(true);
-      setError(false);
-      try {
-        const response = await ChartService.getDashboardCharts(Number(selectedDashboard));
-        if (response.result && Array.isArray(response.data)) {
-          setCharts(response.data);
-          setSelectedCharts(response.data.map((chart: any) => ({ id: chart.id, name: chart.name })));
-          const newLayout = calculateLayout(response.data);
-          setLayout(newLayout);
-          if (response.data.length > 0) {
-            setCurrentChartId(response.data[0].id);
-            
-            // Check for `canAssign` in the first chart's data
-            const firstChart = response.data[0];
-            if (firstChart.canAssign === null) {
-              setCanAssign(false);
-            } else {
-              setCanAssign(true);
-            }
+ // 获取仪表盘图表
+const fetchDashboardCharts = async () => {
+  if (selectedDashboard) {
+    setLoading(true);
+    try {
+      const response = await ChartService.getDashboardCharts(Number(selectedDashboard));
+      if (response.result && Array.isArray(response.data)) {
+        setCharts(response.data);
+        setLayout(calculateLayout(response.data));
+        const firstChart = response.data[0];
+        if (firstChart && 'canAssign' in firstChart) {
+          if (firstChart.canAssign !== false) {
+            setCanAssign(false);
+          } else {
+            setCanAssign(true);
           }
         } else {
-          setCharts([]);
-          setSelectedCharts([]);
+          setCanAssign(false); // 如果没有有效的数据，默认设为 false
         }
-      } catch (error) {
-        console.error('Failed to fetch dashboard charts:', error);
-        setCharts([]);
-        setSelectedCharts([]);
-      } finally {
-        setLoading(false);
       }
+    } catch (error) {
+      console.error('獲取圖表失敗:', error);
+      setError(true);
+    } finally {
+      setLoading(false);
     }
-  };
-  
+  }
+};
+
+  console.log(canAssign); // 檢查這裡是否為 true
+
   useEffect(() => {
     fetchDashboardCharts();
   }, [selectedDashboard]);
+
+  useEffect(() => {
+    if (currentChartId !== null) {
+      const selectedChart = charts.find(chart => chart.id === currentChartId);
+      if (selectedChart) {
+        setCanAssign(selectedChart.canAssign);
+      }
+    }
+  }, [currentChartId, charts]);
+  
 
   // 获取同步时间
   useEffect(() => {
@@ -158,9 +162,9 @@ const Home: React.FC = () => {
       alert('匯出過程中發生錯誤。請再試一次。');
       return { result: false, errorCode: 'EXPORT_ERROR', data: new Blob() };
     }
-  };  
+  };
+  
 
-  // Handle chart selection
   const handleChartSelect = (chartId: number) => {
     setCurrentChartId(chartId);
     const chartData = charts.find(chart => chart.id === chartId);
@@ -212,53 +216,53 @@ const Home: React.FC = () => {
     setLayout(layout);
   };
 
-// 处理图表大小调整
-const handleResizeStop = (layout: any[]) => {
-  setLayout(layout);
-  const updatedCharts = charts.map(chart => {
-    const item = layout.find(l => l.i === `chart-${chart.id}`);
-    if (item) {
-      const newWidth = (item.w / 12) * 100; // 将网格单位转换为百分比宽度
-      const newHeight = item.h * 50; // 根据布局高度计算新的高度
-      return {
-        ...chart,
-        width: newWidth,
-        height: newHeight,
-      };
+  // 处理图表大小调整
+  const handleResizeStop = (layout: any[]) => {
+    setLayout(layout);
+    const updatedCharts = charts.map(chart => {
+      const item = layout.find(l => l.i === `chart-${chart.id}`);
+      if (item) {
+        const newWidth = (item.w / 12) * 100; // 将网格单位转换为百分比宽度
+        const newHeight = item.h * 50; // 根据布局高度计算新的高度
+        return {
+          ...chart,
+          width: newWidth,
+          height: newHeight,
+        };
+      }
+      return chart;
+    });
+    setCharts(updatedCharts);
+
+    // 调整 iframe 大小
+    updatedCharts.forEach(chart => {
+      const iframe = document.getElementById(`iframe-${chart.id}`) as HTMLIFrameElement;
+      if (iframe) {
+        sendResizeMessage(iframe, updatedCharts.find(c => c.id === chart.id).width, updatedCharts.find(c => c.id === chart.id).height);
+      }
+    });
+  };
+
+  // 父窗口发送调整大小消息
+  const sendResizeMessage = (iframe: HTMLIFrameElement, width: number, height: number) => {
+    iframe.contentWindow?.postMessage({
+      type: 'resizeChart',
+      width,
+      height,
+    }, '*');
+  };
+
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'resizeChart') {
+      const { width, height } = event.data;
+      // 假設你想調整圖表的大小
+      const chart = document.getElementById('chart');
+      if (chart) {
+        chart.style.width = `${width}px`;
+        chart.style.height = `${height}px`;
+      }
     }
-    return chart;
   });
-  setCharts(updatedCharts);
-
-  // 调整 iframe 大小
-  updatedCharts.forEach(chart => {
-    const iframe = document.getElementById(`iframe-${chart.id}`) as HTMLIFrameElement;
-    if (iframe) {
-      sendResizeMessage(iframe, updatedCharts.find(c => c.id === chart.id).width, updatedCharts.find(c => c.id === chart.id).height);
-    }
-  });
-};
-
-// 父窗口发送调整大小消息
-const sendResizeMessage = (iframe: HTMLIFrameElement, width: number, height: number) => {
-  iframe.contentWindow?.postMessage({
-    type: 'resizeChart',
-    width,
-    height,
-  }, '*');
-};
-
-window.addEventListener('message', (event) => {
-  if (event.data.type === 'resizeChart') {
-    const { width, height } = event.data;
-    // 假設你想調整圖表的大小
-    const chart = document.getElementById('chart');
-    if (chart) {
-      chart.style.width = `${width}px`;
-      chart.style.height = `${height}px`;
-    }
-  }
-});
 
   return (
     <div className='wrapper'>
@@ -295,7 +299,7 @@ window.addEventListener('message', (event) => {
                     requestData={[]}
                     onChartSelect={() => handleChartSelect(chart.id)}
                     currentUserId={''} // Replace with actual user ID
-                    canAssign={canAssign} // Update based on your logic
+                    canAssign={chart.canAssign} // Update based on your logic
                     selectedDashboardId={selectedDashboard ? Number(selectedDashboard) : undefined}
                   >
                     {selectedChartData ? <LineChart data={selectedChartData} /> : <p></p>}

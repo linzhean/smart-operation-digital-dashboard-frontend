@@ -8,6 +8,8 @@ export interface AssignedTask {
   name: string;
   defaultProcessor: string;
   available: boolean;
+  upperLimit?: number;  // New
+  lowerLimit?: number;  // New
   createId?: string;
   createDate?: string;
   modifyId?: string;
@@ -92,6 +94,38 @@ export const getAllAssignedTasks = async (chartId?: number): Promise<Response<As
     return response.data;
   } catch (error) {
     console.error('Error fetching all assigned tasks', error);
+    throw error;
+  }
+};
+
+// 创建新交办任务
+export const createAssignedTask = async (taskData: AssignedTask): Promise<Response<AssignedTask>> => {
+  try {
+    const { available, ...filteredTaskData } = taskData; // 濾除不需要的字段
+
+    const response = await apiClient.post<Response<AssignedTask>>('/assigned-task', {
+      ...filteredTaskData,
+      upperLimit: taskData.upperLimit,
+      lowerLimit: taskData.lowerLimit,
+    });
+    return response.data;  // 确保符合 Response<AssignedTask> 结构
+  } catch (error) {
+    console.error('Error creating assigned task', error);
+    throw error;
+  }
+};
+
+// 更新现有交办任务
+export const updateAssignedTask = async (id: number, taskData: AssignedTask): Promise<Response<AssignedTask>> => {
+  try {
+    const response = await apiClient.patch<Response<AssignedTask>>(`/assigned-task/${id}`, {
+      ...taskData,
+      upperLimit: taskData.upperLimit,
+      lowerLimit: taskData.lowerLimit,
+    });
+    return response.data;  // 确保符合 Response<AssignedTask> 结构
+  } catch (error) {
+    console.error('Error updating assigned task', error);
     throw error;
   }
 };

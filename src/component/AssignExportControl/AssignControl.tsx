@@ -7,7 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { fetchAllUsers } from '../../services/UserAccountService';
-import { fetchAllCharts, getAssignedTaskSponsors, setAssignedTaskSponsorsForDashboard, getAllAssignedTasks } from '../../services/AssignedTaskService';
+import { fetchAllCharts, getAssignedTaskSponsors, setAssignedTaskSponsorsForDashboard, getAllAssignedTasks, createAssignedTask, updateAssignedTask } from '../../services/AssignedTaskService';
 import { UserAccountBean } from '../../services/types/userManagement';
 import { makeStyles } from '@mui/styles';
 import styles from './AssignControl.module.css';
@@ -64,6 +64,8 @@ interface AssignedTask {
   name: string;
   defaultProcessor: string;
   available: boolean;
+  upperLimit?: number;
+  lowerLimit?: number;
 }
 
 const UserPickerDialog: React.FC<{
@@ -156,6 +158,8 @@ const AssignTaskControl: React.FC = () => {
   const [assignedTasks, setAssignedTasks] = useState<{ [key: number]: AssignedTask[] }>({});
   const [showKPIAlertSetting, setShowKPIAlertSetting] = useState(false);
   const [currentChartName, setCurrentChartName] = useState<string | null>(null);
+  const [upperLimit, setUpperLimit] = useState<number | null>(null);
+  const [lowerLimit, setLowerLimit] = useState<number | null>(null);
 
   const handleSetAlert = (chartName: string) => {
     setCurrentChartName(chartName);
@@ -164,6 +168,30 @@ const AssignTaskControl: React.FC = () => {
 
   const handleCloseAlert = () => {
     setShowKPIAlertSetting(false);
+  };
+
+  const handleKPIAlertSubmit = (lower: number, upper: number) => {
+    setLowerLimit(lower);
+    setUpperLimit(upper);
+
+    // 這裡可以添加發送請求的邏輯，例如：
+    const requestData = {
+      chartId: currentChart,
+      name: currentChartName || '',
+      upperLimit: upper,
+      lowerLimit: lower,
+      defaultProcessor: 'defaultProcessorValue', 
+      available: true,
+    };
+
+    createAssignedTask(requestData)
+      .then(response => {
+        console.log('Successfully created assigned task', response);
+        // 可以添加其他後續邏輯
+      })
+      .catch(error => {
+        console.error('Failed to create assigned task', error);
+      });
   };
 
   useEffect(() => {
@@ -209,18 +237,31 @@ const AssignTaskControl: React.FC = () => {
   };
 
   const handleSubmit = (selectedUsers: User[]) => {
-    setSelectedUsersMap((prevMap) => ({
-      ...prevMap,
-      [currentChart]: selectedUsers,
-    }));
-
     const userIds = selectedUsers.map(user => user.userId);
 
     const requestData = {
       sponsorList: userIds,
       exporterList: [],
       dashboardCharts: [],
+      upperLimit,
+      lowerLimit,
     };
+
+    createAssignedTask({
+      chartId: currentChart,
+      name: currentChartName || '',
+      defaultProcessor: 'defaultProcessorValue', // 根据需要填入
+      available: true, // 或根据需求填入
+      upperLimit: upperLimit !== null ? upperLimit : undefined,
+      lowerLimit: lowerLimit !== null ? lowerLimit : undefined,
+    })
+      .then(response => {
+        console.log('Successfully created assigned task', response);
+        // 处理成功创建后的逻辑
+      })
+      .catch(error => {
+        console.error('Failed to create assigned task', error);
+      });
 
     setAssignedTaskSponsorsForDashboard(currentChart, requestData)
       .then(response => {
@@ -305,7 +346,15 @@ const AssignTaskControl: React.FC = () => {
         chartId={currentChart}
       />
       {showKPIAlertSetting && (
-        <KPIAlertSetting onClose={handleCloseAlert} chartName={currentChartName} />
+        <KPIAlertSetting
+          onClose={handleCloseAlert}
+          chartName={currentChartName}
+          upperLimit={upperLimit !== null ? upperLimit : 0} 
+          lowerLimit={lowerLimit !== null ? lowerLimit : 0}
+          setUpperLimit={setUpperLimit}
+          setLowerLimit={setLowerLimit}
+          onSubmit={handleKPIAlertSubmit}
+        />
       )}
     </>
   );

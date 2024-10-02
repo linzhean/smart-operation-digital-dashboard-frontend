@@ -1,3 +1,4 @@
+//src\component\AssignExportControl\KPIAlertSetting.tsx
 import * as React from 'react';
 import Slider from '@mui/material/Slider';
 import TextField from '@mui/material/TextField';
@@ -9,12 +10,17 @@ const minDistance = 1;
 interface KPIAlertSettingProps {
   onClose: () => void;
   chartName: string | null;
+  upperLimit: number;    // 從父組件接收
+  lowerLimit: number;    // 從父組件接收
+  setUpperLimit: (value: number) => void;  // 設置父組件的上下限
+  setLowerLimit: (value: number) => void;  // 設置父組件的上下限
+  onSubmit: (lowerLimit: number, upperLimit: number) => void; // 新增這一行
 }
 
 
-export default function KPIAlertSetting({ onClose, chartName }: KPIAlertSettingProps) {
+export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerLimit, setUpperLimit, setLowerLimit, onSubmit}: KPIAlertSettingProps) {
 
-  const [value, setValue] = React.useState<number[]>([20, 50]);
+  const [value, setValue] = React.useState<number[]>([lowerLimit, upperLimit]);
 
   const handleSliderChange = (
     event: Event,
@@ -45,19 +51,24 @@ export default function KPIAlertSetting({ onClose, chartName }: KPIAlertSettingP
     if (index === 0) {
       const clampedValue = Math.min(inputValue, value[1] - minDistance);
       setValue([clampedValue, value[1]]);
+      setLowerLimit(clampedValue);  // 更新父組件的狀態
     } else {
       const clampedValue = Math.max(inputValue, value[0] + minDistance);
       setValue([value[0], clampedValue]);
+      setUpperLimit(clampedValue);  // 更新父組件的狀態
     }
   };
 
   const handleBlur = () => {
-    if (value[0] < 0) {
-      setValue([0, value[1]]);
-    }
-    if (value[1] > 100) {
-      setValue([value[0], 100]);
-    }
+    setLowerLimit(value[0]);
+    setUpperLimit(value[1]);
+  };
+
+  const handleConfirm = () => {
+    setLowerLimit(value[0]); // 更新父組件的狀態
+    setUpperLimit(value[1]); // 更新父組件的狀態
+    onSubmit(value[0], value[1]); // 呼叫父組件的提交函數
+    onClose(); // 關閉警訊設置對話框
   };
 
   return (
@@ -210,8 +221,8 @@ export default function KPIAlertSetting({ onClose, chartName }: KPIAlertSettingP
         </Box>
       </Box>
       <div className={styles.buttonGroup}>
-        <button className={styles.cancel} onClick={onClose}>取消</button>
-        <button className={styles.submit}>確定</button>
+      <button className={styles.cancel} onClick={onClose}>取消</button>
+      <button className={styles.submit} onClick={handleConfirm}>確定</button>
       </div>
     </div >
   );

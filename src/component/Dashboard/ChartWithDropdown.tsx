@@ -53,6 +53,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     sponsorList,
     loadingSponsors,
     responseMessage,
+    showNoPermissionMsg
   } = useChartWithDropdown(exportData, chartId, requestData, currentUserId);
 
   useEffect(() => {
@@ -113,11 +114,14 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     }
   };
 
-  // 交辦事項
-  const AssignForm = (
-    <>
-      <div className={styles.modalOverlay} onClick={closeModal}></div>
-      <div className={styles.modal}>
+// 交辦事項
+const AssignForm = (
+  <>
+    <div className={styles.modalOverlay} onClick={closeModal}></div>
+    <div className={styles.modal}>
+    {showNoPermissionMsg ? (
+        <p className={styles.noPermissionMsg}>您沒有權限交辦此圖表</p>
+      ) :(
         <form onSubmit={handleSubmit} className={styles.AssignForm}>
           <h2>撰寫郵件交辦</h2>
           <div>
@@ -200,9 +204,10 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             <button type="submit" className={styles.submit}>提交</button>
           </div>
         </form>
-      </div>
-    </>
-  );
+      )}
+    </div>
+  </>
+);
 
   // 進階分析 
   const advancedAnalysis = (
@@ -369,13 +374,8 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
                   onMouseEnter={() => handleMouseEnter('delegate', handleDelegateWrapper)}
                   onMouseLeave={() => handleMouseLeave('delegate')}
                 >
-                  <button
-                    className={styles.delegateButton}
-                    onClick={canAssign ? handleDelegateWrapper : () => alert('您沒有權限')}
-                    disabled={!canAssign}
-                  >
-                    交辦
-                  </button>
+                  <button onClick={handleDelegateWrapper}>交辦</button>
+                  
                   <div
                     className={styles.timerCircle}
                     style={{ '--progress': hoverProgress.delegate } as React.CSSProperties}
@@ -399,7 +399,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         </div>
         {children}
         {/* 交辦的表單 */}
-        {isModalOpen && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}
+        {isModalOpen && canAssign && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}
         {/* 進階分析 */}
         {isAdvancedAnalysisModalOpen && (interactiveCharts.length > 0) && ReactDOM.createPortal(advancedAnalysis, document.getElementById('portal-root')!)}
       </div>

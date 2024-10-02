@@ -108,7 +108,7 @@
   background-color: transparent !important;
   font-size: 24px;
   cursor: pointer;
-  width: 60px !important;
+  width: 50px !important;
 }
 
 .dropdownMenu {
@@ -395,4 +395,11 @@
   color: white !important;
   background-color: #333 !important;
   font-weight: bold !important;
+}
+
+.noPermissionMsg {
+  color: red;
+  font-size: 16px;
+  margin: 10px 0;
+  text-align: center;
 }

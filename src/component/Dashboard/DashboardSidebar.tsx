@@ -53,9 +53,15 @@ const DashboardSidebar: React.FC<{
 const fetchAllDashboards = useCallback(async () => {
   try {
     const fetchedDashboards = await DashboardService.getAllDashboards();
-    setDashboards(fetchedDashboards);
+    
+    // 确保 fetchedDashboards 是数组
+    if (Array.isArray(fetchedDashboards)) {
+      setDashboards(fetchedDashboards);
+    } else {
+      console.error('Fetched dashboards is not an array:', fetchedDashboards);
+      setDashboards([]); // 设置为一个空数组，避免后续错误
+    }
 
-    // 如果沒有活動的儀表板，且獲取的儀表板不為空，則自動選中第一個儀表板
     if (fetchedDashboards.length > 0 && !activeDashboard) {
       const firstDashboard = fetchedDashboards[0];
       setActiveDashboard(firstDashboard.id);
@@ -63,8 +69,10 @@ const fetchAllDashboards = useCallback(async () => {
     }
   } catch (error) {
     console.error('Failed to fetch dashboards:', error);
+    setDashboards([]); // 发生错误时也清空 dashboards
   }
 }, [activeDashboard, onSelectDashboard]);
+
 
 useEffect(() => {
   fetchAllDashboards();

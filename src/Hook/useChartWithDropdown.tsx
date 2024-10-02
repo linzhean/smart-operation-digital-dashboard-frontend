@@ -9,8 +9,8 @@ import { useNavigate } from 'react-router-dom';
 
 export function useChartWithDropdown(
   exportData: (chartId: number, requestData: string[]) => Promise<{
-    [x: string]: any; result: boolean; errorCode: string; data: Blob; 
-}>,
+    [x: string]: any; result: boolean; errorCode: string; data: Blob;
+  }>,
   chartId: number,
   requestData: string[],
   currentUserId: string
@@ -45,34 +45,37 @@ export function useChartWithDropdown(
   const [sponsorList, setSponsorList] = useState<string[]>([]);
   const [loadingSponsors, setLoadingSponsors] = useState<boolean>(true);
   const [responseMessage, setResponseMessage] = useState<string | null>(null);
+  const [showNoPermissionMsg, setShowNoPermissionMsg] = useState(false);
 
-// 獲取所有可用的圖表
-useEffect(() => {
-  const fetchCharts = async () => {
-    try {
-      const response = await ChartService.getAvailableCharts();
-      if (Array.isArray(response.data)) {
-        setCharts(response.data);
-        // 假設 response.data[0] 是我們要處理的圖表
-        if (response.data.length > 0) {
-          setCanAssign(response.data[0].canAssign); // 根據圖表數據設定 canAssign
+  // 獲取所有可用的圖表
+  useEffect(() => {
+    const fetchCharts = async () => {
+      try {
+        const response = await ChartService.getAvailableCharts();
+        if (Array.isArray(response.data)) {
+          setCharts(response.data);
+          // 假設 response.data[0] 是我們要處理的圖表
+          if (response.data.length > 0) {
+            setCanAssign(response.data[0].canAssign); // 根据图表数据设置 canAssign
+            console.log('Fetched canAssign value:', response.data[0].canAssign);
+          }
+        } else {
+          console.error('獲取圖表失敗:', response.message);
         }
-      } else {
-        console.error('獲取圖表失敗:', response.message);
+      } catch (error) {
+        console.error('獲取圖表失敗:', error);
       }
-    } catch (error) {
-      console.error('獲取圖表失敗:', error);
-    }
-  };
+    };
 
-  fetchCharts(); // 初始获取一次
+    fetchCharts(); // 初始获取一次
 
-  const intervalId = setInterval(() => {
-    fetchCharts();
-  }, 10 * 60 * 1000); // 每 10 分钟执行一次
+    const intervalId = setInterval(() => {
+      fetchCharts();
+    }, 10 * 60 * 1000); // 每 10 分钟执行一次
 
-  return () => clearInterval(intervalId); // 清除定时器
-}, []);
+    return () => clearInterval(intervalId); // 清除定时器
+
+  }, []);
 
   // 獲取所有用戶
   useEffect(() => {
@@ -137,11 +140,11 @@ useEffect(() => {
         setLoadingSponsors(false);
       }
     };
-  
+
     if (chartId) {
       fetchSponsors();
     }
-  }, [chartId]);  
+  }, [chartId]);
 
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
 
@@ -169,30 +172,18 @@ useEffect(() => {
     } finally {
       setIsDropdownOpen(false);
     }
-  };  
+  };
 
-  const handleDelegateWrapper = async () => {
-    setLoading(true);
-    try {
-      await handleDelegate();
-    } catch (error) {
-      console.error('Error delegating task:', error);
-    } finally {
-      setLoading(false);
-    }
+  const handleDelegateWrapper = () => {
+    setIsModalOpen(true); // 打開模態框
   };
 
   const handleDelegate = () => {
-    if (!canAssign) {
-      alert('您沒有權限交辦提交出去');
-      return;
-    }
     setIsModalOpen(true);
-    setIsDropdownOpen(false);
   };
 
   const handleChartSelect = (id?: number) => {
-    setCurrentChartId(id || null); // 更新圖表 ID
+    setCurrentChartId(id || null);
     setIsChartSelectModalOpen(true);
     setIsDropdownOpen(false);
   };
@@ -207,7 +198,7 @@ useEffect(() => {
       alert('請先選擇一個圖表。');
       return;
     }
-  
+
     try {
       const assignedTask = {
         chartId,
@@ -217,11 +208,11 @@ useEffect(() => {
           content: message,
         },
       };
-  
+
       // 創建郵件
       const createdEmail = await createEmail(assignedTask);
       console.log('創建郵件響應:', createdEmail);
-  
+
       if (createdEmail && createdEmail.id) {
         // 如果郵件創建成功，則發送聊天消息
         await sendChatMessage(createdEmail.id, {
@@ -234,9 +225,9 @@ useEffect(() => {
           modifyId: currentUserId,
           modifyDate: formatDate(new Date()),
         });
-        
+
         // 设置响应消息
-        setResponseMessage(createdEmail.message|| null); // 假设 createdEmail.message 是响应中的消息
+        setResponseMessage(createdEmail.message || null); // 假设 createdEmail.message 是响应中的消息
         setIsModalOpen(false);
       } else {
         throw new Error('創建郵件失敗，且無法取得錯誤訊息。');
@@ -249,7 +240,7 @@ useEffect(() => {
         alert('成功。');
       }
     }
-  };      
+  };
 
   const fetchChartData = async (chartId: number) => {
     try {
@@ -279,7 +270,7 @@ useEffect(() => {
           })
         );
         setInteractiveCharts(chartsWithData); // 更新状态
-        
+
         // 获取图表的 HTML 链接
         const firstChart = chartsWithData[0]; // 获取第一个图表的 HTML 链接
         if (firstChart?.data?.chartHTML) {
@@ -295,7 +286,7 @@ useEffect(() => {
       console.error('Error during advanced analysis:', error);
       alert('Error during advanced analysis. Please try again later.');
     }
-  };  
+  };
 
   const handleAIAnalysis = async (dashboardId: number, chartId: number) => {
     if (!dashboardId) {
@@ -342,7 +333,7 @@ useEffect(() => {
 
   // A simple function to sanitize or replace unprintable characters
   const sanitizeText = (text: string): string => {
-    return text.replace(/[\x00-\x1F\x7F-\x9F]/g, ''); 
+    return text.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
   };
 
   useEffect(() => {
@@ -430,8 +421,9 @@ useEffect(() => {
     loading,
     handleExportWrapper,
     handleDelegateWrapper,
-    sponsorList, 
+    sponsorList,
     loadingSponsors,
     responseMessage,
+    showNoPermissionMsg
   };
 }
