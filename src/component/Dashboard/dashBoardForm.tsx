@@ -213,7 +213,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
               <h3 className={styles.fsSubtitle}>
                 選擇想顯示在此儀表板的圖表
                 <br />
-                <button type="button" className={styles.applyMore} onClick={handleApplyMore}>或是點此申請更多</button>
+                <button type="button" className={styles.applyMore} onClick={handleApplyMore}>或是點此申請無權限圖表</button>
               </h3>
               <div className={styles.theKPIs}>
                 {charts.map(chart => (
