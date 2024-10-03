@@ -158,6 +158,24 @@ const Pdata: React.FC = () => {
 
           <div className="row">
             <div className="col-12">
+              <label htmlFor="joNumber" className={styles.formLabel}>
+                員工編號
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="jobNumber"
+                value={state.formData.jobNumber}
+                // value={user?.email}
+                required
+                disabled={!state.editable}
+                onChange={(e) => handleInputChange(e.target.id, e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-12">
               <label htmlFor="gmail" className={styles.formLabel}>
                 信箱 (Gmail)
               </label>

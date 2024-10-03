@@ -1,26 +1,83 @@
 //src\component\AssignExportControl\KPIAlertSetting.tsx
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Slider from '@mui/material/Slider';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import styles from './KPIAlertSetting.module.css';
+import { fetchAllUsers } from '../../services/UserAccountService';
+import { UserAccountBean, User } from '../../services/types/userManagement';
+import { Autocomplete } from '@mui/material';
+import ChartService from '../../services/ChartService';
+import { Chart } from 'chart.js';
 
 const minDistance = 1;
 
 interface KPIAlertSettingProps {
   onClose: () => void;
   chartName: string | null;
-  upperLimit: number;    // 從父組件接收
-  lowerLimit: number;    // 從父組件接收
-  setUpperLimit: (value: number) => void;  // 設置父組件的上下限
-  setLowerLimit: (value: number) => void;  // 設置父組件的上下限
-  onSubmit: (lowerLimit: number, upperLimit: number) => void; // 新增這一行
+  upperLimit: number;
+  lowerLimit: number;
+  setUpperLimit: (value: number) => void;
+  setLowerLimit: (value: number) => void;
+  onSubmit: (lowerLimit: number, upperLimit: number, defaultProcessor: string, defaultAuditor: string, chartId: number) => void; // 添加 chartId 参数
 }
 
+interface CustomChart extends Chart {
+  name: string; // Add other properties if needed
+}
 
-export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerLimit, setUpperLimit, setLowerLimit, onSubmit}: KPIAlertSettingProps) {
+export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerLimit, setUpperLimit, setLowerLimit, onSubmit }: KPIAlertSettingProps) {
 
   const [value, setValue] = React.useState<number[]>([lowerLimit, upperLimit]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [defaultProcessor, setDefaultProcessor] = useState<User | null>(null);
+  const [defaultAuditor, setDefaultAuditor] = useState<User | null>(null);
+  const [charts, setCharts] = useState<CustomChart[]>([]);
+  const [selectedChart, setSelectedChart] = useState<Chart | null>(null);
+
+  useEffect(() => {
+    ChartService.getAllCharts()
+      .then((data) => {
+        console.log(data); // 檢查數據
+        if (Array.isArray(data.data)) { // 確保訪問到正確的屬性
+          setCharts(data.data); // 將這行改為 data.data
+        } else {
+          console.error('Expected an array for charts, but got:', data);
+          setCharts([]);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching charts', error);
+        setCharts([]);
+      });
+  }, []);
+  
+  
+  useEffect(() => {
+    fetchAllUsers()
+      .then((data) => {
+        const userList: User[] = data.map((user: UserAccountBean) => ({
+          id: user.id || 0,
+          groupId: user.groupId || 0,
+          userId: user.userId,
+          name: user.userName,
+          userName: user.userName,
+          department: user.departmentName,
+          position: user.position,
+          userGroupId: user.userGroupId || 0,
+          available: user.available === true,
+          createId: user.createId,
+          createDate: user.createDate,
+          modifyId: user.modifyId,
+          modifyDate: user.modifyDate,
+        }));
+        setUsers(userList);
+      })
+      .catch((error) => {
+        console.error('Error fetching users', error);
+        setUsers([]); // Reset to empty array on error
+      });
+  }, []);  
 
   const handleSliderChange = (
     event: Event,
@@ -65,11 +122,13 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
   };
 
   const handleConfirm = () => {
-    setLowerLimit(value[0]); // 更新父組件的狀態
-    setUpperLimit(value[1]); // 更新父組件的狀態
-    onSubmit(value[0], value[1]); // 呼叫父組件的提交函數
-    onClose(); // 關閉警訊設置對話框
-  };
+    setLowerLimit(value[0]);
+    setUpperLimit(value[1]);
+    if (defaultProcessor && defaultAuditor && selectedChart) {
+      onSubmit(value[0], value[1], defaultProcessor.userId, defaultAuditor.userId,  Number(selectedChart.id)); // 传递 chartId
+    }
+    onClose();
+  };  
 
   return (
     <div className={styles.settingAlert}>
@@ -219,10 +278,44 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
             }}
           />
         </Box>
+        {/* 添加 defaultProcessor 下拉选择 */}
+        <Autocomplete
+          className={styles.autocomplete}
+          options={users} // Should be an array
+          getOptionLabel={(option) => option.name}
+          onChange={(event, newValue) => {
+            setDefaultProcessor(newValue);
+          }}
+          renderInput={(params) => (
+            <TextField {...params} label="選擇處理者" variant="outlined" />
+          )}
+        />
+        <Autocomplete
+          className={styles.autocomplete} // 添加類名以適用樣式
+          options={users}
+          getOptionLabel={(option) => option.name}
+          onChange={(event, newValue) => {
+            setDefaultAuditor(newValue);
+          }}
+          renderInput={(params) => (
+            <TextField {...params} label="選擇稽核者" variant="outlined" />
+          )}
+        />
+        <Autocomplete
+          className={styles.autocomplete}
+          options={charts}
+          getOptionLabel={(option) => option.name} // 假设 Chart 对象有 name 属性
+          onChange={(event, newValue) => {
+            setSelectedChart(newValue);
+          }}
+          renderInput={(params) => (
+            <TextField {...params} label="選擇圖表" variant="outlined" />
+          )}
+        />
       </Box>
       <div className={styles.buttonGroup}>
-      <button className={styles.cancel} onClick={onClose}>取消</button>
-      <button className={styles.submit} onClick={handleConfirm}>確定</button>
+        <button className={styles.cancel} onClick={onClose}>取消</button>
+        <button className={styles.submit} onClick={handleConfirm}>確定</button>
       </div>
     </div >
   );

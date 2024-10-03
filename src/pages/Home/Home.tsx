@@ -64,10 +64,12 @@ const fetchDashboardCharts = async () => {
       if (response.result && Array.isArray(response.data)) {
         setCharts(response.data);
         setLayout(calculateLayout(response.data));
+
         const firstChart = response.data[0];
         if (firstChart && 'canAssign' in firstChart) {
           if (firstChart.canAssign !== false) {
             setCanAssign(false);
+            alert('您没有權限交辦');
           } else {
             setCanAssign(true);
           }
@@ -134,27 +136,27 @@ const fetchDashboardCharts = async () => {
         setExportMessage(`匯出失敗: ${permissionResponse.message}`);
         return { result: false, errorCode: permissionResponse.errorCode, data: new Blob() };
       }
-  
-      const setPermissionResponse = await setExportPermission(chartId, { 
-        sponsorList: [], 
-        exporterList: requestData, 
-        dashboardCharts: [chartId] 
+
+      const setPermissionResponse = await setExportPermission(chartId, {
+        sponsorList: [],
+        exporterList: requestData,
+        dashboardCharts: [chartId]
       });
       if (!setPermissionResponse.result) {
         setExportMessage(`匯出失敗: ${setPermissionResponse.message}`);
         return { result: false, errorCode: setPermissionResponse.errorCode, data: new Blob() };
       }
-  
+
       // 2. 發送匯出請求並處理 Blob 回應
       const exportResponse = await exportData(chartId, { exporterList: requestData, dashboardCharts: [chartId] });
       if (!exportResponse.result) {
         return { result: false, errorCode: exportResponse.errorCode, data: new Blob() };
       }
-  
+
       // 3. 使用 Blob 保存 XLSX 文件
       const blob = new Blob([exportResponse.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       saveAs(blob, `exported_data_${chartId}.xlsx`);
-  
+
       alert('數據匯出成功！');
       return { result: true, errorCode: '', data: blob };
     } catch (error) {
@@ -163,12 +165,13 @@ const fetchDashboardCharts = async () => {
       return { result: false, errorCode: 'EXPORT_ERROR', data: new Blob() };
     }
   };
-  
 
   const handleChartSelect = (chartId: number) => {
     setCurrentChartId(chartId);
     const chartData = charts.find(chart => chart.id === chartId);
     if (chartData) {
+      console.log(`Selected Chart: ${chartData.name}, Can Assign: ${chartData.canAssign}`);
+      setCanAssign(chartData.canAssign); // 更新 canAssign 狀態
       setSelectedCharts(prev => {
         if (prev.find(chart => chart.id === chartId)) {
           return prev.filter(chart => chart.id !== chartId);
@@ -295,7 +298,7 @@ const fetchDashboardCharts = async () => {
                   />
                   <ChartWithDropdown
                     exportData={handleExport}
-                    chartId={currentChartId || 0}
+                    chartId={chart.id}
                     requestData={[]}
                     onChartSelect={() => handleChartSelect(chart.id)}
                     currentUserId={''} // Replace with actual user ID

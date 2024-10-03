@@ -1,6 +1,6 @@
 .settingAlert {
   width: 260px;
-  height: 330px;
+  height: 500px;
   padding: 25px 30px;
   background-color: #ACACBE;
   position: fixed;
@@ -92,3 +92,25 @@
   }
 
 }
+
+/* 新增一個類來控制下拉選單的樣式 */
+.autocomplete {
+  width: 100%; /* 使用百分比以確保響應式設計 */
+  height: 100%;
+  margin: 10px 0; /* 控制上下間距 */
+}
+
+/* 手機 */
+@media (max-width: 599px) {
+  .autocomplete {
+    width: 90%; /* 手機上佔據較小的寬度 */
+  }
+}
+
+/* 平板電腦 */
+@media (min-width: 600px) and (max-width: 1199px) {
+  .autocomplete {
+    width: 70%; /* 平板上使用較大的寬度 */
+  }
+}
+

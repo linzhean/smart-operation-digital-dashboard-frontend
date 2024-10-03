@@ -7,6 +7,7 @@ export interface AssignedTask {
   chartId: number;
   name: string;
   defaultProcessor: string;
+  defaultAuditor:string;
   available: boolean;
   upperLimit?: number;  // New
   lowerLimit?: number;  // New

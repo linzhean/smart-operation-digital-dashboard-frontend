@@ -170,34 +170,31 @@ const AssignTaskControl: React.FC = () => {
     setShowKPIAlertSetting(false);
   };
 
-  const handleKPIAlertSubmit = (lower: number, upper: number) => {
-    setLowerLimit(lower);
-    setUpperLimit(upper);
-
-    // 這裡可以添加發送請求的邏輯，例如：
+  const handleKPIAlertSubmit = (lower: number, upper: number, defaultProcessor: string, defaultAuditor: string, chartId: number) => {
     const requestData = {
-      chartId: currentChart,
+      chartId,
       name: currentChartName || '',
       upperLimit: upper,
       lowerLimit: lower,
-      defaultProcessor: 'defaultProcessorValue', 
+      defaultProcessor,
+      defaultAuditor,
       available: true,
     };
-
+  
     createAssignedTask(requestData)
       .then(response => {
         console.log('Successfully created assigned task', response);
-        // 可以添加其他後續邏輯
       })
       .catch(error => {
         console.error('Failed to create assigned task', error);
       });
-  };
+  };  
 
   useEffect(() => {
     fetchAllCharts()
       .then((response) => {
         if (response.data) {
+          console.log('Fetched charts:', response.data); // 输出图表数据
           setCharts(response.data);
         }
       })
@@ -237,6 +234,11 @@ const AssignTaskControl: React.FC = () => {
   };
 
   const handleSubmit = (selectedUsers: User[]) => {
+    if (!currentChart) {
+      console.error('No chart selected');
+      return;
+    }
+  
     const userIds = selectedUsers.map(user => user.userId);
 
     const requestData = {
@@ -245,12 +247,14 @@ const AssignTaskControl: React.FC = () => {
       dashboardCharts: [],
       upperLimit,
       lowerLimit,
+      defaultAuditor: 'defaultAuditorValue', // 添加defaultAuditor字段
     };
 
     createAssignedTask({
       chartId: currentChart,
       name: currentChartName || '',
       defaultProcessor: 'defaultProcessorValue', // 根据需要填入
+      defaultAuditor: 'defaultAuditorValue', // 添加defaultAuditor字段
       available: true, // 或根据需求填入
       upperLimit: upperLimit !== null ? upperLimit : undefined,
       lowerLimit: lowerLimit !== null ? lowerLimit : undefined,
@@ -349,11 +353,11 @@ const AssignTaskControl: React.FC = () => {
         <KPIAlertSetting
           onClose={handleCloseAlert}
           chartName={currentChartName}
-          upperLimit={upperLimit !== null ? upperLimit : 0} 
+          upperLimit={upperLimit !== null ? upperLimit : 0}
           lowerLimit={lowerLimit !== null ? lowerLimit : 0}
           setUpperLimit={setUpperLimit}
           setLowerLimit={setLowerLimit}
-          onSubmit={handleKPIAlertSubmit}
+          onSubmit={(lower, upper, processor, auditor, chartId) => handleKPIAlertSubmit(lower, upper, processor, auditor, chartId)}
         />
       )}
     </>
