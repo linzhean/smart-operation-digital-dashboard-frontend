@@ -1,10 +1,10 @@
-.mainEmailUnique {
+.theEmailBox {
   display: flex;
-  height: 100vh;
+  height: 89.5vh;
 }
 
-.leftsideUnique,
-.rightsideUnique {
+.LeftMail,
+.RightMail {
   overflow: auto;
   background-color: #343541;
   color: #CCCCCC;
@@ -12,7 +12,7 @@
   margin-bottom: 5px;
 }
 
-.leftsideUnique {
+.LeftMail {
   width: 50%;
   display: flex;
   margin-right: 3px;
@@ -20,7 +20,7 @@
   margin-left: 3px;
 }
 
-.rightsideUnique {
+.RightMail {
   width: 50%;
   margin-top: 0px;
   margin-right: 3px;
@@ -30,12 +30,38 @@
   justify-content: space-between;
 }
 
-.hiddenUnique {
+.theMailHidden {
   display: none;
 }
 
-.toggleButtonUnique,
-.sendButtonUnique {
+.backButton {
+  background-color: transparent;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 10px;
+  align-self: flex-start;
+  align-items: center;
+  position: fixed;
+}
+
+.backIcon {
+  width: 30px;
+  height: 30px;
+  transition: transform 0.2s ease;
+}
+
+.backIcon:hover {
+  transform: scale(1.15);
+}
+
+.backIcon:active {
+  transform: scale(0.9);
+}
+
+
+.sendButton {
   background-color: #1E90FF;
   color: #fff;
   border: none;
@@ -46,7 +72,11 @@
   align-self: flex-end;
 }
 
-.chatContainerUnique {
+.sendButton {
+  position: fixed;
+}
+
+.chatboxContainer {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -59,36 +89,37 @@
 
 
 @media (min-width: 768px) {
-  .mainEmailUnique {
+  .theEmailBox {
     flex-direction: row;
   }
 
-  .hiddenUnique {
+  .theMailHidden {
     display: block;
   }
 
-  .rightsideUnique .toggleButtonUnique {
+  .RightMail .backButton {
     display: none;
   }
 }
 
-@media (max-width: 767px) {
-  .mainEmailUnique {
+@media (max-width: 767.99px) {
+  .theEmailBox {
     flex-direction: column;
+    height: 94.5vh !important;
   }
 
-  .leftsideUnique {
-    width: 98.5vw;
-    /* 剩下的1.5是給右邊距的 */
+  .LeftMail {
+    width: 99vw;
     margin-left: 3px;
+    height: 100% !important;
   }
 
-  .leftsideUnique,
-  .rightsideUnique {
-    flex: 1;
+  .RightMail {
+    width: 98.5vw;
+    height: 100% !important;
   }
 
-  .toggleButtonUnique {
+  .backButton {
     display: block;
   }
 }

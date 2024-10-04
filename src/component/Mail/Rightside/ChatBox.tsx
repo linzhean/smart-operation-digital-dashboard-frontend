@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from './chatBox.module.css';
 import { Email, EmailMessage, getEmailDetails, sendMessage } from '../../../services/mailService';
-import SockJS from 'sockjs-client';
-import { Client, Stomp } from '@stomp/stompjs';
+import sendIcon from '../../../assets/icon/send.png'
+import { useUserContext } from '../../../context/UserContext';
 
 interface ChatBoxProps {
   emailId: number;
-  onMessageChange?: (message: string) => void;
+  emailName: string; 
+  sendNewChatMessage: (emailId: number, message: string) => Promise<void>;
 }
 
-const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onMessageChange }) => {
+const ChatBox: React.FC<ChatBoxProps> = ({ emailId, emailName,sendNewChatMessage }) => {
   const [messages, setMessages] = useState<EmailMessage[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
   const [email, setEmail] = useState<Email | null>(null);
   const [isSending, setIsSending] = useState<boolean>(false);
-  
-  const stompClientRef = useRef<Client | null>(null); // Reference to STOMP client
+  const { user } = useUserContext();
 
   const fetchEmailDetails = useCallback(async () => {
     try {
@@ -33,92 +33,115 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, onMessageChange }) => {
 
   const handleSendMessage = useCallback(async () => {
     if (newMessage.trim() && !isSending) {
-      const tempMessageId = Date.now(); // 使用临时ID
+      const tempMessageId = Date.now();
+  
       const newChatMessage: EmailMessage = {
-        id: tempMessageId, // 添加id属性
+        id: tempMessageId,
         messageId: tempMessageId,
         mailId: emailId,
         content: newMessage,
         available: 'true',
-        createId: 'currentUser',
+        createId: user!.id,
         createDate: new Date().toISOString(),
         modifyId: 'currentUser',
         modifyDate: new Date().toISOString(),
       };
-  
-      // 立即更新状态，显示临时消息
+
       setMessages((prevMessages) => [...prevMessages, newChatMessage]);
       setNewMessage('');
       setIsSending(true);
-  
       try {
-        // 发送消息到服务器
-        const sentMessage = await sendMessage(emailId, {
-          messageId: tempMessageId,
-          content: newMessage,
-          available: 'true',
-          createId: 'currentUser',
-          createDate: new Date().toISOString(),
-          modifyId: 'currentUser',
-          modifyDate: new Date().toISOString(),
-        });
+        await sendNewChatMessage(emailId, newMessage);
   
-        // 更新状态，使用服务器返回的消息替换临时消息
         setMessages((prevMessages) =>
-          prevMessages.map((msg) =>
-            msg.messageId === tempMessageId ? sentMessage : msg
+          prevMessages.map((msg) => 
+            msg.messageId === tempMessageId
+              ? { ...msg, available: 'true', modifyDate: new Date().toISOString() }
+              : msg
           )
         );
       } catch (error) {
         console.error('Error sending message:', error);
   
-        // 发送失败时，移除临时消息
         setMessages((prevMessages) =>
           prevMessages.filter((msg) => msg.messageId !== tempMessageId)
         );
       } finally {
         setIsSending(false);
       }
-  
-      if (onMessageChange) {
-        onMessageChange(newMessage);
-      }
     }
-  }, [emailId, newMessage, onMessageChange, isSending]);
- 
+  }, [emailId, newMessage, sendNewChatMessage]);
 
+  console.log(`!!!!!!!!!!!!!!!!`+user?.id)
+  
+ 
   return (
     <div className={styles.chatContainer}>
       <div className={styles.mailTitle}>
-        <i className={`${styles.faSolid} fa-solid fa-ellipsis`}></i>
+      {emailName && <h2 className={styles.theTitle}>{emailName}</h2>}
       </div>
-      <div className={`${styles.chatBox} custom-scrollbar`}>
-        {messages.length > 0 ? (
-          messages.map((message) => (
-            <div key={message.messageId} className={styles.chatMessage}>
-              <div className={styles.messageContent}>
-                <span className={styles.sender}>{message.createId}</span>
-                <span className={styles.content}>{message.content}</span>
-              </div>
-              <span className={styles.timestamp}>{new Date(message.createDate).toLocaleString()}</span>
-            </div>
-          ))
-        ) : (
-          <p>沒有訊息了</p>
-        )}
+{/* 
+      <div className={styles.chatBox}>
+  {messages.length > 0 ? (
+    messages.map((message) => (
+      <div 
+        key={message.messageId} 
+        className={`${styles.chatMessage} ${user?.id === message.createId ? styles.myMessage : ''}`}
+      >
+        <div className={styles.messageContent}>
+          <span className={styles.sender}>{message.createId}</span>
+          <span className={styles.content}>{message.content}</span>
+        </div>
+        <span className={styles.timestamp}>{new Date(message.createDate).toLocaleString()}</span>
       </div>
+    ))
+  ) : (
+    <p>沒有訊息了</p>
+  )}
+</div> */}
+<div className={styles.chatBox}>
+  {messages.length > 0 ? (
+    messages.map((message) => (
+      <div 
+        key={message.messageId} 
+        className={`${styles.chatMessage} ${user?.id === message.createId ? styles.myMessage : ''}`}
+      >
+        <div className={styles.messageContent}>
+          {user?.id !== message.createId && (
+            <span className={styles.sender}>{message.createId}</span>
+          )}
+          <span className={styles.content}>{message.content}</span>
+        </div>
+        {/* <span className={styles.timestamp}>{new Date(message.createDate).toLocaleString()}</span> */}
+        <span className={styles.timestamp}>
+           {new Date(message.createDate).toLocaleDateString() !== new Date().toLocaleDateString() ? (
+           <>
+             {new Date(message.createDate).toLocaleDateString()}<br />
+           </>
+           ) : null}
+          {new Date(message.createDate).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+</span>
+        
+      </div>
+    ))
+  ) : (
+    <p>沒有訊息了</p>
+  )}
+</div>
       <div className={styles.inputContainer}>
         <textarea
           value={newMessage}
-          onChange={(e) => {
-            setNewMessage(e.target.value);
-            if (onMessageChange) {
-              onMessageChange(e.target.value);
-            }
-          }}
+          onChange={(e) => setNewMessage(e.target.value)}
           placeholder="輸入你的内容..."
         />
-        <i className={`fa fa-arrow-right arrow-icon ${styles.arrowIcon}`} onClick={handleSendMessage}></i>
+        <button  
+        className={`${styles.sendButton}`}
+         onClick={() => {
+          handleSendMessage();
+        }}
+          disabled={isSending}>
+     <img src={sendIcon}  className={styles.sendIcon} alt="發送" />
+  </button>
       </div>
     </div>
   );

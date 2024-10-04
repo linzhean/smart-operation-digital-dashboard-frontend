@@ -1,9 +1,7 @@
-/* src\component\Mail\Rightside\chatBox.module.css */
 .chatContainer {
   background-color: #343541;
   border-radius: 15px;
-  padding: 10px;
-  margin: 10px;
+  padding: 15px;
   color: #fff;
   height: 100%;
   display: flex;
@@ -13,10 +11,10 @@
 
 .mailTitle {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
-  border-bottom: 1px solid #acacbe;
-  padding-bottom: 5px;
+  border-bottom: 1px solid #c2c2c253;
+  padding-bottom: 10px;
 }
 
 .mailTitle .deleteButton {
@@ -28,11 +26,13 @@
   border-radius: 5px;
 }
 
-
-.mailTitle .deleteButton img{
-width: 25px;
+.mailTitle .deleteButton img {
+  width: 25px;
 }
 
+.theTitle {
+  font-size: 1.5rem !important;
+}
 
 .mailTitle .faSolid {
   font-size: 1.5em;
@@ -40,48 +40,63 @@ width: 25px;
 }
 
 .chatBox {
-  flex-grow: 1;
+  height: 67.5vh;
   padding: 10px;
   margin-bottom: 10px;
-  max-height: 500px; 
+  max-height: 500px;
   overflow-y: auto;
 }
 
 .chatMessage {
   margin-top: 10px;
   display: flex;
-  flex-direction: column;
-  word-wrap: break-word; 
+  word-wrap: break-word;
 }
 
 .messageContent {
+  font-weight: 500;
   background-color: #444654;
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 5px;
+  width: fit-content;
+}
+
+.myMessage {
+  flex-flow: row-reverse !important;
+  color: white;
 }
 
 .messageContent .sender {
   font-weight: bold;
+  font-size: 1rem;
 }
 
 .messageContent .content {
   margin-top: 5px;
+  font-size: 1rem;
 }
 
 .timestamp {
-  font-size: 0.8em;
+  font-weight: 600;
+  font-size: 0.7rem;
   color: #999;
   align-self: flex-end;
+  margin-left: 5px;
+  margin-bottom: 8px;
+  margin-right: 5px;
+  text-align: right;
 }
 
 .inputContainer {
   display: flex;
   align-items: center;
   background-color: #343541;
-  border: 2px solid #000;
+  border: 1px solid #c2c2c253;
   border-radius: 15px;
-  padding: 10px;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .inputContainer textarea {
@@ -95,6 +110,7 @@ width: 25px;
   resize: none;
   overflow-y: auto;
   max-height: 150px;
+
 }
 
 .inputContainer textarea::placeholder {
@@ -106,4 +122,48 @@ width: 25px;
   color: #aaa;
   cursor: pointer;
   margin-left: 10px;
+}
+
+.sender {
+  font-weight: bold;
+  color: #6eb6ff;
+  margin-right: 10px;
+}
+
+.content {
+  color: #f0f0f0;
+}
+
+.sendButton {
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  margin-left: 8px;
+  padding: 12px 20px;
+  color: #1a1a1a;
+  background-color: transparent;
+  font-weight: 800;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.sendButton:disabled {
+  background-color: #1e1e1e;
+  cursor: not-allowed;
+}
+
+.sendIcon {
+  width: 25px;
+  height: 25px;
+  transition: transform 0.3s ease;
+}
+
+.sendButton:hover .sendIcon {
+  transform: rotate(-90deg);
+}
+
+.sendButton:active {
+  transform: scale(0.8);
 }

@@ -25,7 +25,7 @@ export interface Email {
 
 export interface EmailMessage {
   id: number;
-  mailId: number;  // 確保 mailId 是必填的
+  mailId: number;
   messageId: number;
   content: string;
   available: string;
