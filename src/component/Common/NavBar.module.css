@@ -4,14 +4,14 @@
 }
 
 .brandImg {
-  width: 40px;
+  width: 55px;
   visibility: hidden;
   cursor: default;
 }
 
 .showBurgerIcon {
   visibility: visible;
-  width: 40px;
+  width: 55px;
 }
 
 .navLink {
@@ -70,7 +70,12 @@
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 
-@media (max-width: 769px) {
+.theBurger {
+  display: none;
+}
+
+/* 手機樣式 */
+@media (max-width: 767.9px) {
   .navbarNavItemImg {
     display: none;
   }
@@ -96,6 +101,18 @@
   .theUserName {
     font-size: 1rem !important;
   }
+
+  .showBurgerIcon {
+    width: 40px;
+  }
+
+  .theBurger {
+    display: inline-block;
+  }
+
+  .theLOGOicon {
+    margin-left: 15px;
+  }
 }
 
 .navbarOverlay {
@@ -111,13 +128,6 @@
 .controlZindex {
   z-index: 8888888 !important;
 }
-
-/* .theUserName {
-  color: white;
-  text-align: center;
-  font-weight: 800;
-  padding-right: 10px;
-} */
 
 .theUserName {
   color: #ACACBE;
@@ -144,4 +154,28 @@
   color: black;
   background-color: #acacbed5;
   border: 2px solid black;
+}
+
+.theLOGO {
+  display: flex;
+}
+
+.LogoTitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.5rem;
+  font-weight: 700;
+  align-self: flex-end;
+  margin-left: 10px;
+}
+
+@media (max-width: 800px) {
+  .LogoTitle {
+    display: none;
+  }
+}
+
+@media (max-width: 850px) {
+  .LogoTitle {
+    font-size: 1.2rem;
+  }
 }

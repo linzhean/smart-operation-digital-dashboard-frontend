@@ -98,7 +98,8 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './NavBar.module.css';
 import { useState, useEffect } from 'react';
-import burgerMenuIcon from '../../assets/icon/burgerMenu-icon.svg';
+// import burgerMenuIcon from '../../assets/icon/burgerMenu-icon.svg';
+import burgerMenuIcon from '../../assets/icon/menubar.png';
 import dashBoardIcon from '../../assets/icon/dashBoard-icon.svg';
 import groupIcon from '../../assets/icon/group-icon.svg';
 import emailIcon from '../../assets/icon/email-icon.svg';
@@ -110,6 +111,8 @@ import ChartAdmin from '../../assets/icon/ChartAdmin.png'
 import { Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUserContext } from '../../context/UserContext';
+import LOGO from '../../assets/icon/LOGOwhite.png'
+import { ImageSharp } from '@mui/icons-material';
 
 const NavBar: React.FC = () => {
   const { user } = useUserContext();
@@ -135,7 +138,6 @@ const NavBar: React.FC = () => {
       border: '1px solid #000000',
     }
   }));
-
 
   const location = useLocation();
   const activeLink = location.pathname;
@@ -168,9 +170,25 @@ const NavBar: React.FC = () => {
       <nav className={`navbar navbar-expand-md ${styles.bgBodyTertiary}`}>
         <div className={`container-fluid ${styles.containerfluid}`}>
 
-          <a className={`brand ${styles.navbarHamburger} `} id='hamburger' href="#">
-            <img className={`brandImg ${styles.brandImg} ${ShowBurgerIcon ? styles.showBurgerIcon : ''}`} src={burgerMenuIcon} alt="menu" />
+          <a className={`brand ${styles.navbarHamburger} ${styles.theLOGO}`} id='hamburger' href="#">
+            {!ShowBurgerIcon ? (<>
+              <img className={`brandImg ${styles.brandImg} ${styles.showBurgerIcon}`} src={LOGO} alt="menu" />
+              <h1 className={styles.LogoTitle}>智慧儀表板系統</h1>
+            </>
+            ) : (
+              <>
+                <img className={`brandImg ${styles.brandImg} ${styles.showBurgerIcon} ${styles.theBurger}`} src={burgerMenuIcon} alt="menu" />
+                <img className={`brandImg ${styles.brandImg} ${styles.showBurgerIcon} ${styles.theLOGOicon}`} src={LOGO} alt="menu" />
+                <h1 className={styles.LogoTitle}>智慧儀表板系統</h1>
+              </>)}
+            {/* <img className={`brandImg ${styles.brandImg} ${ShowBurgerIcon ? styles.showBurgerIcon : ''}`} src={LOGO} alt="menu" /> */}
+
           </a>
+          {/* <img className={`brandImg ${styles.brandImg} ${styles.showBurgerIcon} ${styles.theLOGOicon}`} src={LOGO} alt="menu" /> */}
+
+          {/* 寫在這裡是中間 
+          */}
+
 
           <button
             onClick={toggleNavBarExpansion}
@@ -280,19 +298,6 @@ const NavBar: React.FC = () => {
                 </Link>
               </li>
 
-              {/* 個人資料 */}
-              {/* <li className={`nav-item ${styles.navbarNavItem}`}>
-                <Link
-                  className={`nav-link ${styles.navLink} ${activeLink.startsWith('/profile') ? styles.activeNavLink : ''}`}
-                  to="/profile"
-                >
-                  <WhiteTooltip title="個人資料" enterDelay={700} leaveDelay={100} >
-                    <img className={styles.navbarNavItemImg} src={userDataIcon} alt="profile" />
-                  </WhiteTooltip>
-                  <span className={`${styles.navbarText} ${activeLink.startsWith('/profile') ? styles.activeNavLinkText : ''}`}>個人資料</span>
-                </Link>
-              </li> */}
-
               {/* 分隔線 */}
               <div className={styles.thePartition}></div>
 
@@ -301,18 +306,17 @@ const NavBar: React.FC = () => {
                   className={`nav-link ${styles.navLink} ${activeLink.startsWith('/profile') ? styles.activeNavLink : ''}`}
                   to="/profile"
                 >
-                  {/* <WhiteTooltip title="個人資料" enterDelay={700} leaveDelay={100} >
-                    <div className={`${styles.theUserName} ${activeLink.startsWith('/profile') ? styles.activeUserName : ''}`}>
-                      {state.formData.userName ? state.formData.userName : '訪客'}
-                    </div>
-
-                  </WhiteTooltip> */}
                   <WhiteTooltip title="個人資料" enterDelay={700} leaveDelay={100} >
                     <div className={`${styles.theUserName} ${activeLink.startsWith('/profile') ? styles.activeUserName : ''}`}>
-                      {user?.name ? user.name : (user?.id ? user.id : '訪客')}
+                      {user?.name
+                        ? user.name
+                        : (user?.id
+                          ? user.id
+                          : (user?.email
+                            ? user.email.split('@')[0]
+                            : '訪客'))}
                     </div>
                   </WhiteTooltip>
-                  {/* <span className={`${styles.navbarText} ${activeLink.startsWith('/profile') ? styles.activeNavLinkText : ''}`}>個人資料</span> */}
                 </Link>
               </li>
 
@@ -325,3 +329,4 @@ const NavBar: React.FC = () => {
 };
 
 export default NavBar;
+
