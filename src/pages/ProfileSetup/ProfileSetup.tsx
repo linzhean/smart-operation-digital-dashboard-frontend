@@ -10,11 +10,11 @@ const ProfileSetup: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
-    jobNumber: '', // 將 employeeId 改為 jobNumber
+    jobNumber: '',
     department: '',
     jobTitle: '',
     identity: ''
-  });  
+  });
   const [departments, setDepartments] = useState<{ value: string; label: string }[]>([]);
   const [identities, setIdentities] = useState<{ value: string; label: string }[]>([]);
   const [error, setError] = useState('');
@@ -23,12 +23,12 @@ const ProfileSetup: React.FC = () => {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const user = await getUser(); // 獲取單一用戶
-        console.log('獲取到的用戶:', user); // 調試輸出
-  
+        const user = await getUser();
+        console.log('獲取到的用戶:', user);
+
         if (user && user.id) {
-          setUserId(user.id.toString()); // 將數字轉為字串後設置
-          console.log('用戶 ID 設置為:', user.id); // 調試輸出
+          setUserId(user.id.toString());
+          console.log('用戶 ID 設置為:', user.id);
         } else {
           setError('找不到用戶或用戶ID缺失。');
         }
@@ -37,11 +37,11 @@ const ProfileSetup: React.FC = () => {
         setError('加載用戶信息失敗，請稍後再試。');
       }
     };
-  
+
     fetchUserId();
-  }, []);  
-  
-  
+  }, []);
+
+
   useEffect(() => {
     const loadDropdownData = async () => {
       try {
@@ -65,13 +65,13 @@ const ProfileSetup: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (!userId) {
       setError('用戶ID缺失。');
-      console.log('錯誤: 用戶 ID 缺失'); // 調試輸出
+      console.log('錯誤: 用戶 ID 缺失');
       return;
     }
-    
+
     const newUser: UserData = {
       userId,
       userName: formData.name,
@@ -80,16 +80,16 @@ const ProfileSetup: React.FC = () => {
       position: formData.jobTitle,
       jobNumber: formData.jobNumber,
     };
-    
+
     try {
-      console.log('提交用戶數據:', newUser); // 調試輸出
+      console.log('提交用戶數據:', newUser);
       await updateUser(userId, newUser);
       navigate('/awaiting-approval');
     } catch (error) {
       console.error('更新用戶失敗:', error);
       setError('提交失敗，請重試。');
     }
-  };  
+  };
 
   return (
     <div className={styles.profileSetupBody}>
@@ -99,7 +99,9 @@ const ProfileSetup: React.FC = () => {
           <h1>填寫資料以完成註冊</h1>
         </div>
         <form onSubmit={handleSubmit} className={styles.setupForm}>
+          
           {error && <div className={styles.errorMsg}>{error}</div>}
+
           <div className={styles.formGroup}>
             <label htmlFor="name">姓名</label>
             <input

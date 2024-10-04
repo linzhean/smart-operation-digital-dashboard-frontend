@@ -11,7 +11,6 @@ interface DropdownData {
   identityList?: { key: string; value: string }[];
 }
 
-// 获取下拉选项数据
 export const fetchDropdownData = async (type: 'identity' | 'department'): Promise<DropdownOption[]> => {
   try {
     const response = await apiClient.get<Response<DropdownData>>('/dropdown', {

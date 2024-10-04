@@ -1,8 +1,8 @@
 .container {
   height: 120vh;
   background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-  overflow: hidden;
   position: relative;
+  white-space: nowrap;
 }
 
 .stars,
@@ -54,39 +54,16 @@
 
 .title {
   position: absolute;
-  top: 35%;
-  left: 0;
-  right: 0;
-  color: #FFF;
-  text-align: center;
-  font-family: 'Lato', sans-serif;
-  font-weight: 300;
-  font-size: 50px;
-  letter-spacing: 5px;
-  z-index: 1;
-}
-
-.BackHomeButton {
-  position: fixed;
-  top: 60%;
+  top: 20%;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: 20px;
-}
-
-.BackHomeButtonLink {
-  padding: 15px 30px;
-  background-color: #9a9a9a49;
-  color: white;
+  color: #FFF;
   text-align: center;
-  border-radius: 25px;
-  text-decoration: none;
-  display: block;
-  width: fit-content;
-}
-
-.BackHomeButtonLink:hover {
-  background-color: #555;
+  font-weight: 300;
+  letter-spacing: 5px;
+  z-index: 1;
+  white-space: nowrap;
+  font-size: 45px;
 }
 
 .theBig {
@@ -96,6 +73,11 @@
 
 .theSmall {
   font-size: 1.2rem;
+}
+
+.LOGO {
+  width: 120px;
+  height: 120px;
 }
 
 @keyframes animStar {
@@ -113,4 +95,35 @@
   .theSmall {
     font-size: 0.8rem;
   }
+
+  .theBig {
+    font-size: 1.5rem;
+  }
+
+  .LOGO {
+    width: 80px;
+    height: 80px;
+  }
 }
+
+@media (max-width: 370px) {
+  .theSmall {
+    font-size: 0.7rem;
+  }
+
+  .LOGO {
+    width: 60px;
+    height: 60px;
+  }
+
+  .theBig {
+    font-size: 1.2rem;
+  }
+
+  .title {
+    letter-spacing: 2px;
+    white-space: normal;
+    width: 100%;
+    text-align: center;
+  }
+} 
