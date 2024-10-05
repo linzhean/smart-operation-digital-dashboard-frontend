@@ -10,7 +10,6 @@ import {
   removeChartFromGroup,
 } from '../services/GroupApi';
 import ChartService from '../services/ChartService';
-import YellowConfirmDialog from '../component/Common/YellowConfirmDialog';
 
 interface UseGroupListParams {
   groupId: number;

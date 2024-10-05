@@ -1,138 +1,171 @@
-.kpi {
+.eachMailBriefSection {
+  height: 130px;
+  width: 100%;
+  overflow: hidden;
   display: flex;
-  position: relative;
-  padding-top: 4px;
-  max-width: 100%;
-  padding-bottom: 12px;
-  border-bottom: 1.5px solid #CCCCCC;
+  border-bottom: 2px solid #acacbe91;
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
 
-.kpi img {
-  max-width: 30%;
-  border-radius: 10px;
-  border: 3px solid black;
+.KPI {
+  height: 100%;
+  width: auto;
+  margin-right: 5px;
 }
 
-.emailName {
-  margin-top: 3px;
-  margin-bottom: 2px;
-  width: fit-content;
-  color: #fff;
-  font-size: 1.5em;
-  font-weight: bold;
+.mailHeader {
+  width: -webkit-fill-available;
+  padding: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.topArea {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  white-space: nowrap;
+}
+
+.assignor {
+  font-weight: 900;
+}
+
+.assignor,
+.time {
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.bottomArea {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.emailTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  background-color: #343541;
+  z-index: 2;
+}
+
+.completeButton,
+.deleteButton {
   background-color: rgba(0, 0, 0, 0.3);
-  padding: 8px;
-  border-radius: 4px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s;
 }
 
-.leftmail:nth-child(n+2) .kpiname {
-  margin-top: 10px;
+.completeButton:hover,
+.deleteButton:hover {
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
-.kpi .assignor {
-  position: absolute;
-  bottom: 10%;
-  margin-left: 10px;
-  font-size: large;
-  font-weight: bold;
+.completeIcon,
+.deleteIcon {
+  width: 25px;
+  height: 25px;
 }
 
-.kpi .time {
-  position: absolute;
-  right: 0%;
-}
+/* 響應式 */
 
-@media (max-width: 768px) {
-  .kpi {
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+@media (max-width: 1000px) {
+  .eachMailBriefSection {
+    height: 100px;
   }
 
-  .kpi img {
-    max-width: 50%;
-    margin-bottom: 5px;
+  .mailHeader {
+    padding-left: 5px;
   }
 
-  .emailName {
-    font-size: 1em;
-    position: relative;
-    top: auto;
-    left: auto;
-    margin-bottom: 5px;
+  .assignor,
+  .time {
+    font-size: 1rem;
+    white-space: nowrap;
   }
 
-  .kpi .assignor {
-    font-size: medium;
-    position: relative;
-    bottom: auto;
-    right: auto;
-    margin-bottom: 5px;
+  .emailTitle {
+    font-size: 1.5rem;
   }
 
-  .kpi .time {
-    position: relative;
-    right: auto;
-    font-size: small;
-    margin-bottom: 5px;
+  .buttonGroup {
+    gap: 5px;
   }
-  .completeButton {
-    position: absolute;
-    right: 90px; /* 固定在左側 */
-    bottom: 15px; /* 固定距離底部 */
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .completeButton:hover {
-    background-color: #218838;
-  }
-  
+
+  .completeButton,
   .deleteButton {
-    position: absolute;
-    right: 10px; /* 固定在右側 */
-    bottom: 10px; /* 固定距離底部 */
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
+    width: 30px;
+    height: 30px;
     padding: 5px;
   }
-  
-  .deleteButton img {
+
+  .completeIcon,
+  .deleteIcon {
     width: 20px;
+    height: 20px;
   }
+
 }
 
-.completeButton {
-  position: absolute;
-  right: 90px; /* 固定在左側 */
-  bottom: 15px; /* 固定距離底部 */
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
-.completeButton:hover {
-  background-color: #218838;
-}
+@media (max-width: 330px) {
+  .eachMailBriefSection {
+    height: 100px;
+  }
 
-.deleteButton {
-  position: absolute;
-  right: 10px; /* 固定在右側 */
-  bottom: 10px; /* 固定距離底部 */
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-}
+  .mailHeader {
+    padding: 0px;
+  }
 
-.deleteButton img {
-  width: 100px;
+  .assignor,
+  .time {
+    white-space: wrap;
+  }
+
+  .time {
+    font-size: 0.8rem;
+    align-content: flex-end;
+  }
+
+  .emailTitle {
+    font-size: 1.2rem;
+  }
+
+  .buttonGroup {
+    gap: 5px;
+  }
+
+  .completeButton,
+  .deleteButton {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+  }
+
+  .completeIcon,
+  .deleteIcon {
+    width: 20px;
+    height: 20px;
+  }
+
 }

@@ -32,7 +32,7 @@ const Pdata: React.FC = () => {
         const userData = await fetchUserData();
         console.log('Loaded user data:', userData);
         dispatch({ type: 'SET_FORM_DATA', payload: userData });
-        setInitialData(userData);  // 設置初始數據
+        setInitialData(userData);
       } catch (error) {
         console.error('載入用戶數據出錯:', error);
       } finally {
@@ -55,11 +55,11 @@ const Pdata: React.FC = () => {
     loadUserData();
     loadDropdownData();
   }, [dispatch]);
-  
+
   useEffect(() => {
     console.log('state.formData:', state.formData);
   }, [state.formData]);
-  
+
 
   const handleEditClick = () => {
     dispatch({ type: 'SET_EDITABLE', payload: !state.editable });
@@ -132,7 +132,7 @@ const Pdata: React.FC = () => {
                     className="btn btn-outline-secondary"
                     onClick={handleLogoutClick}
                   >
-                    <span className={styles.letter}>登出</span>
+                    <span>登出</span>
                   </button>
                 </div>
               )}
@@ -165,7 +165,7 @@ const Pdata: React.FC = () => {
                 type="text"
                 className="form-control"
                 id="jobNumber"
-                value={state.formData.jobNumber}
+                value={user?.id}
                 // value={user?.email}
                 required
                 disabled={!state.editable}

@@ -1,8 +1,11 @@
 import React from 'react';
 import styles from './mailItem.module.css';
 import KPI from '../../../assets/icon/testKPI.svg';
-import { Email, updateEmailStatus, deleteEmail,getEmailDetails } from '../../../services/mailService';
+import { Email, updateEmailStatus, deleteEmail, getEmailDetails } from '../../../services/mailService';
 import trash from '../../../assets/icon/trashBin.png';
+import finishIcon from '../../../assets/icon/finish.png'
+import { style } from '@mui/system';
+import { useState } from 'react';
 
 interface MailItemProps {
   email: Email;
@@ -45,18 +48,17 @@ const MailItem: React.FC<MailItemProps> = ({ email, onClick, onDelete }) => {
     const emailDetails = await getEmailDetails(id);
     return emailDetails.status;
   };
-  
+
   const handleDeleteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
-  
-    // 刪除前重新獲取郵件狀態
+
     const currentStatus = await refreshEmailStatus(email.id);
-  
+
     if (currentStatus !== '已完成') {
       alert('郵件非已完成狀態，無法刪除');
       return;
     }
-  
+
     if (window.confirm('確定要刪除此郵件嗎？')) {
       try {
         await deleteEmail(email.id);
@@ -68,33 +70,73 @@ const MailItem: React.FC<MailItemProps> = ({ email, onClick, onDelete }) => {
         alert('無法刪除郵件，請稍後再試');
       }
     }
-  };  
+  };
 
   return (
-    <div className={styles.leftmail} onClick={onClick}>
-      <div className={styles.emailName}>{email.name}</div>
-      <div className={styles.kpi}>
-        <img src={KPI} alt="KPI" />
-        <div className={styles.kpiDetails}>
-          <div className={styles.assignorContainer}>
-            <h6 className={styles.assignor}>發起人: {email.publisher}</h6>
-            <button
-              className={styles.completeButton}
-              onClick={handleCompleteClick}
-            >
-              完成
-            </button>
-            <button
-              className={styles.deleteButton}
-              onClick={handleDeleteClick}
-            >
-              <img src={trash} alt="刪除" />
-            </button>
+    <>
+
+      {/* 整個區域 */}
+      < div className={styles.eachMailBriefSection} onClick={onClick} >
+
+        {/* 示意圖 */}
+        < img src={KPI} className={styles.KPI} alt="KPI" />
+
+        {/* 信件標頭 */}
+        < div className={styles.mailHeader} >
+
+          <div className={styles.topArea}>
+            <h6 className={styles.assignor}>{email.publisher}</h6>
+            <h6 className={styles.time}>
+              {(() => {
+                const date = new Date(email.emailSendTime);
+                const currentYear = new Date().getFullYear();
+                const formattedDate = date.toLocaleString('zh-TW', {
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+                }).replace(/\//g, '/').replace(/,/g, '');
+
+                if (date.getFullYear() !== currentYear) {
+                  return `${date.getFullYear()}/${formattedDate}`;
+                }
+
+                return formattedDate;
+              })()}
+            </h6>
           </div>
-          <h6 className={styles.time}>{new Date(email.emailSendTime).toLocaleString()}</h6>
-        </div>
-      </div>
-    </div>
+
+          <div className={styles.bottomArea} >
+            {/* 標題 */}
+            <div className={styles.emailTitle}>{email.name}</div>
+            {/* 按鈕組 */}
+            <div className={styles.buttonGroup}>
+              {/* 完成按鈕 */}
+              <button
+                className={styles.completeButton}
+                onClick={handleCompleteClick}
+              >
+                <img src={finishIcon} className={styles.completeIcon} alt='完成' />
+              </button>
+              {/* 刪除按鈕 */}
+              <button
+                className={styles.deleteButton}
+                onClick={handleDeleteClick}
+              >
+                <img src={trash} className={styles.deleteIcon} alt="刪除" />
+              </button>
+
+            </div>
+
+          </div>
+        </div >
+      </div >
+
+    </>
+
+
+
   );
 };
 
