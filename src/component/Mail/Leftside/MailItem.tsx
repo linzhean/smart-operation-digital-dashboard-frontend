@@ -4,8 +4,8 @@ import KPI from '../../../assets/icon/testKPI.svg';
 import { Email, updateEmailStatus, deleteEmail, getEmailDetails } from '../../../services/mailService';
 import trash from '../../../assets/icon/trashBin.png';
 import finishIcon from '../../../assets/icon/finish.png'
-import { style } from '@mui/system';
-import { useState } from 'react';
+import { Tooltip } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 interface MailItemProps {
   email: Email;
@@ -13,7 +13,31 @@ interface MailItemProps {
   onDelete?: (id: number) => void;
 }
 
+
 const MailItem: React.FC<MailItemProps> = ({ email, onClick, onDelete }) => {
+
+  const WhiteTooltip = styled(({ className, ...props }: any) => (
+    <Tooltip {...props} classes={{ popper: className }} PopperProps={{
+      modifiers: [
+        {
+          name: 'offset',
+          options: {
+            offset: [0, -12],
+          },
+        },
+      ],
+    }} />
+  ))(() => ({
+    [`& .MuiTooltip-tooltip`]: {
+      backgroundColor: '#ffffff',
+      color: '#000000',
+      boxShadow: '0px 3px 5px rgba(0, 0, 0, 0.2)',
+      fontSize: '0.8rem',
+      fontWeight: '700',
+      border: '1px solid #000000',
+    }
+  }));
+
   const handleCompleteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
@@ -113,19 +137,24 @@ const MailItem: React.FC<MailItemProps> = ({ email, onClick, onDelete }) => {
             {/* 按鈕組 */}
             <div className={styles.buttonGroup}>
               {/* 完成按鈕 */}
-              <button
-                className={styles.completeButton}
-                onClick={handleCompleteClick}
-              >
-                <img src={finishIcon} className={styles.completeIcon} alt='完成' />
-              </button>
+              <WhiteTooltip title="將此任務標記為已完成" enterDelay={700} leaveDelay={100} >
+                <button
+                  className={styles.completeButton}
+                  onClick={handleCompleteClick}
+                >
+                  <img src={finishIcon} className={styles.completeIcon} alt='完成' />
+                </button>
+              </WhiteTooltip>
+
               {/* 刪除按鈕 */}
-              <button
-                className={styles.deleteButton}
-                onClick={handleDeleteClick}
-              >
-                <img src={trash} className={styles.deleteIcon} alt="刪除" />
-              </button>
+              <WhiteTooltip title="刪除已完成的郵件" enterDelay={700} leaveDelay={100} >
+                <button
+                  className={styles.deleteButton}
+                  onClick={handleDeleteClick}
+                >
+                  <img src={trash} className={styles.deleteIcon} alt="刪除" />
+                </button>
+              </WhiteTooltip>
 
             </div>
 

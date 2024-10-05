@@ -98,12 +98,10 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './NavBar.module.css';
 import { useState, useEffect } from 'react';
-// import burgerMenuIcon from '../../assets/icon/burgerMenu-icon.svg';
 import burgerMenuIcon from '../../assets/icon/menubar.png';
 import dashBoardIcon from '../../assets/icon/dashBoard-icon.svg';
 import groupIcon from '../../assets/icon/group-icon.svg';
 import emailIcon from '../../assets/icon/email-icon.svg';
-import userDataIcon from '../../assets/icon/userData-icon.svg';
 import AssignExportControlIcon from '../../assets/icon/AssignExportControl.svg';
 import InterimKPIControl from '../../assets/icon/InterimKPIControl.svg';
 import UserControl from '../../assets/icon/UserControl.svg';
@@ -112,7 +110,6 @@ import { Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUserContext } from '../../context/UserContext';
 import LOGO from '../../assets/icon/LOGOwhite.png'
-import { ImageSharp } from '@mui/icons-material';
 
 const NavBar: React.FC = () => {
   const { user } = useUserContext();
