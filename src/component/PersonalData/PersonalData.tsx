@@ -30,15 +30,16 @@ const Pdata: React.FC = () => {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
         const userData = await fetchUserData();
-        console.log('Loaded user data:', userData);
-        dispatch({ type: 'SET_FORM_DATA', payload: userData });
-        setInitialData(userData);
+        console.log('Loaded user data:', userData); // 確保用戶數據正確加載
+        dispatch({ type: 'SET_FORM_DATA', payload: { ...userData, userId: user?.id ?? '' } });
+        console.log('Updated form data:', state.formData); 
+        setInitialData(userData);  // 設置初始數據
       } catch (error) {
         console.error('載入用戶數據出錯:', error);
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
-    };
+    };   
 
     const loadDropdownData = async () => {
       try {
@@ -76,13 +77,14 @@ const Pdata: React.FC = () => {
   };
 
   const handleSaveClick = async () => {
-    if (!state.formData.departmentId) {
-      setSnackbarMessage('請選擇您所屬部門！');
+    console.log('Saving form data with userId:', state.formData.userId);  // 檢查 userId
+    if (!state.formData.departmentId || !state.formData.userId) {  // 添加對 userId 的檢查
+      setSnackbarMessage('使用者ID - 未填寫');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       return;
     }
-
+  
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
       await updateUserData(state.formData as UpdateUserData);
@@ -151,25 +153,7 @@ const Pdata: React.FC = () => {
                 value={user?.name}
                 required
                 disabled={!state.editable}
-                onChange={(e) => handleInputChange(e.target.id, e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col-12">
-              <label htmlFor="joNumber" className={styles.formLabel}>
-                員工編號
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="jobNumber"
-                value={user?.id}
-                // value={user?.email}
-                required
-                disabled={!state.editable}
-                onChange={(e) => handleInputChange(e.target.id, e.target.value)}
+                onChange={(e) => handleInputChange('userName', e.target.value)}
               />
             </div>
           </div>

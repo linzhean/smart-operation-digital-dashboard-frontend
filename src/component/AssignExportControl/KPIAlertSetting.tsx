@@ -19,21 +19,47 @@ interface KPIAlertSettingProps {
   lowerLimit: number;
   setUpperLimit: (value: number) => void;
   setLowerLimit: (value: number) => void;
+  defaultProcessor: string;
+  defaultAuditor: string;
   onSubmit: (lowerLimit: number, upperLimit: number, defaultProcessor: string, defaultAuditor: string, chartId: number) => void; // 添加 chartId 参数
+  chartId: number;
 }
 
 interface CustomChart extends Chart {
   name: string; // Add other properties if needed
 }
 
-export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerLimit, setUpperLimit, setLowerLimit, onSubmit }: KPIAlertSettingProps) {
+export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerLimit, setUpperLimit, setLowerLimit, defaultProcessor, defaultAuditor, onSubmit, chartId }: KPIAlertSettingProps) {
 
-  const [value, setValue] = React.useState<number[]>([lowerLimit, upperLimit]);
+  const [value, setValue] = React.useState<number[]>([lowerLimit || 1, upperLimit || 100]); // 設置初始默認值
   const [users, setUsers] = useState<User[]>([]);
-  const [defaultProcessor, setDefaultProcessor] = useState<User | null>(null);
-  const [defaultAuditor, setDefaultAuditor] = useState<User | null>(null);
+  const [selectedProcessor, setSelectedProcessor] = useState<User | null>(null);
+  const [selectedAuditor, setSelectedAuditor] = useState<User | null>(null);
   const [charts, setCharts] = useState<CustomChart[]>([]);
-  const [selectedChart, setSelectedChart] = useState<Chart | null>(null);
+
+  useEffect(() => {
+    console.log('Received upperLimit:', upperLimit, 'lowerLimit:', lowerLimit);
+  }, [upperLimit, lowerLimit]);
+
+  useEffect(() => {
+    console.log('Lower Limit:', lowerLimit);
+    console.log('Upper Limit:', upperLimit);
+    setValue([lowerLimit, upperLimit]);
+  }, [lowerLimit, upperLimit]);
+
+  useEffect(() => {
+    console.log('Users:', users);
+    console.log('Default Processor:', defaultProcessor);
+    console.log('Default Auditor:', defaultAuditor);
+
+    if (users.length > 0) {
+      const processorUser = users.find(user => user.userId === defaultProcessor) || null;
+      const auditorUser = users.find(user => user.userId === defaultAuditor) || null;
+
+      setSelectedProcessor(processorUser);
+      setSelectedAuditor(auditorUser);
+    }
+  }, [defaultProcessor, defaultAuditor, users]);
 
   useEffect(() => {
     ChartService.getAllCharts()
@@ -51,33 +77,35 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
         setCharts([]);
       });
   }, []);
-  
-  
+
   useEffect(() => {
-    fetchAllUsers()
-      .then((data) => {
-        const userList: User[] = data.map((user: UserAccountBean) => ({
-          id: user.id || 0,
-          groupId: user.groupId || 0,
-          userId: user.userId,
-          name: user.userName,
-          userName: user.userName,
-          department: user.departmentName,
-          position: user.position,
-          userGroupId: user.userGroupId || 0,
-          available: user.available === true,
-          createId: user.createId,
-          createDate: user.createDate,
-          modifyId: user.modifyId,
-          modifyDate: user.modifyDate,
-        }));
-        setUsers(userList);
-      })
-      .catch((error) => {
-        console.error('Error fetching users', error);
-        setUsers([]); // Reset to empty array on error
-      });
-  }, []);  
+    fetchAllUsers().then((data: UserAccountBean[]) => {
+      console.log('Fetched Users:', data); // 確認數據是否正確
+      const mappedUsers: User[] = data.map((user) => ({
+        id: Number(user.userId),
+        userId: user.userId,
+        userName: user.userName,
+        groupId: user.userGroupId,
+        name: user.userName,
+        department: user.departmentName || '',
+        position: user.position,
+        userGroupId: user.userGroupId,
+        available: user.available,
+        createId: user.createId,
+        createDate: user.createDate,
+        modifyId: user.modifyId,
+        modifyDate: user.modifyDate,
+      }));
+
+      setUsers(mappedUsers);
+
+      const processorUser = mappedUsers.find(user => user.id === Number(defaultProcessor)) || null;
+      const auditorUser = mappedUsers.find(user => user.id === Number(defaultAuditor)) || null;
+
+      setSelectedProcessor(processorUser);
+      setSelectedAuditor(auditorUser);
+    });
+  }, [defaultProcessor, defaultAuditor]);
 
   const handleSliderChange = (
     event: Event,
@@ -101,18 +129,16 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
     }
   };
 
-  const handleInputChange = (index: number) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleInputChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = Number(event.target.value);
     if (index === 0) {
       const clampedValue = Math.min(inputValue, value[1] - minDistance);
       setValue([clampedValue, value[1]]);
-      setLowerLimit(clampedValue);  // 更新父組件的狀態
+      setLowerLimit(clampedValue);  // Update parent component's state
     } else {
       const clampedValue = Math.max(inputValue, value[0] + minDistance);
       setValue([value[0], clampedValue]);
-      setUpperLimit(clampedValue);  // 更新父組件的狀態
+      setUpperLimit(clampedValue);  // Update parent component's state
     }
   };
 
@@ -124,11 +150,11 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
   const handleConfirm = () => {
     setLowerLimit(value[0]);
     setUpperLimit(value[1]);
-    if (defaultProcessor && defaultAuditor && selectedChart) {
-      onSubmit(value[0], value[1], defaultProcessor.userId, defaultAuditor.userId,  Number(selectedChart.id)); // 传递 chartId
+    if (selectedProcessor && selectedAuditor) {
+      onSubmit(value[0], value[1], selectedProcessor.userId, selectedAuditor.userId, chartId);
     }
     onClose();
-  };  
+  };
 
   return (
     <div className={styles.settingAlert}>
@@ -162,7 +188,7 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
           valueLabelDisplay="auto"
           disableSwap
           min={0}
-          max={100}
+          max={1000}
           sx={{
             color: '#000000',
             height: 8,
@@ -223,13 +249,13 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
         >
           <TextField
             label="最低"
-            value={value[0]}
+            type="number"
+            value={value[0]}   // 綁定到 lowerLimit
             onChange={handleInputChange(0)}
             onBlur={handleBlur}
             inputProps={{
               min: 0,
               max: value[1] - minDistance,
-              type: 'number',
             }}
             InputLabelProps={{
               sx: {
@@ -249,15 +275,16 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
               },
             }}
           />
+
           <TextField
-            label="最高"
-            value={value[1]}
+            label="最高值"
+            type="number"
+            value={value[1]}  // 綁定到 upperLimit
             onChange={handleInputChange(1)}
             onBlur={handleBlur}
             inputProps={{
               min: value[0] + minDistance,
               max: 100,
-              type: 'number',
             }}
             InputLabelProps={{
               sx: {
@@ -281,37 +308,26 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
         {/* 添加 defaultProcessor 下拉选择 */}
         <Autocomplete
           className={styles.autocomplete}
-          options={users} // Should be an array
-          getOptionLabel={(option) => option.name}
-          onChange={(event, newValue) => {
-            setDefaultProcessor(newValue);
-          }}
+          value={selectedProcessor || { id: 0, userId: '', userName: defaultProcessor, groupId: 0, name: defaultProcessor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
+          options={users}
+          getOptionLabel={(option) => option.userName}
+          onChange={(event, newValue) => setSelectedProcessor(newValue)}
           renderInput={(params) => (
             <TextField {...params} label="選擇處理者" variant="outlined" />
           )}
         />
+
         <Autocomplete
-          className={styles.autocomplete} // 添加類名以適用樣式
+          className={styles.autocomplete}
+          value={selectedAuditor || { id: 0, userId: '', userName: defaultAuditor, groupId: 0, name: defaultAuditor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
           options={users}
-          getOptionLabel={(option) => option.name}
-          onChange={(event, newValue) => {
-            setDefaultAuditor(newValue);
-          }}
+          getOptionLabel={(option) => option.userName}
+          onChange={(event, newValue) => setSelectedAuditor(newValue)}
           renderInput={(params) => (
             <TextField {...params} label="選擇稽核者" variant="outlined" />
           )}
         />
-        <Autocomplete
-          className={styles.autocomplete}
-          options={charts}
-          getOptionLabel={(option) => option.name} // 假设 Chart 对象有 name 属性
-          onChange={(event, newValue) => {
-            setSelectedChart(newValue);
-          }}
-          renderInput={(params) => (
-            <TextField {...params} label="選擇圖表" variant="outlined" />
-          )}
-        />
+
       </Box>
       <div className={styles.buttonGroup}>
         <button className={styles.cancel} onClick={onClose}>取消</button>

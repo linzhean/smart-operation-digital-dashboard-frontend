@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ChartAdminTable.module.css';
-import NewChartForm from './newChartForm';
+// import NewChartForm from './newChartForm';
 import ViewChartForm from './ViewChartForm';
 import { Snackbar, Button, Alert, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -232,9 +232,9 @@ const ChartAdminTable: React.FC = () => {
           </Collapse>
         </div>
 
-        <button className={styles.addKPIButton} onClick={handleOpenForm}>
+        {/* <button className={styles.addKPIButton} onClick={handleOpenForm}>
           新增圖表
-        </button>
+        </button> */}
       </div>
 
       <div className={styles.theTable}>
@@ -271,9 +271,9 @@ const ChartAdminTable: React.FC = () => {
         </div>
       </div>
 
-      {isFormOpen && (
+      {/* {isFormOpen && (
         <NewChartForm onSubmit={handleFormSubmit} onClose={handleCloseForm} />
-      )}
+      )} */}
 
       {isViewFormOpen && (
         <ViewChartForm

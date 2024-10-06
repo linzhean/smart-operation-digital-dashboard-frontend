@@ -63,9 +63,17 @@ interface AssignedTask {
   chartId: number;
   name: string;
   defaultProcessor: string;
+  defaultAuditor:string;
   available: boolean;
   upperLimit?: number;
   lowerLimit?: number;
+}
+
+interface AssignedTaskResponse {
+  upperLimit: number;
+  lowerLimit: number;
+  defaultProcessor: string;
+  defaultAuditor: string;
 }
 
 const UserPickerDialog: React.FC<{
@@ -158,13 +166,17 @@ const AssignTaskControl: React.FC = () => {
   const [assignedTasks, setAssignedTasks] = useState<{ [key: number]: AssignedTask[] }>({});
   const [showKPIAlertSetting, setShowKPIAlertSetting] = useState(false);
   const [currentChartName, setCurrentChartName] = useState<string | null>(null);
-  const [upperLimit, setUpperLimit] = useState<number | null>(null);
-  const [lowerLimit, setLowerLimit] = useState<number | null>(null);
+  const [upperLimit, setUpperLimit] = useState<number>(0);  // 初始化为 0
+  const [lowerLimit, setLowerLimit] = useState<number>(0);  // 初始化为 0
+  const [defaultProcessorName, setDefaultProcessorName] = useState<string>(''); // Initialize as empty string
+  const [defaultAuditorName, setDefaultAuditorName] = useState<string>(''); // Initialize as empty string
 
-  const handleSetAlert = (chartName: string) => {
+  const handleSetAlert = (chartName: string, chartId: number) => {
     setCurrentChartName(chartName);
     setShowKPIAlertSetting(true);
+    setCurrentChart(chartId); // Use the passed chartId here
   };
+
 
   const handleCloseAlert = () => {
     setShowKPIAlertSetting(false);
@@ -172,7 +184,7 @@ const AssignTaskControl: React.FC = () => {
 
   const handleKPIAlertSubmit = (lower: number, upper: number, defaultProcessor: string, defaultAuditor: string, chartId: number) => {
     const requestData = {
-      chartId,
+      chartId: currentChart,
       name: currentChartName || '',
       upperLimit: upper,
       lowerLimit: lower,
@@ -181,13 +193,18 @@ const AssignTaskControl: React.FC = () => {
       available: true,
     };
   
-    createAssignedTask(requestData)
-      .then(response => {
-        console.log('Successfully created assigned task', response);
-      })
-      .catch(error => {
-        console.error('Failed to create assigned task', error);
-      });
+    // Check if there's an existing assigned task by checking its `id` 
+    if (chartId) {
+      updateAssignedTask(chartId, requestData)
+        .then(response => {
+          console.log('Successfully updated assigned task', response);
+        })
+        .catch(error => {
+          console.error('Failed to update assigned task', error);
+        });
+    } else {
+      console.error('Chart ID is not available for updating');
+    }
   };  
 
   useEffect(() => {
@@ -204,25 +221,39 @@ const AssignTaskControl: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    getAllAssignedTasks()
-      .then((response) => {
-        if (response.data) {
-          const taskMap: { [key: number]: AssignedTask[] } = {};
-          response.data.forEach((task) => {
-            if (task.id !== undefined) {
-              if (!taskMap[task.chartId]) {
-                taskMap[task.chartId] = [];
-              }
-              taskMap[task.chartId].push(task as AssignedTask);
-            }
-          });
-          setAssignedTasks(taskMap);
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching assigned tasks', error);
+    if (currentChart > 0) {
+      fetchAllUsers().then((userData) => {
+        const userMap: { [key: string]: string } = {};
+        userData.forEach(user => {
+          userMap[user.userId] = user.userName;
+        });
+  
+        getAllAssignedTasks(currentChart).then((response) => {
+          console.log('Assigned tasks response:', response.data);
+  
+          // Type assertion to specify the shape of the response data
+          const taskData = response.data as unknown as AssignedTaskResponse; // Use the new interface here
+          console.log('Task data:', taskData);
+  
+          if (taskData) {
+            setUpperLimit(taskData.upperLimit);
+            setLowerLimit(taskData.lowerLimit);
+            const defaultProcessorName = userMap[taskData.defaultProcessor] || 'Unknown Processor';
+            const defaultAuditorName = userMap[taskData.defaultAuditor] || 'Unknown Auditor';
+  
+            setDefaultProcessorName(defaultProcessorName);
+            setDefaultAuditorName(defaultAuditorName);
+          } else {
+            console.warn('Task data is undefined or null');
+          }
+        }).catch((error) => {
+          console.error('Error fetching assigned tasks', error);
+        });
+      }).catch((error) => {
+        console.error('Error fetching users', error);
       });
-  }, []);
+    }
+  }, [currentChart]);
 
   const handleOpenDialog = (chartId: number) => {
     setCurrentChart(chartId);
@@ -240,33 +271,34 @@ const AssignTaskControl: React.FC = () => {
     }
   
     const userIds = selectedUsers.map(user => user.userId);
-
+  
     const requestData = {
       sponsorList: userIds,
       exporterList: [],
       dashboardCharts: [],
       upperLimit,
       lowerLimit,
-      defaultAuditor: 'defaultAuditorValue', // 添加defaultAuditor字段
+      defaultAuditor: 'defaultAuditorValue',
     };
-
-    createAssignedTask({
+  
+    // Assume currentChart contains the ID of the task you're updating
+    updateAssignedTask(currentChart, {
       chartId: currentChart,
       name: currentChartName || '',
-      defaultProcessor: 'defaultProcessorValue', // 根据需要填入
-      defaultAuditor: 'defaultAuditorValue', // 添加defaultAuditor字段
-      available: true, // 或根据需求填入
+      defaultProcessor: 'defaultProcessorValue',
+      defaultAuditor: 'defaultAuditorValue',
+      available: true,
       upperLimit: upperLimit !== null ? upperLimit : undefined,
       lowerLimit: lowerLimit !== null ? lowerLimit : undefined,
     })
       .then(response => {
-        console.log('Successfully created assigned task', response);
-        // 处理成功创建后的逻辑
+        console.log('Successfully updated assigned task', response);
+        // Handle the successful update logic here
       })
       .catch(error => {
-        console.error('Failed to create assigned task', error);
+        console.error('Failed to update assigned task', error);
       });
-
+  
     setAssignedTaskSponsorsForDashboard(currentChart, requestData)
       .then(response => {
         console.log('Successfully set task sponsors', response);
@@ -274,10 +306,10 @@ const AssignTaskControl: React.FC = () => {
       .catch(error => {
         console.error('Failed to set task sponsors', error);
       });
-
+  
     setDialogOpen(false);
   };
-
+  
   const getSelectedUserNames = (chartId: number) => {
     const selectedUsers = selectedUsersMap[chartId] || [];
     const taskCount = assignedTasks[chartId]?.length || 0;
@@ -319,7 +351,7 @@ const AssignTaskControl: React.FC = () => {
             <tbody>
               {charts.map((chart) => (
                 <tr key={chart.id}>
-                  <td onClick={() => handleSetAlert(chart.name)}>
+                  <td onClick={() => handleSetAlert(chart.name, chart.id)}>
                     {chart.name}
 
                     <LargeTooltip title="點擊可以設定警訊上下限" open={alertSettingTooltipOpen} placement="right" arrow>
@@ -353,11 +385,14 @@ const AssignTaskControl: React.FC = () => {
         <KPIAlertSetting
           onClose={handleCloseAlert}
           chartName={currentChartName}
-          upperLimit={upperLimit !== null ? upperLimit : 0}
-          lowerLimit={lowerLimit !== null ? lowerLimit : 0}
+          upperLimit={upperLimit} // 传递 upperLimit
+          lowerLimit={lowerLimit} // 传递 lowerLimit
           setUpperLimit={setUpperLimit}
           setLowerLimit={setLowerLimit}
+          defaultProcessor={defaultProcessorName} // Pass the name instead of user object
+          defaultAuditor={defaultAuditorName}
           onSubmit={(lower, upper, processor, auditor, chartId) => handleKPIAlertSubmit(lower, upper, processor, auditor, chartId)}
+          chartId={currentChart}
         />
       )}
     </>

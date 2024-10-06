@@ -57,7 +57,6 @@ const initialState: State = {
   isAuthenticated: false
 };
 
-
 const userReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'SET_USER':
@@ -92,55 +91,22 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [state, dispatch] = useReducer(userReducer, initialState);
   const [user, setUserState] = useState<User | null>(null);
 
-  // const setUser = (user: User | null) => {
-  //   setUserState(user);
-  //   if (user) {
-  //     dispatch({ type: 'SET_USER', payload: user });
-  //   } else {
-  //     dispatch({ type: 'CLEAR_USER' });
-  //   }
-  // };
-
-  // const setUser = (userData: any) => {
-  //   if (userData) {
-  //     const userForContext: User = {
-  //       id: userData.userId || '',
-  //       name: userData.userName || '',
-  //       email: userData.gmail || '',
-  //       role: userData.position || '',
-  //       identity: userData.identity || '',
-  //     };
-  //     setUserState(userForContext);
-  //     dispatch({ type: 'SET_USER', payload: userForContext });
-  //   } else {
-  //     setUserState(null);
-  //     dispatch({ type: 'CLEAR_USER' });
-  //   }
-  // };
-
   const setUser = (userData: any) => {
     if (userData) {
       const userForContext: User = {
-        id: userData.id || '',
-        name: userData.name || '',
+        id: userData.userId || userData.id || '',
+        name: userData.userName || userData.name || '',
         email: userData.gmail || '',
         role: userData.position || '',
         identity: userData.identity || '',
       };
-      console.log('Setting user data:', userForContext);
       setUserState(userForContext);
       dispatch({ type: 'SET_USER', payload: userForContext });
     } else {
-      console.log('Clearing user data');
       setUserState(null);
       dispatch({ type: 'CLEAR_USER' });
     }
   };
-
-
-  useEffect(() => {
-    console.log('Form data:', state.formData);
-  }, [state.formData]);
 
   useEffect(() => {
     const authToken = localStorage.getItem('authToken');

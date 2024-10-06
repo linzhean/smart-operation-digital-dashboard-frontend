@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './mailItem.module.css';
 import KPI from '../../../assets/icon/testKPI.svg';
 import { Email, updateEmailStatus, deleteEmail, getEmailDetails } from '../../../services/mailService';
@@ -95,6 +95,14 @@ const MailItem: React.FC<MailItemProps> = ({ email, onClick, onDelete }) => {
       }
     }
   };
+
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     await refreshEmailStatus(email.id);
+  //   }, 5000); // 每五秒調用一次
+
+  //   return () => clearInterval(interval); // 清除定時器
+  // }, [email.id]);
 
   return (
     <>

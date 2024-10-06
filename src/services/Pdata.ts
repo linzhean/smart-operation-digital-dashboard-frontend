@@ -4,9 +4,9 @@ import { ApiUserData, UpdateUserData } from './types/userManagement';
 import { Response } from './types/Request.type';
 
 // 获取用户数据
+// 確保 userId 被傳遞到更新的資料裡
 export const fetchUserData = async (): Promise<UpdateUserData> => {
   try {
-    // 第一次請求 /user-account 獲取基本資料
     const userResponse = await apiClient.get<Response<ApiUserData>>('/user-account');
     const { result: userResult, data: userData } = userResponse.data;
 
@@ -14,7 +14,6 @@ export const fetchUserData = async (): Promise<UpdateUserData> => {
       throw new Error('獲取用戶資料失敗: 無法獲取用戶 ID');
     }
 
-    // 第二次請求 /user-account/{userId} 獲取詳細資料
     const detailedResponse = await apiClient.get<Response<ApiUserData>>(`/user-account/${userData.id}`);
     const { result: detailedResult, data: detailedData } = detailedResponse.data;
 
@@ -22,7 +21,6 @@ export const fetchUserData = async (): Promise<UpdateUserData> => {
       throw new Error('獲取用戶詳細失敗');
     }
 
-    // 確保返回的資料包含必要屬性
     return {
       userId: detailedData.id || '',
       userName: detailedData.name || '',
@@ -52,7 +50,11 @@ export const updateUserData = async (updatedData: UpdateUserData): Promise<void>
     const { available, googleId, createId, createDate, modifyId, modifyDate, identity,gmail, ...filteredData } = updatedData;
 
     // 这里保留 userId，并确保 PATCH 请求发送 userId
-    const response = await apiClient.patch<Response<null>>('/user-account', { ...filteredData, userId: updatedData.userId });
+    const response = await apiClient.patch<Response<null>>('/user-account', { 
+      ...filteredData, 
+      userId: updatedData.userId   // 確保這裡的 userId 是正確傳遞的
+    });
+    
     const { result, message } = response.data;
 
     if (!result) {
