@@ -1,6 +1,5 @@
 //src\component\AssignExportControl\KPIAlertSetting.tsx
 import React, { useEffect, useState } from 'react';
-import Slider from '@mui/material/Slider';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import styles from './KPIAlertSetting.module.css';
@@ -26,12 +25,12 @@ interface KPIAlertSettingProps {
 }
 
 interface CustomChart extends Chart {
-  name: string; // Add other properties if needed
+  name: string;
 }
 
 export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerLimit, setUpperLimit, setLowerLimit, defaultProcessor, defaultAuditor, onSubmit, chartId }: KPIAlertSettingProps) {
 
-  const [value, setValue] = React.useState<number[]>([lowerLimit || 1, upperLimit || 100]); // 設置初始默認值
+  const [value, setValue] = React.useState<number[]>([lowerLimit || 1, upperLimit || 1000]); // 設置初始默認值
   const [users, setUsers] = useState<User[]>([]);
   const [selectedProcessor, setSelectedProcessor] = useState<User | null>(null);
   const [selectedAuditor, setSelectedAuditor] = useState<User | null>(null);
@@ -64,9 +63,9 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
   useEffect(() => {
     ChartService.getAllCharts()
       .then((data) => {
-        console.log(data); // 檢查數據
-        if (Array.isArray(data.data)) { // 確保訪問到正確的屬性
-          setCharts(data.data); // 將這行改為 data.data
+        console.log(data);
+        if (Array.isArray(data.data)) {
+          setCharts(data.data);
         } else {
           console.error('Expected an array for charts, but got:', data);
           setCharts([]);
@@ -80,7 +79,7 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
 
   useEffect(() => {
     fetchAllUsers().then((data: UserAccountBean[]) => {
-      console.log('Fetched Users:', data); // 確認數據是否正確
+      console.log('Fetched Users:', data);
       const mappedUsers: User[] = data.map((user) => ({
         id: Number(user.userId),
         userId: user.userId,
@@ -134,11 +133,11 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
     if (index === 0) {
       const clampedValue = Math.min(inputValue, value[1] - minDistance);
       setValue([clampedValue, value[1]]);
-      setLowerLimit(clampedValue);  // Update parent component's state
+      setLowerLimit(clampedValue);
     } else {
       const clampedValue = Math.max(inputValue, value[0] + minDistance);
       setValue([value[0], clampedValue]);
-      setUpperLimit(clampedValue);  // Update parent component's state
+      setUpperLimit(clampedValue);
     }
   };
 
@@ -157,182 +156,124 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
   };
 
   return (
-    <div className={styles.settingAlert}>
-      <h2>{`${chartName}警訊`}</h2>
-      <div className={`${styles.descriptionText} ${styles.firstline}`}>若數值超過此區間</div>
-      <div className={styles.descriptionText}>系統會發送異常信件通知您</div>
-      <Box
-        sx={{
-          width: 200,
-          '@media (min-width: 1200px)': {
-            width: '350px',
-            position: 'fixed',
-            top: '57%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            transition: 'all 0.3s ease',
-          },
-          '@media (min-width: 600px) and (max-width: 1199px)': {
-            width: '300px',
-            position: 'fixed',
-            top: '57%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            transition: 'all 0.3s ease',
-          },
-        }}
-      >
-        <Slider
-          value={value}
-          onChange={handleSliderChange}
-          valueLabelDisplay="auto"
-          disableSwap
-          min={0}
-          max={1000}
-          sx={{
-            color: '#000000',
-            height: 8,
-            '& .MuiSlider-track': {
-              border: 'none',
-            },
-            '& .MuiSlider-thumb': {
-              height: 24,
-              width: 24,
-              backgroundColor: '#fff',
-              border: '2px solid currentColor',
-              '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
-                boxShadow: 'inherit',
-              },
-              '&::before': {
-                display: 'none',
-              },
-            },
-            '& .MuiSlider-valueLabel': {
-              lineHeight: 1.2,
-              fontSize: 20,
-              background: 'unset',
-              padding: 0,
-              width: 38,
-              height: 38,
-              color: '#CCC',
-              fontWeight: 700,
-              borderRadius: '50% 50% 50% 0',
-              backgroundColor: '#000000',
-              transformOrigin: 'bottom left',
-              transform: 'translate(50%, -100%) rotate(-45deg) scale(0)',
-              '&::before': { display: 'none' },
-              '&.MuiSlider-valueLabelOpen': {
-                transform: 'translate(50%, -100%) rotate(-45deg) scale(1)',
-              },
-              '& > *': {
-                transform: 'rotate(45deg)',
-              },
-            },
-          }}
-        />
+    <div className={styles.overlay}
+      onClick={(e) => { if (e.target === e.currentTarget) { onClose(); } }}>
+      <div className={styles.settingAlert}>
+        <h2>{chartName}警訊</h2>
+        <div className={`${styles.descriptionText} ${styles.firstline}`}>若數值超過此區間</div>
+        <div className={styles.descriptionText}>系統會發送異常信件通知您</div>
         <Box
           sx={{
             display: 'flex',
+            flexDirection: 'column',
             mt: 2,
-            gap: '18px',
             justifyContent: 'center',
             '@media (min-width: 1200px)': {
               marginTop: '22px',
-              gap: '55px',
-
             },
             '@media (min-width: 600px) and (max-width: 1199px)': {
-              marginTop: '22px',
-              gap: '40px',
+              marginTop: '16px',
             },
           }}
         >
-          <TextField
-            label="最低"
-            type="number"
-            value={value[0]}   // 綁定到 lowerLimit
-            onChange={handleInputChange(0)}
-            onBlur={handleBlur}
-            inputProps={{
-              min: 0,
-              max: value[1] - minDistance,
-            }}
-            InputLabelProps={{
-              sx: {
-                color: 'black',
-                fontWeight: 700,
-                '&.Mui-focused': {
-                  color: '#000',
+          <div className={styles.theText}>
+            <p className={styles.textField}>
+              最高值
+            </p>
+            <p className={styles.textField}>
+              最低值
+            </p>
+          </div>
+          <div className={styles.theBox}>
+            <TextField
+              type="number"
+              value={value[0]}
+              onChange={handleInputChange(0)}
+              onBlur={handleBlur}
+              inputProps={{
+                min: 0,
+                max: value[1] - minDistance,
+              }}
+              InputLabelProps={{
+                sx: {
+                  color: 'black',
+                  fontWeight: 600,
+                  '&.Mui-focused': {
+                    color: '#000',
+                  },
                 },
-              },
-            }}
-            InputProps={{
-              sx: {
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'black',
-                  borderWidth: '3px',
+              }}
+              InputProps={{
+                sx: {
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'black',
+                    borderWidth: '2px',
+                  },
                 },
-              },
-            }}
-          />
+              }}
 
-          <TextField
-            label="最高值"
-            type="number"
-            value={value[1]}  // 綁定到 upperLimit
-            onChange={handleInputChange(1)}
-            onBlur={handleBlur}
-            inputProps={{
-              min: value[0] + minDistance,
-              max: 100,
-            }}
-            InputLabelProps={{
-              sx: {
-                color: 'black',
-                fontWeight: 700,
-                '&.Mui-focused': {
-                  color: '#000',
+            />
+
+            <TextField
+              type="number"
+              value={value[1]}
+              onChange={handleInputChange(1)}
+              onBlur={handleBlur}
+              inputProps={{
+                min: value[0] + minDistance,
+                max: 100,
+              }}
+              InputLabelProps={{
+                sx: {
+                  color: 'black',
+                  fontWeight: 600,
+                  '&.Mui-focused': {
+                    color: '#000',
+                  },
                 },
-              },
-            }}
-            InputProps={{
-              sx: {
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'black',
-                  borderWidth: '3px',
+              }}
+              InputProps={{
+                sx: {
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'black',
+                    borderWidth: '2px',
+                  },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
         </Box>
-        {/* 添加 defaultProcessor 下拉选择 */}
-        <Autocomplete
-          className={styles.autocomplete}
-          value={selectedProcessor || { id: 0, userId: '', userName: defaultProcessor, groupId: 0, name: defaultProcessor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
-          options={users}
-          getOptionLabel={(option) => option.userName}
-          onChange={(event, newValue) => setSelectedProcessor(newValue)}
-          renderInput={(params) => (
-            <TextField {...params} label="選擇處理者" variant="outlined" />
-          )}
-        />
+        <div className={styles.theUserPickerBox}>
+          <Autocomplete
+            className={styles.autocomplete}
+            value={selectedProcessor || { id: 0, userId: '', userName: defaultProcessor, groupId: 0, name: defaultProcessor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
+            options={users}
+            getOptionLabel={(option) => option.userName}
+            onChange={(event, newValue) => setSelectedProcessor(newValue)}
+            renderInput={(params) => (
+              <TextField {...params} label="選擇處理者" />
+            )}
+          />
+        </div>
+        <div className={styles.theUserPickerBox}>
+          <Autocomplete
+            className={styles.autocomplete}
+            value={selectedAuditor || { id: 0, userId: '', userName: defaultAuditor, groupId: 0, name: defaultAuditor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
+            options={users}
+            getOptionLabel={(option) => option.userName}
+            onChange={(event, newValue) => setSelectedAuditor(newValue)}
+            renderInput={(params) => (
+              <TextField {...params} label="選擇稽核者" />
+            )}
+          />
+        </div>
 
-        <Autocomplete
-          className={styles.autocomplete}
-          value={selectedAuditor || { id: 0, userId: '', userName: defaultAuditor, groupId: 0, name: defaultAuditor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
-          options={users}
-          getOptionLabel={(option) => option.userName}
-          onChange={(event, newValue) => setSelectedAuditor(newValue)}
-          renderInput={(params) => (
-            <TextField {...params} label="選擇稽核者" variant="outlined" />
-          )}
-        />
-
-      </Box>
-      <div className={styles.buttonGroup}>
-        <button className={styles.cancel} onClick={onClose}>取消</button>
-        <button className={styles.submit} onClick={handleConfirm}>確定</button>
+        {/* </Box> */}
+        <div className={styles.buttonGroup}>
+          <button className={styles.cancel} onClick={onClose}>取消</button>
+          <button className={styles.submit} onClick={handleConfirm}>確定</button>
+        </div>
       </div>
-    </div >
+    </div>
   );
 }

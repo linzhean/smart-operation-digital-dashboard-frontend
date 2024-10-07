@@ -74,7 +74,7 @@ const Login: React.FC = () => {
       }
     } catch (error) {
       console.error('Error during login request:', error);
-      setError('An error occurred during the login request. Please try again.');
+      setError('失敗，請稍後再次嘗試');
     }
   };
 

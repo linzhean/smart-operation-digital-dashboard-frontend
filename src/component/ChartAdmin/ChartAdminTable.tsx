@@ -98,7 +98,7 @@ const ChartAdminTable: React.FC = () => {
     try {
       const response = await ChartService.getCharts(actualAvailable); // Pass the actual boolean value
       const chartsData = response.data;
-  
+
       if (Array.isArray(chartsData)) {
         const filteredCharts = chartsData.filter(chart => {
           if (selectedStatus === '全部') return true; // No filtering, show all
@@ -106,7 +106,7 @@ const ChartAdminTable: React.FC = () => {
           if (selectedStatus === '停用中') return chart.available === false;
           return true;
         });
-  
+
         setCharts(filteredCharts);
         setError('');
       } else {
@@ -116,11 +116,11 @@ const ChartAdminTable: React.FC = () => {
       console.error('獲取圖表時出錯:', error);
       handleError('查詢圖表狀態失敗', () => fetchCharts(available));
     }
-  };  
+  };
 
   useEffect(() => {
     const isAvailable = selectedStatus === '啟用中' ? true : (selectedStatus === '停用中' ? false : true);
-    fetchCharts(isAvailable); // 如果 selectedStatus 是 "全部"，則 available 會是 null
+    fetchCharts(isAvailable);
   }, [selectedStatus]);
 
   const handleOpenForm = () => setIsFormOpen(true);
@@ -175,7 +175,7 @@ const ChartAdminTable: React.FC = () => {
       const selectedChart = availableCharts.find((chart: { name: string; }) => chart.name === chartName);
 
       if (selectedChart) {
-        const showcaseImage = selectedChart.showcaseImage; // 从返回的图表数据中获取示意图 URL
+        const showcaseImage = selectedChart.showcaseImage;
         setViewFormData({ chartName, chartCodeFile, chartImage, showcaseImage });
         setIsViewFormOpen(true);
       } else {
@@ -232,9 +232,9 @@ const ChartAdminTable: React.FC = () => {
           </Collapse>
         </div>
 
-        {/* <button className={styles.addKPIButton} onClick={handleOpenForm}>
+        <button className={`${styles.addKPIButton} ${styles.notVisable}`} onClick={handleOpenForm}>
           新增圖表
-        </button> */}
+        </button>
       </div>
 
       <div className={styles.theTable}>

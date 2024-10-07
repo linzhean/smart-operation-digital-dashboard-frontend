@@ -1,6 +1,17 @@
+.overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 3;
+  background-color: rgba(0, 0, 0, 0.2);
+  left: 0;
+  top: 0;
+}
+
 .settingAlert {
+  z-index: 4;
   width: 260px;
-  height: 500px;
+  height: 450px;
   padding: 25px 30px;
   background-color: #ACACBE;
   position: fixed;
@@ -76,8 +87,6 @@
   transition: transform 0.2s ease-out;
 }
 
-/* 手機 */
-@media (max-width: 599px) {}
 
 @media (min-width: 600px) and (max-width: 1199px) {
   .settingAlert {
@@ -85,32 +94,40 @@
   }
 }
 
-/* 桌面電腦 */
 @media (min-width: 1200px) {
   .settingAlert {
     width: 470px;
   }
-
 }
 
-/* 新增一個類來控制下拉選單的樣式 */
 .autocomplete {
-  width: 100%; /* 使用百分比以確保響應式設計 */
-  height: 100%;
-  margin: 10px 0; /* 控制上下間距 */
+  width: 100%;
+  margin: 10px 0;
 }
 
-/* 手機 */
-@media (max-width: 599px) {
-  .autocomplete {
-    width: 90%; /* 手機上佔據較小的寬度 */
-  }
+.theText {
+  width: 100% !;
+  display: flex;
+  gap: 62px;
 }
 
-/* 平板電腦 */
 @media (min-width: 600px) and (max-width: 1199px) {
-  .autocomplete {
-    width: 70%; /* 平板上使用較大的寬度 */
+  .theText {
+    gap: 120px;
   }
 }
 
+@media (min-width: 1200px) {
+  .theText {
+    gap: 165px;
+  }
+}
+
+.theBox {
+  display: flex;
+  gap: 10px;
+}
+
+.theUserPickerBox {
+  margin-top: 23px;
+}

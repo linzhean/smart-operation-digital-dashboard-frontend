@@ -22,8 +22,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ error, onSuccess, onFailure }) =>
       </div>
 
       <div className={styles['login-wrapper']}>
+        {error && <p className={styles.errorMsg}>{error}</p>}
         <h2>歡迎回來！</h2>
-        {error && <p>{error}</p>}
         <div id='signInButton' className={styles['login-wrapper__loginbtn']}>
           <GoogleLoginButton onSuccess={onSuccess} onFailure={onFailure} />
         </div>

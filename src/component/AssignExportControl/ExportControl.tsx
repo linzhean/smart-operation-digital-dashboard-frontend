@@ -92,7 +92,7 @@ const ExportControl: React.FC = () => {
   const [currentChart, setCurrentChart] = useState<number>(0);
   const [users, setUsers] = useState<User[]>([]);
   const [charts, setCharts] = useState<Chart[]>([]);
-  const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: number]: string[] }>({}); 
+  const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: number]: string[] }>({});
 
   useEffect(() => {
     const fetchData = async () => {

@@ -67,6 +67,7 @@
 }
 
 .theBig {
+  display: block;
   font-size: 2rem;
   font-weight: 900;
 }
@@ -78,6 +79,7 @@
 .LOGO {
   width: 120px;
   height: 120px;
+  margin-bottom: 30px;
 }
 
 @keyframes animStar {
@@ -126,4 +128,53 @@
     width: 100%;
     text-align: center;
   }
-} 
+}
+
+/* 同時引到等待審核跟404頁面 */
+
+.BackHomeButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  width: 150px;
+  height: 50px;
+  border-radius: 25px;
+  background-color: white;
+  border: 2px solid #b0b0b0;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.BackHomeButtonLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.BackHomeText {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.BackHomeButton:hover {
+  background-color: #f0f0f086;
+  color: #000;
+}
+
+@media (max-width: 600px) {
+  .BackHomeButton {
+    width: 120px;
+    height: 45px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 370px) {
+  .BackHomeButton {
+    width: 100px;
+    height: 40px;
+    font-size: 0.8rem;
+  }
+}

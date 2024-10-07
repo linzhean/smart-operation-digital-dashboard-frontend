@@ -144,6 +144,7 @@ const MailItem: React.FC<MailItemProps> = ({ email, onClick, onDelete }) => {
             <div className={styles.emailTitle}>{email.name}</div>
             {/* 按鈕組 */}
             <div className={styles.buttonGroup}>
+
               {/* 完成按鈕 */}
               <WhiteTooltip title="將此任務標記為已完成" enterDelay={700} leaveDelay={100} >
                 <button

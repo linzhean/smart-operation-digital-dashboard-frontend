@@ -12,7 +12,6 @@
   font-size: 30px;
   height: 100vh;
   width: 100vw;
-  /* background-image: linear-gradient(125deg, #000000, #0d0d0d, #1a1a1a, #333333, #4d4d4d); */
   background-size: 400%;
   animation: lineargradientMove 20s infinite;
 }
@@ -82,17 +81,6 @@
   height: 55px;
   padding: 8px;
 }
-
-/* .dec-line {
-  width: 100%;
-  height: 40px;
-  background-color: #ACACBE;
-  position: absolute;
-  margin-bottom: 130px;
-  transform: skewY(-15deg);
-  z-index: -6;
-  background: linear-gradient(90deg, #ACACBE 30%, transparent 30%, transparent 70%, #ACACBE 70%);
-} */
 
 .box {
   right: 10%;
@@ -189,10 +177,6 @@
 }
 
 @media (max-width: 768px) {
-  .login-wrapper {
-    /* width: 90%;
-    padding: 20px; */
-  }
 
   .login-wrapper h2 {
     font-size: large;
@@ -209,11 +193,6 @@
 }
 
 @media (max-width: 480px) {
-  .login-wrapper {
-    /* width: 100%;
-    padding: 15px; */
-  }
-
   .login-wrapper h2 {
     font-size: medium;
   }
@@ -226,4 +205,11 @@
     width: 35px;
     height: 35px;
   }
+}
+
+.errorMsg {
+  text-align: center;
+  color: rgb(210, 35, 45);
+  font-weight: 600;
+  margin: 10px;
 }
