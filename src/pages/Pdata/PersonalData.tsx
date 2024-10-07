@@ -7,18 +7,9 @@ import { Route, Routes, Navigate } from 'react-router';
 const Pdata: React.FC = () => {
 
   return (
-    <div className='wrapper'>
-      <PdataSidebar />
-      <div className="main_container">
-        <div className="theContent" style={{ overflow: 'hidden' }}>
-          <Routes>
-            <Route path="profile" element={<Profile />} />
-            <Route path="loginHistory" element={<LoginHistory />} />
-            <Route path="*" element={<Navigate to="profile" />} />
-          </Routes>
-        </div>
-      </div>
-    </div >
+    <div className="theContent" style={{ overflow: 'hidden' }}>
+      <Profile />
+    </div>
   );
 };
 

@@ -3,8 +3,6 @@ import apiClient from './axiosConfig';
 import { ApiUserData, UpdateUserData } from './types/userManagement';
 import { Response } from './types/Request.type';
 
-// 获取用户数据
-// 確保 userId 被傳遞到更新的資料裡
 export const fetchUserData = async (): Promise<UpdateUserData> => {
   try {
     const userResponse = await apiClient.get<Response<ApiUserData>>('/user-account');
@@ -44,17 +42,15 @@ export const fetchUserData = async (): Promise<UpdateUserData> => {
 };
 
 
-// 更新用户数据
 export const updateUserData = async (updatedData: UpdateUserData): Promise<void> => {
   try {
-    const { available, googleId, createId, createDate, modifyId, modifyDate, identity,gmail, ...filteredData } = updatedData;
+    const { available, googleId, createId, createDate, modifyId, modifyDate, identity, gmail, ...filteredData } = updatedData;
 
-    // 这里保留 userId，并确保 PATCH 请求发送 userId
-    const response = await apiClient.patch<Response<null>>('/user-account', { 
-      ...filteredData, 
+    const response = await apiClient.patch<Response<null>>('/user-account', {
+      ...filteredData,
       userId: updatedData.userId   // 確保這裡的 userId 是正確傳遞的
     });
-    
+
     const { result, message } = response.data;
 
     if (!result) {

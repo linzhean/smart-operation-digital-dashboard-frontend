@@ -24,7 +24,7 @@ const Pdata: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
-  const [identitiesLoaded, setIdentitiesLoaded] = useState(false); // 新增状态
+  const [identitiesLoaded, setIdentitiesLoaded] = useState(false); 
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -33,7 +33,6 @@ const Pdata: React.FC = () => {
         const userData = await fetchUserData();
         console.log('Loaded user data:', userData);
         
-        // 仅在身份数据加载完成后更新表单数据
         if (identitiesLoaded) {
           const userIdentityKey = identities.find(identity => identity.label === userData.identity)?.value || '';
           dispatch({
@@ -62,7 +61,7 @@ const Pdata: React.FC = () => {
   
         const identityData = await fetchDropdownData('identity');
         setIdentities(identityData);
-        setIdentitiesLoaded(true); // 标记身份数据已加载
+        setIdentitiesLoaded(true); 
         console.log('Loaded identities:', identityData);
       } catch (error) {
         console.error('加载选项时发生错误:', error);
@@ -71,7 +70,7 @@ const Pdata: React.FC = () => {
   
     loadDropdownData();
     loadUserData(); 
-  }, [dispatch, identitiesLoaded]); // 只依赖 identitiesLoaded
+  }, [dispatch, identitiesLoaded]); 
 
   useEffect(() => {
     console.log('state.formData:', state.formData);
@@ -99,13 +98,13 @@ const Pdata: React.FC = () => {
 
 const handleSaveClick = async () => {
   console.log('Saving form data with userId:', state.formData.userId);
-  if (!state.formData.departmentId) {  // 这里需要确保 departmentId 有值
+  if (!state.formData.departmentId) { 
       setSnackbarMessage('所屬部門 - 未填寫');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       return;
   }
-  if (!state.formData.userId) {  // 确保 userId 有值
+  if (!state.formData.userId) {  
       setSnackbarMessage('使用者ID - 未填寫');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);

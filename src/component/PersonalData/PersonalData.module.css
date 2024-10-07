@@ -1,9 +1,8 @@
 .section {
   height: 100%;
+  width: 100%;
   overflow-y: auto;
   background-color: #343541;
-  border-radius: 15px;
-  margin: 0px 3px 5px 3px;
   display: flex;
 }
 
@@ -20,6 +19,7 @@
   display: flex;
   flex-direction: column !important;
   align-items: center;
+  justify-content: center;
 }
 
 .profileSide {
@@ -29,8 +29,20 @@
   background-color: #2c2f33;
   border-radius: 10px;
 
-  @media (max-width: 475px) {
-    width: 350px;
+  @media (min-width: 768px) and (max-width: 930px) {
+    font-size: 1.2rem;
+    margin: 2px 0;
+  }
+
+  @media (max-width: 460px) {
+    width: 100%;
+    height: auto;
+    font-size: 1rem;
+    margin: 2px 0;
+  }
+
+  @media (max-width: 325px) {
+    font-size: 0.8rem;
   }
 }
 
@@ -41,6 +53,18 @@
   color: black;
   font-weight: 550;
   margin-bottom: 6px;
+
+  @media (min-width: 768px) and (max-width: 930px) {
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 460px) {
+    font-size: 1rem;
+  }
+
+  @media (max-width: 325px) {
+    font-size: 0.8rem;
+  }
 }
 
 .legendContainer {
@@ -49,6 +73,23 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+
+  @media (min-width: 768px) and (max-width: 930px) {
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 460px) {
+    font-size: 1rem;
+  }
+
+  @media (max-width: 416px) {
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
 }
 
 .legend {
@@ -57,11 +98,14 @@
   white-space: nowrap;
 
   @media (max-width: 475px) {
-    font-size: 1rem !important;
+    font-size: 1.5rem !important;
     white-space: nowrap;
-
   }
 
+  @media (max-width: 416px) {
+    text-align: center;
+    font-size: 1.5rem !important;
+  }
 }
 
 .theButtonGroup {
@@ -69,7 +113,19 @@
   gap: 10px;
   flex-wrap: nowrap;
   transition: transform 0.3s ease;
+
+  @media (max-width: 460px) {
+    gap: 8px;
+  }
+
+  @media (max-width: 325px) {
+    gap: 12px;
+    display: flex;
+    margin-bottom: 10px;
+  }
+
 }
+
 
 .theEditButton button,
 .logoutContainer button {
@@ -80,6 +136,14 @@
   white-space: nowrap;
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 460px) {
+    padding: 2px 8px;
+  }
+
+  @media (max-width: 325px) {
+    padding: 2px 8px;
+  }
 }
 
 .logoutContainer button:hover,
@@ -137,54 +201,4 @@
   color: #CCCCCC;
   font-size: 1.2rem;
   margin-top: -10px;
-}
-
-@media (max-width: 390px) {
-  .container {
-    padding: 5px;
-    font-size: 0.8rem;
-  }
-
-  .profileSide {
-    width: 90%;
-    padding: 10px;
-    margin-top: 15px;
-  }
-
-  .profileSide input,
-  .profileSide select {
-    font-size: 1rem;
-    margin-bottom: 8px;
-  }
-
-  .legend {
-    font-size: 1.2rem;
-  }
-
-  .theButtonGroup {
-    gap: 5px;
-  }
-
-  .theEditButton button,
-  .logoutContainer button {
-    padding: 8px 15px;
-    font-size: 0.9rem;
-  }
-
-  .formLabel {
-    font-size: 0.9rem;
-  }
-
-  #validationName,
-  #validationNum,
-  #validationUnit,
-  #validationRole,
-  #validationEmail,
-  #inputGroupAppend {
-    font-size: 1rem;
-  }
-
-  .listTitle {
-    font-size: 1rem;
-  }
 }

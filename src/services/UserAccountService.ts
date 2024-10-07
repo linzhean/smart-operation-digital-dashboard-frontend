@@ -18,7 +18,6 @@ export const fetchAllUsers = async (): Promise<UserAccountBean[]> => {
   }
 };
 
-// 获取用户列表
 export const fetchUsers = async (
   nowPage: number = 1,
   departmentId?: string,
@@ -67,13 +66,13 @@ export const admitUser = async (userId: string): Promise<void> => {
       }
     });
 
-    console.log('Admit User Response:', response.data); // 添加日志以帮助调试
+    console.log('Admit User Response:', response.data);
 
     if (!response.data.result) {
       throw new Error(response.data.message || 'Error admitting user');
     }
   } catch (error: any) {
-    console.error('Error admitting user:', error.response?.data || error); // 打印详细错误信息
+    console.error('Error admitting user:', error.response?.data || error);
     throw new Error(`Error admitting user: ${error.message}`);
   }
 };
