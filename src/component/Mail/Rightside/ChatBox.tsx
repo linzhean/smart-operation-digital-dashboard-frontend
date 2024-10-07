@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import SockJS from 'sockjs-client';
-import { Client } from '@stomp/stompjs'; // 使用 @stomp/stompjs
+import { Client } from '@stomp/stompjs';
 import styles from './chatBox.module.css';
 import { Email, EmailMessage, getEmailDetails } from '../../../services/mailService';
 import sendIcon from '../../../assets/icon/send.png';
@@ -37,14 +37,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, emailName, sendNewChatMessag
       console.error('獲取郵件詳細資訊時發生錯誤:', error);
     }
   }, [emailId]);
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     fetchEmailDetails();
-  //   }, 5000); // 每五秒調用一次
-
-  //   return () => clearInterval(interval); // 清除定時器
-  // }, [fetchEmailDetails]);
 
   useEffect(() => {
     fetchEmailDetails();
@@ -88,7 +80,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, emailName, sendNewChatMessag
         modifyId: 'currentUser',
         modifyDate: new Date().toISOString(),
       };
-  
+
       // 立即更新状态，显示临时消息
       setMessages((prevMessages) => [...prevMessages, newChatMessage]);
       setNewMessage('');
@@ -170,7 +162,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, emailName, sendNewChatMessag
             </div>
           ))
         ) : (
-          <p className={styles.emptyAlert}>說句話吧</p>
+          <p className={styles.emptyAlert}>尚無訊息</p>
         )}
         <div ref={messagesEndRef} />
       </div>

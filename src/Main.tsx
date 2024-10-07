@@ -24,6 +24,7 @@ const Main: React.FC = () => {
       <Routes>
         <Route path="/advanced-analysis" element={<AdvancedSmartAnalysis />} />
         <Route element={<NavbarRoute />}>
+        {/*  */}
           <Route path="/home" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><Home /></PrivateRoute>} />
           <Route path="/profile/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><Pdata /></PrivateRoute>} />
           <Route path="/GroupManagement/*" element={<PrivateRoute allowedRoles={['MANAGER', 'EMPLOYEE', 'ADMIN']}><GroupManagement /></PrivateRoute>} />
