@@ -269,24 +269,21 @@ export function useChartWithDropdown(
             return { ...chart, data: chartData };
           })
         );
-        setInteractiveCharts(chartsWithData); // 更新状态
-
-        // 获取图表的 HTML 链接
-        const firstChart = chartsWithData[0]; // 获取第一个图表的 HTML 链接
-        if (firstChart?.data?.chartHTML) {
-          // 新建标签页并打开链接
-          const url = `/advanced-analysis?dashboardId=${dashboardId}&chartId=${firstChart.id}`;
-          window.open(url, '_blank');
-        }
+        setInteractiveCharts(chartsWithData);
+  
+        // 確保使用 ChartWithDropdown 中的正確 chartId
+        const url = `/advanced-analysis?dashboardId=${dashboardId}&chartId=${chartId}`;
+        window.open(url, '_blank');
+        console.log('ChartWithDropdown chartId:', chartId);
       } else {
-        console.error('Failed to fetch dashboard charts:', dashboardChartsResponse.message);
-        alert('Failed to fetch dashboard charts. Please try again later.');
+        console.error('無法獲取儀表板圖表:', dashboardChartsResponse.message);
+        alert('無法獲取儀表板圖表。請稍後再試。');
       }
     } catch (error) {
-      console.error('Error during advanced analysis:', error);
-      alert('Error during advanced analysis. Please try again later.');
+      console.error('進行進階分析時發生錯誤:', error);
+      alert('進行進階分析時發生錯誤。請稍後再試。');
     }
-  };
+  };  
 
   const handleAIAnalysis = async (dashboardId: number, chartId: number) => {
     if (!dashboardId) {

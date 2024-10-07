@@ -118,7 +118,7 @@
 
 // export default AdvancedSmartAnalysis;  
 
-
+//src\pages\AdvancedSmartAnalysis\AdvancedSmartAnalysis.tsx
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import SmartHTML from '../../component/AdvancedSmartAnalysis/SmartHTML';
@@ -137,20 +137,21 @@ const AdvancedSmartAnalysis: React.FC = () => {
   const [aiSuggestion, setAiSuggestion] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (chartId && dashboardId) {
-      const fetchChartData = async () => {
-        try {
-          const response = await ChartService.getChartData(Number(chartId));
-          if (response.result) {
-            setChartHTML(response.data.chartHTML);
-          } else {
-            console.error('Failed to fetch chart data:', response.message);
-          }
-        } catch (error) {
-          console.error('Error fetching chart data:', error);
+ useEffect(() => {
+  if (chartId && dashboardId) {
+    const fetchChartData = async () => {
+      try {
+        console.log('AdvancedSmartAnalysis chartId:', chartId); // 输出 chartId
+        const response = await ChartService.getChartData(Number(chartId));
+        if (response.result) {
+          setChartHTML(response.data.chartHTML);
+        } else {
+          console.error('Failed to fetch chart data:', response.message);
         }
-      };
+      } catch (error) {
+        console.error('Error fetching chart data:', error);
+      }
+    };
 
       const fetchAIAnalysisAndSuggestion = async () => {
         try {
