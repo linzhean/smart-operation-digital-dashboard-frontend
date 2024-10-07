@@ -244,7 +244,6 @@ const ChartAdminTable: React.FC = () => {
               <tr>
                 <th>圖表</th>
                 <th>狀態</th>
-                <th>內容</th>
               </tr>
             </thead>
             <tbody>
@@ -259,11 +258,6 @@ const ChartAdminTable: React.FC = () => {
                       />
                     </div>
                   </td>
-                  <td>
-                    <span onClick={() => handleViewChart(chart.name, chart.codeFile, chart.image, chart.showcaseImage)}>
-                      查看
-                    </span>
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -275,7 +269,7 @@ const ChartAdminTable: React.FC = () => {
         <NewChartForm onSubmit={handleFormSubmit} onClose={handleCloseForm} />
       )} */}
 
-      {isViewFormOpen && (
+      {/* {isViewFormOpen && (
         <ViewChartForm
           chartName={viewFormData.chartName}
           chartCodeFile={viewFormData.chartCodeFile}
@@ -283,7 +277,7 @@ const ChartAdminTable: React.FC = () => {
           onClose={handleCloseViewForm}
           showcaseImage={viewFormData.showcaseImage}
         />
-      )}
+      )} */}
 
       <Snackbar
         open={snackbarOpen}
