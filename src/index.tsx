@@ -1,3 +1,4 @@
+// src/index.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
@@ -12,7 +13,6 @@ import AwaitingApproval from './pages/ProfileSetup/AwaitingApproval';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
-  // <React.StrictMode>
   <UserProvider>
     <ChartProvider>
       <Router>
@@ -21,10 +21,9 @@ root.render(
           <Route path="/profile-setup" element={<ProfileSetup />} />
           <Route path="/awaiting-approval" element={<AwaitingApproval />} />
           <Route path="/*" element={<Main />} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
     </ChartProvider>
   </UserProvider>
-  // </React.StrictMode>
-
 );

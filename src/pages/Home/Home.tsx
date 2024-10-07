@@ -69,7 +69,6 @@ const fetchDashboardCharts = async () => {
         if (firstChart && 'canAssign' in firstChart) {
           if (firstChart.canAssign !== false) {
             setCanAssign(false);
-            alert('您没有權限交辦');
           } else {
             setCanAssign(true);
           }

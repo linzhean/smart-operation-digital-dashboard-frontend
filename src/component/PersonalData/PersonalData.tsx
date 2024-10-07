@@ -24,38 +24,54 @@ const Pdata: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [identitiesLoaded, setIdentitiesLoaded] = useState(false); // 新增状态
 
   useEffect(() => {
     const loadUserData = async () => {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
         const userData = await fetchUserData();
-        console.log('Loaded user data:', userData); // 確保用戶數據正確加載
-        dispatch({ type: 'SET_FORM_DATA', payload: { ...userData, userId: user?.id ?? '' } });
-        console.log('Updated form data:', state.formData); 
-        setInitialData(userData);  // 設置初始數據
+        console.log('Loaded user data:', userData);
+        
+        // 仅在身份数据加载完成后更新表单数据
+        if (identitiesLoaded) {
+          const userIdentityKey = identities.find(identity => identity.label === userData.identity)?.value || '';
+          dispatch({
+            type: 'SET_FORM_DATA',
+            payload: {
+              ...userData,
+              userId: user?.id ?? '',
+              identity: userIdentityKey,
+              departmentName: userData.departmentId
+            }
+          });
+          console.log('Updated form data:', state.formData);
+        }
+        setInitialData(userData);
       } catch (error) {
-        console.error('載入用戶數據出錯:', error);
+        console.error('加载用户数据出错:', error);
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
-    };   
-
+    };
+  
     const loadDropdownData = async () => {
       try {
         const departmentData = await fetchDropdownData('department');
         setDepartments(departmentData);
-
+  
         const identityData = await fetchDropdownData('identity');
         setIdentities(identityData);
+        setIdentitiesLoaded(true); // 标记身份数据已加载
+        console.log('Loaded identities:', identityData);
       } catch (error) {
-        console.error('載入選項時發生錯誤:', error);
+        console.error('加载选项时发生错误:', error);
       }
     };
-
-    loadUserData();
+  
     loadDropdownData();
-  }, [dispatch]);
+    loadUserData(); 
+  }, [dispatch, identitiesLoaded]); // 只依赖 identitiesLoaded
 
   useEffect(() => {
     console.log('state.formData:', state.formData);
@@ -68,23 +84,34 @@ const Pdata: React.FC = () => {
 
   const handleInputChange = (id: string, value: string) => {
     if (id === 'departmentName') {
-      const selectedDepartment = departments.find(dept => dept.value === value);
-      if (selectedDepartment) {
-        dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'departmentId', value: selectedDepartment.value } });
-      }
+        const selectedDepartment = departments.find(dept => dept.value === value);
+        if (selectedDepartment) {
+            dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'departmentId', value: selectedDepartment.value } });
+        }
+    } else if (id === 'identity') {
+        const selectedIdentity = identities.find(identity => identity.value === value);
+        if (selectedIdentity) {
+            dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'identity', value: selectedIdentity.value } });
+        }
     }
     dispatch({ type: 'UPDATE_FORM_DATA', payload: { id, value } });
-  };
+};
 
-  const handleSaveClick = async () => {
-    console.log('Saving form data with userId:', state.formData.userId);  // 檢查 userId
-    if (!state.formData.departmentId || !state.formData.userId) {  // 添加對 userId 的檢查
+const handleSaveClick = async () => {
+  console.log('Saving form data with userId:', state.formData.userId);
+  if (!state.formData.departmentId) {  // 这里需要确保 departmentId 有值
+      setSnackbarMessage('所屬部門 - 未填寫');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      return;
+  }
+  if (!state.formData.userId) {  // 确保 userId 有值
       setSnackbarMessage('使用者ID - 未填寫');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       return;
-    }
-  
+  }
+
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
       await updateUserData(state.formData as UpdateUserData);
@@ -223,8 +250,7 @@ const Pdata: React.FC = () => {
               <select
                 className="form-control"
                 id="identity"
-                // value={state.formData.identity}
-                value={user?.identity}
+                value={state.formData.identity}
                 disabled={!state.editable}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
               >

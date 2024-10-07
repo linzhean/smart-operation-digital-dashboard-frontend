@@ -91,40 +91,53 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [state, dispatch] = useReducer(userReducer, initialState);
   const [user, setUserState] = useState<User | null>(null);
 
-  const setUser = (userData: any) => {
-    if (userData) {
-      const userForContext: User = {
-        id: userData.userId || userData.id || '',
-        name: userData.userName || userData.name || '',
-        email: userData.gmail || '',
-        role: userData.position || '',
-        identity: userData.identity || '',
-      };
-      setUserState(userForContext);
-      dispatch({ type: 'SET_USER', payload: userForContext });
-    } else {
-      setUserState(null);
-      dispatch({ type: 'CLEAR_USER' });
-    }
-  };
-
   useEffect(() => {
+    // 从 localStorage 恢复用户数据和 token
+    const savedUser = localStorage.getItem('user');
     const authToken = localStorage.getItem('authToken');
+
     if (authToken) {
-      fetchWithAuth(`${backendApiUrl}/user-account`)
-        .then((response) => response.json())
-        .then((data) => {
-          setUser(data.data);
-          dispatch({ type: 'SET_AUTHENTICATED', payload: true });
-        })
-        .catch((error) => {
-          console.error('Failed to fetch user data:', error);
-          dispatch({ type: 'SET_AUTHENTICATED', payload: false });
-        });
+      dispatch({ type: 'SET_AUTHENTICATED', payload: true });
+
+      if (savedUser) {
+        setUserState(JSON.parse(savedUser));
+        dispatch({ type: 'SET_USER', payload: JSON.parse(savedUser) });
+      } else {
+        // 如果未找到保存的用户，获取用户信息
+        fetchWithAuth(`${backendApiUrl}/user-account`)
+          .then((data) => {
+            const userForContext: User = data.data;
+            setUserState(userForContext);
+            dispatch({ type: 'SET_USER', payload: userForContext });
+            localStorage.setItem('user', JSON.stringify(userForContext)); // 保存用户数据
+          })
+          .catch(() => {
+            dispatch({ type: 'SET_AUTHENTICATED', payload: false });
+            localStorage.removeItem('authToken'); // 在错误时清除 token
+          });
+      }
     } else {
       dispatch({ type: 'SET_AUTHENTICATED', payload: false });
     }
+
+    // 清除 token 的 cleanup function
+    return () => {
+      localStorage.removeItem('authToken'); // 在组件卸载时清除 token
+    };
   }, []);
+
+  const setUser = (userData: any) => {
+    if (userData) {
+      const userForContext: User = { ...userData };
+      setUserState(userForContext);
+      dispatch({ type: 'SET_USER', payload: userForContext });
+      localStorage.setItem('user', JSON.stringify(userForContext)); // 持久化用户数据
+    } else {
+      setUserState(null);
+      dispatch({ type: 'CLEAR_USER' });
+      localStorage.removeItem('user');
+    }
+  };
 
   const value = {
     user,
