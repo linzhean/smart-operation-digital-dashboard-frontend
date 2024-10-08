@@ -225,7 +225,7 @@
 // export default NavBar;
 
 
-
+//src\component\Common\Navbar.tsx
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './NavBar.module.css';
@@ -329,7 +329,7 @@ const NavBar: React.FC = () => {
             <ul className={`navbar-nav ${styles.navbarNav}`}>
 
               {/* 圖表新增後台 */}
-              {['ADMIN', 'MANAGER'].includes(user?.role ?? '') && (
+              {user?.identity === 'DEVELOPER'  && (
                 <li className={`nav-item ${styles.navbarNavItem}`}>
                   <Link
                     className={`nav-link ${styles.navLink} ${activeLink.startsWith('/ChartAdmin') ? styles.activeNavLink : ''}`}
@@ -344,8 +344,8 @@ const NavBar: React.FC = () => {
               )}
 
               {/* 權限管理 */}
-              {['ADMIN', 'MANAGER'].includes(user?.role ?? '') && (
-                // {user?.role === 'ADMIN' && (
+              {/* {['ADMIN', 'USER'].includes(user?.role ?? '') && ( */}
+              {user?.identity  === 'ADMIN' && (
                 <li className={`nav-item ${styles.navbarNavItem}`}>
                   <Link
                     className={`nav-link ${styles.navLink} ${activeLink.startsWith('/AssignExportControl') ? styles.activeNavLink : ''}`}
@@ -360,7 +360,7 @@ const NavBar: React.FC = () => {
               )}
 
               {/* 使用者管理 */}
-              {['ADMIN', 'MANAGER'].includes(user?.role ?? '') && (
+              {user?.identity  === 'ADMIN' && (
                 <li className={`nav-item ${styles.navbarNavItem}`}>
                   <Link
                     className={`nav-link ${styles.navLink} ${activeLink.startsWith('/UserControl') ? styles.activeNavLink : ''}`}
@@ -375,7 +375,7 @@ const NavBar: React.FC = () => {
               )}
 
               {/* ＫＰＩ審核 */}
-              {['ADMIN', 'MANAGER'].includes(user?.role ?? '') && (
+              {user?.identity === 'ADMIN' && (
                 <li className={`nav-item ${styles.navbarNavItem}`}>
                   <Link
                     className={`nav-link ${styles.navLink} ${activeLink.startsWith('/InterimKPIControl') ? styles.activeNavLink : ''}`}
@@ -390,7 +390,7 @@ const NavBar: React.FC = () => {
               )}
 
               {/* 群組管理 */}
-              {['ADMIN', 'MANAGER'].includes(user?.role ?? '') && (
+              {user?.identity  === 'ADMIN' && (
                 <li className={`nav-item ${styles.navbarNavItem}`}>
                   <Link
                     className={`nav-link ${styles.navLink} ${activeLink.startsWith('/GroupManagement') ? styles.activeNavLink : ''}`}

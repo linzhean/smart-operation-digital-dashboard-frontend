@@ -221,7 +221,7 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
               onBlur={handleBlur}
               inputProps={{
                 min: value[0] + minDistance,
-                max: 100,
+                max: 1000,
               }}
               InputLabelProps={{
                 sx: {

@@ -57,8 +57,8 @@ const Login: React.FC = () => {
         
         const identityMapping: { [key: string]: string } = {
           '無權限': 'NO_PERMISSION',
-          '高階主管': 'MANAGER',
-          '開發者': 'EMPLOYEE',
+          '一般使用者': 'USER',
+          '開發者': 'DEVELOPER',
           '管理員': 'ADMIN'
         };
         
@@ -72,8 +72,8 @@ const Login: React.FC = () => {
           case 'NO_PERMISSION':
             navigate('/profile-setup');
             break;
-          case 'MANAGER':
-          case 'EMPLOYEE':
+          case 'USER':
+          case 'DEVELOPER':
           case 'ADMIN':
             navigate('/home');
             break;
