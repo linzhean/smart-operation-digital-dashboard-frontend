@@ -1,3 +1,11 @@
+.theContent {
+  pointer-events: none; /* 禁用事件 */
+}
+
+.theContent > .react-grid-layout {
+  pointer-events: auto; /* 启用事件 */
+}
+
 .dashboard_container {
   border-radius: 15px;
   color: #CCCCCC;
@@ -34,6 +42,7 @@
   justify-content: center;
   margin-bottom: 20px;
   position: relative;
+  pointer-events: auto;
 }
 
 .dataCard img {
@@ -92,6 +101,7 @@
   height: 100%;
   max-height: 600px;
   display: block;
+  pointer-events: auto;
 }
 
 @media (max-width: 1024px) {
@@ -139,6 +149,7 @@
 .chart-dropdown {
   position: absolute;
   z-index: 10000;
+  pointer-events: auto;
 }
 
 .exportMessage {

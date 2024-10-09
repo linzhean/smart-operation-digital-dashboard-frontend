@@ -285,6 +285,8 @@ const fetchDashboardCharts = async () => {
               cols={{ lg: 12, md: 12, sm: 8, xs: 6, xxs: 2 }}  // Maintain a grid with 12 columns on large screens
               onLayoutChange={handleLayoutChange}
               onResizeStop={handleResizeStop} // 添加此事件处理函数
+              isDraggable={false}
+              isResizable={true}
             >
               {charts.map(chart => (
                 <div key={`chart-${chart.id}`} className={styles.dataCard} data-grid={{ i: `chart-${chart.id}`, ...layout.find(l => l.i === `chart-${chart.id}`) }}>

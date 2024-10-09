@@ -118,7 +118,7 @@
   position: absolute;
   border-radius: 15px;
   padding: 10px;
-  z-index: 2000;
+  z-index: 5000;
 }
 
 .dropdownMenu li {

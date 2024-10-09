@@ -41,7 +41,8 @@ const Pdata: React.FC = () => {
               ...userData,
               userId: user?.id ?? '',
               identity: userIdentityKey,
-              departmentName: userData.departmentId
+              departmentName: userData.departmentId,
+              userName:user?.name??''
             }
           });
           console.log('Updated form data:', state.formData);
@@ -176,7 +177,7 @@ const handleSaveClick = async () => {
                 type="text"
                 className="form-control"
                 id="userName"
-                value={user?.name}
+                value={state.formData.userName}
                 required
                 disabled={!state.editable}
                 onChange={(e) => handleInputChange('userName', e.target.value)}

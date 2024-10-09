@@ -131,15 +131,13 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
   const handleInputChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = Number(event.target.value);
     if (index === 0) {
-      const clampedValue = Math.min(inputValue, value[1] - minDistance);
-      setValue([clampedValue, value[1]]);
-      setLowerLimit(clampedValue);
+      setValue([inputValue, value[1]]);
+      setLowerLimit(inputValue);
     } else {
-      const clampedValue = Math.max(inputValue, value[0] + minDistance);
-      setValue([value[0], clampedValue]);
-      setUpperLimit(clampedValue);
+      setValue([value[0], inputValue]);
+      setUpperLimit(inputValue);
     }
-  };
+  };  
 
   const handleBlur = () => {
     setLowerLimit(value[0]);
@@ -147,10 +145,14 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
   };
 
   const handleConfirm = () => {
-    setLowerLimit(value[0]);
-    setUpperLimit(value[1]);
+    const lower = parseFloat(value[0].toString());
+    const upper = parseFloat(value[1].toString());
+    
+    setLowerLimit(lower);
+    setUpperLimit(upper);
+    
     if (selectedProcessor && selectedAuditor) {
-      onSubmit(value[0], value[1], selectedProcessor.userId, selectedAuditor.userId, chartId);
+      onSubmit(lower, upper, selectedProcessor.userId, selectedAuditor.userId, chartId);
     }
     onClose();
   };
@@ -178,10 +180,10 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
         >
           <div className={styles.theText}>
             <p className={styles.textField}>
-              最高值
+              最低值
             </p>
             <p className={styles.textField}>
-              最低值
+              最高值
             </p>
           </div>
           <div className={styles.theBox}>
@@ -220,8 +222,7 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
               onChange={handleInputChange(1)}
               onBlur={handleBlur}
               inputProps={{
-                min: value[0] + minDistance,
-                max: 1000,
+                min: 0,
               }}
               InputLabelProps={{
                 sx: {
