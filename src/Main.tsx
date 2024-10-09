@@ -20,14 +20,20 @@ import NotFound from './pages/NotFound/NotFound';
 const Main: React.FC = () => {
   const { isAuthenticated } = useUserContext();
 
+  const identityMapping: { [key: string]: string } = {
+    '無權限': 'NO_PERMISSION',
+    '職員': 'USER',
+    '管理員': 'ADMIN',
+    '開發者': 'DEVELOPER'
+  };
+
   return (
     <div className="App">
       <Routes>
         <Route path="/advanced-analysis" element={<AdvancedSmartAnalysis />} />
         <Route element={<NavbarRoute />}>
-        {/*  */}
           <Route path="/home" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><Home /></PrivateRoute>} />
-          <Route path="/profile/*" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><Pdata /></PrivateRoute>} />
+          <Route path="/profile" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><Pdata /></PrivateRoute>} />
           <Route path="/GroupManagement/*" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><GroupManagement /></PrivateRoute>} />
           <Route path="/mail" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><Mail /></PrivateRoute>} />
           <Route path="/InterimKPIControl" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><InterimKPIControl /></PrivateRoute>} />
@@ -35,9 +41,30 @@ const Main: React.FC = () => {
           <Route path="/UserControl/*" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><UserControl /></PrivateRoute>} />
           <Route path="/ChartAdmin" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><ChartAdmin /></PrivateRoute>} />
           <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+
+          {/* <Route path="/home" element={<PrivateRoute allowedRoles={['USER', 'ADMIN', 'DEVELOPER']}><Home /></PrivateRoute>} />
+          <Route path="/profile/*" element={<PrivateRoute allowedRoles={['USER', 'ADMIN', 'DEVELOPER']}><Pdata /></PrivateRoute>} />
+          <Route path="/mail" element={<PrivateRoute allowedRoles={['USER', 'ADMIN', 'DEVELOPER']}><Mail /></PrivateRoute>} />
+          <Route path="/GroupManagement/*" element={<PrivateRoute allowedRoles={['ADMIN', 'DEVELOPER']}><GroupManagement /></PrivateRoute>} />
+          <Route path="/InterimKPIControl" element={<PrivateRoute allowedRoles={['ADMIN', 'DEVELOPER']}><InterimKPIControl /></PrivateRoute>} />
+          <Route path="/AssignExportControl/*" element={<PrivateRoute allowedRoles={['ADMIN', 'DEVELOPER']}><AssignExportControl /></PrivateRoute>} />
+          <Route path="/UserControl/*" element={<PrivateRoute allowedRoles={['ADMIN', 'DEVELOPER']}><UserControl /></PrivateRoute>} />
+          <Route path="/ChartAdmin" element={<PrivateRoute allowedRoles={['DEVELOPER']}><ChartAdmin /></PrivateRoute>} />
+          <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} /> */}
+
+          {/* <Route path="/home" element={<Home />} />
+          <Route path="/profile" element={<Pdata />} />
+          <Route path="/mail" element={<Mail />} />
+          <Route path="/GroupManagement/*" element={<GroupManagement />} />
+          <Route path="/InterimKPIControl" element={<InterimKPIControl />} />
+          <Route path="/AssignExportControl/*" element={<AssignExportControl />} />
+          <Route path="/UserControl/*" element={<UserControl />} />
+          <Route path="/ChartAdmin" element={<ChartAdmin />} />
+          <Route path="*" element={<Navigate to="/login" />} /> */}
+
         </Route>
         <Route path="/404" element={<NotFound />} />
-        <Route path="*" element={<Navigate to="/404" />} />
+        {/* <Route path="*" element={<Navigate to="/404" />} /> */}
       </Routes>
     </div>
   );

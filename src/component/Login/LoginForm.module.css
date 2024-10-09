@@ -1,0 +1,183 @@
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+* {
+  outline: none;
+}
+
+.loginButton {
+  width: 100%;
+  height: 80px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  right: 10%;
+  bottom: 10%;
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  transform-style: preserve-3d;
+  animation: rotateAnimate 10s linear infinite;
+}
+
+.outDiv {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  transition: transform 1s ease-in;
+  border: 3px solid #fff;
+}
+
+.outFront {
+  transform: translateZ(50px);
+  animation: rotateq 5s linear infinite;
+}
+
+.outBack {
+  transform: translateZ(-50px) rotateY(180deg);
+  animation: rotateh 5s linear infinite;
+}
+
+.outLeft {
+  transform: translateX(-50px) rotateY(-90deg);
+  animation: rotatez 5s linear infinite;
+}
+
+.outRight {
+  transform: translateX(50px) rotateY(90deg);
+  animation: rotatey 5s linear infinite;
+}
+
+.outTop {
+  transform: translateY(-50px) rotateX(90deg);
+  animation: rotates 5s linear infinite;
+}
+
+.outBottom {
+  transform: translateY(50px) rotateX(-90deg);
+  animation: rotatex 5s linear infinite;
+}
+
+@keyframes rotateq {
+  50% {
+    transform: translateZ(125px);
+  }
+}
+
+@keyframes rotateh {
+  50% {
+    transform: translateZ(-125px) rotateY(180deg);
+  }
+}
+
+@keyframes rotatez {
+  50% {
+    transform: translateX(-125px) rotateY(-90deg);
+  }
+}
+
+@keyframes rotatey {
+  50% {
+    transform: translateX(125px) rotateY(90deg);
+  }
+}
+
+@keyframes rotates {
+  50% {
+    transform: translateY(-125px) rotateX(90deg);
+  }
+}
+
+@keyframes rotatex {
+  50% {
+    transform: translateY(125px) rotateX(-90deg);
+  }
+}
+
+@keyframes rotateAnimate {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+  }
+}
+
+.errorMsg {
+  text-align: center;
+  color: rgb(210, 35, 45);
+  font-weight: 600;
+  margin: 10px;
+}
+
+.title {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #FFF;
+  text-align: center;
+  font-weight: 300;
+  letter-spacing: 5px;
+  z-index: 1;
+  white-space: nowrap;
+  font-size: 45px;
+}
+
+.welcome {
+  display: block;
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 15px;
+}
+
+.LOGO {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 600px) {
+  .theSmall {
+    font-size: 0.8rem;
+  }
+
+  .theBig {
+    font-size: 1.5rem;
+  }
+
+  .LOGO {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+@media (max-width: 370px) {
+  .theSmall {
+    font-size: 0.7rem;
+  }
+
+  .LOGO {
+    width: 60px;
+    height: 60px;
+  }
+
+  .theBig {
+    font-size: 1.2rem;
+  }
+
+  .title {
+    letter-spacing: 2px;
+    white-space: normal;
+    width: 100%;
+    text-align: center;
+  }
+}

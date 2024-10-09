@@ -1,0 +1,131 @@
+.container {
+  height: 100vh;
+  background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%) !important;
+  position: relative;
+  white-space: nowrap;
+}
+
+.stars,
+.stars2,
+.stars3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 0;
+}
+
+.stars {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow:
+    123px 239px #FFF, 432px 389px #FFF, 200px 750px #FFF,
+    900px 123px #FFF, 340px 870px #FFF, 600px 987px #FFF,
+    1200px 89px #FFF, 540px 23px #FFF, 345px 569px #FFF,
+    765px 345px #FFF;
+  animation: animStar 50s linear infinite;
+}
+
+.stars2 {
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  box-shadow:
+    89px 400px #FFF, 1234px 987px #FFF, 765px 200px #FFF,
+    240px 870px #FFF, 990px 89px #FFF, 1320px 450px #FFF,
+    680px 670px #FFF, 450px 234px #FFF, 210px 123px #FFF,
+    900px 670px #FFF;
+  animation: animStar 100s linear infinite;
+}
+
+.stars3 {
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  box-shadow:
+    300px 100px #FFF, 700px 400px #FFF, 1400px 600px #FFF,
+    400px 1200px #FFF, 1600px 300px #FFF, 800px 900px #FFF,
+    1100px 1300px #FFF, 1900px 100px #FFF, 600px 300px #FFF,
+    1800px 800px #FFF;
+  animation: animStar 150s linear infinite;
+}
+
+.title {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #FFF;
+  text-align: center;
+  font-weight: 300;
+  letter-spacing: 5px;
+  z-index: 1;
+  white-space: nowrap;
+  font-size: 45px;
+}
+
+.theBig {
+  display: block;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.theSmall {
+  font-size: 1.2rem;
+}
+
+.LOGO {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 30px;
+}
+
+@keyframes animStar {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-2000px);
+  }
+}
+
+
+@media (max-width: 600px) {
+  .theSmall {
+    font-size: 0.8rem;
+  }
+
+  .theBig {
+    font-size: 1.5rem;
+  }
+
+  .LOGO {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+@media (max-width: 370px) {
+  .theSmall {
+    font-size: 0.7rem;
+  }
+
+  .LOGO {
+    width: 60px;
+    height: 60px;
+  }
+
+  .theBig {
+    font-size: 1.2rem;
+  }
+
+  .title {
+    letter-spacing: 2px;
+    white-space: normal;
+    width: 100%;
+    text-align: center;
+  }
+}

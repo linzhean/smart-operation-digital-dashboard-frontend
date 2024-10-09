@@ -1,4 +1,3 @@
-// src/pages/Login/Login.tsx
 import React, { useState, useEffect } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
@@ -6,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginForm from '../../component/Login/LoginForm';
 import { backendApiUrl, clientId } from '../../services/LoginApi';
 import { useUserContext } from '../../context/UserContext';
-
+import styles from './Login.module.css'
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { setUser, dispatch } = useUserContext();
@@ -95,9 +94,16 @@ const Login: React.FC = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId={clientId}>
-      <LoginForm error={error} onSuccess={onSuccess} onFailure={onFailure} />
-    </GoogleOAuthProvider>
+    <div className={styles.container}>
+      <div className={styles.stars}></div>
+      <div className={styles.stars2}></div>
+      <div className={styles.stars3}></div>
+
+      <GoogleOAuthProvider clientId={clientId}>
+        <LoginForm error={error} onSuccess={onSuccess} onFailure={onFailure} />
+      </GoogleOAuthProvider>
+    </div>
+
   );
 };
 
