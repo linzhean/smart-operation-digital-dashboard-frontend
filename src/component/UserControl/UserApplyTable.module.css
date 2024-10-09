@@ -5,45 +5,72 @@
   margin-bottom: 10px;
 }
 
-.thePermissionList {
-  font-size: 1rem;
+.theList {
+  color: #CCCCCC;
+  font-size: 1.2rem;
   font-weight: bold;
-  height: 76vh;
+  height: 100%;
   width: 100%;
   border-radius: 10px;
-  overflow: auto;
+  margin-bottom: 0.5rem;
 }
 
-.thePermissionList table {
-  overflow: auto;
+.theTable table {
   width: 100%;
   border-collapse: collapse;
   border-radius: 10px;
-  line-height: 1.5 !important;
+  overflow: auto;
+  line-height: 2.5 !important;
 }
 
-.thePermissionList th,
-.thePermissionList td {
-  padding: 15px;
+.theTable tr {
+  line-height: 25px;
+}
+
+.theTable th {
+  line-height: inherit;
+}
+
+.theTable th,
+.theTable td {
+  padding-top: 10px;
+  padding-bottom: 10px;
   text-align: center;
-  border-bottom: 1px solid #444;
-  /* 分隔線顏色控制在這!!!!!!!!! */
+  border: 2px solid rgba(255, 255, 255, 0.25);
 }
 
-.thePermissionList th {
+.theTable th {
+  background-color: #444;
   color: white;
+}
+
+.theTable tr:nth-child(even) {
   background-color: #444;
 }
 
-.thePermissionList tr:nth-child(even) {
-  background-color: #444;
+@media (max-width: 575px) {
+  .theList tr {
+    font-size: 1rem;
+  }
+
+  .theList button {
+    font-size: 1rem;
+    padding: 0 5px 0 5px;
+  }
+
+  .theList td {
+    font-size: 1rem;
+  }
+
+  .theTable td {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
 }
 
-.thePermissionList tr:last-child td {
-  border-bottom: none;
-}
-
-.thePermissionList .disapproveButton {
+.disapproveButton {
   margin-left: 5px;
   background-color: #d9534f;
   color: #fff;
@@ -54,11 +81,11 @@
   transition: background-color 0.3s;
 }
 
-.thePermissionList .disapproveButton:hover {
+.disapproveButton:hover {
   background-color: #A52824;
 }
 
-.thePermissionList .approveButton {
+.approveButton {
   margin-left: 5px;
   background-color: #94C546;
   color: #fff;
@@ -69,11 +96,12 @@
   transition: background-color 0.3s;
 }
 
-.thePermissionList .approveButton:hover {
+.approveButton:hover {
   background-color: #6E8B30;
 }
 
 .endMsg {
+  font-weight: 700;
   text-align: center;
   margin: 20px;
 }

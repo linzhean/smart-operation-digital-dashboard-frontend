@@ -3,14 +3,15 @@
   padding: 20px;
   border-radius: 10px;
   color: #fff;
-  height: 87vh;
+  height: 85vh;
   overflow: auto;
+  padding-bottom: 0px;
 }
 
 .tableFilters {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .tableFilters select,
@@ -48,150 +49,9 @@
   background-color: #444;
 }
 
-.toggleWrapper {
-  overflow: hidden;
-}
-
-.dn {
-  position: absolute;
-  left: -99em;
-}
-
-.toggle {
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  width: 120px;
-  height: 50px;
-  background: #D21626;
-  border-radius: 15px;
-  transition: all 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
-}
-
-.toggle::before,
-.toggle::after {
-  position: absolute;
-  line-height: 50px;
-  font-size: 14px;
-  z-index: 2;
-  transition: all 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
-}
-
-/* 添加OFF字樣 */
-.toggle::before {
-  content: 'OFF';
-  left: 20px;
-  color: #D21626;
-}
-
-/* 添加ON字樣 */
-.toggle::after {
-  content: 'ON';
-  right: 20px;
-  color: #fff;
-}
-
-/* 白色方塊 */
-.toggle__handler {
-  display: inline-block;
-  position: relative;
-  z-index: 1;
-  background: #fff;
-  width: 44px;
-  height: 40px;
-  border-radius: 15px;
-  top: 5.5px;
-  left: -26px;
-  transition: all 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
-  transform: translateX(0px);
-}
-
-.dn:checked+.toggle {
-  background: #66B317;
-}
-
-.dn:checked+.toggle::before {
-  color: #fff;
-}
-
-.dn:checked+.toggle::after {
-  color: #66B317;
-}
-
-.dn:checked+.toggle .toggle__handler {
-  width: 44px;
-  transform: translateX(56px);
-  border-color: #fff;
-}
-
 .endMsg {
   text-align: center;
   margin: 20px;
-}
-
-/* 下面是加載動畫 */
-.theLoadingBall {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* 整體高度 */
-  height: 15vh;
-}
-
-.loaderMsg {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* 整體高度 */
-  height: 15vh;
-}
-
-.threeBalls {
-  position: relative;
-  width: 100px;
-  height: 80px;
-}
-
-.threeBalls .circle {
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  border-radius: 50%;
-  background-color: #1E90FF;
-  left: 0%;
-  transform-origin: 50%;
-  animation: balls-circle 0.5s alternate-reverse infinite ease;
-}
-
-.threeBalls .circle:nth-child(2) {
-  /* 調整球間距 */
-  left: 40%;
-  animation-delay: 0.2s;
-}
-
-.threeBalls .circle:nth-child(3) {
-  left: auto;
-  right: 0%;
-  animation-delay: 0.3s;
-}
-
-@keyframes balls-circle {
-  0% {
-    top: 60px;
-    height: 5px;
-    border-radius: 50px 50px 25px 25px;
-    transform: scaleX(1.7);
-  }
-
-  40% {
-    height: 20px;
-    border-radius: 50%;
-    transform: scaleX(1);
-  }
-
-  100% {
-    top: 0%;
-  }
 }
 
 .searchInput::-webkit-search-cancel-button {

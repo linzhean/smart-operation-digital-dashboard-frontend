@@ -128,33 +128,38 @@ const UserApplyTable: React.FC = () => {
             endMessage={!error && users.length > 0 && <p className={styles.endMsg}>沒有更多了</p>}
             scrollableTarget="scrollableDiv"
           >
-            <table className={styles.thePermissionList}>
-              <thead>
-                <tr>
-                  <th>申請人</th>
-                  <th>員工編號</th>
-                  <th>所屬部門</th>
-                  <th>信箱</th>
-                  <th>職稱</th>
-                  <th>操作</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user, index) => (
-                  <tr key={user.userId}>
-                    <td>{user.userName}</td>
-                    <td>{user.userId}</td>
-                    <td>{user.departmentName}</td>
-                    <td>{user.gmail}</td>
-                    <td>{user.position}</td>
-                    <td>
-                      <button className={styles.approveButton} onClick={() => admitUserHandler(index)}>開通</button>
-                      <button className={styles.disapproveButton} onClick={() => removeUserHandler(index)}>刪除</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className={styles.theTable}>
+
+              <div className={styles.theList}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>申請人</th>
+                      <th>員工編號</th>
+                      <th>所屬部門</th>
+                      <th>信箱</th>
+                      <th>職稱</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map((user, index) => (
+                      <tr key={user.userId}>
+                        <td>{user.userName}</td>
+                        <td>{user.userId}</td>
+                        <td>{user.departmentName}</td>
+                        <td>{user.gmail}</td>
+                        <td>{user.position}</td>
+                        <td>
+                          <button className={styles.approveButton} onClick={() => admitUserHandler(index)}>開通</button>
+                          <button className={styles.disapproveButton} onClick={() => removeUserHandler(index)}>刪除</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </InfiniteScroll>
         )}
         {!loading && !error && totalPages > 1 && (

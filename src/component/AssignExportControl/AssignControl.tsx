@@ -13,7 +13,7 @@ import { makeStyles } from '@mui/styles';
 import styles from './AssignControl.module.css';
 import KPIAlertSetting from './KPIAlertSetting';
 import alertIcon from '../../assets/icon/alertSetting.png'
-import { colors, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { styled } from '@mui/system';
 
