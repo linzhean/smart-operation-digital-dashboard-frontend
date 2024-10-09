@@ -24,54 +24,57 @@ const Pdata: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
-  const [identitiesLoaded, setIdentitiesLoaded] = useState(false); 
+  const [identitiesLoaded, setIdentitiesLoaded] = useState(false);
 
   useEffect(() => {
     const loadUserData = async () => {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
         const userData = await fetchUserData();
+        const departmentId = userData.departmentId || ''; // 使用来自 userData 的 departmentId
+        const departmentName = departments.find(dept => dept.value === departmentId)?.label || 'Default Department'; // 查找相应的部门名称
+    
         console.log('Loaded user data:', userData);
+    
+        // 更新 formData，包括从 userData 获取的值
+        dispatch({
+          type: 'SET_FORM_DATA',
+          payload: {
+            ...userData,
+            userId: user?.id ?? '',
+            identity: identities.find(identity => identity.label === userData.identity)?.value || '',
+            departmentId, // 确保设置 departmentId
+            departmentName, // 确保设置 departmentName
+            userName: user?.name ?? ''
+          }
+        });
         
-        if (identitiesLoaded) {
-          const userIdentityKey = identities.find(identity => identity.label === userData.identity)?.value || '';
-          dispatch({
-            type: 'SET_FORM_DATA',
-            payload: {
-              ...userData,
-              userId: user?.id ?? '',
-              identity: userIdentityKey,
-              departmentName: userData.departmentId,
-              userName:user?.name??''
-            }
-          });
-          console.log('Updated form data:', state.formData);
-        }
+        console.log('Updated form data:', state.formData);
         setInitialData(userData);
       } catch (error) {
         console.error('加载用户数据出错:', error);
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
-    };
-  
+    };    
+
     const loadDropdownData = async () => {
       try {
         const departmentData = await fetchDropdownData('department');
         setDepartments(departmentData);
-  
+
         const identityData = await fetchDropdownData('identity');
         setIdentities(identityData);
-        setIdentitiesLoaded(true); 
+        setIdentitiesLoaded(true);
         console.log('Loaded identities:', identityData);
       } catch (error) {
         console.error('加载选项时发生错误:', error);
       }
     };
-  
+
     loadDropdownData();
-    loadUserData(); 
-  }, [dispatch, identitiesLoaded]); 
+    loadUserData();
+  }, [dispatch, identitiesLoaded]);
 
   useEffect(() => {
     console.log('state.formData:', state.formData);
@@ -84,34 +87,45 @@ const Pdata: React.FC = () => {
 
   const handleInputChange = (id: string, value: string) => {
     if (id === 'departmentName') {
-        const selectedDepartment = departments.find(dept => dept.value === value);
-        if (selectedDepartment) {
-            dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'departmentId', value: selectedDepartment.value } });
-        }
+      const selectedDepartment = departments.find(dept => dept.value === value);
+      if (selectedDepartment) {
+        dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'departmentId', value: selectedDepartment.value } });
+      }
     } else if (id === 'identity') {
-        const selectedIdentity = identities.find(identity => identity.value === value);
-        if (selectedIdentity) {
-            dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'identity', value: selectedIdentity.value } });
-        }
+      const selectedIdentity = identities.find(identity => identity.value === value);
+      if (selectedIdentity) {
+        dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'identity', value: selectedIdentity.value } });
+      }
     }
     dispatch({ type: 'UPDATE_FORM_DATA', payload: { id, value } });
-};
+  };
 
-const handleSaveClick = async () => {
-  console.log('Saving form data with userId:', state.formData.userId);
-  if (!state.formData.departmentId) { 
+  const handleSaveClick = async () => {
+    console.log('Saving form data with userId:', state.formData.departmentName);
+  
+    // 如果 departmentId 为空且有默认 departmentName，则设置 departmentId
+    if (!state.formData.departmentId && state.formData.departmentName) {
+      const defaultDepartment = departments.find(dept => dept.label === state.formData.departmentName);
+      if (defaultDepartment) {
+        // 这里是更新 departmentId 使用 fetchUserData 中的值
+        dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'departmentId', value: defaultDepartment.value } });
+      }
+    }
+  
+    // 检查是否有 departmentId
+    if (!state.formData.departmentId) { 
       setSnackbarMessage('所屬部門 - 未填寫');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       return;
-  }
-  if (!state.formData.userId) {  
+    }
+    if (!state.formData.userId) {  
       setSnackbarMessage('使用者ID - 未填寫');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       return;
-  }
-
+    }
+  
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
       await updateUserData(state.formData as UpdateUserData);
@@ -126,7 +140,7 @@ const handleSaveClick = async () => {
       setSnackbarOpen(true);
       dispatch({ type: 'SET_LOADING', payload: false });
     }
-  };
+  };  
 
   const handleLogoutClick = () => {
     localStorage.removeItem('authToken');
