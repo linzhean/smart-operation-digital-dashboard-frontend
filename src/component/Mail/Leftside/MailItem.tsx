@@ -96,13 +96,13 @@ const MailItem: React.FC<MailItemProps> = ({ email, onClick, onDelete }) => {
     }
   };
 
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     await refreshEmailStatus(email.id);
-  //   }, 5000); // 每五秒調用一次
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      await refreshEmailStatus(email.id);
+    }, 5000); // 每五秒調用一次
 
-  //   return () => clearInterval(interval); // 清除定時器
-  // }, [email.id]);
+    return () => clearInterval(interval); // 清除定時器
+  }, [email.id]);
 
   return (
     <>

@@ -42,6 +42,15 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, emailName, sendNewChatMessag
     fetchEmailDetails();
   }, [fetchEmailDetails]);
 
+    // 定時刷新郵件詳細資訊
+    useEffect(() => {
+      const interval = setInterval(() => {
+        fetchEmailDetails();
+      }, 5000); // 每五秒調用一次
+  
+      return () => clearInterval(interval); // 清除定時器
+    }, [fetchEmailDetails]);
+
   // // WebSocket 初始化
   useEffect(() => {
     const socket = new SockJS('http://140.131.115.153:8080/webSocket');
