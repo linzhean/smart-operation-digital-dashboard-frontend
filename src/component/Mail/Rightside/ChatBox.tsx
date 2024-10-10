@@ -20,7 +20,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, emailName, sendNewChatMessag
   const { user } = useUserContext();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  // const stompClient = useRef<Client | null>(null); // Declare stompClient as a ref
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

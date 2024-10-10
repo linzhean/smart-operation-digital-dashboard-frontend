@@ -41,6 +41,7 @@ const initialState: State = {
     userId: '',
     userName: '',
     departmentId: '',
+    department:'',
     departmentName: '',
     googleId: '',
     gmail: '',

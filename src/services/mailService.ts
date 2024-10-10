@@ -36,7 +36,6 @@ export interface EmailMessage {
 }
 
 const handleApiResponse = <T>(response: Response<T>): T => {
-  console.log('API Response:', response);
   if (response.result) {
     return response.data as T;
   } else {

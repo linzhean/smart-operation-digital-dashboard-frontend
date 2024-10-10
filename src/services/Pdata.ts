@@ -23,6 +23,7 @@ export const fetchUserData = async (): Promise<UpdateUserData> => {
       userId: detailedData.id || '',
       userName: detailedData.name || '',
       departmentId: detailedData.departmentId || '',
+      department: detailedData.department || '',
       departmentName: detailedData.departmentName || '',
       googleId: detailedData.googleId || '',
       gmail: detailedData.gmail || '',

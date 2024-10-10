@@ -138,7 +138,6 @@ const UserApplyTable: React.FC = () => {
                       <th>員工編號</th>
                       <th>所屬部門</th>
                       <th>信箱</th>
-                      <th>職稱</th>
                       <th>操作</th>
                     </tr>
                   </thead>
@@ -148,8 +147,7 @@ const UserApplyTable: React.FC = () => {
                         <td>{user.userName}</td>
                         <td>{user.userId}</td>
                         <td>{user.departmentName}</td>
-                        <td>{user.gmail}</td>
-                        <td>{user.position}</td>
+                        <td>{user.email}</td>
                         <td>
                           <button className={styles.approveButton} onClick={() => admitUserHandler(index)}>開通</button>
                           <button className={styles.disapproveButton} onClick={() => removeUserHandler(index)}>刪除</button>

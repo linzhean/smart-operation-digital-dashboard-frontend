@@ -92,6 +92,7 @@ export interface AddUserToGroupRequest {
 export type ApiUserData = {
   id: string;
   name: string;
+  department?:string;
   departmentId?: string;   
   departmentName?: string; 
   googleId?: string;       
@@ -107,6 +108,7 @@ export type ApiUserData = {
 };
 
 export interface UpdateUserData {
+  [x: string]: any;
   userId: string;
   userName: string;
   jobNumber: string;

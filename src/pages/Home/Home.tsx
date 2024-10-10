@@ -202,6 +202,12 @@ const fetchDashboardCharts = async () => {
       const chartIds = newCharts.map((chart: any) => chart.id);
       await ChartService.addChartsToDashboard(Number(selectedDashboard), chartIds);
 
+      setCharts(prevCharts => {
+        const updatedCharts = [...prevCharts, ...chartsToAdd];
+        setLayout(calculateLayout(updatedCharts)); // 更新布局
+        return updatedCharts;
+    });
+
       setCharts(prevCharts => [...prevCharts, ...newCharts]);
       const newLayout = calculateLayout(newCharts);
       console.log(newLayout);

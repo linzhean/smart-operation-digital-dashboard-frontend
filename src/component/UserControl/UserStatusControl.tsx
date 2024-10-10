@@ -262,9 +262,9 @@ const UserStatusControl: React.FC = () => {
 
     return users.sort((a, b) => {
 
-      const idA = parseInt(a.id, 10);
+      const idA = parseInt(a.id, 5);
 
-      const idB = parseInt(b.id, 10);
+      const idB = parseInt(b.id, 5);
 
       if (sortOrder === 'latest') {
 

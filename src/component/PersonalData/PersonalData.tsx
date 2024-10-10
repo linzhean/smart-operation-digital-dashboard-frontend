@@ -31,32 +31,36 @@ const Pdata: React.FC = () => {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
         const userData = await fetchUserData();
-        const departmentId = userData.departmentId || ''; // 使用来自 userData 的 departmentId
-        const departmentName = departments.find(dept => dept.value === departmentId)?.label || 'Default Department'; // 查找相应的部门名称
-    
-        console.log('Loaded user data:', userData);
-    
-        // 更新 formData，包括从 userData 获取的值
+
+        // 等待部門選項加載完成
+        if (departments.length === 0) {
+          return;
+        }
+
+        // 根據部門名稱找到對應的部門ID
+        const matchingDepartment = departments.find(dept => dept.label === userData.department);
+        const departmentId = matchingDepartment ? matchingDepartment.value : '';
+
+        // 更新表單數據
         dispatch({
           type: 'SET_FORM_DATA',
           payload: {
             ...userData,
             userId: user?.id ?? '',
+            departmentId, // 設定 departmentId
+            departmentName: userData.department, // 更新部門名稱
             identity: identities.find(identity => identity.label === userData.identity)?.value || '',
-            departmentId, // 确保设置 departmentId
-            departmentName, // 确保设置 departmentName
             userName: user?.name ?? ''
           }
         });
-        
-        console.log('Updated form data:', state.formData);
+
         setInitialData(userData);
       } catch (error) {
         console.error('加载用户数据出错:', error);
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
-    };    
+    };
 
     const loadDropdownData = async () => {
       try {
@@ -66,20 +70,19 @@ const Pdata: React.FC = () => {
         const identityData = await fetchDropdownData('identity');
         setIdentities(identityData);
         setIdentitiesLoaded(true);
-        console.log('Loaded identities:', identityData);
+
+        await loadUserData();
       } catch (error) {
         console.error('加载选项时发生错误:', error);
       }
     };
 
     loadDropdownData();
-    loadUserData();
   }, [dispatch, identitiesLoaded]);
 
   useEffect(() => {
     console.log('state.formData:', state.formData);
   }, [state.formData]);
-
 
   const handleEditClick = () => {
     dispatch({ type: 'SET_EDITABLE', payload: !state.editable });
@@ -90,6 +93,7 @@ const Pdata: React.FC = () => {
       const selectedDepartment = departments.find(dept => dept.value === value);
       if (selectedDepartment) {
         dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'departmentId', value: selectedDepartment.value } });
+        dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'departmentName', value: selectedDepartment.label } });
       }
     } else if (id === 'identity') {
       const selectedIdentity = identities.find(identity => identity.value === value);
@@ -98,34 +102,33 @@ const Pdata: React.FC = () => {
       }
     }
     dispatch({ type: 'UPDATE_FORM_DATA', payload: { id, value } });
-  };
+  };  
 
   const handleSaveClick = async () => {
-    console.log('Saving form data with userId:', state.formData.departmentName);
-  
+    console.log('Saving form data with userId:', state.formData.userId);
+
     // 如果 departmentId 为空且有默认 departmentName，则设置 departmentId
     if (!state.formData.departmentId && state.formData.departmentName) {
-      const defaultDepartment = departments.find(dept => dept.label === state.formData.departmentName);
-      if (defaultDepartment) {
-        // 这里是更新 departmentId 使用 fetchUserData 中的值
-        dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'departmentId', value: defaultDepartment.value } });
+      const matchingDepartment = departments.find(dept => dept.label === state.formData.departmentName);
+      if (matchingDepartment) {
+        dispatch({ type: 'UPDATE_FORM_DATA', payload: { id: 'departmentId', value: matchingDepartment.value } });
       }
     }
-  
-    // 检查是否有 departmentId
-    if (!state.formData.departmentId) { 
+
+    // 确保 departmentId 和 departmentName 都被正确设置
+    if (!state.formData.departmentId || !state.formData.departmentName) {
       setSnackbarMessage('所屬部門 - 未填寫');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       return;
     }
-    if (!state.formData.userId) {  
+    if (!state.formData.userId) {
       setSnackbarMessage('使用者ID - 未填寫');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       return;
     }
-  
+
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
       await updateUserData(state.formData as UpdateUserData);
@@ -140,7 +143,7 @@ const Pdata: React.FC = () => {
       setSnackbarOpen(true);
       dispatch({ type: 'SET_LOADING', payload: false });
     }
-  };  
+  };
 
   const handleLogoutClick = () => {
     localStorage.removeItem('authToken');
@@ -225,10 +228,11 @@ const Pdata: React.FC = () => {
               <select
                 className="form-control"
                 id="departmentName"
-                value={state.formData.departmentName}
+                value={state.formData.departmentId}
                 disabled={!state.editable}
-                onChange={(e) => handleInputChange(e.target.id, e.target.value)}
+                onChange={(e) => handleInputChange('departmentName', e.target.value)}
               >
+                <option value="">選擇部門</option>
                 {departments.map((department) => (
                   <option key={department.value} value={department.value}>
                     {department.label}

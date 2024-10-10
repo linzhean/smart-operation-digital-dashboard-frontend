@@ -1,3 +1,4 @@
+//src\component\Dashboard\DashboardSidebar.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './DashBoardSidebar.module.css';
@@ -235,25 +236,23 @@ const DashboardSidebar: React.FC<{
 
   const handleAddChartConfirm = async () => {
     if (activeDashboard && selectedCharts.size > 0) {
-      const selectedChartsData = Array.from(selectedCharts).map(chartId => {
-        const chart = availableCharts.find(c => c.id === chartId);
-        return chart ? { ...chart, id: chartId } : null;
-      }).filter(chart => chart !== null);
+        const selectedChartsData = Array.from(selectedCharts).map(chartId => {
+            const chart = availableCharts.find(c => c.id === chartId);
+            return chart ? { ...chart, id: chartId } : null;
+        }).filter(chart => chart !== null);
 
-      console.log('Selected Charts Data:', selectedChartsData); // Debug
-      console.log('Active Dashboard:', activeDashboard); // Debug
+        try {
+            await ChartService.addChartsToDashboard(Number(activeDashboard), selectedChartsData.map(chart => chart.id));
+            onAddChart(selectedChartsData); // 调用传递的函数更新 Home 的状态
+        } catch (error) {
+            console.error('Failed to add charts to dashboard:', error);
+        }
 
-      try {
-        await ChartService.addChartsToDashboard(Number(activeDashboard), selectedChartsData.map(chart => chart.id));
-      } catch (error) {
-        console.error('Failed to add charts to dashboard:', error);
-      }
-
-      handleAddChartClose();
+        handleAddChartClose();
     } else {
-      console.error('Active Dashboard or Selected Charts are missing');
+        console.error('Active Dashboard or Selected Charts are missing');
     }
-  };
+};
 
   const handleAddDashboardOpen = () => {
     setShowMultiStepForm(true);
@@ -400,7 +399,7 @@ const DashboardSidebar: React.FC<{
       )}
 
       <Dialog open={openAddChartDialog} onClose={handleAddChartClose}>
-        <DialogTitle>新增圖表</DialogTitle>
+        <DialogTitle>選擇你要的圖表</DialogTitle>
         <DialogContent>
           {availableCharts.map((chart) => (
             <MenuItem
