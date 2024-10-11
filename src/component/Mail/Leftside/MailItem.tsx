@@ -46,6 +46,12 @@ const MailItem: React.FC<MailItemProps> = ({ email, onClick, onDelete }) => {
       return;
     }
 
+    const confirmUpdate = window.confirm('確定要將此郵件標記為已完成嗎？');
+
+    if (!confirmUpdate) {
+      return;
+    }
+
     try {
       const statusMapping: Record<string, number> = {
         "交辦": 0,
@@ -67,6 +73,7 @@ const MailItem: React.FC<MailItemProps> = ({ email, onClick, onDelete }) => {
       alert('無法更新狀態，請稍後再試');
     }
   };
+
 
   const refreshEmailStatus = async (id: number) => {
     const emailDetails = await getEmailDetails(id);
