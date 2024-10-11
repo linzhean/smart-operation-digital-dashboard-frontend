@@ -175,7 +175,7 @@ export function useChartWithDropdown(
   };
 
   const handleDelegateWrapper = () => {
-    setIsModalOpen(true); // 打開模態框
+    setIsModalOpen(true);
   };
 
   const handleDelegate = () => {
@@ -270,7 +270,7 @@ export function useChartWithDropdown(
           })
         );
         setInteractiveCharts(chartsWithData);
-  
+
         // 確保使用 ChartWithDropdown 中的正確 chartId
         const url = `/advanced-analysis?dashboardId=${dashboardId}&chartId=${chartId}`;
         window.open(url, '_blank');
@@ -283,7 +283,7 @@ export function useChartWithDropdown(
       console.error('進行進階分析時發生錯誤:', error);
       alert('進行進階分析時發生錯誤。請稍後再試。');
     }
-  };  
+  };
 
   const handleAIAnalysis = async (dashboardId: number, chartId: number) => {
     if (!dashboardId) {
@@ -328,7 +328,6 @@ export function useChartWithDropdown(
     }
   };
 
-  // A simple function to sanitize or replace unprintable characters
   const sanitizeText = (text: string): string => {
     return text.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
   };

@@ -1,4 +1,3 @@
-//src\component\Dashboard\ChartWithDropdown.tsx
 import React, { useEffect, useState } from 'react';
 import styles from './ChartWithDropdown.module.css';
 import { useChartWithDropdown } from '../../Hook/useChartWithDropdown';
@@ -86,6 +85,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     }
   }, [interactiveCharts]);
 
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -113,6 +113,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
       alert('No Dashboard ID selected.');
     }
   };
+
   // 交辦事項
   const AssignForm = (
     <>
@@ -159,7 +160,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
               <div className={styles.select}>
                 <select
                   id='chartSelection'
-                  value={chartId || ''}
+                  value={chartId || '請選擇圖表'}
                   onChange={e => onChartSelect(Number(e.target.value))}
                   required
                   disabled={true}
@@ -193,6 +194,26 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const dropdownElement = document.querySelector(`.${styles.dropdownContainer}`);
+      const dropdownMenuElement = document.querySelector(`.${styles.dropdownMenu}`);
+
+      if (dropdownElement && !dropdownElement.contains(event.target as Node) &&
+        dropdownMenuElement && !dropdownMenuElement.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
   return (
     <>
       <div className={styles.chartContainer}>
@@ -200,9 +221,16 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
           <div
             className={styles.dropdownContainer}
           >
-            <button
+            {/* <button
               onClick={() => {
                 setIsDropdownOpen(true);
+              }}
+              className={styles.dropdownButton}
+            > */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsDropdownOpen((prev) => !prev);
               }}
               className={styles.dropdownButton}
             >
