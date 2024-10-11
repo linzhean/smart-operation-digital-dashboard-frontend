@@ -1,6 +1,6 @@
 //src\Main.tsx
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React,{ useEffect } from 'react';
+import { Routes, Route, Navigate ,useLocation, useNavigate} from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Pdata from './pages/Pdata/PersonalData';
 import Mail from './pages/Mail/Mail';
@@ -19,6 +19,20 @@ import NotFound from './pages/NotFound/NotFound';
 
 const Main: React.FC = () => {
   const { isAuthenticated } = useUserContext();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.setItem('lastVisitedPath', location.pathname);
+  }, [location]);
+
+  // 检查 localStorage 中是否有保存的路径，并重定向到该路径
+  useEffect(() => {
+    const savedPath = localStorage.getItem('lastVisitedPath');
+    if (savedPath) {
+      navigate(savedPath);
+    }
+  }, [navigate]);
 
   const identityMapping: { [key: string]: string } = {
     '無權限': 'NO_PERMISSION',

@@ -1,3 +1,4 @@
+//src\Hook\useGroupList.ts
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '../services/types/userManagement';
 import {
@@ -24,9 +25,6 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   const [charts, setCharts] = useState<{ id: number; name: string; chartGroupId: number }[]>([]);
   const [allCharts, setAllCharts] = useState<{ id: number; name: string }[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [confirmDialogMessage, setConfirmDialogMessage] = useState('');
-  const [onConfirm, setOnConfirm] = useState<(() => void) | null>(null);
   const isMenuOpen = Boolean(anchorEl);
 
   const fetchData = useCallback(async () => {
@@ -47,7 +45,6 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
       })));
 
       console.log('Fetched users data:', userList);
-
       setMemberData(userList);
       setAllCharts(allChartsResponse.data.map((chart: { id: number; name: string }) => ({
         id: chart.id,
@@ -63,9 +60,9 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   }, [fetchData]);
 
   const openConfirmDialog = (message: string, onConfirmCallback: () => void) => {
-    setConfirmDialogMessage(message);
-    setOnConfirm(() => onConfirmCallback);
-    setConfirmDialogOpen(true);
+    if (window.confirm(message)) {
+      onConfirmCallback();
+    }
   };
 
   const handleAddMember = async (selectedUsers: User[]) => {
@@ -83,10 +80,10 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   const handleRemove = async (userId: string, userName: string) => {
     openConfirmDialog(`確定要移除 ${userName} 嗎？`, async () => {
       try {
-        console.log("Attempting to remove:", { userId, memberData });
+        console.log("Attempting to remove:", { userId, memberData }); // 调试输出
         const member = memberData.find(member => member.userId === userId);
         if (member && member.userGroupId) {
-          console.log("Found member:", member);
+          console.log("Found member:", member); // 调试输出
           await removeUserFromGroup(member.userGroupId);
           await fetchData();
         } else {
@@ -130,13 +127,15 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
   const handleDeleteGroup = async () => {
     openConfirmDialog('確定要刪除此群組嗎？', async () => {
       try {
+        console.log('Deleting group:', groupId); // 调试输出
         await deleteGroup(groupId);
-        onDeleteGroup(groupId);
+        await fetchData(); // 更新数据，确保删除后状态反映在组列表中
+        onDeleteGroup(groupId); // 也可以在这里传递删除的 groupId
       } catch (error) {
         console.error('Error deleting group:', error);
       }
     });
-  };
+  };  
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -164,10 +163,6 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
     handleMenuClose,
     showChartPicker,
     setShowChartPicker,
-    confirmDialogOpen,
-    confirmDialogMessage,
-    setConfirmDialogOpen,
-    onConfirm,
   };
 };
 

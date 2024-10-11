@@ -7,8 +7,10 @@ const ChartService = {
     return response.data;
   },
 
-  getAvailableCharts: async () => {
-    const response = await axiosInstance.get('/chart/available');
+  getAvailableCharts: async (dashboardId?: number) => {
+    const response = await axiosInstance.get('/chart/available', {
+      params: { dashboardId }
+    });
     return response.data;
   },
 

@@ -1,3 +1,4 @@
+//src\component\Dashboard\dashBoardForm.tsx
 import React, { useState, useEffect } from 'react';
 import styles from './dashBoardForm.module.css';
 import closeIcon from '../../assets/icon/X.svg';
@@ -37,15 +38,17 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
   useEffect(() => {
     const fetchCharts = async () => {
       try {
-        const response = await ChartService.getAvailableCharts();
-        setCharts(response.data);
+        const response = await ChartService.getAvailableCharts(); // 不傳遞參數
+        const chartsData = Array.isArray(response.data) ? response.data : [];
+        console.log('Response from ChartService:', response);
+        setCharts(chartsData); // 確保 response.data 是一個陣列
       } catch (error) {
         console.error('Failed to fetch charts:', error);
         alert('Failed to fetch charts. Please try again later.');
       }
     };
     fetchCharts();
-  }, []);
+  }, []);  
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -216,7 +219,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                 <button type="button" className={styles.applyMore} onClick={handleApplyMore}>或是點此申請無權限圖表</button>
               </h3>
               <div className={styles.theKPIs}>
-                {charts.map(chart => (
+                {Array.isArray(charts) && charts.map(chart => (
                   <div
                     key={chart.id}
                     className={`${styles.checkboxWrapper} ${!chart.observable ? styles.disabled : ''} ${selectedKPIs.includes(chart.id) ? styles.selected : ''}`}

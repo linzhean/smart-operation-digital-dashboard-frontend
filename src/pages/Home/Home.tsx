@@ -45,15 +45,17 @@ const Home: React.FC = () => {
   // 获取可用图表
   useEffect(() => {
     const fetchAvailableCharts = async () => {
-      try {
-        const response = await ChartService.getAvailableCharts();
-        setAvailableCharts(response.data);
-      } catch (error) {
-        console.error('Failed to fetch available charts:', error);
+      if (selectedDashboard) { // 確保有選擇的儀表板
+        try {
+          const response = await ChartService.getAvailableCharts(Number(selectedDashboard));
+          setAvailableCharts(response.data);
+        } catch (error) {
+          console.error('Failed to fetch available charts:', error);
+        }
       }
     };
     fetchAvailableCharts();
-  }, []);
+  }, [selectedDashboard]);
 
  // 获取仪表盘图表
 const fetchDashboardCharts = async () => {

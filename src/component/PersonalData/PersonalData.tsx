@@ -269,7 +269,7 @@ const Pdata: React.FC = () => {
                 className="form-control"
                 id="identity"
                 value={state.formData.identity}
-                disabled={!state.editable}
+                disabled={true}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
               >
                 {identities.map((identity) => (

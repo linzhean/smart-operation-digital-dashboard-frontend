@@ -54,16 +54,19 @@ const DashboardSidebar: React.FC<{
 
   useEffect(() => {
     const fetchCharts = async () => {
-      try {
-        const response = await ChartService.getAvailableCharts();
-        setCharts(response.data);
-      } catch (error) {
-        console.error('Failed to fetch charts:', error);
-        alert('Failed to fetch charts. Please try again later.');
+      if (activeDashboard) {
+        try {
+          const response = await ChartService.getAvailableCharts(Number(activeDashboard));
+          setCharts(response.data);
+        } catch (error) {
+          console.error('Failed to fetch charts:', error);
+          alert('Failed to fetch charts. Please try again later.');
+        }
       }
     };
     fetchCharts();
-  }, []);
+  }, [activeDashboard]);
+   
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -188,16 +191,18 @@ const DashboardSidebar: React.FC<{
   const fetchAvailableCharts = async () => {
     setLoading(true);
     try {
-      const response = await ChartService.getAvailableCharts();
-      console.log('Fetched charts:', response.data); // Add this line
-      setAvailableCharts(response.data);
+      if (activeDashboard) {
+        const response = await ChartService.getAvailableCharts(Number(activeDashboard));
+        console.log('Fetched charts:', response.data);
+        setAvailableCharts(response.data);
+      }
     } catch (error) {
       console.error('Failed to fetch available charts:', error);
       setError('Failed to fetch available charts.');
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   const toggleActiveState = () => {
     setIsActive(prev => !prev);
@@ -376,8 +381,8 @@ const DashboardSidebar: React.FC<{
                   className={styles.dropdownMenu}
                 >
                   <MenuItem onClick={() => { setEditingDashboardId(dashboard.id); handleMenuClose(dashboard.id); }}>修改名稱</MenuItem>
-                  <MenuItem onClick={() => { handleDeleteDashboard(dashboard.id); handleMenuClose(dashboard.id); }}>刪除</MenuItem>
                   <MenuItem onClick={() => handleAddChartOpen()}>設定圖表</MenuItem>
+                  <MenuItem onClick={() => { handleDeleteDashboard(dashboard.id); handleMenuClose(dashboard.id); }}>刪除</MenuItem>
                 </Menu>
               </li>
             ))}
@@ -398,7 +403,7 @@ const DashboardSidebar: React.FC<{
         />
       )}
 
-      <Dialog open={openAddChartDialog} onClose={handleAddChartClose}>
+      {/* <Dialog open={openAddChartDialog} onClose={handleAddChartClose}>
         <DialogTitle>選擇你要的圖表</DialogTitle>
         <DialogContent>
           {availableCharts.map((chart) => (
@@ -523,7 +528,7 @@ const DashboardSidebar: React.FC<{
             </form>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

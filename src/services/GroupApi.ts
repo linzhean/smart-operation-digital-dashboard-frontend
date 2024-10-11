@@ -46,8 +46,10 @@ export const addGroup = async (group: Omit<Group, 'id'>): Promise<Group> => {
 // 根据 ID 删除群组
 export const deleteGroup = async (groupId: number): Promise<void> => {
   try {
+    console.log('Deleting group with ID:', groupId); // 调试输出
     await apiClient.delete<void>(`${API_URL}/${groupId}`);
   } catch (error: any) {
+    console.error('删除群组失败: ' + error.message);
     throw new Error('删除群组失败: ' + error.message);
   }
 };

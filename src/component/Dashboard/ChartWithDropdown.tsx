@@ -155,7 +155,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
                 </select>
               </div>
             </div>
-            <div className={styles.labelGroup}>
+            {/* <div className={styles.labelGroup}>
               <label htmlFor="chartSelection">圖表名稱</label>
               <div className={styles.select}>
                 <select
@@ -173,7 +173,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
                   ))}
                 </select>
               </div>
-            </div>
+            </div> */}
             <div className={`${styles.labelGroup} ${styles.lastlabelGroup} ${styles.noBorderBottom}`}>
               <textarea
                 placeholder="請輸入郵件內容..."

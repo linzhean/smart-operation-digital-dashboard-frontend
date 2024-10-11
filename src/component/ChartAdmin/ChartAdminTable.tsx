@@ -169,23 +169,23 @@ const ChartAdminTable: React.FC = () => {
     }
   };
 
-  const handleViewChart = async (chartName: string, chartCodeFile: string, chartImage: string, showcaseImage: string) => {
-    try {
-      const availableCharts = await ChartService.getAvailableCharts();
-      const selectedChart = availableCharts.find((chart: { name: string; }) => chart.name === chartName);
+  // const handleViewChart = async (chartName: string, chartCodeFile: string, chartImage: string, showcaseImage: string) => {
+  //   try {
+  //     const availableCharts = await ChartService.getAvailableCharts();
+  //     const selectedChart = availableCharts.find((chart: { name: string; }) => chart.name === chartName);
 
-      if (selectedChart) {
-        const showcaseImage = selectedChart.showcaseImage;
-        setViewFormData({ chartName, chartCodeFile, chartImage, showcaseImage });
-        setIsViewFormOpen(true);
-      } else {
-        alert('未找到示意圖');
-      }
-    } catch (error) {
-      console.error('Error fetching chart data:', error);
-      alert('获取图表信息失败');
-    }
-  };
+  //     if (selectedChart) {
+  //       const showcaseImage = selectedChart.showcaseImage;
+  //       setViewFormData({ chartName, chartCodeFile, chartImage, showcaseImage });
+  //       setIsViewFormOpen(true);
+  //     } else {
+  //       alert('未找到示意圖');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching chart data:', error);
+  //     alert('获取图表信息失败');
+  //   }
+  // };
 
   const handleCloseViewForm = () => setIsViewFormOpen(false);
 

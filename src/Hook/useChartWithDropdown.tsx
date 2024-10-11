@@ -50,32 +50,34 @@ export function useChartWithDropdown(
   // 獲取所有可用的圖表
   useEffect(() => {
     const fetchCharts = async () => {
-      try {
-        const response = await ChartService.getAvailableCharts();
-        if (Array.isArray(response.data)) {
-          setCharts(response.data);
-          // 假設 response.data[0] 是我們要處理的圖表
-          if (response.data.length > 0) {
-            setCanAssign(response.data[0].canAssign); // 根据图表数据设置 canAssign
-            console.log('Fetched canAssign value:', response.data[0].canAssign);
+      if (selectedDashboardId) { // Ensure dashboardId is available
+        try {
+          const response = await ChartService.getAvailableCharts(selectedDashboardId);
+          if (Array.isArray(response.data)) {
+            setCharts(response.data);
+            if (response.data.length > 0) {
+              setCanAssign(response.data[0].canAssign);
+              console.log('Fetched canAssign value:', response.data[0].canAssign);
+            }
+          } else {
+            console.error('獲取圖表失敗:', response.message);
           }
-        } else {
-          console.error('獲取圖表失敗:', response.message);
+        } catch (error) {
+          console.error('獲取圖表失敗:', error);
         }
-      } catch (error) {
-        console.error('獲取圖表失敗:', error);
+      } else {
+        console.warn('No dashboardId available to fetch charts.');
       }
     };
-
-    fetchCharts(); // 初始获取一次
-
+  
+    fetchCharts(); // Initial fetch
+  
     const intervalId = setInterval(() => {
       fetchCharts();
-    }, 10 * 60 * 1000); // 每 10 分钟执行一次
-
-    return () => clearInterval(intervalId); // 清除定时器
-
-  }, []);
+    }, 10 * 60 * 1000); // Every 10 minutes
+  
+    return () => clearInterval(intervalId); // Clear interval on unmount
+  }, [selectedDashboardId]); // Dependency array includes selectedDashboardId
 
   // 獲取所有用戶
   useEffect(() => {

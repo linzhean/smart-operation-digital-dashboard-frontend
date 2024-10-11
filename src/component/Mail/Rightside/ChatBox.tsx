@@ -51,27 +51,27 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, emailName, sendNewChatMessag
     }, [fetchEmailDetails]);
 
   // // WebSocket 初始化
-  useEffect(() => {
-    const socket = new SockJS('http://140.131.115.153:8080/webSocket');
-    const stompClient = new Client({
-      webSocketFactory: () => socket as any,  // SockJS 使用
-      debug: (str) => console.log(str),       // 用於調試，您可以移除
-    });
+  // useEffect(() => {
+  //   const socket = new SockJS('http://140.131.115.153:8080/webSocket');
+  //   const stompClient = new Client({
+  //     webSocketFactory: () => socket as any,  // SockJS 使用
+  //     debug: (str) => console.log(str),       // 用於調試，您可以移除
+  //   });
 
-    stompClient.onConnect = () => {
-      // 訂閱服務器上的主題，接收新消息
-      stompClient.subscribe('/topic/newMessage', (message) => {
-        const receivedMessage = JSON.parse(message.body) as EmailMessage;
-        setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-      });
-    };
+  //   stompClient.onConnect = () => {
+  //     // 訂閱服務器上的主題，接收新消息
+  //     stompClient.subscribe('/topic/newMessage', (message) => {
+  //       const receivedMessage = JSON.parse(message.body) as EmailMessage;
+  //       setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+  //     });
+  //   };
 
-    stompClient.activate();
+  //   stompClient.activate();
 
-    return () => {
-      stompClient.deactivate(); // 組件卸載時關閉 WebSocket 連接
-    };
-  }, [emailId]);
+  //   return () => {
+  //     stompClient.deactivate(); // 組件卸載時關閉 WebSocket 連接
+  //   };
+  // }, [emailId]);
 
   // 處理發送訊息
   const handleSendMessage = useCallback(async () => {
