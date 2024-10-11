@@ -101,6 +101,7 @@
   width: 40%;
   position: fixed;
   top: 50%;
+  overflow-x: hidden;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 300010;

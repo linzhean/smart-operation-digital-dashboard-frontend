@@ -223,28 +223,31 @@ const UserStatusControl: React.FC = () => {
   };
 
   const toggleStatus = async (index: number) => {
+    const user = users[index];
+
+    const confirmChange = window.confirm(`確定要將 ${user.name} 的狀態切換為 ${user.status === '啟用中' ? '停用' : '啟用中'} 嗎？`);
+
+    if (!confirmChange) {
+      return;
+    }
 
     try {
-
-      const user = users[index];
-
       await toggleUserStatus(user.id);
 
-      const updatedUser = { ...user, status: user.status === '啟用中' ? '停用' : '啟用中' };
+      const updatedUser = {
+        ...user,
+        status: user.status === '啟用中' ? '停用' : '啟用中'
+      };
 
       const updatedUsers = [...users];
-
       updatedUsers[index] = updatedUser;
-
       setUsers(updatedUsers);
 
     } catch (error) {
-
       console.error('更新用戶狀態時出錯:', error);
-
     }
-
   };
+
 
   const handleDepartmentFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 

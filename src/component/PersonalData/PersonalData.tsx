@@ -73,7 +73,7 @@ const Pdata: React.FC = () => {
 
         await loadUserData();
       } catch (error) {
-        console.error('加载选项时发生错误:', error);
+        console.error('載入選項時發生錯誤:', error);
       }
     };
 
@@ -102,12 +102,11 @@ const Pdata: React.FC = () => {
       }
     }
     dispatch({ type: 'UPDATE_FORM_DATA', payload: { id, value } });
-  };  
+  };
 
   const handleSaveClick = async () => {
     console.log('Saving form data with userId:', state.formData.userId);
 
-    // 如果 departmentId 为空且有默认 departmentName，则设置 departmentId
     if (!state.formData.departmentId && state.formData.departmentName) {
       const matchingDepartment = departments.find(dept => dept.label === state.formData.departmentName);
       if (matchingDepartment) {
@@ -115,15 +114,14 @@ const Pdata: React.FC = () => {
       }
     }
 
-    // 确保 departmentId 和 departmentName 都被正确设置
     if (!state.formData.departmentId || !state.formData.departmentName) {
-      setSnackbarMessage('所屬部門 - 未填寫');
+      setSnackbarMessage('未填寫所屬部門');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       return;
     }
     if (!state.formData.userId) {
-      setSnackbarMessage('使用者ID - 未填寫');
+      setSnackbarMessage('未填寫使用者ID');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       return;

@@ -1,4 +1,3 @@
-//src\component\Dashboard\DashboardSidebar.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './DashBoardSidebar.module.css';
@@ -25,7 +24,7 @@ const DashboardSidebar: React.FC<{
   onSelectDashboard: (dashboardId: string) => void,
   onAddChart: (chart: any) => void,
   currentUserId: string
-}> = ({ onSelectDashboard, onAddChart, currentUserId}) => {
+}> = ({ onSelectDashboard, onAddChart, currentUserId }) => {
   const [isActive, setIsActive] = useState(false);
   const [isDisabled, setIsDisabled] = useState(window.innerWidth > 1024);
   const [activeDashboard, setActiveDashboard] = useState<string | null>(null);
@@ -146,7 +145,6 @@ const DashboardSidebar: React.FC<{
     setSelectedChartForApplication(null);
   };
 
-  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       setIsDisabled(window.innerWidth > 1024);
@@ -158,17 +156,15 @@ const DashboardSidebar: React.FC<{
     };
   }, []);
 
-  // 修改 fetchAllDashboards 函數
   const fetchAllDashboards = useCallback(async () => {
     try {
       const fetchedDashboards = await DashboardService.getAllDashboards();
 
-      // 确保 fetchedDashboards 是数组
       if (Array.isArray(fetchedDashboards)) {
         setDashboards(fetchedDashboards);
       } else {
         console.error('Fetched dashboards is not an array:', fetchedDashboards);
-        setDashboards([]); // 设置为一个空数组，避免后续错误
+        setDashboards([]);
       }
 
       if (fetchedDashboards.length > 0 && !activeDashboard) {
@@ -178,7 +174,7 @@ const DashboardSidebar: React.FC<{
       }
     } catch (error) {
       console.error('Failed to fetch dashboards:', error);
-      setDashboards([]); // 发生错误时也清空 dashboards
+      setDashboards([]);
     }
   }, [activeDashboard, onSelectDashboard]);
 
@@ -187,7 +183,6 @@ const DashboardSidebar: React.FC<{
     fetchAllDashboards();
   }, [fetchAllDashboards]);
 
-  // Fetch available charts for adding
   const fetchAvailableCharts = async () => {
     setLoading(true);
     try {
@@ -224,7 +219,7 @@ const DashboardSidebar: React.FC<{
 
   const handleChartSelection = (chart: any) => {
     if (!chart.observable) {
-      return; // 如果 observable 為 false，直接返回，阻止選擇
+      return;
     }
 
     setSelectedCharts(prev => {
@@ -241,23 +236,23 @@ const DashboardSidebar: React.FC<{
 
   const handleAddChartConfirm = async () => {
     if (activeDashboard && selectedCharts.size > 0) {
-        const selectedChartsData = Array.from(selectedCharts).map(chartId => {
-            const chart = availableCharts.find(c => c.id === chartId);
-            return chart ? { ...chart, id: chartId } : null;
-        }).filter(chart => chart !== null);
+      const selectedChartsData = Array.from(selectedCharts).map(chartId => {
+        const chart = availableCharts.find(c => c.id === chartId);
+        return chart ? { ...chart, id: chartId } : null;
+      }).filter(chart => chart !== null);
 
-        try {
-            await ChartService.addChartsToDashboard(Number(activeDashboard), selectedChartsData.map(chart => chart.id));
-            onAddChart(selectedChartsData); // 调用传递的函数更新 Home 的状态
-        } catch (error) {
-            console.error('Failed to add charts to dashboard:', error);
-        }
+      try {
+        await ChartService.addChartsToDashboard(Number(activeDashboard), selectedChartsData.map(chart => chart.id));
+        onAddChart(selectedChartsData);
+      } catch (error) {
+        console.error('Failed to add charts to dashboard:', error);
+      }
 
-        handleAddChartClose();
+      handleAddChartClose();
     } else {
-        console.error('Active Dashboard or Selected Charts are missing');
+      console.error('Active Dashboard or Selected Charts are missing');
     }
-};
+  };
 
   const handleAddDashboardOpen = () => {
     setShowMultiStepForm(true);
@@ -267,12 +262,11 @@ const DashboardSidebar: React.FC<{
     setShowMultiStepForm(false);
   };
 
-  // Add dashboard
   const handleAddDashboardSubmit = useCallback(async () => {
     if (dashboardName) {
       try {
         await DashboardService.createDashboard({ name: dashboardName, description: dashboardDescription });
-        fetchAllDashboards(); // Refresh the dashboard list
+        fetchAllDashboards();
         handleAddDashboardClose();
       } catch (error) {
         console.error('Failed to add dashboard:', error);
@@ -286,11 +280,10 @@ const DashboardSidebar: React.FC<{
     setDashboardDescription('');
   };
 
-  // Delete dashboard
   const handleDeleteDashboard = useCallback(async (dashboardId: string) => {
     try {
       await DashboardService.deleteDashboard(dashboardId);
-      fetchAllDashboards(); // Refresh the dashboard list
+      fetchAllDashboards();
     } catch (error) {
       console.error('Failed to delete dashboard:', error);
     }
@@ -306,7 +299,6 @@ const DashboardSidebar: React.FC<{
     setAnchorEls(prev => ({ ...prev, [dashboardId]: null }));
   };
 
-  // Update dashboard name
   const handleUpdateDashboardName = useCallback(async () => {
     if (editingDashboardId && newDashboardName) {
       try {
@@ -398,7 +390,6 @@ const DashboardSidebar: React.FC<{
           }}
           currentUserId={currentUserId}
           onDashboardCreated={(dashboard, charts) => {
-            // Handle dashboard creation, if needed
           }}
         />
       )}
@@ -427,9 +418,9 @@ const DashboardSidebar: React.FC<{
           ))}
         </DialogContent>
         <DialogActions>
-        <button type="button" className={styles.applyMore} onClick={handleApplyMore}>
-        或是點此申請無權限圖表
-      </button>
+          <button type="button" className={styles.applyMore} onClick={handleApplyMore}>
+            或是點此申請無權限圖表
+          </button>
           <Button onClick={handleAddChartClose} color="primary">
             取消
           </Button>
@@ -439,6 +430,7 @@ const DashboardSidebar: React.FC<{
         </DialogActions>
       </Dialog>
 
+      {/* 申請KPI表單 */}
       {isFormVisible && (
         <div className={styles.checkFormContainer}>
           <div className={styles.formOverlay} onClick={handleCloseForm}></div>

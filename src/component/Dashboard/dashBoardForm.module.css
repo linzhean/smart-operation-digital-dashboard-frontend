@@ -191,10 +191,9 @@
 .theKPIs {
   overflow: auto;
   overflow-x: hidden;
-  max-height: 235px;
+  max-height: 225px;
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
 }
 
@@ -442,6 +441,9 @@
   border-bottom: 2px solid #acacbe8e;
   margin-bottom: 15px;
   padding-bottom: 10px;
+  display: flex;
+  text-align: center;
+  align-items: baseline;
 }
 
 .cancel {
@@ -475,19 +477,6 @@
   margin-bottom: 10px;
 }
 
-@media (max-width: 600px) {
-  .showcaseImage {
-    width: 80px;
-    /* Smaller width for smaller screens */
-  }
-}
-
-@media (min-width: 601px) {
-  .showcaseImage {
-    width: 120px;
-    /* Larger width for larger screens */
-  }
-}
 
 .LabelImgContainer {
   display: flex;
@@ -502,4 +491,50 @@
 
 .MuiTooltip-popper {
   z-index: 9999999999999999999999999999999;
+}
+
+
+.theKpiOption,
+.applyKpiOption {
+  color: #CCC !important;
+  background-color: #212121 !important;
+  font-weight: bold !important;
+}
+
+.select {
+  background-color: #212121;
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex: 1;
+  border: none;
+  font-size: 1.05rem;
+
+  select {
+    width: 100%;
+    padding: 7px;
+    border: none;
+    appearance: none;
+    outline: 0;
+    background: none;
+    color: #CCC;
+    box-shadow: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  &::after {
+    content: "\25BC";
+    position: absolute;
+    right: 12px;
+    top: 4px;
+    transition: 0.25s all ease;
+    pointer-events: none;
+  }
+
+  &:hover::after {
+    color: #1E90FF;
+    animation: bounce 0.5s infinite;
+  }
 }
