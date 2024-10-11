@@ -11,11 +11,10 @@ const Login: React.FC = () => {
   const { setUser, dispatch } = useUserContext();
   const [error, setError] = useState<string>("");
 
-  // 在组件挂载时检查用户的登录状态
   useEffect(() => {
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
-      navigate('/home'); // 如果已认证，则重定向到首页
+      navigate('/home');
     }
   }, [navigate]);
 
@@ -45,28 +44,27 @@ const Login: React.FC = () => {
       const authToken = res.headers.get('x-auth-token');
       if (authToken) {
         localStorage.setItem('authToken', authToken);
-        
+
         const userResponse = await fetch(`${backendApiUrl}/user-account`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
         });
-        
+
         const userData = await userResponse.json();
-        
+
         const identityMapping: { [key: string]: string } = {
           '無權限': 'NO_PERMISSION',
           '一般使用者': 'USER',
           '開發者': 'DEVELOPER',
           '管理員': 'ADMIN'
         };
-        
+
         const mappedIdentity = identityMapping[userData.data.identity] || 'NO_PERMISSION';
         setUser({ ...userData.data, identity: mappedIdentity });
-        
-        // 成功后，设置用户为已认证状态
+
         dispatch({ type: 'SET_AUTHENTICATED', payload: true });
-        
+
         switch (mappedIdentity) {
           case 'NO_PERMISSION':
             navigate('/profile-setup');
@@ -82,10 +80,10 @@ const Login: React.FC = () => {
         }
       } else {
         setError('No auth token received from backend');
-      }      
+      }
     } catch (error) {
       console.error('Error during login request:', error);
-      setError('失敗，請稍後再次嘗試');
+      setError('登入失敗，請稍後再次嘗試');
     }
   };
 

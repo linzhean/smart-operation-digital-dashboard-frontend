@@ -112,15 +112,19 @@
 }
 
 .errorMsg {
+  font-size: 1.2rem;
   text-align: center;
   color: rgb(210, 35, 45);
   font-weight: 600;
   margin: 10px;
+  border-radius: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .title {
   position: absolute;
-  top: 20%;
+  top: 30%;
   left: 50%;
   transform: translateX(-50%);
   color: #FFF;
@@ -146,11 +150,7 @@
 }
 
 @media (max-width: 600px) {
-  .theSmall {
-    font-size: 0.8rem;
-  }
-
-  .theBig {
+  .welcome {
     font-size: 1.5rem;
   }
 
@@ -161,8 +161,8 @@
 }
 
 @media (max-width: 370px) {
-  .theSmall {
-    font-size: 0.7rem;
+  .welcome {
+    font-size: 1.2rem;
   }
 
   .LOGO {
@@ -170,14 +170,4 @@
     height: 60px;
   }
 
-  .theBig {
-    font-size: 1.2rem;
-  }
-
-  .title {
-    letter-spacing: 2px;
-    white-space: normal;
-    width: 100%;
-    text-align: center;
-  }
 }

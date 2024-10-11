@@ -1,9 +1,11 @@
 .theContent {
-  pointer-events: none; /* 禁用事件 */
+  pointer-events: none;
+  /* 禁用事件 */
 }
 
-.theContent > .react-grid-layout {
-  pointer-events: auto; /* 启用事件 */
+.theContent>.react-grid-layout {
+  pointer-events: auto;
+  /* 启用事件 */
 }
 
 .dashboard_container {
@@ -23,7 +25,6 @@
     margin-left: 0;
   }
 }
-
 
 .staticContent {
   margin-bottom: 20px;
@@ -60,7 +61,6 @@
   padding: 10px 0px;
   border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 7px;
   width: 90px;
   transition: transform 0.3s ease;
   z-index: 999999999;

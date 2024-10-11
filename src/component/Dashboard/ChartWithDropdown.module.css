@@ -5,8 +5,8 @@
 
 .ball {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background-color: white;
 }
@@ -15,9 +15,9 @@
   background-color: #343542;
   border-radius: 25px;
   display: flex;
-  gap: 4px;
-  width: 50px;
-  height: 50px;
+  gap: 3.5px;
+  width: 37px;
+  height: 37px;
   justify-content: center;
   align-items: center;
 }
@@ -49,44 +49,8 @@
 .chartContainer {
   position: absolute;
   right: 0;
-  top: 0;
+  top: 7%;
   margin-right: 10px;
-}
-
-.MenuTimerCircle {
-  z-index: 999;
-  position: absolute;
-  top: 50%;
-  right: 0px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 2px solid #000;
-  box-sizing: border-box;
-  transform: translateY(-50%);
-  background: conic-gradient(white calc(var(--progress) * 100%),
-      transparent 0);
-}
-
-.buttonContainer {
-  position: relative;
-  display: inline-block;
-}
-
-.timerCircle {
-  position: absolute;
-  top: 68%;
-  right: -7px;
-  width: 15px;
-  height: 15px;
-  border: 1px solid #000;
-  background: conic-gradient(black calc(var(--progress) * 360deg),
-      #e6f0ff 0deg);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: background 0.1s linear;
-  pointer-events: none;
 }
 
 .chart {
@@ -119,6 +83,7 @@
   border-radius: 15px;
   padding: 10px;
   z-index: 5000;
+  gap: 20px;
 }
 
 .dropdownMenu li {
@@ -343,15 +308,14 @@
 }
 
 .dropdownMenu {
-  top: 65%;
+  top: 75%;
   right: 15%;
 }
 
-.dropdownMenu button:last-child {
-  margin-bottom: 0;
+.dropdownMenu button {
+  margin-bottom: 10px;
 }
 
-/* 可共用樣式(主要是submit/cancel按鈕) */
 .buttonGroup {
   display: flex;
   justify-content: flex-end;
@@ -403,4 +367,8 @@
   font-size: 16px;
   margin: 10px 0;
   text-align: center;
+}
+
+.lastButton {
+  margin-bottom: 0px !important;
 }
