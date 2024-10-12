@@ -126,6 +126,11 @@
 .theBox {
   display: flex;
   gap: 10px;
+  width: 100%;
+}
+
+.theNumberBox {
+  flex: 1 !important;
 }
 
 .theUserPickerBox {

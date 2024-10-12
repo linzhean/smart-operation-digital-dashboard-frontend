@@ -38,17 +38,6 @@ const LargeTooltip = styled(({ className, ...props }: TooltipProps & { className
   },
 }));
 
-
-const useStyles = makeStyles({
-  dialogPaper: {
-    width: '50%',
-    height: '50%',
-    maxHeight: '80%',
-    maxWidth: '80%',
-  },
-});
-
-
 interface User extends UserAccountBean {
   selected?: boolean;
 }
@@ -310,7 +299,8 @@ const AssignTaskControl: React.FC = () => {
     const selectedUsers = selectedUsersMap[chartId] || [];
     const taskCount = assignedTasks[chartId]?.length || 0;
     return selectedUsers.length > 0
-      ? `擁有權限者：共 ${selectedUsers.length} 人，已分配任務：${taskCount} 個`
+      // ? `擁有權限者：共 ${selectedUsers.length} 人，已分配任務：${taskCount} 個`
+      ? `擁有權限者：共 ${selectedUsers.length} 人`
       : '設置交辦權限';
   };
 

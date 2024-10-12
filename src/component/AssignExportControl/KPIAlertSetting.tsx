@@ -30,7 +30,7 @@ interface CustomChart extends Chart {
 
 export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerLimit, setUpperLimit, setLowerLimit, defaultProcessor, defaultAuditor, onSubmit, chartId }: KPIAlertSettingProps) {
 
-  const [value, setValue] = React.useState<number[]>([lowerLimit || 1, upperLimit || 1000]); // 設置初始默認值
+  const [value, setValue] = React.useState<number[]>([lowerLimit || 1, upperLimit || 1000]);
   const [users, setUsers] = useState<User[]>([]);
   const [selectedProcessor, setSelectedProcessor] = useState<User | null>(null);
   const [selectedAuditor, setSelectedAuditor] = useState<User | null>(null);
@@ -106,28 +106,6 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
     });
   }, [defaultProcessor, defaultAuditor]);
 
-  const handleSliderChange = (
-    event: Event,
-    newValue: number | number[],
-    activeThumb: number
-  ) => {
-    if (!Array.isArray(newValue)) {
-      return;
-    }
-
-    if (newValue[1] - newValue[0] < minDistance) {
-      if (activeThumb === 0) {
-        const clamped = Math.min(newValue[0], 100 - minDistance);
-        setValue([clamped, clamped + minDistance]);
-      } else {
-        const clamped = Math.max(newValue[1], minDistance);
-        setValue([clamped - minDistance, clamped]);
-      }
-    } else {
-      setValue(newValue as number[]);
-    }
-  };
-
   const handleInputChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = Number(event.target.value);
     if (index === 0) {
@@ -137,7 +115,7 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
       setValue([value[0], inputValue]);
       setUpperLimit(inputValue);
     }
-  };  
+  };
 
   const handleBlur = () => {
     setLowerLimit(value[0]);
@@ -147,10 +125,10 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
   const handleConfirm = () => {
     const lower = parseFloat(value[0].toString());
     const upper = parseFloat(value[1].toString());
-    
+
     setLowerLimit(lower);
     setUpperLimit(upper);
-    
+
     if (selectedProcessor && selectedAuditor) {
       onSubmit(lower, upper, selectedProcessor.userId, selectedAuditor.userId, chartId);
     }
@@ -186,63 +164,128 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
               最高值
             </p>
           </div>
+          {/* <div className={styles.theBox}>
+            <div className={styles.theNumberBox}>
+              <TextField
+                type="number"
+                value={value[0]}
+                onChange={handleInputChange(0)}
+                onBlur={handleBlur}
+                inputProps={{
+                  min: 0,
+                  max: value[1] - minDistance,
+                }}
+                InputLabelProps={{
+                  sx: {
+                    color: 'black',
+                    fontWeight: 600,
+                    '&.Mui-focused': {
+                      color: '#000',
+                    },
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'black',
+                      borderWidth: '2px',
+                    },
+                  },
+                }}
+              />
+            </div>
+            <div className={styles.theNumberBox}>
+              <TextField
+                type="number"
+                value={value[1]}
+                onChange={handleInputChange(1)}
+                onBlur={handleBlur}
+                inputProps={{
+                  min: 0,
+                }}
+                InputLabelProps={{
+                  sx: {
+                    color: 'black',
+                    fontWeight: 600,
+                    '&.Mui-focused': {
+                      color: '#000',
+                    },
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'black',
+                      borderWidth: '2px',
+                    },
+                  },
+                }}
+              />
+            </div>
+          </div> */}
+
           <div className={styles.theBox}>
-            <TextField
-              type="number"
-              value={value[0]}
-              onChange={handleInputChange(0)}
-              onBlur={handleBlur}
-              inputProps={{
-                min: 0,
-                max: value[1] - minDistance,
-              }}
-              InputLabelProps={{
-                sx: {
-                  color: 'black',
-                  fontWeight: 600,
-                  '&.Mui-focused': {
-                    color: '#000',
+            <div className={styles.theNumberBox}>
+              <TextField
+                type="number"
+                value={value[0]}
+                onChange={handleInputChange(0)}
+                onBlur={handleBlur}
+                inputProps={{
+                  min: 0,
+                  max: value[1] - minDistance,
+                }}
+                sx={{ width: '100%' }}
+                InputLabelProps={{
+                  sx: {
+                    color: 'black',
+                    fontWeight: 600,
+                    '&.Mui-focused': {
+                      color: '#000',
+                    },
                   },
-                },
-              }}
-              InputProps={{
-                sx: {
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'black',
-                    borderWidth: '2px',
+                }}
+                InputProps={{
+                  sx: {
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'black',
+                      borderWidth: '2px',
+                    },
                   },
-                },
-              }}
-
-            />
-
-            <TextField
-              type="number"
-              value={value[1]}
-              onChange={handleInputChange(1)}
-              onBlur={handleBlur}
-              inputProps={{
-                min: 0,
-              }}
-              InputLabelProps={{
-                sx: {
-                  color: 'black',
-                  fontWeight: 600,
-                  '&.Mui-focused': {
-                    color: '#000',
+                }}
+              />
+            </div>
+            <div className={styles.theNumberBox}>
+              <TextField
+                type="number"
+                value={value[1]}
+                onChange={handleInputChange(1)}
+                onBlur={handleBlur}
+                inputProps={{
+                  min: 0,
+                }}
+                sx={{ width: '100%' }}
+                InputLabelProps={{
+                  sx: {
+                    color: 'black',
+                    fontWeight: 600,
+                    '&.Mui-focused': {
+                      color: '#000',
+                    },
                   },
-                },
-              }}
-              InputProps={{
-                sx: {
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'black',
-                    borderWidth: '2px',
+                }}
+                InputProps={{
+                  sx: {
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'black',
+                      borderWidth: '2px',
+                    },
                   },
-                },
-              }}
-            />
+                }}
+              />
+            </div>
           </div>
+
         </Box>
         <div className={styles.theUserPickerBox}>
           <Autocomplete
