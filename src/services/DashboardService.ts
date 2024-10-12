@@ -1,5 +1,4 @@
 // src/services/DashboardService.ts
-
 import axiosInstance from './axiosConfig';
 import { Dashboard } from './types/dashboard';
 
@@ -20,7 +19,7 @@ const DashboardService = {
   },
 
   updateDashboard: async (id: string, dashboardData: any): Promise<Dashboard> => {
-    const response = await axiosInstance.put(`/dashboard/${id}`, dashboardData);
+    const response = await axiosInstance.patch(`/dashboard/${id}`, dashboardData);
     return response.data.data; // 提取 response.data.data
   },
 

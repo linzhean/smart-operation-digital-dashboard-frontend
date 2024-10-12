@@ -1,3 +1,4 @@
+//src\component\Dashboard\DashboardSidebar.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './DashBoardSidebar.module.css';
@@ -6,19 +7,12 @@ import ChartService from '../../services/ChartService';
 import { Dashboard } from '../../services/types/dashboard';
 import { fetchAllUsers } from '../../services/UserAccountService';
 import { createApplication } from '../../services/application';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import more from '../../assets/icon/homeMore.svg';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
 import MultiStepForm from './dashBoardForm';
-import Checkbox from '@mui/material/Checkbox';
 
 const DashboardSidebar: React.FC<{
   onSelectDashboard: (dashboardId: string) => void,
@@ -48,9 +42,24 @@ const DashboardSidebar: React.FC<{
   const [users, setUsers] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [selectedDashboard, setSelectedDashboard] = useState<Dashboard | null>(null);
   const [selectedChartForApplication, setSelectedChartForApplication] = useState<number | null>(null);
   const [selectedChartId, setSelectedChartId] = useState<number | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedDashboardId, setSelectedDashboardId] = useState<number | null>(null);
 
+  useEffect(() => {
+    const fetchDashboards = async () => {
+      try {
+        const response = await DashboardService.getAllDashboards();
+        setDashboards(response);
+      } catch (error) {
+        console.error('Failed to fetch dashboards:', error);
+      }
+    };
+    fetchDashboards();
+  }, []);
+  
   useEffect(() => {
     const fetchCharts = async () => {
       if (activeDashboard) {
@@ -65,7 +74,7 @@ const DashboardSidebar: React.FC<{
     };
     fetchCharts();
   }, [activeDashboard]);
-   
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -85,6 +94,16 @@ const DashboardSidebar: React.FC<{
     if (charts.find(chart => chart.id === kpiId)?.observable) {
       setSelectedKPIs(prev => prev.includes(kpiId) ? prev.filter(id => id !== kpiId) : [...prev, kpiId]);
     }
+  };
+
+  const handleEditDashboard = (dashboardId: number) => {
+    const dashboardToEdit = dashboards.find(d => Number(d.id) === dashboardId);
+    if (dashboardToEdit) {
+      setSelectedDashboard(dashboardToEdit);
+      setIsEditing(true);
+    }
+    setSelectedDashboardId(dashboardId);
+    setIsFormVisible(true);
   };
 
   const handleRequestKpi = (chartId: number) => {
@@ -142,7 +161,8 @@ const DashboardSidebar: React.FC<{
 
   const handleCloseForm = () => {
     setIsFormVisible(false);
-    setSelectedChartForApplication(null);
+    setSelectedDashboard(null);
+    setIsEditing(false);
   };
 
   useEffect(() => {
@@ -197,7 +217,7 @@ const DashboardSidebar: React.FC<{
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
   const toggleActiveState = () => {
     setIsActive(prev => !prev);
@@ -243,7 +263,7 @@ const DashboardSidebar: React.FC<{
 
       try {
         await ChartService.addChartsToDashboard(Number(activeDashboard), selectedChartsData.map(chart => chart.id));
-        onAddChart(selectedChartsData);
+        onAddChart(selectedChartsData); // 调用传递的函数更新 Home 的状态
       } catch (error) {
         console.error('Failed to add charts to dashboard:', error);
       }
@@ -373,7 +393,13 @@ const DashboardSidebar: React.FC<{
                   className={styles.dropdownMenu}
                 >
                   <MenuItem onClick={() => { setEditingDashboardId(dashboard.id); handleMenuClose(dashboard.id); }}>修改名稱</MenuItem>
-                  <MenuItem onClick={() => handleAddChartOpen()}>設定圖表</MenuItem>
+                  <ul>
+                    {dashboards.map(dashboard => (
+                      <li key={dashboard.id}>
+                        <MenuItem onClick={() => handleEditDashboard(Number(dashboard.id))}>設定圖表</MenuItem>
+                      </li>
+                    ))}
+                  </ul>
                   <MenuItem onClick={() => { handleDeleteDashboard(dashboard.id); handleMenuClose(dashboard.id); }}>刪除</MenuItem>
                 </Menu>
               </li>
@@ -394,133 +420,15 @@ const DashboardSidebar: React.FC<{
         />
       )}
 
-      {/* <Dialog open={openAddChartDialog} onClose={handleAddChartClose}>
-        <DialogTitle>選擇你要的圖表</DialogTitle>
-        <DialogContent>
-          {availableCharts.map((chart) => (
-            <MenuItem
-              key={chart.id}
-              onClick={() => handleChartSelection(chart)}
-              style={{
-                color: chart.observable ? 'black' : 'gray', // observable 為 false 顯示灰色
-                cursor: chart.observable ? 'pointer' : 'not-allowed' // 禁用點擊
-              }}
-              disabled={!chart.observable} // observable 為 false 禁用點選
-            >
-              <Checkbox
-                checked={selectedCharts.has(chart.id)}
-                onChange={() => handleChartSelection(chart.id)}
-                color="primary"
-                disabled={!chart.observable} // observable 為 false 禁用選擇
-              />
-              {chart.name}
-            </MenuItem>
-          ))}
-        </DialogContent>
-        <DialogActions>
-          <button type="button" className={styles.applyMore} onClick={handleApplyMore}>
-            或是點此申請無權限圖表
-          </button>
-          <Button onClick={handleAddChartClose} color="primary">
-            取消
-          </Button>
-          <Button onClick={handleAddChartConfirm} color="primary">
-            確定
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* 申請KPI表單 */}
-      {isFormVisible && (
-        <div className={styles.checkFormContainer}>
-          <div className={styles.formOverlay} onClick={handleCloseForm}></div>
-          <div onClick={(e) => e.stopPropagation()} className={styles.checkFormContent}>
-            <h2>申請KPI圖表</h2>
-            <form onSubmit={handleRequestSubmit}>
-              <div className={styles.applyKPIlabelGroup}>
-                <label htmlFor='KPIapplicant'>申請人</label>
-                <input
-                  id='KPIapplicant'
-                  type="text"
-                  value={currentUserId}
-                  readOnly
-                  className={styles.KPIapplicant}
-                />
-              </div>
-
-              <div className={styles.applyKPIlabelGroup}>
-                <label htmlFor='KPIguarantor'>保證人</label>
-                <select
-                  id='KPIguarantor'
-                  value={selectedUser || ''}
-                  onChange={(e) => setSelectedUser(e.target.value)}>
-
-                  <option>請選擇</option>
-                  {users.map(user => (
-                    <option key={user.id} value={user.id} className={styles.applyKpiOption}>{user.userName}</option>
-                  ))}
-
-                </select>
-              </div>
-
-              <div className={styles.applyKPIlabelGroup}>
-                <label htmlFor="chart-select">選擇圖表:</label>
-                <select id="chart-select" value={selectedChartId ?? ''} onChange={handleChartChange}>
-                  <option value="" disabled className={styles.applyKpiOption}>請選擇圖表</option>
-                  {charts.map(chart => (
-                    <option key={chart.id} value={chart.id}>
-                      {chart.name} {chart.observable ? '' : '(不可觀察)'}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className={styles.applyKPIlabelGroup}>
-                <label htmlFor='KPIstartDate'>開始日期</label>
-                <DatePicker
-                  id='KPIstartDate'
-                  selected={startDate}
-                  onChange={date => setStartDate(date)}
-                  placeholderText="請選擇開始時間"
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={15}
-                  dateFormat="yyyy-MM-dd HH:mm"
-                />
-              </div>
-
-              <div className={styles.applyKPIlabelGroup}>
-                <label htmlFor='KPIendDate'>結束日期</label>
-                <DatePicker
-                  id='KPIendDate'
-                  selected={endDate}
-                  onChange={date => setEndDate(date)}
-                  placeholderText="請選擇結束時間"
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={15}
-                  dateFormat="yyyy-MM-dd HH:mm"
-                />
-              </div>
-
-              <div className={styles.LastapplyKPIlabelGroup}>
-                <textarea
-                  className={styles.applyKPItextarea}
-                  placeholder='請填寫此次申請理由'
-                  value={requestContent}
-                  onChange={(e) => setRequestContent(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className={styles.KPIbuttonGroup}>
-                <button type="button" className={styles.cancel} onClick={handleCloseForm}>取消</button>
-                <button type="submit" className={styles.submit}>提交</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )} */}
+      {isEditing && (
+        <MultiStepForm
+          onClose={handleCloseForm}
+          exportData={async () => await fetchAllDashboards()} // 更新儀表板列表
+          currentUserId="currentUserId" // 使用當前的用戶 ID
+          onDashboardCreated={(dashboard, charts) => {setIsEditing(false); }}
+          selectedDashboard={selectedDashboard} // 傳遞選中的儀表板資料
+        />
+      )}
     </div>
   );
 };
