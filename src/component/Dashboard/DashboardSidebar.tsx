@@ -59,7 +59,7 @@ const DashboardSidebar: React.FC<{
     };
     fetchDashboards();
   }, []);
-  
+
   useEffect(() => {
     const fetchCharts = async () => {
       if (activeDashboard) {
@@ -393,13 +393,9 @@ const DashboardSidebar: React.FC<{
                   className={styles.dropdownMenu}
                 >
                   <MenuItem onClick={() => { setEditingDashboardId(dashboard.id); handleMenuClose(dashboard.id); }}>修改名稱</MenuItem>
-                  <ul>
-                    {dashboards.map(dashboard => (
-                      <li key={dashboard.id}>
-                        <MenuItem onClick={() => handleEditDashboard(Number(dashboard.id))}>設定圖表</MenuItem>
-                      </li>
-                    ))}
-                  </ul>
+                  {activeDashboard === dashboard.id && (
+                    <MenuItem onClick={() => handleEditDashboard(Number(dashboard.id))}>設定圖表</MenuItem>
+                  )}
                   <MenuItem onClick={() => { handleDeleteDashboard(dashboard.id); handleMenuClose(dashboard.id); }}>刪除</MenuItem>
                 </Menu>
               </li>
@@ -425,7 +421,7 @@ const DashboardSidebar: React.FC<{
           onClose={handleCloseForm}
           exportData={async () => await fetchAllDashboards()} // 更新儀表板列表
           currentUserId="currentUserId" // 使用當前的用戶 ID
-          onDashboardCreated={(dashboard, charts) => {setIsEditing(false); }}
+          onDashboardCreated={(dashboard, charts) => { setIsEditing(false); }}
           selectedDashboard={selectedDashboard} // 傳遞選中的儀表板資料
         />
       )}
