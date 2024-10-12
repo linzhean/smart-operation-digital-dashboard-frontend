@@ -392,11 +392,11 @@ const DashboardSidebar: React.FC<{
                   onClose={() => handleMenuClose(dashboard.id)}
                   className={styles.dropdownMenu}
                 >
-                  <MenuItem onClick={() => { setEditingDashboardId(dashboard.id); handleMenuClose(dashboard.id); }}>修改名稱</MenuItem>
+                  {/* <MenuItem onClick={() => { setEditingDashboardId(dashboard.id); handleMenuClose(dashboard.id); }}>修改名稱</MenuItem> */}
                   {activeDashboard === dashboard.id && (
-                    <MenuItem onClick={() => handleEditDashboard(Number(dashboard.id))}>設定圖表</MenuItem>
+                    <MenuItem onClick={() => handleEditDashboard(Number(dashboard.id))}>設定儀表板</MenuItem>
                   )}
-                  <MenuItem onClick={() => { handleDeleteDashboard(dashboard.id); handleMenuClose(dashboard.id); }}>刪除</MenuItem>
+                  <MenuItem onClick={() => { handleDeleteDashboard(dashboard.id); handleMenuClose(dashboard.id); }}>刪除儀表板</MenuItem>
                 </Menu>
               </li>
             ))}

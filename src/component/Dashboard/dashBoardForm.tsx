@@ -1,4 +1,3 @@
-//src\component\Dashboard\dashBoardForm.tsx
 import React, { useState, useEffect } from 'react';
 import styles from './dashBoardForm.module.css';
 import closeIcon from '../../assets/icon/X.svg';
@@ -22,12 +21,12 @@ interface MultiStepFormProps {
 interface Chart {
   id: number;
   name: string;
-  isAdded: boolean; // 添加这个字段
+  isAdded: boolean;
   observable: boolean;
   showcaseImage?: string;
 }
 
-const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, currentUserId, onDashboardCreated,selectedDashboard  }) => {
+const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, currentUserId, onDashboardCreated, selectedDashboard }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [dashboardName, setDashboardName] = useState('');
   const [dashboardDescription, setDashboardDescription] = useState('');
@@ -49,7 +48,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
     if (selectedDashboard) {
       setDashboardName(selectedDashboard.name);
       setDashboardDescription(selectedDashboard.description || '');
-      fetchAvailableCharts(Number(selectedDashboard.id)); // 根據 selectedDashboard.id 獲取可用圖表
+      fetchAvailableCharts(Number(selectedDashboard.id));
     }
   }, [selectedDashboard]);
 
@@ -66,7 +65,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
       setSelectedKPIs(initialSelectedKPIs);
     } catch (error) {
       console.error('獲取可用圖表失敗:', error);
-      alert('獲取可用圖表失敗。請稍後再試。');
+      alert('獲取可用圖表失敗。請稍後再試');
     }
   };
 
@@ -78,7 +77,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
         setCharts(chartsData);
       } catch (error) {
         console.error('Failed to fetch charts:', error);
-        alert('Failed to fetch charts. Please try again later.');
+        alert('無法取得圖表。請稍後再試');
       }
     };
     fetchCharts();
@@ -92,7 +91,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
         setUsers(userList);
       } catch (error) {
         console.error('Failed to fetch users:', error);
-        alert('Failed to fetch users. Please try again later.');
+        alert('無法取得用戶資料。請稍後再試');
       }
     };
     fetchUsers();
@@ -182,25 +181,25 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
             name: dashboardName,
             description: dashboardDescription,
           });
-  
+
           const selectedChartIds = selectedCharts.map(chart => chart.id);
           const response = await ChartService.addChartsToDashboard(Number(updatedDashboard.id), selectedChartIds);
-  
+
           await exportData();
           onDashboardCreated(updatedDashboard, selectedCharts);
           onClose();
-  
+
         } else {
           // 創建新的儀表板
           const newDashboard = await DashboardService.createDashboard({
             name: dashboardName,
             description: dashboardDescription,
           });
-  
+
           const dashboardId: number = Number(newDashboard.id);
           const selectedChartIds = selectedCharts.map(chart => chart.id);
           const response = await ChartService.addChartsToDashboard(dashboardId, selectedChartIds);
-  
+
           await exportData();
           onDashboardCreated(newDashboard, selectedCharts);
           onClose();
@@ -210,7 +209,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
         alert('操作失敗。請重試。');
       }
     }
-  };  
+  };
 
   const previousStep = () => {
     setCurrentStep((prevStep) => prevStep - 1);
@@ -252,7 +251,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
             </fieldset>
           )}
 
-          {currentStep === 1 && (
+          {/* {currentStep === 1 && (
             <fieldset>
               <h2 className={styles.fsTitle}>選擇圖表</h2>
               <h3 className={styles.fsSubtitle}>
@@ -295,6 +294,75 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                 <button type="button" className={styles.actionButton} onClick={confirmChartSelection}>下一步</button>
               </div>
             </fieldset>
+          )} */}
+
+          {currentStep === 1 && (
+            <fieldset>
+              <h2 className={styles.fsTitle}>選擇圖表</h2>
+              <h3 className={styles.fsSubtitle}>
+                選擇想顯示在此儀表板的圖表
+                <br />
+                <button type="button" className={styles.applyMore} onClick={handleApplyMore}>或是點此申請無權限圖表</button>
+              </h3>
+
+              <div className={styles.theKPIs}>
+                {Array.isArray(charts) && charts.map(chart => (
+                  <div
+                    key={chart.id}
+                    className={`${styles.checkboxWrapper} ${!chart.observable ? styles.disabled : ''} ${selectedKPIs.includes(chart.id) ? styles.selected : ''}`}
+                  >
+                    <div
+                      className={styles.LabelImgContainer}
+                      onClick={() => chart.observable && handleKpiSelection(chart.id)}
+                      style={{ cursor: chart.observable ? 'pointer' : 'default' }}
+                    >
+                      <input
+                        type="checkbox"
+                        id={`kpi-${chart.id}`}
+                        checked={selectedKPIs.includes(chart.id)}
+                        onChange={(e) => e.stopPropagation()}
+                        disabled={!chart.observable}
+                        className={styles.kpiInputs}
+                      />
+                      <label
+                        htmlFor={`kpi-${chart.id}`}
+                        className={!chart.observable ? styles.disabledLabel : ''}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!chart.observable) {
+                            alert('您沒有查看此圖表的權限，若有需要請點擊申請');
+                          }
+                        }}
+                      >
+                        {chart.name}
+                      </label>
+                      {chart.showcaseImage && (
+                        <img
+                          src={chart.showcaseImage}
+                          // alt={chart.name}
+                          alt={'示意圖缺失'}
+                          className={styles.showcaseImage}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (chart.observable) {
+                              handleKpiSelection(chart.id);
+                            } else {
+                              alert('您沒有查看此圖表的權限，若有需要請點擊申請');
+                            }
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+
+              <div className={styles.buttonGroup}>
+                <button type="button" className={styles.actionButton} onClick={previousStep}>上一步</button>
+                <button type="button" className={styles.actionButton} onClick={confirmChartSelection}>下一步</button>
+              </div>
+            </fieldset>
           )}
 
           {currentStep === 2 && (
@@ -325,7 +393,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
           <div onClick={(e) => e.stopPropagation()} className={styles.checkFormContent}>
             <h2>申請KPI圖表</h2>
             <form onSubmit={handleRequestSubmit}>
-              <div className={styles.applyKPIlabelGroup}>
+              {/* <div className={styles.applyKPIlabelGroup}>
                 <label htmlFor='KPIapplicant'>申請人</label>
                 <input
                   id='KPIapplicant'
@@ -334,33 +402,39 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                   readOnly
                   className={styles.KPIapplicant}
                 />
+              </div> */}
+
+              <div className={styles.applyKPIlabelGroup}>
+                <label htmlFor='KPIguarantor'>您的保證人</label>
+                <div className={styles.select}>
+
+                  <select
+                    id='KPIguarantor'
+                    value={selectedUser || ''}
+                    onChange={(e) => setSelectedUser(e.target.value)}>
+
+                    <option className={styles.theKpiOption}>請選擇</option>
+                    {users.map(user => (
+                      <option key={user.id} value={user.id} className={styles.applyKpiOption}>{user.userName}</option>
+                    ))}
+                  </select>
+
+                </div>
               </div>
 
               <div className={styles.applyKPIlabelGroup}>
-                <label htmlFor='KPIguarantor'>保證人</label>
-                <select
-                  id='KPIguarantor'
-                  value={selectedUser || ''}
-                  onChange={(e) => setSelectedUser(e.target.value)}>
+                <label htmlFor="chart-select">欲申請圖表</label>
+                <div className={styles.select}>
 
-                  <option>請選擇</option>
-                  {users.map(user => (
-                    <option key={user.id} value={user.id} className={styles.applyKpiOption}>{user.userName}</option>
-                  ))}
+                  <select id="chart-select" value={selectedChartId ?? ''} onChange={handleChartChange}>
+                    <option className={styles.theKpiOption}>請選擇圖表</option>                    {charts.map(chart => (
+                      <option key={chart.id} value={chart.id} className={styles.applyKpiOption}>
+                        {chart.name} {chart.observable ? '' : '(不可觀察)'}
+                      </option>
+                    ))}
+                  </select>
 
-                </select>
-              </div>
-
-              <div className={styles.applyKPIlabelGroup}>
-                <label htmlFor="chart-select">選擇圖表:</label>
-                <select id="chart-select" value={selectedChartId ?? ''} onChange={handleChartChange}>
-                  <option value="" disabled className={styles.applyKpiOption}>請選擇圖表</option>
-                  {charts.map(chart => (
-                    <option key={chart.id} value={chart.id}>
-                      {chart.name} {chart.observable ? '' : '(不可觀察)'}
-                    </option>
-                  ))}
-                </select>
+                </div>
               </div>
 
               <div className={styles.applyKPIlabelGroup}>

@@ -1,6 +1,6 @@
 //src\Main.tsx
-import React,{ useEffect } from 'react';
-import { Routes, Route, Navigate ,useLocation, useNavigate} from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Pdata from './pages/Pdata/PersonalData';
 import Mail from './pages/Mail/Mail';

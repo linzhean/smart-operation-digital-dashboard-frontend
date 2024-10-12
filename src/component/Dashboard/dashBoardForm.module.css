@@ -470,7 +470,7 @@
 }
 
 .showcaseImage {
-  width: 50px;
+  width: 100px;
   height: auto;
   object-fit: contain;
   margin-top: 10px;
