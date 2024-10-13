@@ -259,7 +259,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         {children}
         {/* 交辦的表單 */}
         {isModalOpen && canAssign && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}
-        {/* 進階分析 */}
       </div >
     </>
   );

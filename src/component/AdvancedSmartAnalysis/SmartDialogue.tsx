@@ -1,3 +1,4 @@
+//src\component\AdvancedSmartAnalysis\SmartDialogue.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './SmartDialogue.module.css';
 import send from '../../assets/icon/send.png';
@@ -28,10 +29,11 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
   };
 
   useEffect(() => {
+    console.log('Messages updated:', messages);
     if (messages.length > 0) {
       scrollToBottom();
     }
-  }, [messages]);
+  }, [messages]);  
 
   useEffect(() => {
     if (aiSuggestion) {

@@ -292,31 +292,22 @@ export function useChartWithDropdown(
       alert('Dashboard ID is undefined.');
       return;
     }
-
+  
     setLoading(true); // Set loading to true when operation starts
     try {
       const dashboardChartsResponse = await ChartService.getDashboardCharts(dashboardId);
-
+  
       if (dashboardChartsResponse.result && Array.isArray(dashboardChartsResponse.data)) {
-        const firstChart = dashboardChartsResponse.data[0];
-
-        if (firstChart && firstChart.id) {
-          const aiResponse = await ChartService.getAIAnalysis(firstChart.id, dashboardId);
-
-          if (aiResponse.result) {
-            // Extract the suggestion from the data object
-            const suggestionText = aiResponse.data.suggestion;
-
-            // Optional: Attempt to handle or sanitize suggestionText if it contains unprintable characters
-            const sanitizedSuggestion = sanitizeText(suggestionText);
-
-            setAiSuggestion(sanitizedSuggestion); // Save the suggestion text to state
-            setShowAIAnalysisModal(true); // Show the modal
-          } else {
-            alert(`Failed to get AI analysis: ${aiResponse.message}`);
-          }
+        // 使用传入的 chartId 进行分析
+        const aiResponse = await ChartService.getAIAnalysis(chartId, dashboardId);
+  
+        if (aiResponse.result) {
+          const suggestionText = aiResponse.data.suggestion;
+          const sanitizedSuggestion = sanitizeText(suggestionText);
+          setAiSuggestion(sanitizedSuggestion); // Save the suggestion text to state
+          setShowAIAnalysisModal(true); // Show the modal
         } else {
-          alert('No charts found in the dashboard.');
+          alert(`Failed to get AI analysis: ${aiResponse.message}`);
         }
       } else {
         console.error('Failed to fetch dashboard charts:', dashboardChartsResponse.message);
@@ -328,7 +319,7 @@ export function useChartWithDropdown(
     } finally {
       setLoading(false); // Set loading to false after operation
     }
-  };
+  };  
 
   const sanitizeText = (text: string): string => {
     return text.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
