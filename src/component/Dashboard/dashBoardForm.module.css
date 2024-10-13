@@ -191,7 +191,7 @@
 .theKPIs {
   overflow: auto;
   overflow-x: hidden;
-  max-height: 225px;
+  max-height: 325px;
   display: flex;
   align-items: center;
   flex-direction: column;
