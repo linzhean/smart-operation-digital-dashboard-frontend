@@ -270,6 +270,11 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                 placeholder="請輸入儀表板名稱"
                 value={dashboardName}
                 onChange={(e) => setDashboardName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                  }
+                }}
                 required
                 autoComplete='off'
               />
