@@ -236,13 +236,8 @@ const AdvancedSmartAnalysis: React.FC = () => {
       ) : (
         <>
           <SmartHTML chartHTML={chartHTML} />
-          {chartId && (
-            <SmartDialogue
-              aiSuggestion={aiSuggestion}
-              chartId={Number(chartId)}
-              isLoading={isLoading}
-            />
-          )}
+          {/* {chartId && <SmartDialogue aiSuggestion={aiSuggestion} chartId={Number(chartId)} isLoading={isLoading} />} */}
+          <SmartDialogue aiSuggestion={aiSuggestion} chartId={Number(chartId)} isLoading={isLoading} />
         </>
       )}
     </div>

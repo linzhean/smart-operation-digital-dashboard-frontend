@@ -114,6 +114,27 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     }
   };
 
+  // 進階分析 
+  const advancedAnalysis = (
+    <>
+      <div className={styles.modalOverlay} onClick={() => setIsAdvancedAnalysisModalOpen(false)}></div>
+      <div className={styles.modal}>
+        <div className={styles.advancedAnalysisForm}>
+          <h2>進階分析</h2>
+          {chartHTML ? (
+            <div
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(chartHTML) }}
+            />
+          ) : (
+            <div className={`loadingMsg`}></div>
+          )}
+          <div className={styles.buttonGroup}>
+            <button onClick={() => setIsAdvancedAnalysisModalOpen(false)} className={styles.cancel}>關閉</button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
   // 交辦事項
   const AssignForm = (
     <>
@@ -259,6 +280,8 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
         {children}
         {/* 交辦的表單 */}
         {isModalOpen && canAssign && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}
+        {/* 進階分析 */}
+        {isAdvancedAnalysisModalOpen && (interactiveCharts.length > 0) && ReactDOM.createPortal(advancedAnalysis, document.getElementById('portal-root')!)}
       </div >
     </>
   );

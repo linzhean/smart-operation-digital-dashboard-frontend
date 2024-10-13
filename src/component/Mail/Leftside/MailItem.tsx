@@ -39,14 +39,18 @@ const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelet
 
   const handleCompleteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
+
     if (email.status === '已完成') {
       alert('此信件已經是已完成狀態');
       return;
     }
+
     const confirmUpdate = window.confirm('確定要將此郵件標記為已完成嗎？');
+
     if (!confirmUpdate) {
       return;
     }
+
     try {
       const statusMapping: Record<string, number> = {
         "交辦": 0,
@@ -54,7 +58,9 @@ const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelet
         "待處理": 2,
         "已完成": 3,
       };
+
       const newStatus = statusMapping['已完成'];
+
       if (email.status !== '已完成') {
         await updateEmailStatus(email.id, newStatus);
         alert('狀態已更新為已完成');
@@ -67,6 +73,7 @@ const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelet
     }
   };
 
+
   const refreshEmailStatus = async (id: number) => {
     const emailDetails = await getEmailDetails(id);
     return emailDetails.status;
@@ -74,11 +81,14 @@ const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelet
 
   const handleDeleteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
+
     const currentStatus = await refreshEmailStatus(email.id);
+
     if (currentStatus !== '已完成') {
       alert('郵件非已完成狀態，無法刪除');
       return;
     }
+
     if (window.confirm('確定要刪除此郵件嗎？')) {
       try {
         await deleteEmail(email.id);
@@ -91,57 +101,86 @@ const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelet
       }
     }
   };
-
-  const itemClasses = `${styles.eachMailBriefSection} ${isSelected ? styles.selected : ''}`;
-  const buttonClasses = `${styles.button} ${isSelected ? styles.selectedButton : ''}`;
+  console.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!` + email.status)
+  const theStatusStyle = email.status === '待處理' ? styles.statusPending : styles.statusComplete;
 
   return (
-    <div className={itemClasses} onClick={onClick}>
-      <img src={KPI} className={styles.KPI} alt="KPI" />
-      <div className={styles.mailHeader}>
-        <div className={styles.topArea}>
-          <h6 className={styles.assignor}>{email.publisher}</h6>
-          <h6 className={styles.time}>
-            {(() => {
-              const date = new Date(email.emailSendTime);
-              const currentYear = new Date().getFullYear();
-              const formattedDate = date.toLocaleString('zh-TW', {
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false,
-              }).replace(/\//g, '/').replace(/,/g, '');
-              if (date.getFullYear() !== currentYear) {
-                return `${date.getFullYear()}/${formattedDate}`;
-              }
-              return formattedDate;
-            })()}
-          </h6>
-        </div>
-        <div className={styles.bottomArea}>
-          <div className={styles.emailTitle}>{email.name}</div>
-          <div className={styles.buttonGroup}>
-            <WhiteTooltip title="將此任務標記為已完成" enterDelay={700} leaveDelay={100}>
-              <button
-                className={buttonClasses}
-                onClick={handleCompleteClick}
-              >
-                <img src={finishIcon} className={styles.completeIcon} alt='完成' />
-              </button>
-            </WhiteTooltip>
-            <WhiteTooltip title="刪除已完成的郵件" enterDelay={700} leaveDelay={100}>
-              <button
-                className={buttonClasses}
-                onClick={handleDeleteClick}
-              >
-                <img src={trash} className={styles.deleteIcon} alt="刪除" />
-              </button>
-            </WhiteTooltip>
+    <>
+
+      {/* 整個區域 */}
+      < div className={`${styles.eachMailBriefSection} ${isSelected ? styles.eachMailBriefSectionSelected : ''}`} onClick={onClick} >
+
+        {/* 示意圖 */}
+        < img src={KPI} className={styles.KPI} alt="KPI" />
+
+        {/* 信件標頭 */}
+        < div className={styles.mailHeader} >
+
+          <div className={styles.topArea}>
+            <h6 className={styles.assignor}>{email.publisher}</h6>
+            <h6 className={styles.time}>
+              {(() => {
+                const date = new Date(email.emailSendTime);
+                const currentYear = new Date().getFullYear();
+                const formattedDate = date.toLocaleString('zh-TW', {
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+                }).replace(/\//g, '/').replace(/,/g, '');
+
+                if (date.getFullYear() !== currentYear) {
+                  return `${date.getFullYear()}/${formattedDate}`;
+                }
+
+                return formattedDate;
+              })()}
+            </h6>
           </div>
-        </div>
-      </div>
-    </div>
+
+          {/* 信件狀態 */}
+          <div className={styles.centerArea}>
+            {/* <div className={styles.eachEmailStatus}>{email.status}</div> */}
+            <div className={`${styles.eachEmailStatus} ${theStatusStyle}`}>{email.status}</div>
+          </div>
+
+          <div className={styles.bottomArea} >
+            {/* 標題 */}
+            <div className={styles.emailTitle}>{email.name}</div>
+            {/* 按鈕組 */}
+            <div className={`${styles.buttonGroup} ${isSelected ? styles.buttonGroupSelected : ''}`}>
+
+              {/* 完成按鈕 */}
+              <WhiteTooltip title="將此任務標記為已完成" enterDelay={700} leaveDelay={100} >
+                <button
+                  className={styles.completeButton}
+                  onClick={handleCompleteClick}
+                >
+                  <img src={finishIcon} className={styles.completeIcon} alt='完成' />
+                </button>
+              </WhiteTooltip>
+
+              {/* 刪除按鈕 */}
+              <WhiteTooltip title="刪除已完成的郵件" enterDelay={700} leaveDelay={100} >
+                <button
+                  className={styles.deleteButton}
+                  onClick={handleDeleteClick}
+                >
+                  <img src={trash} className={styles.deleteIcon} alt="刪除" />
+                </button>
+              </WhiteTooltip>
+
+            </div>
+
+          </div>
+        </div >
+      </div >
+
+    </>
+
+
+
   );
 };
 

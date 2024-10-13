@@ -12,6 +12,7 @@
   height: 100%;
   width: auto;
   margin-right: 5px;
+  margin-left: 12px;
 }
 
 .mailHeader {
@@ -39,6 +40,28 @@
 .time {
   font-size: 1rem;
   white-space: nowrap;
+}
+
+.centerArea {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.eachEmailStatus {
+  padding: 3px 10px;
+  color: black;
+  font-weight: 600;
+  border-radius: 15px;
+  width: fit-content;
+}
+
+.statusPending {
+  background-color: #FF4C4C;
+}
+
+.statusComplete {
+  background-color: #1E90FF;
 }
 
 .bottomArea {
@@ -86,6 +109,11 @@
 .deleteIcon {
   width: 25px;
   height: 25px;
+}
+
+.eachMailBriefSectionSelected,
+.buttonGroupSelected {
+  background-color: #272727;
 }
 
 /* 響應式 */
@@ -169,40 +197,4 @@
     height: 20px;
   }
 
-}
-
-.eachMailBriefSection {
-  height: 130px;
-  width: 100%;
-  overflow: hidden;
-  display: flex;
-  border-bottom: 2px solid #acacbe91;
-  padding-bottom: 5px;
-  padding-top: 5px;
-  cursor: pointer;
-}
-
-
-.button {
-  background-color: rgba(0, 0, 0, 0.3);
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  padding: 5px;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: background-color 0.3s;
-}
-
-.selectedButton {
-  background-color: #e0f7fa; /* 當 item 被選取時按鈕的反白顏色 */
-}
-
-.completeIcon,
-.deleteIcon {
-  width: 25px;
-  height: 25px;
 }

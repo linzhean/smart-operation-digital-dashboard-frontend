@@ -26,7 +26,6 @@ const Main: React.FC = () => {
     localStorage.setItem('lastVisitedPath', location.pathname);
   }, [location]);
 
-  // 检查 localStorage 中是否有保存的路径，并重定向到该路径
   useEffect(() => {
     const savedPath = localStorage.getItem('lastVisitedPath');
     if (savedPath) {
@@ -46,7 +45,7 @@ const Main: React.FC = () => {
       <Routes>
         <Route path="/advanced-analysis" element={<AdvancedSmartAnalysis />} />
         <Route element={<NavbarRoute />}>
-          <Route path="/home" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><Home /></PrivateRoute>} />
+          {/* <Route path="/home" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><Home /></PrivateRoute>} />
           <Route path="/profile" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><Pdata /></PrivateRoute>} />
           <Route path="/GroupManagement/*" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><GroupManagement /></PrivateRoute>} />
           <Route path="/mail" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><Mail /></PrivateRoute>} />
@@ -54,9 +53,8 @@ const Main: React.FC = () => {
           <Route path="/AssignExportControl/*" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><AssignExportControl /></PrivateRoute>} />
           <Route path="/UserControl/*" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><UserControl /></PrivateRoute>} />
           <Route path="/ChartAdmin" element={<PrivateRoute allowedRoles={['USER', 'DEVELOPER', 'ADMIN']}><ChartAdmin /></PrivateRoute>} />
-          <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} />
-
-          {/* <Route path="/home" element={<PrivateRoute allowedRoles={['USER', 'ADMIN', 'DEVELOPER']}><Home /></PrivateRoute>} />
+          <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} /> */}
+          <Route path="/home" element={<PrivateRoute allowedRoles={['USER', 'ADMIN', 'DEVELOPER']}><Home /></PrivateRoute>} />
           <Route path="/profile/*" element={<PrivateRoute allowedRoles={['USER', 'ADMIN', 'DEVELOPER']}><Pdata /></PrivateRoute>} />
           <Route path="/mail" element={<PrivateRoute allowedRoles={['USER', 'ADMIN', 'DEVELOPER']}><Mail /></PrivateRoute>} />
           <Route path="/GroupManagement/*" element={<PrivateRoute allowedRoles={['ADMIN', 'DEVELOPER']}><GroupManagement /></PrivateRoute>} />
@@ -64,7 +62,7 @@ const Main: React.FC = () => {
           <Route path="/AssignExportControl/*" element={<PrivateRoute allowedRoles={['ADMIN', 'DEVELOPER']}><AssignExportControl /></PrivateRoute>} />
           <Route path="/UserControl/*" element={<PrivateRoute allowedRoles={['ADMIN', 'DEVELOPER']}><UserControl /></PrivateRoute>} />
           <Route path="/ChartAdmin" element={<PrivateRoute allowedRoles={['DEVELOPER']}><ChartAdmin /></PrivateRoute>} />
-          <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} /> */}
+          <Route path="*" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} />
 
           {/* <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Pdata />} />
