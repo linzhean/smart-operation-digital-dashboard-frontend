@@ -42,7 +42,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [selectedChartForApplication, setSelectedChartForApplication] = useState<number | null>(null);
   const [selectedChartId, setSelectedChartId] = useState<number | null>(null);
-
+  const [createdDashboardId, setCreatedDashboardId] = useState<number | null>(null);
 
   useEffect(() => {
     if (selectedDashboard) {
@@ -56,9 +56,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
     try {
       const response = await ChartService.getAvailableCharts(dashboardId);
       const chartsData: Chart[] = Array.isArray(response.data) ? response.data : [];
-
       setCharts(chartsData);
-
       const initialSelectedKPIs = chartsData
         .filter((chart: Chart) => chart.isAdded)
         .map((chart: Chart) => chart.id);
@@ -101,12 +99,6 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
     if (charts.find(chart => chart.id === kpiId)?.observable) {
       setSelectedKPIs(prev => prev.includes(kpiId) ? prev.filter(id => id !== kpiId) : [...prev, kpiId]);
     }
-  };
-
-  const confirmChartSelection = () => {
-    const selectedChartsData = charts.filter(chart => selectedKPIs.includes(chart.id));
-    setSelectedCharts(selectedChartsData);
-    setCurrentStep(2);
   };
 
   const handleRequestKpi = (chartId: number) => {
@@ -174,42 +166,83 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
   const handleSubmit = async () => {
     if (dashboardName) {
       try {
-        // 如果 selectedDashboard 存在，表示是更新操作，否則是創建新儀表板
+        let dashboardId: any;
+  
         if (selectedDashboard) {
-          // 進行更新儀表板的操作
-          const updatedDashboard = await DashboardService.updateDashboard(selectedDashboard.id, {
+          const id = Number(selectedDashboard.id);
+          if (!id || isNaN(id)) {
+            alert('無效的儀表板 ID');
+            return;
+          }
+          dashboardId = id;
+  
+          // Update dashboard
+          await DashboardService.updateDashboard(String(dashboardId), {
             name: dashboardName,
             description: dashboardDescription,
           });
-
-          const selectedChartIds = selectedCharts.map(chart => chart.id);
-          const response = await ChartService.addChartsToDashboard(Number(updatedDashboard.id), selectedChartIds);
-
-          await exportData();
-          onDashboardCreated(updatedDashboard, selectedCharts);
-          onClose();
-
+  
+          setCreatedDashboardId(dashboardId);
+          alert('儀表板更新成功');
+          setCurrentStep(2);
         } else {
-          // 創建新的儀表板
+          // Create new dashboard
           const newDashboard = await DashboardService.createDashboard({
             name: dashboardName,
             description: dashboardDescription,
           });
-
-          const dashboardId: number = Number(newDashboard.id);
-          const selectedChartIds = selectedCharts.map(chart => chart.id);
-          const response = await ChartService.addChartsToDashboard(dashboardId, selectedChartIds);
-
-          await exportData();
-          onDashboardCreated(newDashboard, selectedCharts);
-          onClose();
+          console.log('新建儀表板回應:', newDashboard);
+          
+          // Correctly access dashboardId from the response
+          const createdId = newDashboard?.dashboardId;  
+          if (createdId) {
+            setCreatedDashboardId(createdId);
+            alert('儀表板創建成功');
+            setCurrentStep(2);
+          } else {
+            throw new Error('dashboardId missing from the response');
+          }
         }
-      } catch (error) {
-        console.error('Failed to create or update dashboard:', error);
-        alert('操作失敗。請重試。');
+      } catch (error:any) {
+        console.error('儀表板創建/更新失敗，錯誤內容:', error.response?.data || error.message);
+        alert('儀表板創建或更新失敗。請重試。');
       }
+    } else {
+      alert('請輸入儀表板名稱。');
     }
-  };
+  };  
+
+ const confirmChartSelection = async () => {
+  if (!createdDashboardId || isNaN(createdDashboardId)) {
+    alert('無效的儀表板 ID');
+    return;
+  }
+
+  const selectedChartsData = charts.filter(chart => selectedKPIs.includes(chart.id));
+  setSelectedCharts(selectedChartsData);
+
+  try {
+    await ChartService.addChartsToDashboard(Number(createdDashboardId), selectedKPIs);
+    alert('圖表已成功新增到儀表板');
+
+    // 在這裡關閉表單並重整畫面
+    onClose(); // 關閉表單
+    window.location.reload(); // 重整畫面
+  } catch (error) {
+    console.error('新增圖表失敗:', error);
+    alert('新增圖表失敗。請重試。');
+  }
+};
+
+const handleNext = async () => {
+  if (currentStep === 1) {
+    // Save dashboard details on step 1 (create/update)
+    await handleSubmit();
+  } else if (currentStep === 0) {
+    // Proceed to step 1
+    setCurrentStep(1);
+  }
+};
 
   const previousStep = () => {
     setCurrentStep((prevStep) => prevStep - 1);
@@ -231,8 +264,9 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
             >
               <li className={currentStep >= 0 ? styles.active : ''}>設定名稱</li>
             </Tooltip>
-            <li className={currentStep >= 1 ? styles.active : ''}>選擇圖表</li>
-            <li className={currentStep >= 2 ? styles.active : ''}>說明文字</li>
+            <li className={currentStep >= 1 ? styles.active : ''}>說明文字</li>
+            <li className={currentStep >= 2 ? styles.active : ''}>選擇圖表</li>
+
           </ul>
 
           {currentStep === 0 && (
@@ -247,56 +281,11 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                 required
                 autoComplete='off'
               />
-              <button className={`${styles.actionButton} ${styles.next} ${styles.firstNext}`} type="button" onClick={() => setCurrentStep(1)}>下一步</button>
+              <button className={`${styles.actionButton} ${styles.next} ${styles.firstNext}`} type="button" onClick={handleNext}>下一步</button>
             </fieldset>
           )}
 
-          {/* {currentStep === 1 && (
-            <fieldset>
-              <h2 className={styles.fsTitle}>選擇圖表</h2>
-              <h3 className={styles.fsSubtitle}>
-                選擇想顯示在此儀表板的圖表
-                <br />
-                <button type="button" className={styles.applyMore} onClick={handleApplyMore}>或是點此申請無權限圖表</button>
-              </h3>
-              <div className={styles.theKPIs}>
-                {Array.isArray(charts) && charts.map(chart => (
-                  <div
-                    key={chart.id}
-                    className={`${styles.checkboxWrapper} ${!chart.observable ? styles.disabled : ''} ${selectedKPIs.includes(chart.id) ? styles.selected : ''}`}
-                  >
-                    <div className={styles.LabelImgContainer}>
-                      <input
-                        type="checkbox"
-                        id={`kpi-${chart.id}`}
-                        checked={selectedKPIs.includes(chart.id)}
-                        onChange={() => handleKpiSelection(chart.id)}
-                        disabled={!chart.observable}
-                        className={styles.kpiInputs}
-                      />
-                      <label htmlFor={`kpi-${chart.id}`} className={!chart.observable ? styles.disabledLabel : ''}>
-                        {chart.name}
-                      </label>
-                      {chart.showcaseImage && (
-                        <img
-                          src={chart.showcaseImage}
-                          alt={chart.name}
-                          className={styles.showcaseImage}
-                        />
-                      )}
-                    </div>
-                  </div>
-                ))}
-
-              </div>
-              <div className={styles.buttonGroup}>
-                <button type="button" className={styles.actionButton} onClick={previousStep}>上一步</button>
-                <button type="button" className={styles.actionButton} onClick={confirmChartSelection}>下一步</button>
-              </div>
-            </fieldset>
-          )} */}
-
-          {currentStep === 1 && (
+          {currentStep === 2 && (
             <fieldset>
               <h2 className={styles.fsTitle}>選擇圖表</h2>
               <h3 className={styles.fsSubtitle}>
@@ -363,9 +352,9 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
                 <button type="button" className={styles.actionButton} onClick={confirmChartSelection}>下一步</button>
               </div>
             </fieldset>
-          )}
+          )} 
 
-          {currentStep === 2 && (
+          {currentStep === 1 && (
             <fieldset>
               <h2 className={styles.fsTitle}>填寫儀表板說明文字</h2>
               <h3 className={styles.fsSubtitle}>非必填</h3>
@@ -379,7 +368,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
               />
               <div className={styles.buttonGroup}>
                 <button type="button" className={styles.actionButton} onClick={previousStep}>上一步</button>
-                <button type="button" className={`${styles.actionButton} ${styles.finish}`} onClick={handleSubmit}>完成</button>
+                <button type="button" className={styles.actionButton} onClick={handleNext}>下一步</button>
               </div>
             </fieldset>
           )}

@@ -101,9 +101,8 @@ const DashboardSidebar: React.FC<{
     if (dashboardToEdit) {
       setSelectedDashboard(dashboardToEdit);
       setIsEditing(true);
+      setIsFormVisible(true);
     }
-    setSelectedDashboardId(dashboardId);
-    setIsFormVisible(true);
   };
 
   const handleRequestKpi = (chartId: number) => {
