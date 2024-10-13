@@ -13,7 +13,6 @@ const AwaitingApproval: React.FC = () => {
         <img src={LOGO} className={styles.LOGO} />
         <br />
         <span className={styles.theBig}>等待管理員審核</span>
-        <br />
         <span className={styles.theSmall}>您的資料已經提交，請等待管理員審核。</span>
       </div>
     </div>

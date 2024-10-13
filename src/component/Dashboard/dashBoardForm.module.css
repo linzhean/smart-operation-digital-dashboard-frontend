@@ -473,8 +473,9 @@
   width: 100px;
   height: auto;
   object-fit: contain;
-  margin-top: 10px;
   margin-bottom: 10px;
+  background-color: white;
+  padding: 10px;
 }
 
 
