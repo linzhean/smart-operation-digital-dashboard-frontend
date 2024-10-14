@@ -13,7 +13,6 @@
   border-radius: 10px;
 }
 
-/* 右側上方操作按鈕 addButton 新增成員 + 新增圖表 / deleteGroupButton 刪除群組  */
 .addButton {
   font-size: 1rem !important;
   color: #CCCCCC !important;
@@ -51,7 +50,6 @@
   background-color: #c9302c !important;
 }
 
-/* 表格樣式 */
 .theTable table {
   width: 100%;
   border-collapse: collapse;
@@ -77,7 +75,6 @@
   background-color: #444;
 }
 
-/* 左上角導航按鈕 */
 .filterButton {
   display: flex;
   width: 100%;
@@ -148,7 +145,6 @@
   background: #1E90FF !important;
 }
 
-/* 移除按鈕(移除成員及移除表格) */
 .removeButton {
   width: 65px !important;
   height: 35px !important;
@@ -169,7 +165,6 @@
   font-size: 1.1rem !important;
 }
 
-/* 操作按鈕的 */
 @media (max-width: 490px) {
 
   .addButton,
@@ -188,7 +183,6 @@
   }
 }
 
-/* 打開按鈕 */
 .dropdownButton {
   position: absolute !important;
   top: -65px;
@@ -199,12 +193,10 @@
   border-radius: 50px;
 }
 
-/* 打開後overlay樣式 */
 .dropdownMenu {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-/* 更多操作 下拉表單按鈕 */
 .moreIcon {
   width: 45px;
   height: 45px;
@@ -216,9 +208,8 @@
   height: 48px;
 }
 
-/* 字體大小設置 */
-
 @media (max-width: 490px) {
+
   .theList,
   .filterButton button,
   .addButton,
@@ -226,10 +217,10 @@
   .removeButton {
     font-size: 0.8rem !important;
   }
+
   .removeButton {
     height: 15px !important;
     transition: width 0.3s, height 0.3s !important;
     padding: 13px !important;
   }
-
 }

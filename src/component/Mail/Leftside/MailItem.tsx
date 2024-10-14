@@ -101,7 +101,6 @@ const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelet
       }
     }
   };
-  console.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!` + email.status)
   const theStatusStyle = email.status === '待處理' ? styles.statusPending : styles.statusComplete;
 
   return (
@@ -141,7 +140,6 @@ const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelet
 
           {/* 信件狀態 */}
           <div className={styles.centerArea}>
-            {/* <div className={styles.eachEmailStatus}>{email.status}</div> */}
             <div className={`${styles.eachEmailStatus} ${theStatusStyle}`}>{email.status}</div>
           </div>
 

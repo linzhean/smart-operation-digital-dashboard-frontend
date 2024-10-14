@@ -15,7 +15,6 @@ const AssignExportControl: React.FC = () => {
     }
   }, [location.pathname, navigate]);
 
-  // 按鈕點擊事件
   const handleButtonClick = (buttonId: string) => {
     setActiveButton(buttonId);
     if (buttonId === 'ExportPermission') {

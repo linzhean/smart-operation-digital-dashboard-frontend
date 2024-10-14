@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../InterimKPISidebar/InterimKPISidebar';
+import Sidebar from './InterimKPISidebar';
 import styles from './InterimKPIList.module.css';
 import { ApplicationData } from '../../services/types/userManagement';
 import { getApplications, updateApplication, deleteApplication, closeApplication } from '../../services/application';
@@ -36,18 +36,17 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
         response.data.forEach(app => {
           console.log('Application:', app);
           if (app.groupId === undefined) {
-            console.warn('groupId 在申请中缺失:', app);
-            // 根据需要处理缺失的 groupId，例如设置默认值或显示消息
+            console.warn('groupId 在申請中缺失:', app);
           }
         });
         setApplications(response.data);
       } else {
-        console.error('API 响应格式异常:', response);
-        alert(response.message || '获取申请失败');
+        console.error('API 響應格式異常:', response);
+        alert(response.message || '獲取申請失敗');
       }
     } catch (error) {
-      console.error('获取申请时出错:', error);
-      alert('获取申请失败');
+      console.error('獲取申請時出錯:', error);
+      alert('獲取申請失敗');
     }
   };
 
@@ -64,21 +63,21 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
 
   const handleApprove = async (id: number | undefined) => {
     if (id === undefined) {
-      console.error('id 未定义');
+      console.error('id 尚未定義');
       alert('id 缺失');
       return;
     }
     try {
       const response = await updateApplication(id, { applyStatus: 1 });
       if (response.result) {
-        alert('申请已批准');
+        alert('申請已批准');
         fetchApplications();
       } else {
-        alert(response.message || '批准申请失败');
+        alert(response.message || '批准申請失敗');
       }
     } catch (error) {
-      console.error('批准错误:', error);
-      alert('批准申请失败');
+      console.error('批准錯誤:', error);
+      alert('批准申請失敗');
     }
   };
 
@@ -86,7 +85,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
   const handleDelete = async (id: number) => {
     try {
       const response = await deleteApplication(id);
-      console.log('Delete response:', response); // 输出响应
+      console.log('Delete response:', response);
       if (response.result) {
         alert('申請已刪除');
         fetchApplications();
@@ -94,7 +93,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
         alert(response.message || '刪除申請失敗');
       }
     } catch (error) {
-      console.error('Delete error:', error); // 输出错误信息
+      console.error('Delete error:', error);
       alert('刪除申請失敗');
     }
   };
@@ -102,7 +101,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
   const handleClose = async (id: number) => {
     try {
       const response = await closeApplication(id);
-      console.log('Close response:', response); // 输出响应
+      console.log('Close response:', response);
       if (response.result) {
         alert('申請已關閉');
         fetchApplications();
@@ -110,7 +109,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
         alert(response.message || '關閉申請失敗');
       }
     } catch (error) {
-      console.error('Close error:', error); // 输出错误信息
+      console.error('Close error:', error);
       alert('關閉申請失敗');
     }
   };
@@ -229,7 +228,6 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                       <textarea id="content" name="content" value={formData.content} className={styles.theTextarea} />
                       <div className={styles.buttonContainer}>
                         <button type="button" onClick={handleCloseForm} className={styles.cancel}>關閉</button>
-                        {/* <button type="button" onClick={handleCloseForm} className={styles.submit} disabled>繳交</button> */}
                       </div>
                     </form>
                   </div>

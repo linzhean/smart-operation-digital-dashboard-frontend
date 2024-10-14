@@ -15,8 +15,6 @@ const AwaitingApproval: React.FC = () => {
         <br />
         <span className={styles.theBig}>等待管理員審核</span>
         <span className={styles.theSmall}>您的資料已經提交，請等待管理員審核。</span>
-        {/* <span className={styles.theBig}>智慧營運數位儀表板</span>
-        <span className={styles.theSmall}>神秘數智揭露未來</span> */}
       </div>
     </div>
   );

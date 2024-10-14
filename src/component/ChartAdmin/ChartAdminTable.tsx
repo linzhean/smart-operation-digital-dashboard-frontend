@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ChartAdminTable.module.css';
-// import NewChartForm from './newChartForm';
-import ViewChartForm from './ViewChartForm';
 import { Snackbar, Button, Alert, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -52,7 +50,6 @@ const IOSSwitch = styled(Switch)(({ theme }) => ({
       duration: 500,
     }),
   },
-  // 響應式的調整
   '@media (max-width: 480px)': {
     width: 50,
     height: 30,
@@ -63,7 +60,6 @@ const IOSSwitch = styled(Switch)(({ theme }) => ({
     '& .MuiSwitch-track': {
       borderRadius: 30 / 2,
     },
-    // 圓點點的位置!!!!
     '& .MuiSwitch-switchBase': {
       '&.Mui-checked': {
         transform: 'translateX(19px)',
@@ -71,7 +67,6 @@ const IOSSwitch = styled(Switch)(({ theme }) => ({
     },
   },
 }));
-
 
 const ChartAdminTable: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -94,14 +89,14 @@ const ChartAdminTable: React.FC = () => {
   };
 
   const fetchCharts = async (available: boolean | null) => {
-    const actualAvailable = available !== null ? available : true; // Handle null by providing a default value
+    const actualAvailable = available !== null ? available : true; 
     try {
-      const response = await ChartService.getCharts(actualAvailable); // Pass the actual boolean value
+      const response = await ChartService.getCharts(actualAvailable); 
       const chartsData = response.data;
 
       if (Array.isArray(chartsData)) {
         const filteredCharts = chartsData.filter(chart => {
-          if (selectedStatus === '全部') return true; // No filtering, show all
+          if (selectedStatus === '全部') return true;
           if (selectedStatus === '啟用中') return chart.available === true;
           if (selectedStatus === '停用中') return chart.available === false;
           return true;
@@ -168,26 +163,6 @@ const ChartAdminTable: React.FC = () => {
       }
     }
   };
-
-  // const handleViewChart = async (chartName: string, chartCodeFile: string, chartImage: string, showcaseImage: string) => {
-  //   try {
-  //     const availableCharts = await ChartService.getAvailableCharts();
-  //     const selectedChart = availableCharts.find((chart: { name: string; }) => chart.name === chartName);
-
-  //     if (selectedChart) {
-  //       const showcaseImage = selectedChart.showcaseImage;
-  //       setViewFormData({ chartName, chartCodeFile, chartImage, showcaseImage });
-  //       setIsViewFormOpen(true);
-  //     } else {
-  //       alert('未找到示意圖');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching chart data:', error);
-  //     alert('获取图表信息失败');
-  //   }
-  // };
-
-  const handleCloseViewForm = () => setIsViewFormOpen(false);
 
   const handleSnackbarClose = () => setSnackbarOpen(false);
 

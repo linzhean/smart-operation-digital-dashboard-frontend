@@ -1,4 +1,3 @@
-//src\component\GroupManagement\GroupManagementSideBar.tsx
 import React, { useEffect, useState, useCallback } from 'react';
 import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './GroupManagementSideBar.module.css';
@@ -43,11 +42,11 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
   const fetchGroupsData = useCallback(async () => {
     try {
       const fetchedGroups = await fetchGroups();
-      setGroups(fetchedGroups); // 更新组数据
+      setGroups(fetchedGroups);
     } catch (error) {
       console.error('獲取群組訊息失敗:', error);
     }
-  }, []);  
+  }, []);
 
   const handleGroupClick = (groupId: number) => {
     setActiveGroup(groupId);

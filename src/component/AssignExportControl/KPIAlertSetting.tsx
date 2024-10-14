@@ -121,21 +121,19 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
     setUpperLimit(value[1]);
   };
 
-const handleConfirm = () => {
-  const lower = parseFloat(value[0].toString());
-  const upper = parseFloat(value[1].toString());
+  const handleConfirm = () => {
+    const lower = parseFloat(value[0].toString());
+    const upper = parseFloat(value[1].toString());
 
-  setLowerLimit(lower);
-  setUpperLimit(upper);
+    setLowerLimit(lower);
+    setUpperLimit(upper);
 
-  // 使用选择的处理者和稽核者的 userId
-  const processorId = selectedProcessor ? selectedProcessor.userId : defaultProcessor; // defaultProcessor 应该是 userId
-  const auditorId = selectedAuditor ? selectedAuditor.userId : defaultAuditor; // defaultAuditor 应该是 userId
+    const processorId = selectedProcessor ? selectedProcessor.userId : defaultProcessor;
+    const auditorId = selectedAuditor ? selectedAuditor.userId : defaultAuditor;
 
-  // 调用 onSubmit 并传递所有必要参数
-  onSubmit(lower, upper, processorId, auditorId, chartId);
-  onClose();
-}; 
+    onSubmit(lower, upper, processorId, auditorId, chartId);
+    onClose();
+  };
 
   return (
     <div className={styles.overlay}
@@ -166,65 +164,6 @@ const handleConfirm = () => {
               最高值
             </p>
           </div>
-          {/* <div className={styles.theBox}>
-            <div className={styles.theNumberBox}>
-              <TextField
-                type="number"
-                value={value[0]}
-                onChange={handleInputChange(0)}
-                onBlur={handleBlur}
-                inputProps={{
-                  min: 0,
-                  max: value[1] - minDistance,
-                }}
-                InputLabelProps={{
-                  sx: {
-                    color: 'black',
-                    fontWeight: 600,
-                    '&.Mui-focused': {
-                      color: '#000',
-                    },
-                  },
-                }}
-                InputProps={{
-                  sx: {
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'black',
-                      borderWidth: '2px',
-                    },
-                  },
-                }}
-              />
-            </div>
-            <div className={styles.theNumberBox}>
-              <TextField
-                type="number"
-                value={value[1]}
-                onChange={handleInputChange(1)}
-                onBlur={handleBlur}
-                inputProps={{
-                  min: 0,
-                }}
-                InputLabelProps={{
-                  sx: {
-                    color: 'black',
-                    fontWeight: 600,
-                    '&.Mui-focused': {
-                      color: '#000',
-                    },
-                  },
-                }}
-                InputProps={{
-                  sx: {
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'black',
-                      borderWidth: '2px',
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div> */}
 
           <div className={styles.theBox}>
             <div className={styles.theNumberBox}>

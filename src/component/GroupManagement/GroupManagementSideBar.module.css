@@ -180,7 +180,6 @@ li:hover .editButton {
   border-radius: 8px;
 }
 
-/* 包住圖片的白色背景 */
 .circleIcon {
   position: absolute;
   margin: 0;
@@ -194,7 +193,6 @@ li:hover .editButton {
   border: 5.5px solid black;
 }
 
-/* 圖片樣式 */
 .theIcon {
   width: 35px;
   height: 35px;

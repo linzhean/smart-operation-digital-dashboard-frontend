@@ -1,4 +1,3 @@
-//src\component\Dashboard\DashboardSidebar.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './DashBoardSidebar.module.css';
@@ -27,7 +26,7 @@ const DashboardSidebar: React.FC<{
   const [newDashboardName, setNewDashboardName] = useState<string>('');
   const [openAddChartDialog, setOpenAddChartDialog] = useState(false);
   const [availableCharts, setAvailableCharts] = useState<any[]>([]);
-  const [selectedCharts, setSelectedCharts] = useState<Set<string>>(new Set()); // Use a Set to manage selected charts
+  const [selectedCharts, setSelectedCharts] = useState<Set<string>>(new Set());
   const [openDialog, setOpenDialog] = useState(false);
   const [dashboardName, setDashboardName] = useState('');
   const [dashboardDescription, setDashboardDescription] = useState('');
@@ -262,7 +261,7 @@ const DashboardSidebar: React.FC<{
 
       try {
         await ChartService.addChartsToDashboard(Number(activeDashboard), selectedChartsData.map(chart => chart.id));
-        onAddChart(selectedChartsData); // 调用传递的函数更新 Home 的状态
+        onAddChart(selectedChartsData);
       } catch (error) {
         console.error('Failed to add charts to dashboard:', error);
       }
@@ -391,7 +390,6 @@ const DashboardSidebar: React.FC<{
                   onClose={() => handleMenuClose(dashboard.id)}
                   className={styles.dropdownMenu}
                 >
-                  {/* <MenuItem onClick={() => { setEditingDashboardId(dashboard.id); handleMenuClose(dashboard.id); }}>修改名稱</MenuItem> */}
                   {activeDashboard === dashboard.id && (
                     <MenuItem onClick={() => handleEditDashboard(Number(dashboard.id))}>設定儀表板</MenuItem>
                   )}
@@ -418,10 +416,10 @@ const DashboardSidebar: React.FC<{
       {isEditing && (
         <MultiStepForm
           onClose={handleCloseForm}
-          exportData={async () => await fetchAllDashboards()} // 更新儀表板列表
-          currentUserId="currentUserId" // 使用當前的用戶 ID
+          exportData={async () => await fetchAllDashboards()}
+          currentUserId="currentUserId"
           onDashboardCreated={(dashboard, charts) => { setIsEditing(false); }}
-          selectedDashboard={selectedDashboard} // 傳遞選中的儀表板資料
+          selectedDashboard={selectedDashboard}
         />
       )}
     </div>

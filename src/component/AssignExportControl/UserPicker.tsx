@@ -25,11 +25,11 @@ const UserPicker: React.FC<UserPickerProps> = ({ open, users, onClose, onSubmit 
       setSelectedUsers([]);
       return;
     }
-  
+
     const preSelectedUsers = users.filter((user) => user.selected);
     setSelectedUsers(preSelectedUsers);
   }, [users]);
-  
+
   const handleSubmit = () => {
     onSubmit(selectedUsers);
     onClose();
@@ -41,7 +41,7 @@ const UserPicker: React.FC<UserPickerProps> = ({ open, users, onClose, onSubmit 
       <DialogContent style={{ paddingTop: '15px' }}>
         <Autocomplete
           multiple
-          options={users || []} // Ensure `users` is an array
+          options={users || []}
           getOptionLabel={(option) => `${option.id} ${option.userName}`}
           onChange={(event, newValue) => {
             setSelectedUsers(newValue as User[]);

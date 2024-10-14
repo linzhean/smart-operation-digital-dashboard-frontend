@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styles from './ChartWithDropdown.module.css';
 import { useChartWithDropdown } from '../../Hook/useChartWithDropdown';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { fetchAllUsers } from '../../services/UserAccountService';
 import ReactDOM from 'react-dom';
-import { useRef } from 'react';
 import DOMPurify from 'dompurify';
 
 interface ChartWithDropdownProps {
@@ -224,12 +222,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
           <div
             className={styles.dropdownContainer}
           >
-            {/* <button
-              onClick={() => {
-                setIsDropdownOpen(true);
-              }}
-              className={styles.dropdownButton}
-            > */}
             <button
               onClick={(e) => {
                 e.stopPropagation();

@@ -24,7 +24,7 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
   useEffect(() => {
     const fetchChartData = async () => {
       try {
-        const response = await ChartService.getDashboardCharts(1); // Assuming dashboardId is 1
+        const response = await ChartService.getDashboardCharts(1);
         setChartData(response);
       } catch (error) {
         console.error('Failed to fetch line chart data:', error);

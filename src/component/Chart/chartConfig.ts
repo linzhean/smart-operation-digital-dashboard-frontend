@@ -1,4 +1,3 @@
-// src/component/Chart/chartConfig.ts
 
 interface BarData {
   label: string;
