@@ -3,8 +3,6 @@ import apiClient from './axiosConfig';
 import { Response } from './types/Request.type';
 
 export interface Email {
-  data: any;
-  result: Email;
   id: number; // Add this line
   assignedTaskId: number;
   chartId: number;

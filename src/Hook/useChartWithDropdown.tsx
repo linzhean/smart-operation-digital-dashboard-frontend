@@ -210,6 +210,7 @@ export function useChartWithDropdown(
           content: message,
         },
       };
+
       // 創建郵件
       const createdEmail = await createEmail(assignedTask);
       console.log('創建郵件響應:', createdEmail);
@@ -230,7 +231,6 @@ export function useChartWithDropdown(
         // 设置响应消息
         setResponseMessage(createdEmail.message || null); // 假设 createdEmail.message 是响应中的消息
         setIsModalOpen(false);
-        closeModal(); 
       } else {
         throw new Error('創建郵件失敗，且無法取得錯誤訊息。');
       }
@@ -239,8 +239,7 @@ export function useChartWithDropdown(
       if (error?.response?.data?.message) {
         alert(`交辦失敗: ${error.response.data.message}`);
       } else {
-        alert('交辦成功');
-        setIsModalOpen(false);
+        alert('成功。');
       }
     }
   };
