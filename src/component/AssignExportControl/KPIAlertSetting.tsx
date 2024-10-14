@@ -121,22 +121,21 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
     setUpperLimit(value[1]);
   };
 
-  const handleConfirm = () => {
-    const lower = parseFloat(value[0].toString());
-    const upper = parseFloat(value[1].toString());
-  
-    setLowerLimit(lower);
-    setUpperLimit(upper);
-  
-    // 使用选择的处理者和稽核者，如果没有选择则使用默认值
-    const processorId = selectedProcessor ? selectedProcessor.userId : defaultProcessor;
-    const auditorId = selectedAuditor ? selectedAuditor.userId : defaultAuditor;
-  
-    // 调用 onSubmit 并传递所有必要参数
-    onSubmit(lower, upper, processorId, auditorId, chartId);
-    onClose();
-  };
-  
+const handleConfirm = () => {
+  const lower = parseFloat(value[0].toString());
+  const upper = parseFloat(value[1].toString());
+
+  setLowerLimit(lower);
+  setUpperLimit(upper);
+
+  // 使用选择的处理者和稽核者的 userId
+  const processorId = selectedProcessor ? selectedProcessor.userId : defaultProcessor; // defaultProcessor 应该是 userId
+  const auditorId = selectedAuditor ? selectedAuditor.userId : defaultAuditor; // defaultAuditor 应该是 userId
+
+  // 调用 onSubmit 并传递所有必要参数
+  onSubmit(lower, upper, processorId, auditorId, chartId);
+  onClose();
+}; 
 
   return (
     <div className={styles.overlay}

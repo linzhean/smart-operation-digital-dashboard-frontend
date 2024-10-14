@@ -1,3 +1,4 @@
+//src\pages\ProfileSetup\ProfileSetup.tsx
 import React, { useEffect, useState } from 'react';
 import styles from './ProfileSetup.module.css';
 import logo from '../../assets/icon/Logo-GIF-crop.gif';

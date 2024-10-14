@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import LoginForm from '../../component/Login/LoginForm';
 import { backendApiUrl, clientId } from '../../services/LoginApi';
 import { useUserContext } from '../../context/UserContext';
 import styles from './Login.module.css'
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { setUser, dispatch } = useUserContext();
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
     const authToken = localStorage.getItem('authToken');
-    if (authToken) {
-      navigate('/home');
+    const savedPath = localStorage.getItem('lastVisitedPath');
+    // 確認存在 authToken 並且 savedPath 存在且不為 '/profile-setup' 或 '/awaiting-approval'
+    if (authToken && savedPath && savedPath !== '/profile-setup' && savedPath !== '/awaiting-approval') {
+        navigate(savedPath);
     }
-  }, [navigate]);
+}, [navigate]);
 
   const onSuccess = async (credentialResponse: any) => {
     try {

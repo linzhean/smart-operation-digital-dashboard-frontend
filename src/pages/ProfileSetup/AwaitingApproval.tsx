@@ -1,4 +1,4 @@
-
+//src\pages\ProfileSetup\AwaitingApproval.tsx
 import React from 'react';
 import styles from './AwaitingApproval.module.css';
 import LOGO from '../../assets/icon/Logo-GIF-crop.gif'
