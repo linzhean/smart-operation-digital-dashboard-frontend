@@ -77,7 +77,7 @@ const UserApplyTable: React.FC = () => {
     } catch (error) {
       console.error('Error admitting user:', error);
       const errorMessage = (error as Error).message || '未知錯誤';
-      setError(`無法開通用戶。錯誤訊息：${errorMessage}`);
+      setError(`無法開通用戶 錯誤訊息：${errorMessage}`);
       setSnackbarOpen(true);
     }
   };
@@ -93,7 +93,7 @@ const UserApplyTable: React.FC = () => {
     } catch (error) {
       console.error('Error removing user:', error);
       const errorMessage = (error as Error).message || '未知錯誤';
-      setError(`無法刪除用戶。錯誤訊息：${errorMessage}`);
+      setError(`無法刪除用戶 錯誤訊息：${errorMessage}`);
       setSnackbarOpen(true);
     }
   };
@@ -112,13 +112,12 @@ const UserApplyTable: React.FC = () => {
 
   return (
     <>
-      <div className={styles.tableTitle}><h2>待審核帳號列表</h2></div>
+      <div className={styles.tableTitle}>待審核帳號列表</div>
       <div id="scrollableDiv" className={styles.thePermissionList}>
         {loading ? (
           <div className={`loadingMsg`}></div>
         ) : error ? (
-          // <div className={styles.errorMsg}>請重新嘗試</div>
-          <></>
+          <> </>
         ) : (
           <InfiniteScroll
             dataLength={users.length}

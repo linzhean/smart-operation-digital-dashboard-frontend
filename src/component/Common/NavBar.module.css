@@ -180,3 +180,10 @@
     font-size: 1.2rem;
   }
 }
+
+@media (max-width: 1024px) {
+  .theBurger {
+    display: inline-block !important;
+    margin-right: 10px;
+  }
+}
