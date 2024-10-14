@@ -1,4 +1,3 @@
-//src\component\AssignExportControl\KPIAlertSetting.tsx
 import React, { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
@@ -125,15 +124,19 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
   const handleConfirm = () => {
     const lower = parseFloat(value[0].toString());
     const upper = parseFloat(value[1].toString());
-
+  
     setLowerLimit(lower);
     setUpperLimit(upper);
-
-    if (selectedProcessor && selectedAuditor) {
-      onSubmit(lower, upper, selectedProcessor.userId, selectedAuditor.userId, chartId);
-    }
+  
+    // 使用选择的处理者和稽核者，如果没有选择则使用默认值
+    const processorId = selectedProcessor ? selectedProcessor.userId : defaultProcessor;
+    const auditorId = selectedAuditor ? selectedAuditor.userId : defaultAuditor;
+  
+    // 调用 onSubmit 并传递所有必要参数
+    onSubmit(lower, upper, processorId, auditorId, chartId);
     onClose();
   };
+  
 
   return (
     <div className={styles.overlay}
