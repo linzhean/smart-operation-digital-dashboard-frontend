@@ -62,7 +62,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
       setSelectedKPIs(initialSelectedKPIs);
     } catch (error) {
       console.error('獲取可用圖表失敗:', error);
-      alert('獲取可用圖表失敗。請稍後再試');
+      alert('獲取可用圖表失敗 請稍後再試');
     }
   };
 
@@ -74,7 +74,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
         setCharts(chartsData);
       } catch (error) {
         console.error('Failed to fetch charts:', error);
-        alert('無法取得圖表。請稍後再試');
+        alert('無法取得圖表 請稍後再試');
       }
     };
     fetchCharts();
@@ -88,7 +88,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
         setUsers(userList);
       } catch (error) {
         console.error('Failed to fetch users:', error);
-        alert('無法取得用戶資料。請稍後再試');
+        alert('無法取得用戶資料 請稍後再試');
       }
     };
     fetchUsers();
@@ -100,11 +100,6 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
     }
   };
 
-  const handleRequestKpi = (chartId: number) => {
-    setSelectedChartForApplication(chartId);
-    setIsFormVisible(true);
-  };
-
   const handleChartChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedChartId(Number(e.target.value));
   };
@@ -112,7 +107,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
   const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedChartId) {
-      alert('請選擇一個圖表進行申請。');
+      alert('請選擇一個圖表進行申請');
       return;
     }
 
@@ -175,7 +170,6 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
           }
           dashboardId = id;
 
-          // Update dashboard
           await DashboardService.updateDashboard(String(dashboardId), {
             name: dashboardName,
             description: dashboardDescription,
@@ -185,14 +179,12 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
           alert('儀表板更新成功');
           setCurrentStep(2);
         } else {
-          // Create new dashboard
           const newDashboard = await DashboardService.createDashboard({
             name: dashboardName,
             description: dashboardDescription,
           });
           console.log('新建儀表板回應:', newDashboard);
 
-          // Correctly access dashboardId from the response
           const createdId = newDashboard?.dashboardId;
           if (createdId) {
             setCreatedDashboardId(createdId);
@@ -223,22 +215,18 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
     try {
       await ChartService.addChartsToDashboard(Number(createdDashboardId), selectedKPIs);
       alert('圖表已成功新增到儀表板');
-
-      // 在這裡關閉表單並重整畫面
-      onClose(); // 關閉表單
-      window.location.reload(); // 重整畫面
+      onClose();
+      window.location.reload();
     } catch (error) {
       console.error('新增圖表失敗:', error);
-      alert('新增圖表失敗。請重試。');
+      alert('新增圖表失敗 請重試');
     }
   };
 
   const handleNext = async () => {
     if (currentStep === 1) {
-      // Save dashboard details on step 1 (create/update)
       await handleSubmit();
     } else if (currentStep === 0) {
-      // Proceed to step 1
       setCurrentStep(1);
     }
   };
