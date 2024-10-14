@@ -176,25 +176,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
                 </select>
               </div>
             </div>
-            {/* <div className={styles.labelGroup}>
-              <label htmlFor="chartSelection">圖表名稱</label>
-              <div className={styles.select}>
-                <select
-                  id='chartSelection'
-                  value={chartId || '請選擇圖表'}
-                  onChange={e => onChartSelect(Number(e.target.value))}
-                  required
-                  disabled={true}
-                >
-                  <option value="" className={styles.applyKpiGroupOption}></option>
-                  {(charts || []).map(chart => (
-                    <option key={chart.id} value={chart.id} className={styles.applyKpiGroupOption}>
-                      {chart.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div> */}
+
             <div className={`${styles.labelGroup} ${styles.lastlabelGroup} ${styles.noBorderBottom}`}>
               <textarea
                 placeholder="請輸入郵件內容..."
