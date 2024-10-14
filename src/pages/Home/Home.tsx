@@ -26,6 +26,7 @@ const Home: React.FC = () => {
   const [error, setError] = useState<boolean>(false);
   const [syncTime, setSyncTime] = useState<string>('');
   const [exportMessage, setExportMessage] = useState<string | null>(null);
+  const [dashboardLoading, setDashboardLoading] = useState<boolean>(false); // 用於顯示dashboard的加載狀態
 
   // 计算图表布局
   const calculateLayout = (charts: any[]) => {
@@ -61,6 +62,7 @@ const Home: React.FC = () => {
 const fetchDashboardCharts = async () => {
   if (selectedDashboard) {
     setLoading(true);
+    setDashboardLoading(true);
     try {
       const response = await ChartService.getDashboardCharts(Number(selectedDashboard));
       if (response.result && Array.isArray(response.data)) {
@@ -83,6 +85,7 @@ const fetchDashboardCharts = async () => {
       setError(true);
     } finally {
       setLoading(false);
+      setDashboardLoading(false); // 結束加載
     }
   }
 };
@@ -278,7 +281,10 @@ const fetchDashboardCharts = async () => {
     <div className='wrapper'>
       <div className="Home">
         <DashboardSidebar
-          onSelectDashboard={setSelectedDashboard}
+          onSelectDashboard={(dashboardId) => {
+            setSelectedDashboard(dashboardId);
+            setDashboardLoading(true); 
+          }}
           onAddChart={handleAddChart}
           currentUserId={''}
         />
@@ -287,6 +293,11 @@ const fetchDashboardCharts = async () => {
           {error && <div className={styles.errorMsg}>{error}</div>}
           {exportMessage && <div className={styles.exportMessage}>{exportMessage}</div>}
           <div className='theContent'>
+          {dashboardLoading && (
+              <div className={styles.loadingOverlay}>
+                <div className={styles.spinner}></div>
+              </div>
+            )}
             <ResponsiveGridLayout
               layouts={{ lg: layout, md: layout, sm: layout, xs: layout, xxs: layout }}
               breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
