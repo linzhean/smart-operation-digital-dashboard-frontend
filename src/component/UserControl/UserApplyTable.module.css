@@ -1,8 +1,9 @@
-.tableTitle h2 {
+.tableTitle {
   font-size: 1.5rem;
   font-weight: bolder;
   margin: 5px;
   margin-bottom: 10px;
+  white-space: nowrap;
 }
 
 .theList {
@@ -13,6 +14,7 @@
   width: 100%;
   border-radius: 10px;
   margin-bottom: 0.5rem;
+  white-space: nowrap;
 }
 
 .theTable table {
@@ -21,18 +23,22 @@
   border-radius: 10px;
   overflow: auto;
   line-height: 2.5 !important;
+  white-space: nowrap;
 }
 
 .theTable tr {
   line-height: 25px;
+  white-space: nowrap;
 }
 
 .theTable th {
   line-height: inherit;
+  white-space: nowrap;
 }
 
 .theTable th,
 .theTable td {
+  white-space: nowrap;
   padding-top: 10px;
   padding-bottom: 10px;
   text-align: center;
@@ -40,6 +46,7 @@
 }
 
 .theTable th {
+  white-space: nowrap;
   background-color: #444;
   color: white;
 }
@@ -104,4 +111,31 @@
   font-weight: 700;
   text-align: center;
   margin: 20px;
+}
+
+/* 超大屏幕（大桌面显示器或电视） */
+@media (min-width: 1200px) {
+  /* 针对大于等于 1200px 的设备 */
+}
+
+/* 大屏幕（常见桌面显示器） */
+@media (min-width: 992px) and (max-width: 1199px) {
+  /* 针对 992px 到 1199px 之间的设备 */
+}
+
+/* 中等屏幕（平板和较小的桌面显示器） */
+@media (min-width: 768px) and (max-width: 991px) {
+  /* 针对 768px 到 991px 之间的设备 */
+}
+
+/* 小屏幕（大多数手机或较小的平板） */
+@media (min-width: 576px) and (max-width: 767px) {
+  /* 针对 576px 到 767px 之间的设备 */
+}
+
+@media (max-width: 575px) {
+  .theTable th,
+  .theTable td {
+    padding: 10px !important;
+  }
 }

@@ -96,31 +96,16 @@
   z-index: -1;
 }
 
-/* 樣式的那根進度條會明顯凸出來，這是細度的媒體查詢修改 */
 @media (max-width: 500px) {
   #progressbar li:after {
-    left: -40.8%;
+    left: -44%;
     width: 95%;
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   #progressbar li:after {
     left: -40.8%;
-    width: 95%;
-  }
-}
-
-@media (min-width: 480px) and (max-width: 860px) {
-  #progressbar li:after {
-    left: -44.8%;
-    width: 95%;
-  }
-}
-
-@media (min-width: 1286px) {
-  #progressbar li:after {
-    left: -45.5%;
     width: 95%;
   }
 }
