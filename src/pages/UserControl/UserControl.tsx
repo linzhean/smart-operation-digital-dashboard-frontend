@@ -2,7 +2,6 @@ import React from 'react';
 import UserStatusControl from '../../component/UserControl/UserStatusControl';
 import UserControlSidebar from '../../component/UserControl/UserControlSidebar';
 import UserApplyTable from '../../component/UserControl/UserApplyTable';
-import NewForm from '../../component/UserControl/NewForm';
 import { UserStatusProvider } from '../../context/UserStatusContext';
 import { Route, Routes, Navigate } from 'react-router';
 
@@ -16,7 +15,6 @@ const UserControl: React.FC = () => {
             <Routes>
               <Route path="userApply" element={<UserApplyTable />} />
               <Route path="userStatus" element={<UserStatusControl />} />
-              {/* <Route path="newForm" element={<NewForm />} /> */}
               <Route path="*" element={<Navigate to="userApply" />} />
             </Routes>
           </div>

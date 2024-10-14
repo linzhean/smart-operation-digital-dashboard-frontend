@@ -30,24 +30,20 @@ const Pdata: React.FC = () => {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
         const userData = await fetchUserData();
-
-        // 等待部門選項加載完成
         if (departments.length === 0) {
           return;
         }
 
-        // 根據部門名稱找到對應的部門ID
         const matchingDepartment = departments.find(dept => dept.label === userData.department);
         const departmentId = matchingDepartment ? matchingDepartment.value : '';
 
-        // 更新表單數據
         dispatch({
           type: 'SET_FORM_DATA',
           payload: {
             ...userData,
             userId: user?.id ?? '',
-            departmentId, // 設定 departmentId
-            departmentName: userData.department, // 更新部門名稱
+            departmentId,
+            departmentName: userData.department,
             identity: identities.find(identity => identity.label === userData.identity)?.value || '',
             userName: user?.name ?? ''
           }
@@ -55,7 +51,7 @@ const Pdata: React.FC = () => {
 
         setInitialData(userData);
       } catch (error) {
-        console.error('加载用户数据出错:', error);
+        console.error('載入用戶出錯:', error);
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }

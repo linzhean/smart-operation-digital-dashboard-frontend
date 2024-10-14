@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import SockJS from 'sockjs-client';
-import { Client } from '@stomp/stompjs';
 import styles from './chatBox.module.css';
 import { Email, EmailMessage, getEmailDetails } from '../../../services/mailService';
 import sendIcon from '../../../assets/icon/send.png';
@@ -41,39 +39,14 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, emailName, sendNewChatMessag
     fetchEmailDetails();
   }, [fetchEmailDetails]);
 
-    // 定時刷新郵件詳細資訊
-    useEffect(() => {
-      const interval = setInterval(() => {
-        fetchEmailDetails();
-      }, 5000); // 每五秒調用一次
-  
-      return () => clearInterval(interval); // 清除定時器
-    }, [fetchEmailDetails]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchEmailDetails();
+    }, 5000);
 
-  // // WebSocket 初始化
-  // useEffect(() => {
-  //   const socket = new SockJS('http://140.131.115.153:8080/webSocket');
-  //   const stompClient = new Client({
-  //     webSocketFactory: () => socket as any,  // SockJS 使用
-  //     debug: (str) => console.log(str),       // 用於調試，您可以移除
-  //   });
+    return () => clearInterval(interval);
+  }, [fetchEmailDetails]);
 
-  //   stompClient.onConnect = () => {
-  //     // 訂閱服務器上的主題，接收新消息
-  //     stompClient.subscribe('/topic/newMessage', (message) => {
-  //       const receivedMessage = JSON.parse(message.body) as EmailMessage;
-  //       setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-  //     });
-  //   };
-
-  //   stompClient.activate();
-
-  //   return () => {
-  //     stompClient.deactivate(); // 組件卸載時關閉 WebSocket 連接
-  //   };
-  // }, [emailId]);
-
-  // 處理發送訊息
   const handleSendMessage = useCallback(async () => {
     if (newMessage.trim() && !isSending) {
       const tempMessageId = Date.now();
@@ -89,7 +62,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, emailName, sendNewChatMessag
         modifyDate: new Date().toISOString(),
       };
 
-      // 立即更新状态，显示临时消息
       setMessages((prevMessages) => [...prevMessages, newChatMessage]);
       setNewMessage('');
       setIsSending(true);

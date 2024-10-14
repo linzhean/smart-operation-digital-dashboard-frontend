@@ -1,4 +1,3 @@
-//src\component\AdvancedSmartAnalysis\SmartHTML.tsx
 import React, { useState, useEffect } from 'react';
 import styles from './SmartHTML.module.css';
 import ChartService from '../../services/ChartService';

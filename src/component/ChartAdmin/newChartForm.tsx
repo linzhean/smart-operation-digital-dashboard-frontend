@@ -40,8 +40,6 @@ const NewChartForm: React.FC<NewChartFormProps> = ({ onSubmit, onClose }) => {
     onClose();
   };
 
-
-  // 螢幕太小的時候把InputPlaceHolder換掉
   const newKpiNameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

@@ -3,13 +3,12 @@ import styles from './ChartAdminForm.module.css';
 import { Stack } from '@mui/material';
 import ChartService from '../../services/ChartService';
 
-//   chartCodeFile: string; 錯誤
 interface ViewChartFormProps {
   chartId?: number;
   chartName: string;
   chartCodeFile: string;
   chartImage: string;
-  showcaseImage: string;  // 新增字段
+  showcaseImage: string;  
   onClose: () => void;
 }
 

@@ -6,7 +6,7 @@ import styles from './GroupManagement.module.css';
 
 const GroupManagement: React.FC = () => {
   const [selectedGroupId, setSelectedGroupId] = useState<number>(0);
-  const [activeButton, setActiveButton] = useState<string>('memberControl'); // Default to 'memberControl'
+  const [activeButton, setActiveButton] = useState<string>('memberControl');
 
   const handleButtonClick = (buttonId: string) => {
     setActiveButton(buttonId);

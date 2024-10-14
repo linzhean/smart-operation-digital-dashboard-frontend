@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import InterimKPIList from '../../component/InterimKPIList/InterimKPIList';
-import Sidebar from '../../component/InterimKPISidebar/InterimKPISidebar';
+import InterimKPIList from '../../component/InterimKPI/InterimKPIList';
 
 const InterimKPIControl: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>('啟用中');

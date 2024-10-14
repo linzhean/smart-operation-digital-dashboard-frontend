@@ -1,4 +1,3 @@
-//src\component\AdvancedSmartAnalysis\SmartDialogue.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './SmartDialogue.module.css';
 import send from '../../assets/icon/send.png';
@@ -37,7 +36,7 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
     if (messages.length > 0) {
       scrollToBottom();
     }
-  }, [messages]);  
+  }, [messages]);
 
   useEffect(() => {
     if (aiSuggestion) {
@@ -48,7 +47,7 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
 
   useEffect(() => {
     if (isLoading) {
-      setMessages((prev) => [...prev, { id: nextId, role: 'ai', content: 'AI建議正在生成中' }]);
+      setMessages((prev) => [...prev, { id: nextId, role: 'ai', content: 'AI 建議正在生成中' }]);
       setNextId(nextId + 1);
     }
   }, [isLoading]);

@@ -41,12 +41,10 @@
   margin-bottom: 10px;
 }
 
-/* 控制第一行descriptionText */
 .firstline {
   margin-bottom: 2px !important;
 }
 
-/* 按鈕其實是共用樣式 */
 .buttonGroup {
   display: flex;
   justify-content: flex-end;

@@ -97,13 +97,12 @@ const ExportControl: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch all users
         const userData = await fetchAllUsers();
         if (Array.isArray(userData)) {
           const userList: User[] = userData.map((user) => ({
             ...user,
             id: user.userId,
-            available: Boolean(user.available), // Convert number to boolean
+            available: Boolean(user.available), 
           }));
           setUsers(userList);
         } else {
@@ -111,12 +110,10 @@ const ExportControl: React.FC = () => {
           setUsers([]);
         }
 
-        // Fetch all charts
         const chartResponse = await fetchAllCharts();
         if (chartResponse.data) {
           setCharts(chartResponse.data);
 
-          // Fetch permissions for each chart
           const permissionsMap: { [key: number]: string[] } = {};
           for (const chart of chartResponse.data) {
             try {
@@ -151,14 +148,13 @@ const ExportControl: React.FC = () => {
   const handleSubmit = (selectedUsers: User[]) => {
     const selectedUserIds = selectedUsers.map(user => user.id);
 
-    // Update the selected users map
     setSelectedUsersMap(prev => ({
       ...prev,
       [currentChart]: selectedUserIds,
     }));
 
     const listDTO = {
-      sponsorList: [], // Add appropriate logic to handle sponsorList
+      sponsorList: [],
       exporterList: selectedUserIds,
       dashboardCharts: [],
     };
