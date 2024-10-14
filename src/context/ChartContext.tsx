@@ -35,18 +35,9 @@ export const ChartProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const fetchChartData = async () => {
     // 模擬從API獲取數據
     const fetchedData: ChartData = {
-      barData: [
-        { label: 'January', value: 65 },
-        { label: 'February', value: 59 },
-      ],
-      doughnutData: [
-        { label: 'Red', value: 300 },
-        { label: 'Blue', value: 50 },
-      ],
-      lineData: [
-        { label: 'March', revenue: 100, cost: 80 },
-        { label: 'April', revenue: 200, cost: 120 },
-      ],
+      lineData: [],
+      barData: [],
+      doughnutData: []
     };
     setChartData(fetchedData);
   };

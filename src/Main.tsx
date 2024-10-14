@@ -22,18 +22,16 @@ const Main: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 檢查當前路徑是否為 /profile-setup 或 /awaiting-approval
     if (location.pathname === '/profile-setup' || location.pathname === '/awaiting-approval') {
-      // 清除特定的 localStorage 項目，例如 authToken
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
       navigate('/login');
     } else {
-      // 如果當前路徑不是 /profile-setup 或 /awaiting-approval，才儲存 lastVisitedPath
-      localStorage.setItem('lastVisitedPath', location.pathname);
+      // 保存完整路径，包括查询参数
+      localStorage.setItem('lastVisitedPath', location.pathname + location.search);
     }
   }, [location, navigate]);
-
+  
   useEffect(() => {
     const savedPath = localStorage.getItem('lastVisitedPath');
     if (savedPath) {

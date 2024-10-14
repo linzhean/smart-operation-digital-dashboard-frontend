@@ -29,6 +29,10 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
   };
 
   useEffect(() => {
+    console.log('Received chartId in SmartDialogue:', chartId);
+  }, [chartId]);  
+
+  useEffect(() => {
     console.log('Messages updated:', messages);
     if (messages.length > 0) {
       scrollToBottom();

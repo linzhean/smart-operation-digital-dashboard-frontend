@@ -277,7 +277,7 @@ export function useChartWithDropdown(
         // 確保使用 ChartWithDropdown 中的正確 chartId
         const url = `/advanced-analysis?dashboardId=${dashboardId}&chartId=${chartId}`;
         window.open(url, '_blank');
-        console.log('ChartWithDropdown chartId:', chartId);
+        console.log('Navigating to:', url); 
       } else {
         console.error('無法獲取儀表板圖表:', dashboardChartsResponse.message);
         alert('無法獲取儀表板圖表。請稍後再試。');

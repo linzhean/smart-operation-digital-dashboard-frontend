@@ -186,6 +186,11 @@ const AdvancedSmartAnalysis: React.FC = () => {
     }
   }, [chartId, dashboardId]);
 
+  useEffect(() => {
+    console.log('Fetched dashboardId:', dashboardId);
+    console.log('Fetched chartId:', chartId);
+  }, [chartId, dashboardId]);  
+
   const [showDialogue, setShowDialogue] = useState(false);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 800);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -236,8 +241,8 @@ const AdvancedSmartAnalysis: React.FC = () => {
       ) : (
         <>
           <SmartHTML chartHTML={chartHTML} />
-          {/* {chartId && <SmartDialogue aiSuggestion={aiSuggestion} chartId={Number(chartId)} isLoading={isLoading} />} */}
-          <SmartDialogue aiSuggestion={aiSuggestion} chartId={Number(chartId)} isLoading={isLoading} />
+          {chartId && <SmartDialogue aiSuggestion={aiSuggestion} chartId={Number(chartId)} isLoading={isLoading} />}
+          {/* <SmartDialogue aiSuggestion={aiSuggestion} chartId={Number(chartId)} isLoading={isLoading} /> */}
         </>
       )}
     </div>
