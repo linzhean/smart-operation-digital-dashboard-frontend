@@ -67,7 +67,7 @@ export const createEmail = async (email: {
   };
 }): Promise<Email> => {
   const response = await apiClient.post('/mail', email);
-  return handleApiResponse<Email>(response.data); // Ensure response.data contains the created email with 'id'
+  return handleApiResponse<Email>(response.data); 
 };
 
 // Update an existing email

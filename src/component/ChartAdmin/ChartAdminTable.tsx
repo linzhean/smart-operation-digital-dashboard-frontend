@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ChartAdminTable.module.css';
-import { Snackbar, Button, Alert, IconButton } from '@mui/material';
+import { Snackbar, Button, Alert, IconButton, MenuItem } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorIcon from '@mui/icons-material/Error';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -8,6 +8,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Collapse, Switch, FormControlLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ChartService from '../../services/ChartService';
+import ViewChartForm from './ViewChartForm';
 
 const IOSSwitch = styled(Switch)(({ theme }) => ({
   width: 60,
@@ -71,7 +72,7 @@ const IOSSwitch = styled(Switch)(({ theme }) => ({
 const ChartAdminTable: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isViewFormOpen, setIsViewFormOpen] = useState(false);
-  const [viewFormData, setViewFormData] = useState({ chartName: '', chartCodeFile: '', chartImage: '', showcaseImage: '' });
+  const [viewFormData, setViewFormData] = useState({ chartId: 0,chartName: '', chartCodeFile: '', chartImage: '', showcaseImage: '' });
   const [charts, setCharts] = useState<any[]>([]);
   const [openStatus, setOpenStatus] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState('篩選狀態');
@@ -88,10 +89,14 @@ const ChartAdminTable: React.FC = () => {
     setSnackbarOpen(true);
   };
 
+  const handleCloseViewForm = () => {
+  setIsViewFormOpen(false);
+};
+
   const fetchCharts = async (available: boolean | null) => {
-    const actualAvailable = available !== null ? available : true; 
+    const actualAvailable = available !== null ? available : true;
     try {
-      const response = await ChartService.getCharts(actualAvailable); 
+      const response = await ChartService.getCharts(actualAvailable);
       const chartsData = response.data;
 
       if (Array.isArray(chartsData)) {
@@ -219,6 +224,7 @@ const ChartAdminTable: React.FC = () => {
               <tr>
                 <th>圖表</th>
                 <th>狀態</th>
+                <th>查看</th>
               </tr>
             </thead>
             <tbody>
@@ -233,6 +239,23 @@ const ChartAdminTable: React.FC = () => {
                       />
                     </div>
                   </td>
+                  <td>
+                    <MenuItem
+                      className={`${styles.viewButton} ${styles.centeredButton}`}
+                      onClick={() => {
+                        setViewFormData({
+                          chartId: chart.id,
+                          chartName: chart.name,
+                          chartCodeFile: chart.codeFile,
+                          chartImage: chart.image,
+                          showcaseImage: chart.showcaseImage,
+                        });
+                        setIsViewFormOpen(true);
+                      }}
+                    >
+                      查看
+                    </MenuItem>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -244,16 +267,16 @@ const ChartAdminTable: React.FC = () => {
         <NewChartForm onSubmit={handleFormSubmit} onClose={handleCloseForm} />
       )} */}
 
-      {/* {isViewFormOpen && (
+      {isViewFormOpen && (
         <ViewChartForm
+          chartId={viewFormData.chartId}
           chartName={viewFormData.chartName}
           chartCodeFile={viewFormData.chartCodeFile}
           chartImage={viewFormData.chartImage}
           onClose={handleCloseViewForm}
           showcaseImage={viewFormData.showcaseImage}
         />
-      )} */}
-
+      )}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={15000}

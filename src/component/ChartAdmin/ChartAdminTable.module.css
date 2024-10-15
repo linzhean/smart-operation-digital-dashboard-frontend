@@ -269,3 +269,11 @@
   opacity: 0;
   pointer-events: none;
 }
+
+.centeredButton {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  width: 100%; /* 确保 MenuItem 占满单元格 */
+  height: 100%; /* 确保 MenuItem 占满单元格 */
+}

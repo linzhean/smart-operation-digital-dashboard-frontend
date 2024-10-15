@@ -239,7 +239,7 @@ export function useChartWithDropdown(
       if (error?.response?.data?.message) {
         alert(`交辦失敗: ${error.response.data.message}`);
       } else {
-        alert('交辦成功');
+        alert('交辦發送成功');
         setIsModalOpen(false);
       }
     }

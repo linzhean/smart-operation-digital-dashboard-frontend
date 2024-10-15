@@ -267,13 +267,11 @@ const Home: React.FC = () => {
         <DashboardSidebar
           onSelectDashboard={(dashboardId) => {
             setSelectedDashboard(dashboardId);
-            setDashboardLoading(true);
           }}
           onAddChart={handleAddChart}
           currentUserId={''}
         />
         <div className={styles.dashboard_container}>
-          {loading && <div className={styles.loadingMsg}></div>}
           {error && <div className={styles.errorMsg}>{error}</div>}
           {exportMessage && <div className={styles.exportMessage}>{exportMessage}</div>}
           <div className='theContent'>
