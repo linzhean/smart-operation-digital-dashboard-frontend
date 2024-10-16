@@ -213,6 +213,32 @@ const Home: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px)');
+
+    const handleScreenChange = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        // Reset layout when switching to desktop view
+        setLayout(calculateLayout(charts));
+      }
+    };
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleScreenChange);
+    } else {
+      mediaQuery.addListener(handleScreenChange); // Fallback for older browsers
+    }
+
+    // Cleanup event listener
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', handleScreenChange);
+      } else {
+        mediaQuery.removeListener(handleScreenChange);
+      }
+    };
+  }, [charts]);
+
   const handleLayoutChange = (layout: any[]) => {
     setLayout(layout);
   };

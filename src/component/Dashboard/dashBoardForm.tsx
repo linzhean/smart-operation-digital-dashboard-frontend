@@ -51,6 +51,26 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose, exportData, curr
     }
   }, [selectedDashboard]);
 
+  useEffect(() => {
+    // Fetch dashboard details when currentStep is 1
+    const fetchDashboardDetails = async () => {
+      if (selectedDashboard && currentStep === 1) {
+        try {
+          const dashboardId = Number(selectedDashboard.id);
+          const response = await DashboardService.getDashboardById(String(dashboardId));
+          if (response) {
+            setDashboardDescription(response.description || '');
+          }
+        } catch (error) {
+          console.error('獲取儀表板詳情失敗:', error);
+          alert('獲取儀表板詳情失敗，請稍後再試');
+        }
+      }
+    };
+
+    fetchDashboardDetails();
+  }, [currentStep, selectedDashboard]);
+
   const fetchAvailableCharts = async (dashboardId: number) => {
     try {
       const response = await ChartService.getAvailableCharts(dashboardId);

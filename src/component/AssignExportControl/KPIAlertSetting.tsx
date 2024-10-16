@@ -97,8 +97,8 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
 
       setUsers(mappedUsers);
 
-      const processorUser = mappedUsers.find(user => user.id === Number(defaultProcessor)) || null;
-      const auditorUser = mappedUsers.find(user => user.id === Number(defaultAuditor)) || null;
+      const processorUser = mappedUsers.find(user => user.userId === defaultProcessor) || null;
+      const auditorUser = mappedUsers.find(user => user.userId === defaultAuditor) || null;
 
       setSelectedProcessor(processorUser);
       setSelectedAuditor(auditorUser);
@@ -127,7 +127,6 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
 
     setLowerLimit(lower);
     setUpperLimit(upper);
-
     const processorId = selectedProcessor ? selectedProcessor.userId : defaultProcessor;
     const auditorId = selectedAuditor ? selectedAuditor.userId : defaultAuditor;
 
@@ -231,9 +230,10 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
         <div className={styles.theUserPickerBox}>
           <Autocomplete
             className={styles.autocomplete}
-            value={selectedProcessor || { id: 0, userId: '', userName: defaultProcessor, groupId: 0, name: defaultProcessor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
+            value={selectedProcessor || { id: 0, userId: defaultProcessor, userName: defaultProcessor, groupId: 0, name: defaultProcessor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
             options={users}
-            getOptionLabel={(option) => option.userName}
+            getOptionLabel={(option) => option.userId }
+            isOptionEqualToValue={(option, value) => option.userId === value.userId}
             onChange={(event, newValue) => setSelectedProcessor(newValue)}
             renderInput={(params) => (
               <TextField {...params} label="選擇處理者" />
@@ -243,9 +243,10 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
         <div className={styles.theUserPickerBox}>
           <Autocomplete
             className={styles.autocomplete}
-            value={selectedAuditor || { id: 0, userId: '', userName: defaultAuditor, groupId: 0, name: defaultAuditor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
+            value={selectedAuditor ||{ id: 0, userId: defaultAuditor, userName: defaultAuditor, groupId: 0, name: defaultAuditor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
             options={users}
-            getOptionLabel={(option) => option.userName}
+            getOptionLabel={(option) => option.userId } // 更新這裡
+            isOptionEqualToValue={(option, value) => option.userId === value.userId}
             onChange={(event, newValue) => setSelectedAuditor(newValue)}
             renderInput={(params) => (
               <TextField {...params} label="選擇稽核者" />
@@ -253,7 +254,6 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
           />
         </div>
 
-        {/* </Box> */}
         <div className={styles.buttonGroup}>
           <button className={styles.cancel} onClick={onClose}>取消</button>
           <button className={styles.submit} onClick={handleConfirm}>確定</button>

@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+//src\Main.tsx
+import React, { useEffect, useState  } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Pdata from './pages/Pdata/PersonalData';
@@ -18,6 +19,7 @@ import NotFound from './pages/NotFound/NotFound';
 
 const Main: React.FC = () => {
   const { isAuthenticated } = useUserContext();
+  const [showGroupManagement, setShowGroupManagement] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -38,6 +40,24 @@ const Main: React.FC = () => {
       navigate(savedPath);
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const savedPath = localStorage.getItem('lastVisitedPath');
+    if (!savedPath || savedPath.includes('GroupManagement')) {
+      navigate('/GroupManagement/GroupList');
+    } else {
+      navigate(savedPath);
+    }
+  }, [navigate]); 
+  
+  useEffect(() => {
+    const savedPath = localStorage.getItem('lastVisitedPath');
+    if (!savedPath || savedPath.includes('AssignExportControl')) {
+      navigate('/AssignExportControl/assign');
+    } else {
+      navigate(savedPath);
+    }
+  }, [navigate]);  
 
   const identityMapping: { [key: string]: string } = {
     '無權限': 'NO_PERMISSION',

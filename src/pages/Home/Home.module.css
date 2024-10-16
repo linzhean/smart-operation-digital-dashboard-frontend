@@ -15,6 +15,7 @@
   transition: all 0.3s ease;
   margin-bottom: 10px;
   overflow-y: auto;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 1024px) {
@@ -42,6 +43,8 @@
   margin-bottom: 20px;
   position: relative;
   pointer-events: auto;
+  flex-grow: 1;
+  flex-basis: 200;
 }
 
 .dataCard img {
@@ -166,7 +169,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999999517779;
+  z-index: 9999;
+  pointer-events: none;
 }
 
 .spinner {

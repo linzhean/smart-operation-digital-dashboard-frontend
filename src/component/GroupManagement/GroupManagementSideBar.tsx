@@ -43,10 +43,17 @@ const GroupManagementSidebar: React.FC<SidebarProps> = ({ onSelectGroup, groupId
     try {
       const fetchedGroups = await fetchGroups();
       setGroups(fetchedGroups);
+      
+      // 自動選取第一個群組
+      if (fetchedGroups.length > 0) {
+        const firstGroupId = fetchedGroups[0].id;
+        setActiveGroup(firstGroupId);
+        onSelectGroup(firstGroupId);
+      }
     } catch (error) {
       console.error('獲取群組訊息失敗:', error);
     }
-  }, []);
+  }, [onSelectGroup]);
 
   const handleGroupClick = (groupId: number) => {
     setActiveGroup(groupId);

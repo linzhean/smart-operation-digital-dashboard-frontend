@@ -34,18 +34,16 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
         fetchChartsByGroupId(groupId),
         ChartService.getAllCharts(),
       ]);
-
-      console.log('chartsResponse:', chartsResponse);
-
-      // 確保 chartsResponse 是陣列
+  
+      console.log('Fetched users data:', userList);
+      console.log('Fetched charts data:', chartsResponse);
+  
+      setMemberData(userList);
       setCharts(chartsResponse.map(chart => ({
         id: chart.chartId,
         name: chart.chartName,
         chartGroupId: chart.chartGroupId,
       })));
-
-      console.log('Fetched users data:', userList);
-      setMemberData(userList);
       setAllCharts(allChartsResponse.data.map((chart: { id: number; name: string }) => ({
         id: chart.id,
         name: chart.name,
@@ -53,7 +51,7 @@ const useGroupList = ({ groupId, onDeleteGroup }: UseGroupListParams) => {
     } catch (error) {
       console.error('Error fetching group data:', error);
     }
-  }, [groupId]);
+  }, [groupId]);  
 
   useEffect(() => {
     fetchData();
