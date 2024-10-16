@@ -8,7 +8,6 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Collapse, Switch, FormControlLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ChartService from '../../services/ChartService';
-import ViewChartForm from './ViewChartForm';
 
 const IOSSwitch = styled(Switch)(({ theme }) => ({
   width: 60,
@@ -224,7 +223,6 @@ const ChartAdminTable: React.FC = () => {
               <tr>
                 <th>圖表</th>
                 <th>狀態</th>
-                <th>查看</th>
               </tr>
             </thead>
             <tbody>
@@ -239,8 +237,8 @@ const ChartAdminTable: React.FC = () => {
                       />
                     </div>
                   </td>
-                  <td>
-                    <MenuItem
+                  {/* <td>
+                   <MenuItem
                       className={`${styles.viewButton} ${styles.centeredButton}`}
                       onClick={() => {
                         setViewFormData({
@@ -254,8 +252,8 @@ const ChartAdminTable: React.FC = () => {
                       }}
                     >
                       查看
-                    </MenuItem>
-                  </td>
+                    </MenuItem> 
+                  </td> */}
                 </tr>
               ))}
             </tbody>
@@ -266,7 +264,7 @@ const ChartAdminTable: React.FC = () => {
       {/* {isFormOpen && (
         <NewChartForm onSubmit={handleFormSubmit} onClose={handleCloseForm} />
       )} */}
-
+{/* 
       {isViewFormOpen && (
         <ViewChartForm
           chartId={viewFormData.chartId}
@@ -276,7 +274,7 @@ const ChartAdminTable: React.FC = () => {
           onClose={handleCloseViewForm}
           showcaseImage={viewFormData.showcaseImage}
         />
-      )}
+      )} */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={15000}
