@@ -124,16 +124,19 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
   const handleConfirm = () => {
     const lower = parseFloat(value[0].toString());
     const upper = parseFloat(value[1].toString());
-
+  
     setLowerLimit(lower);
     setUpperLimit(upper);
+  
+    // 确认处理者和稽核者，若未选择则使用默认值
     const processorId = selectedProcessor ? selectedProcessor.userId : defaultProcessor;
-    const auditorId = selectedAuditor ? selectedAuditor.userId : defaultAuditor;
-
+    const auditorId = selectedAuditor ? selectedAuditor.userId : defaultAuditor;    
+  
+    // 调用提交函数并传递处理者和稽核者的 userId
     onSubmit(lower, upper, processorId, auditorId, chartId);
     onClose();
   };
-
+  
   return (
     <div className={styles.overlay}
       onClick={(e) => { if (e.target === e.currentTarget) { onClose(); } }}>
@@ -232,7 +235,7 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
             className={styles.autocomplete}
             value={selectedProcessor || { id: 0, userId: defaultProcessor, userName: defaultProcessor, groupId: 0, name: defaultProcessor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
             options={users}
-            getOptionLabel={(option) => option.userId }
+            getOptionLabel={(option) => option.userName }
             isOptionEqualToValue={(option, value) => option.userId === value.userId}
             onChange={(event, newValue) => setSelectedProcessor(newValue)}
             renderInput={(params) => (
@@ -245,7 +248,7 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
             className={styles.autocomplete}
             value={selectedAuditor ||{ id: 0, userId: defaultAuditor, userName: defaultAuditor, groupId: 0, name: defaultAuditor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
             options={users}
-            getOptionLabel={(option) => option.userId } // 更新這裡
+            getOptionLabel={(option) => option.userName } // 更新這裡
             isOptionEqualToValue={(option, value) => option.userId === value.userId}
             onChange={(event, newValue) => setSelectedAuditor(newValue)}
             renderInput={(params) => (

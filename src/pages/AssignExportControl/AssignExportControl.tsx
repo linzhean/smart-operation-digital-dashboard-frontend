@@ -1,3 +1,4 @@
+//src\pages\AssignExportControl\AssignExportControl.tsx
 import React, { useState, useEffect } from 'react';
 import styles from './AssignExportControl.module.css';
 import { Route, Routes, useNavigate, Navigate, useLocation } from 'react-router-dom';
@@ -9,11 +10,15 @@ const AssignExportControl: React.FC = () => {
   const location = useLocation();
   const [activeButton, setActiveButton] = useState<string>('AssignPermission');
 
-  useEffect(() => {
-    if (location.pathname === '/AssignExportControl' || location.pathname === '/AssignExportControl/') {
-      navigate('assign');
-    }
-  }, [location.pathname, navigate]);
+useEffect(() => {
+  if (location.pathname === '/AssignExportControl' || location.pathname === '/AssignExportControl/') {
+    navigate('assign', { replace: true }); // Ensures '/assign' is set as the default
+  } else if (location.pathname === '/AssignExportControl/assign') {
+    setActiveButton('AssignPermission');
+  } else if (location.pathname === '/AssignExportControl/export') {
+    setActiveButton('ExportPermission');
+  }
+}, [location.pathname, navigate]);
 
   const handleButtonClick = (buttonId: string) => {
     setActiveButton(buttonId);
@@ -54,7 +59,7 @@ const AssignExportControl: React.FC = () => {
         <Routes>
           <Route path="export" element={<Export />} />
           <Route path="assign" element={<Assign />} />
-          <Route path="*" element={<Navigate to="export" />} />
+          <Route path="*" element={<Navigate to="assign" />} />
         </Routes>
       </div>
     </div>

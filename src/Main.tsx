@@ -43,21 +43,21 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     const savedPath = localStorage.getItem('lastVisitedPath');
-    if (!savedPath || savedPath.includes('GroupManagement')) {
-      navigate('/GroupManagement/GroupList');
-    } else {
-      navigate(savedPath);
+    
+    if (savedPath) {
+      // If the saved path is GroupManagement, navigate to GroupList as before
+      if (savedPath.includes('GroupManagement')) {
+        navigate('/GroupManagement/GroupList');
+      }
+      // If the saved path is AssignExportControl, navigate to AssignExportControl/assign by default
+      else if (savedPath === '/AssignExportControl' || savedPath === '/AssignExportControl/') {
+        navigate('/AssignExportControl/assign');
+      }
+      else {
+        navigate(savedPath);
+      }
     }
-  }, [navigate]); 
-  
-  useEffect(() => {
-    const savedPath = localStorage.getItem('lastVisitedPath');
-    if (!savedPath || savedPath.includes('AssignExportControl')) {
-      navigate('/AssignExportControl/assign');
-    } else {
-      navigate(savedPath);
-    }
-  }, [navigate]);  
+  }, [navigate]);
 
   const identityMapping: { [key: string]: string } = {
     '無權限': 'NO_PERMISSION',

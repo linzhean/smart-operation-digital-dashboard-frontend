@@ -13,20 +13,14 @@ interface FilterProps {
 }
 
 const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
-  const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = React.useState<string | null>(null);
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, checked } = event.target;
-
-    setSelectedStatuses(prevStatuses => {
-      const updatedStatuses = checked
-        ? [...prevStatuses, id]
-        : prevStatuses.filter(statusId => statusId !== id);
-
-      onFilterChange(updatedStatuses);
-      return updatedStatuses;
-    });
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setSelectedStatus(value);
+    onFilterChange([value]); // Call the onFilterChange with the selected value in an array
   };
+
 
   return (
     <div className={styles.EmailFilter}>
@@ -37,7 +31,8 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
             name="taskStatus"
             id={statusCode}
             value={statusCode}
-            onChange={handleCheckboxChange}
+            checked={selectedStatus === statusCode}
+            onChange={handleRadioChange}
           />
           <label htmlFor={statusCode}>{label}</label>
         </div>

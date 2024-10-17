@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState  } from 'react';
 import styles from './mailItem.module.css';
-import KPI from '../../../assets/icon/testKPI.svg';
-import { Email, updateEmailStatus, deleteEmail, getEmailDetails } from '../../../services/mailService';
+// import KPI from '../../../assets/icon/testKPI.svg';
+import { Email, updateEmailStatus, deleteEmail, getEmailDetails, getEmails } from '../../../services/mailService';
 import trash from '../../../assets/icon/trashBin.png';
 import finishIcon from '../../../assets/icon/finish.png'
 import { Tooltip } from '@mui/material';
@@ -15,6 +15,24 @@ interface MailItemProps {
 }
 
 const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelete }) => {
+  const [showcaseImage, setShowcaseImage] = useState<string>();
+
+  useEffect(() => {
+    const fetchEmails = async () => {
+      try {
+        const emails = await getEmails([]); // Fetch emails without filtering by status
+        // Assuming showcaseImage is part of the returned email data; adjust according to your API response structure.
+        if (emails.length > 0 && emails[0].showcaseImage) { 
+          setShowcaseImage(emails[0].showcaseImage);
+        }
+      } catch (error) {
+        console.error('Failed to fetch emails:', error);
+      }
+    };
+
+    fetchEmails();
+  }, []);
+
   const WhiteTooltip = styled(({ className, ...props }: any) => (
     <Tooltip {...props} classes={{ popper: className }} PopperProps={{
       modifiers: [
@@ -110,8 +128,7 @@ const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelet
       < div className={`${styles.eachMailBriefSection} ${isSelected ? styles.eachMailBriefSectionSelected : ''}`} onClick={onClick} >
 
         {/* 示意圖 */}
-        < img src={KPI} className={styles.KPI} alt="KPI" />
-
+        <img src={showcaseImage} className={styles.KPI} alt="KPI" />
         {/* 信件標頭 */}
         < div className={styles.mailHeader} >
 

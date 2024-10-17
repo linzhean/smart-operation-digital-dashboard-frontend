@@ -21,6 +21,7 @@ export interface Email {
   };
   messageList: EmailMessage[];
   message?: string;
+  showcaseImage?: string; 
 }
 
 export interface EmailMessage {
