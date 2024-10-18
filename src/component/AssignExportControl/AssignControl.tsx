@@ -160,6 +160,9 @@ const AssignTaskControl: React.FC = () => {
   const [defaultProcessorName, setDefaultProcessorName] = useState<string>('');
   const [defaultAuditorName, setDefaultAuditorName] = useState<string>('');
   const [selectedAuditor, setSelectedAuditor] = useState<User | null>(null);
+  const [selectedProcessor, setSelectedProcessor] = useState<User | null>(null);
+  const [defaultProcessorId, setDefaultProcessorId] = useState<string>('');
+  const [defaultAuditorId, setDefaultAuditorId] = useState<string>('');
 
   const handleSetAlert = (chartName: string, chartId: number) => {
     setCurrentChartName(chartName);
@@ -172,17 +175,17 @@ const AssignTaskControl: React.FC = () => {
     setShowKPIAlertSetting(false);
   };
 
-  const handleKPIAlertSubmit = (lower: number, upper: number, defaultProcessor: string, defaultAuditor: string, chartId: number) => {
+  const handleKPIAlertSubmit = (lower: number, upper: number, defaultProcessorId: string, defaultAuditorId: string, chartId: number) => {
     const requestData = {
-      chartId: currentChart, // 確保傳遞 chartId
+      chartId: currentChart,
       name: currentChartName || '',
       upperLimit: upper,
       lowerLimit: lower,
-      defaultProcessor: defaultProcessor,  
-      defaultAuditor: defaultAuditor,    
+      defaultProcessor: defaultProcessorId,
+      defaultAuditor: defaultAuditorId,
       available: true,
     };
-  
+
     if (chartId) {
       updateAssignedTask(chartId, requestData)
         .then(response => {
@@ -194,7 +197,7 @@ const AssignTaskControl: React.FC = () => {
     } else {
       console.error('Chart ID is not available for updating');
     }
-  };  
+  };
 
   useEffect(() => {
     fetchAllCharts()
@@ -221,14 +224,22 @@ const AssignTaskControl: React.FC = () => {
           console.log('Assigned tasks response:', response.data);
 
           const taskData = response.data as unknown as AssignedTaskResponse;
-          console.log('Task data:', taskData);
 
           if (taskData) {
             setUpperLimit(taskData.upperLimit);
             setLowerLimit(taskData.lowerLimit);
-            const defaultProcessorName = userMap[taskData.defaultProcessor] || 'Unknown Processor';
-            const defaultAuditorName = userMap[taskData.defaultAuditor] || 'Unknown Auditor';
 
+            // 确保从 taskData 中获取 processor 和 auditor 的 ID
+            const defaultProcessorId = taskData.defaultProcessor;
+            const defaultAuditorId = taskData.defaultAuditor;
+
+            // 使用 userMap 获取名字
+            const defaultProcessorName = userMap[defaultProcessorId] || 'Unknown Processor';
+            const defaultAuditorName = userMap[defaultAuditorId] || 'Unknown Auditor';
+
+            // 设置默认 ID 和名称
+            setDefaultProcessorId(defaultProcessorId);
+            setDefaultAuditorId(defaultAuditorId);
             setDefaultProcessorName(defaultProcessorName);
             setDefaultAuditorName(defaultAuditorName);
           } else {
@@ -252,18 +263,15 @@ const AssignTaskControl: React.FC = () => {
     setDialogOpen(false);
   };
 
-  const handleSubmit = (selectedUsers: User[]) => {
+  const handleSubmit = () => {
     if (!currentChart) {
       console.error('No chart selected');
       return;
     }
-  
-    const userIds = selectedUsers.map(user => user.userId);
-  
-    // 确保传递 userId，而不是 userName
-    const processorId = userIds.length > 0 ? userIds[0] : defaultProcessorName; 
-    const auditorId = selectedAuditor ? selectedAuditor.userId : defaultAuditorName;
-  
+
+    const processorId = selectedProcessor?.userId || defaultProcessorId;
+    const auditorId = selectedAuditor?.userId || defaultAuditorId;
+
     const requestData = {
       sponsorList: [processorId],
       exporterList: [],
@@ -271,15 +279,15 @@ const AssignTaskControl: React.FC = () => {
       upperLimit,
       lowerLimit,
       defaultAuditor: auditorId,
-      defaultProcessor:processorId
+      defaultProcessor: processorId
     };
-  
-    // 确保传递 userId 进行交办事项更新
+
+    // 更新交辦事項
     updateAssignedTask(currentChart, {
       chartId: currentChart,
       name: currentChartName || '',
-      defaultProcessor: processorId, 
-      defaultAuditor: auditorId,     
+      defaultProcessor: processorId || '',
+      defaultAuditor: auditorId || '',
       available: true,
       upperLimit: upperLimit !== null ? upperLimit : undefined,
       lowerLimit: lowerLimit !== null ? lowerLimit : undefined,
@@ -290,17 +298,9 @@ const AssignTaskControl: React.FC = () => {
       .catch(error => {
         console.error('Failed to update assigned task', error);
       });
-  
-    setAssignedTaskSponsorsForDashboard(currentChart, requestData)
-      .then(response => {
-        console.log('Successfully set task sponsors', response);
-      })
-      .catch(error => {
-        console.error('Failed to set task sponsors', error);
-      });
-  
+
     setDialogOpen(false);
-  };  
+  };
 
   const getSelectedUserNames = (chartId: number) => {
     const selectedUsers = selectedUsersMap[chartId] || [];
@@ -381,8 +381,10 @@ const AssignTaskControl: React.FC = () => {
           lowerLimit={lowerLimit}
           setUpperLimit={setUpperLimit}
           setLowerLimit={setLowerLimit}
-          defaultProcessor={defaultProcessorName}
-          defaultAuditor={defaultAuditorName}
+          defaultProcessor={defaultProcessorId} // 傳遞處理者的預設 ID
+          defaultAuditor={defaultAuditorId}     // 傳遞稽核者的預設 ID
+          defaultProcessorName={defaultProcessorName} // 傳遞處理者的預設名稱
+          defaultAuditorName={defaultAuditorName}     // 傳遞稽核者的預設名稱
           onSubmit={(lower, upper, processor, auditor, chartId) => handleKPIAlertSubmit(lower, upper, processor, auditor, chartId)}
           chartId={currentChart}
         />

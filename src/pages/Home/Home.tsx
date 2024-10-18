@@ -306,6 +306,11 @@ const Home: React.FC = () => {
                 <div className={styles.spinner}></div>
               </div>
             )}
+             {charts.length === 0 ? (
+              <div className={styles.noChartsMessage}>
+                您還未新增任何圖表，請點設定儀表板以新增圖表。
+              </div>
+            ) : (
             <ResponsiveGridLayout
               layouts={{ lg: layout, md: layout, sm: layout, xs: layout, xxs: layout }}
               breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
@@ -331,6 +336,7 @@ const Home: React.FC = () => {
                     onChartSelect={() => handleChartSelect(chart.id)}
                     currentUserId={''}
                     canAssign={chart.canAssign}
+                    canExport={chart.canExport} 
                     selectedDashboardId={selectedDashboard ? Number(selectedDashboard) : undefined}
                   >
                     {selectedChartData ? <LineChart data={selectedChartData} /> : <p></p>}
@@ -338,6 +344,7 @@ const Home: React.FC = () => {
                 </div>
               ))}
             </ResponsiveGridLayout>
+            )}
             <div className={styles.syncTime}>
               {syncTime ? `最後同步時間: ${new Date(syncTime).toLocaleString()}` : 'Fetching sync time...'}
             </div>

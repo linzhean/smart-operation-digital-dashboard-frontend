@@ -14,10 +14,11 @@ interface ChartWithDropdownProps {
   onChartSelect: (chartId: number) => void;
   currentUserId: string;
   canAssign: boolean;
+  canExport: boolean;
   selectedDashboardId?: number;
 }
 
-const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, canAssign, onChartSelect, currentUserId, selectedDashboardId }) => {
+const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, canAssign, onChartSelect, currentUserId, selectedDashboardId, canExport  }) => {
 
   const {
     toggleDropdown,
@@ -241,7 +242,7 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             {isDropdownOpen && (
               <div className={styles.dropdownMenu}>
 
-                <button onClick={() => handleExportWrapper()}>匯出</button>
+                <button  onClick={() => canExport ? handleExportWrapper() : alert('無法匯出此圖表')}disabled={!canExport}>匯出</button>
 
                 <button onClick={() => handleDelegateWrapper()}>交辦</button>
 

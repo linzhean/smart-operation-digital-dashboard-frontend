@@ -1,6 +1,5 @@
 import React, { useEffect, useState  } from 'react';
 import styles from './mailItem.module.css';
-// import KPI from '../../../assets/icon/testKPI.svg';
 import { Email, updateEmailStatus, deleteEmail, getEmailDetails, getEmails } from '../../../services/mailService';
 import trash from '../../../assets/icon/trashBin.png';
 import finishIcon from '../../../assets/icon/finish.png'
@@ -16,22 +15,6 @@ interface MailItemProps {
 
 const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelete }) => {
   const [showcaseImage, setShowcaseImage] = useState<string>();
-
-  useEffect(() => {
-    const fetchEmails = async () => {
-      try {
-        const emails = await getEmails([]); // Fetch emails without filtering by status
-        // Assuming showcaseImage is part of the returned email data; adjust according to your API response structure.
-        if (emails.length > 0 && emails[0].showcaseImage) { 
-          setShowcaseImage(emails[0].showcaseImage);
-        }
-      } catch (error) {
-        console.error('Failed to fetch emails:', error);
-      }
-    };
-
-    fetchEmails();
-  }, []);
 
   const WhiteTooltip = styled(({ className, ...props }: any) => (
     <Tooltip {...props} classes={{ popper: className }} PopperProps={{
@@ -54,6 +37,22 @@ const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelet
       border: '1px solid #000000',
     }
   }));
+
+  useEffect(() => {
+    const fetchShowcaseImage = async () => {
+      try {
+        const emails = await getEmails([]); 
+        const matchedEmail = emails.find((e: Email) => e.id === email.id);
+        if (matchedEmail) {
+          setShowcaseImage(matchedEmail.showcaseImage); 
+        }
+      } catch (error) {
+        console.error('Failed to fetch showcase image:', error);
+      }
+    };
+
+    fetchShowcaseImage();
+  }, [email]);
 
   const handleCompleteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();

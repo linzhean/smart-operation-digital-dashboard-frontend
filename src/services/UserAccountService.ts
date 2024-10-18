@@ -22,14 +22,16 @@ export const fetchUsers = async (
   nowPage: number = 1,
   departmentId?: string,
   name?: string,
-  identity?: string
+  identity?: string,
+  keyword?: string 
 ): Promise<UserAccountBean[]> => {
   try {
     // 准备查询参数
     const params: any = {
       nowPage,
       departmentId,
-      name
+      name,
+      keyword
     };
 
     // 处理 identity 参数

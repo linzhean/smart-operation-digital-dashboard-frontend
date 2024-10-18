@@ -19,6 +19,8 @@ interface KPIAlertSettingProps {
   setLowerLimit: (value: number) => void;
   defaultProcessor: string;
   defaultAuditor: string;
+  defaultProcessorName: string; 
+  defaultAuditorName: string; 
   onSubmit: (lowerLimit: number, upperLimit: number, defaultProcessor: string, defaultAuditor: string, chartId: number) => void; // 添加 chartId 参数
   chartId: number;
 }
@@ -27,7 +29,7 @@ interface CustomChart extends Chart {
   name: string;
 }
 
-export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerLimit, setUpperLimit, setLowerLimit, defaultProcessor, defaultAuditor, onSubmit, chartId }: KPIAlertSettingProps) {
+export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerLimit, setUpperLimit, setLowerLimit, defaultProcessor, defaultAuditor,defaultProcessorName,  defaultAuditorName,  onSubmit, chartId }: KPIAlertSettingProps) {
 
   const [value, setValue] = React.useState<number[]>([lowerLimit || 1, upperLimit || 1000]);
   const [users, setUsers] = useState<User[]>([]);
@@ -78,7 +80,6 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
 
   useEffect(() => {
     fetchAllUsers().then((data: UserAccountBean[]) => {
-      console.log('Fetched Users:', data);
       const mappedUsers: User[] = data.map((user) => ({
         id: Number(user.userId),
         userId: user.userId,
@@ -97,11 +98,12 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
 
       setUsers(mappedUsers);
 
-      const processorUser = mappedUsers.find(user => user.userId === defaultProcessor) || null;
-      const auditorUser = mappedUsers.find(user => user.userId === defaultAuditor) || null;
+      // 預設設置處理者與稽核者
+      const processorUser = mappedUsers.find(user => user.userId === defaultProcessor);
+      const auditorUser = mappedUsers.find(user => user.userId === defaultAuditor);
 
-      setSelectedProcessor(processorUser);
-      setSelectedAuditor(auditorUser);
+      setSelectedProcessor(processorUser || null);
+      setSelectedAuditor(auditorUser || null);
     });
   }, [defaultProcessor, defaultAuditor]);
 
@@ -124,19 +126,23 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
   const handleConfirm = () => {
     const lower = parseFloat(value[0].toString());
     const upper = parseFloat(value[1].toString());
-  
+
     setLowerLimit(lower);
     setUpperLimit(upper);
-  
-    // 确认处理者和稽核者，若未选择则使用默认值
-    const processorId = selectedProcessor ? selectedProcessor.userId : defaultProcessor;
-    const auditorId = selectedAuditor ? selectedAuditor.userId : defaultAuditor;    
-  
-    // 调用提交函数并传递处理者和稽核者的 userId
+
+    // 使用用户选择的处理者和稽核者 ID
+    const processorId = selectedProcessor?.userId || defaultProcessor; // 如果未选择，则使用 defaultProcessor
+    const auditorId = selectedAuditor?.userId || defaultAuditor; // 如果未选择，则使用 defaultAuditor
+
+    if (!processorId || !auditorId) {
+      console.error('Processor or Auditor ID is missing!');
+      return;
+    }
+
     onSubmit(lower, upper, processorId, auditorId, chartId);
     onClose();
   };
-  
+
   return (
     <div className={styles.overlay}
       onClick={(e) => { if (e.target === e.currentTarget) { onClose(); } }}>
@@ -233,10 +239,9 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
         <div className={styles.theUserPickerBox}>
           <Autocomplete
             className={styles.autocomplete}
-            value={selectedProcessor || { id: 0, userId: defaultProcessor, userName: defaultProcessor, groupId: 0, name: defaultProcessor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
+            value={selectedProcessor || { id: 0, userId: defaultProcessor, userName: defaultProcessorName, groupId: 0, name: '', department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
             options={users}
-            getOptionLabel={(option) => option.userName }
-            isOptionEqualToValue={(option, value) => option.userId === value.userId}
+            getOptionLabel={(option) => option.userName}
             onChange={(event, newValue) => setSelectedProcessor(newValue)}
             renderInput={(params) => (
               <TextField {...params} label="選擇處理者" />
@@ -246,10 +251,9 @@ export default function KPIAlertSetting({ onClose, chartName, upperLimit, lowerL
         <div className={styles.theUserPickerBox}>
           <Autocomplete
             className={styles.autocomplete}
-            value={selectedAuditor ||{ id: 0, userId: defaultAuditor, userName: defaultAuditor, groupId: 0, name: defaultAuditor, department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
+            value={selectedAuditor || { id: 0, userId: defaultAuditor, userName: defaultAuditorName, groupId: 0, name: '', department: '', position: '', userGroupId: 0, available: true, createId: '', createDate: '', modifyId: '', modifyDate: '' }}
             options={users}
-            getOptionLabel={(option) => option.userName } // 更新這裡
-            isOptionEqualToValue={(option, value) => option.userId === value.userId}
+            getOptionLabel={(option) => option.userName} // 更新這裡
             onChange={(event, newValue) => setSelectedAuditor(newValue)}
             renderInput={(params) => (
               <TextField {...params} label="選擇稽核者" />

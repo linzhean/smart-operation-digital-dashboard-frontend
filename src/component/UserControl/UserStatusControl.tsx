@@ -6,6 +6,8 @@ import styles from './UserStatusControl.module.css';
 
 import { fetchUsers, toggleUserStatus, fetchTotalPages } from '../../services/UserAccountService';
 
+import { fetchDropdownData } from '../../services/dropdownServices';
+
 import NumberOfPages from './NumberOfPages';
 
 import { UserAccountBean } from '../../services/types/userManagement';
@@ -166,47 +168,51 @@ const UserStatusControl: React.FC = () => {
 
   const [totalPages, setTotalPages] = useState<number>(1);
 
+  const [searchKeyword, setSearchKeyword] = useState<string>('');
+
+  const [departments, setDepartments] = useState<{ value: string; label: string }[]>([]);
+
   useEffect(() => {
-
     loadInitialData();
+  }, [page, searchKeyword, departmentFilter, sortOrder]);
 
-  }, [page]);
+  useEffect(() => {
+    const loadDepartments = async () => {
+      try {
+        const departmentOptions = await fetchDropdownData('department');
+        setDepartments(departmentOptions);
+      } catch (error) {
+        console.error('加载部门数据时出错:', error);
+      }
+    };
+
+    loadDepartments();
+  }, []);
 
   const loadInitialData = async () => {
-
     try {
-
-      const [data, pages] = await Promise.all([fetchUsers(page), fetchTotalPages()]);
-
+      const [data, pages] = await Promise.all([
+        fetchUsers(page, departmentFilter === 'all' ? undefined : departmentFilter, undefined, undefined, searchKeyword),
+        fetchTotalPages()
+      ]);
+  
       setTotalPages(pages);
-
+  
       const formattedData: User[] = data.map((employee: UserAccountBean) => ({
-
         name: employee.userName,
-
         id: employee.userId,
-
         department: employee.departmentName,
-
         email: employee.email,
-
         position: employee.identity,
-
         status: employee.available === true ? '啟用中' : '停用'
-
       }));
-
+  
       setUsers(formattedData);
-
-      setHasMore(page < totalPages - 1);
-
+      setHasMore(page < pages - 1);
     } catch (error) {
-
       console.error('載入用戶時出錯', error);
-
     }
-
-  };
+  };  
 
   const fetchMoreData = async () => {
 
@@ -250,15 +256,19 @@ const UserStatusControl: React.FC = () => {
 
 
   const handleDepartmentFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-
     setDepartmentFilter(e.target.value);
-
+    setPage(0);
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 
     setSortOrder(e.target.value);
 
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+    setPage(0); // 重置页码为0以重新加载数据
   };
 
   const sortUsers = (users: User[]) => {
@@ -302,28 +312,23 @@ const UserStatusControl: React.FC = () => {
     <div id="scrollableDiv" className={styles.tableContainer}>
 
       <div className={styles.tableFilters}>
-
-        <select onChange={handleSortChange}>
-
-          <option value="latest">工號：從大到小</option>
-
-          <option value="oldest">工號：從小到大</option>
-
-        </select>
-
-        <select onChange={handleDepartmentFilterChange}>
-
+        
+        <select onChange={handleDepartmentFilterChange} value={departmentFilter}>
           <option value="all">部門：全部</option>
-
-          <option value="production">生產部門</option>
-
-          <option value="sales">銷售部門</option>
-
-          <option value="materials">物料部門</option>
-
+          {departments.map(department => (
+            <option key={department.value} value={department.value}>
+              {department.label}
+            </option>
+          ))}
         </select>
 
-        <input type="search" placeholder="搜尋" className={styles.searchInput} />
+        <input
+          type="search"
+          placeholder="搜尋"
+          className={styles.searchInput}
+          value={searchKeyword}
+          onChange={handleSearchChange}
+        />
 
       </div>
 
