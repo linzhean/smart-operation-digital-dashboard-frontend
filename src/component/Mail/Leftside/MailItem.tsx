@@ -38,22 +38,6 @@ const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelet
     }
   }));
 
-  useEffect(() => {
-    const fetchShowcaseImage = async () => {
-      try {
-        const emails = await getEmails([]); 
-        const matchedEmail = emails.find((e: Email) => e.id === email.id);
-        if (matchedEmail) {
-          setShowcaseImage(matchedEmail.showcaseImage); 
-        }
-      } catch (error) {
-        console.error('Failed to fetch showcase image:', error);
-      }
-    };
-
-    fetchShowcaseImage();
-  }, [email]);
-
   const handleCompleteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
@@ -127,7 +111,7 @@ const MailItem: React.FC<MailItemProps> = ({ email, isSelected, onClick, onDelet
       < div className={`${styles.eachMailBriefSection} ${isSelected ? styles.eachMailBriefSectionSelected : ''}`} onClick={onClick} >
 
         {/* 示意圖 */}
-        <img src={showcaseImage} className={styles.KPI} alt="KPI" />
+        <img src={email.showcaseImage} className={styles.KPI} alt="KPI" />
         {/* 信件標頭 */}
         < div className={styles.mailHeader} >
 

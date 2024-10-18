@@ -13,14 +13,19 @@ export const useEmails = () => {
         setError(null);
         try {
             const fetchedEmails = await getEmails(statuses);
-            setEmails(fetchedEmails);
+            setEmails(fetchedEmails); // Store all emails in state
         } catch (error: any) {
             console.error('Fetch Emails Error:', error);
             setError(error.message);
         } finally {
             setLoading(false);
         }
-    }, []);    
+    }, []);
+
+    useEffect(() => {
+        // Only fetch emails with status '待處理' once when the component is mounted
+        fetchEmails(['待處理']);
+    }, [fetchEmails]);
 
     const selectEmail = async (id: number) => {
         setLoading(true);
