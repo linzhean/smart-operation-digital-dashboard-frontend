@@ -26,7 +26,6 @@ export const fetchUsers = async (
   keyword?: string 
 ): Promise<UserAccountBean[]> => {
   try {
-    // 准备查询参数
     const params: any = {
       nowPage,
       departmentId,
@@ -34,21 +33,16 @@ export const fetchUsers = async (
       keyword
     };
 
-    // 处理 identity 参数
     if (identity !== undefined && identity !== '3') {
       params.identity = identity;
     } else if (identity === '3') {
       params.identity = undefined;
     }
 
-    // 发起 API 请求
     const response = await apiClient.get<Response<UserAccountBean[]>>('/user-account/list', {
       params
     });
 
-    console.log('API Response:', response.data);
-
-    // 处理 API 响应
     if (response.data?.result && Array.isArray(response.data.data)) {
       return response.data.data;
     } else {

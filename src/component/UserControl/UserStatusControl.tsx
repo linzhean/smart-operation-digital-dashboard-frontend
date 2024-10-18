@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
 
@@ -173,10 +173,6 @@ const UserStatusControl: React.FC = () => {
   const [departments, setDepartments] = useState<{ value: string; label: string }[]>([]);
 
   useEffect(() => {
-    loadInitialData();
-  }, [page, searchKeyword, departmentFilter, sortOrder]);
-
-  useEffect(() => {
     const loadDepartments = async () => {
       try {
         const departmentOptions = await fetchDropdownData('department');
@@ -189,15 +185,22 @@ const UserStatusControl: React.FC = () => {
     loadDepartments();
   }, []);
 
+  useEffect(() => {
+    loadInitialData();
+  }, [page, searchKeyword, departmentFilter, sortOrder]);
+
   const loadInitialData = async () => {
     try {
       const [data, pages] = await Promise.all([
         fetchUsers(page, departmentFilter === 'all' ? undefined : departmentFilter, undefined, undefined, searchKeyword),
         fetchTotalPages()
       ]);
-  
+
+      console.log('Fetched Users:', data);  // Debug log for fetched users
+      console.log('Total Pages:', pages);    // Debug log for total pages
+
       setTotalPages(pages);
-  
+
       const formattedData: User[] = data.map((employee: UserAccountBean) => ({
         name: employee.userName,
         id: employee.userId,
@@ -206,13 +209,13 @@ const UserStatusControl: React.FC = () => {
         position: employee.identity,
         status: employee.available === true ? '啟用中' : '停用'
       }));
-  
+
       setUsers(formattedData);
       setHasMore(page < pages - 1);
     } catch (error) {
       console.error('載入用戶時出錯', error);
     }
-  };  
+  };
 
   const fetchMoreData = async () => {
 
@@ -256,8 +259,9 @@ const UserStatusControl: React.FC = () => {
 
 
   const handleDepartmentFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setDepartmentFilter(e.target.value);
-    setPage(0);
+    const newDepartmentFilter = e.target.value;
+    setDepartmentFilter(newDepartmentFilter);
+    setPage(0); // 部門更改後重置頁碼
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -293,30 +297,32 @@ const UserStatusControl: React.FC = () => {
 
   };
 
-  const filteredUsers = users.filter(user => {
+  const filteredUsers = useMemo(() => {
+    return users.filter(user => {
+      if (departmentFilter === 'all') {
+        return true;
+      }
+      const selectedDepartmentLabel = departments.find(dept => dept.value === departmentFilter)?.label;
+      return user.department === selectedDepartmentLabel;  // 根據部門名稱過濾
+    });
+  }, [users, departmentFilter, departments]);
 
-    if (departmentFilter === 'all') {
+  const sortedUsers = useMemo(() => {
+    return sortUsers(filteredUsers);
+  }, [filteredUsers, sortOrder]);
 
-      return true;
-
-    }
-
-    return user.department === departmentFilter;
-
-  });
-
-  const sortedUsers = sortUsers(filteredUsers);
+  console.log('Filtered and Sorted Users:', sortedUsers);
 
   return (
 
     <div id="scrollableDiv" className={styles.tableContainer}>
 
       <div className={styles.tableFilters}>
-        
+
         <select onChange={handleDepartmentFilterChange} value={departmentFilter}>
           <option value="all">部門：全部</option>
           {departments.map(department => (
-            <option key={department.value} value={department.value}>
+            <option value={department.value} >
               {department.label}
             </option>
           ))}

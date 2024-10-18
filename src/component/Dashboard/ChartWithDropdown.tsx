@@ -18,7 +18,7 @@ interface ChartWithDropdownProps {
   selectedDashboardId?: number;
 }
 
-const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, canAssign, onChartSelect, currentUserId, selectedDashboardId, canExport  }) => {
+const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportData, chartId, requestData, canAssign, onChartSelect, currentUserId, selectedDashboardId, canExport }) => {
 
   const {
     toggleDropdown,
@@ -51,7 +51,8 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     sponsorList,
     loadingSponsors,
     responseMessage,
-    showNoPermissionMsg
+    showNoPermissionMsg,
+    setShowNoPermissionMsg
   } = useChartWithDropdown(exportData, chartId, requestData, currentUserId);
 
   useEffect(() => {
@@ -84,7 +85,6 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     }
   }, [interactiveCharts]);
 
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -97,6 +97,31 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
     };
     fetchUsers();
   }, [setUsers]);
+
+  const handleExportClick = () => {
+    if (!canExport) {
+      setShowNoPermissionMsg(true);
+    } else {
+      handleExportWrapper();
+    }
+  };
+
+  const handleDelegateClick = () => {
+    if (!canAssign) {
+      setShowNoPermissionMsg(true);
+    } else {
+      handleDelegateWrapper();
+    }
+  };
+
+  useEffect(() => {
+    if (showNoPermissionMsg) {
+      const timer = setTimeout(() => {
+        setShowNoPermissionMsg(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showNoPermissionMsg]);
 
   const handleAdvancedAnalysisWrapper = async () => {
     if (selectedDashboardId) {
@@ -242,9 +267,9 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             {isDropdownOpen && (
               <div className={styles.dropdownMenu}>
 
-                <button  onClick={() => canExport ? handleExportWrapper() : alert('無法匯出此圖表')}disabled={!canExport}>匯出</button>
+               <button onClick={handleExportClick}>匯出</button>
 
-                <button onClick={() => handleDelegateWrapper()}>交辦</button>
+                <button onClick={handleDelegateClick}>交辦</button>
 
                 <button className={styles.lastButton} onClick={() => handleAdvancedAnalysisWrapper()}>進階分析</button>
 
@@ -252,6 +277,13 @@ const ChartWithDropdown: React.FC<ChartWithDropdownProps> = ({ children, exportD
             )}
           </div>
         </div>
+
+        {showNoPermissionMsg && (
+          <div className={styles.alertMessage}>
+            您沒有權限可以操作此功能
+          </div>
+        )}
+
         {children}
         {/* 交辦的表單 */}
         {isModalOpen && canAssign && (ReactDOM.createPortal(AssignForm, document.getElementById('portal-root')!))}

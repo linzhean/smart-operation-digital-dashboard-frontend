@@ -414,6 +414,7 @@ export function useChartWithDropdown(
     sponsorList,
     loadingSponsors,
     responseMessage,
-    showNoPermissionMsg
+    showNoPermissionMsg,
+    setShowNoPermissionMsg
   };
 }
