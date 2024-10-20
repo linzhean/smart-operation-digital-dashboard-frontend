@@ -163,6 +163,7 @@ const AssignTaskControl: React.FC = () => {
   const [selectedProcessor, setSelectedProcessor] = useState<User | null>(null);
   const [defaultProcessorId, setDefaultProcessorId] = useState<string>('');
   const [defaultAuditorId, setDefaultAuditorId] = useState<string>('');
+  const [taskUpdated, setTaskUpdated] = useState(false);
 
   const handleSetAlert = (chartName: string, chartId: number) => {
     setCurrentChartName(chartName);
@@ -185,11 +186,13 @@ const AssignTaskControl: React.FC = () => {
       defaultAuditor: defaultAuditorId,
       available: true,
     };
-
+  
     if (chartId) {
       updateAssignedTask(chartId, requestData)
         .then(response => {
           console.log('Successfully updated assigned task', response);
+          // Set taskUpdated to true to trigger the refetch
+          setTaskUpdated(prev => !prev);
         })
         .catch(error => {
           console.error('Failed to update assigned task', error);
@@ -197,7 +200,7 @@ const AssignTaskControl: React.FC = () => {
     } else {
       console.error('Chart ID is not available for updating');
     }
-  };
+  };  
 
   useEffect(() => {
     fetchAllCharts()
@@ -219,25 +222,22 @@ const AssignTaskControl: React.FC = () => {
         userData.forEach(user => {
           userMap[user.userId] = user.userName;
         });
-
+  
         getAllAssignedTasks(currentChart).then((response) => {
           console.log('Assigned tasks response:', response.data);
-
+  
           const taskData = response.data as unknown as AssignedTaskResponse;
-
+  
           if (taskData) {
             setUpperLimit(taskData.upperLimit);
             setLowerLimit(taskData.lowerLimit);
-
-            // 确保从 taskData 中获取 processor 和 auditor 的 ID
+  
             const defaultProcessorId = taskData.defaultProcessor;
             const defaultAuditorId = taskData.defaultAuditor;
-
-            // 使用 userMap 获取名字
+  
             const defaultProcessorName = userMap[defaultProcessorId] || 'Unknown Processor';
             const defaultAuditorName = userMap[defaultAuditorId] || 'Unknown Auditor';
-
-            // 设置默认 ID 和名称
+  
             setDefaultProcessorId(defaultProcessorId);
             setDefaultAuditorId(defaultAuditorId);
             setDefaultProcessorName(defaultProcessorName);
@@ -252,7 +252,7 @@ const AssignTaskControl: React.FC = () => {
         console.error('Error fetching users', error);
       });
     }
-  }, [currentChart]);
+  }, [currentChart, taskUpdated]); // Adding taskUpdated as a dependency  
 
   const handleOpenDialog = (chartId: number) => {
     setCurrentChart(chartId);
