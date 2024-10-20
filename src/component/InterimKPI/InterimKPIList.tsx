@@ -22,13 +22,13 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
   const [applications, setApplications] = useState<ApplicationData[]>([]);
 
   useEffect(() => {
-    console.log('Fetching applications...'); // Adding log
     fetchApplications();
   }, [selectedStatus]);
 
   const fetchApplications = async () => {
     try {
       const statusKey = statusMap[selectedStatus] || 0;
+      console.log('statusKey:', statusKey);
       const response = await getApplications(statusKey.toString(), 0);
       console.log('API response:', response);
 
@@ -225,7 +225,7 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                       <label htmlFor="endDate">結束日期:</label>
                       <input type="text" id="endDate" name="endDate" value={formData.endDate} disabled />
                       <label htmlFor="content">申請內容:</label>
-                      <textarea id="content" name="content" value={formData.content} className={styles.theTextarea} />
+                      <textarea id="content" name="content" value={formData.reason} className={styles.theTextarea} />
                       <div className={styles.buttonContainer}>
                         <button type="button" onClick={handleCloseForm} className={styles.cancel}>關閉</button>
                       </div>

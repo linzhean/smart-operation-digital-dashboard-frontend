@@ -47,7 +47,8 @@ export interface ApplicationData {
   endDate: string;
   content: string;
   applyStatus: number;
-  groupId?: number; 
+  groupId?: number;
+  reason: string; 
 }
 
 export interface UserAccountBean {

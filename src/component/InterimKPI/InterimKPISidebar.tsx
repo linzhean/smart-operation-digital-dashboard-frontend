@@ -7,11 +7,11 @@ interface SidebarProps {
   selectedStatus: string;
 }
 
-const statusMap: { [key: string]: string } = {
-  '已關閉': '0',
-  '申請未通過': '1',
-  '申請已通過': '2',
-  '正在啟用': '3',
+const statusMap: { [key: string]: number } = {
+  '已關閉': 0,
+  '申請未通過': 1,
+  '申請已通過': 2,
+  '正在啓用': 3,
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ onStatusChange, selectedStatus }) => {
