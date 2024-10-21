@@ -47,10 +47,14 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
 
   useEffect(() => {
     if (isLoading) {
+      // 如果正在加載，顯示 "AI 建議正在生成中"
       setMessages((prev) => [...prev, { id: nextId, role: 'ai', content: 'AI 建議正在生成中' }]);
-      setNextId(nextId + 1);
+      setNextId((prevId) => prevId + 1);
+    } else {
+      // 如果不再加載，移除 "AI 建議正在生成中" 消息
+      setMessages((prev) => prev.filter((msg) => msg.content !== 'AI 建議正在生成中'));
     }
-  }, [isLoading]);
+  }, [isLoading]);  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
