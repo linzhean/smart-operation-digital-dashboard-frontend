@@ -15,6 +15,8 @@ const AdvancedSmartAnalysis: React.FC = () => {
   const [chartHTML, setChartHTML] = useState<string>('');
   const [aiSuggestion, setAiSuggestion] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [aiAnalysisId, setAiAnalysisId] = useState<number | null>(null);
+  const [aiAnalysisData, setAiAnalysisData] = useState<any[]>([]); 
 
   useEffect(() => {
     if (chartId && dashboardId) {
@@ -31,29 +33,23 @@ const AdvancedSmartAnalysis: React.FC = () => {
           console.error('Error fetching chart data:', error);
         }
       };
+
       const fetchAIAnalysisAndSuggestion = async () => {
         try {
-          setIsLoading(true); // 設置加載狀態為 true
+          setIsLoading(true);
           const aiResponse = await ChartService.getAIAnalysis(Number(chartId), Number(dashboardId));
-          if (aiResponse.result) {
-            if (aiResponse.data && aiResponse.data.length > 0) {
-              setAiSuggestion(aiResponse.data[0].content);
-            } else {
-              // 如果 AI 分析結果為空，查詢建議
-              const suggestionResponse = await ChartService.getAISuggestion(Number(chartId), Number(dashboardId));
-              if (suggestionResponse.result) {
-                setAiSuggestion(suggestionResponse.data.suggestion);
-              } else {
-                console.error('Failed to fetch AI suggestion:', suggestionResponse.message);
-              }
-            }
+          if (aiResponse.result && aiResponse.data.length > 0) {
+            setAiAnalysisData(aiResponse.data); // 保存所有分析數據
+            setAiAnalysisId(aiResponse.data[0].id);  // 设置 AI 分析的 ID
           } else {
-            console.error('Failed to fetch AI analysis:', aiResponse.message);
+            const suggestionResponse = await ChartService.getAISuggestion(Number(chartId), Number(dashboardId));
+            if (suggestionResponse.result) {
+              setAiAnalysisData([{ content: suggestionResponse.data.suggestion, id: suggestionResponse.data.id }]); // 保存建議數據
+              setAiAnalysisId(suggestionResponse.data.id);
+            }
           }
-        } catch (error) {
-          console.error('Error fetching AI analysis or suggestion:', error);
         } finally {
-          setIsLoading(false); // 確保結束後將加載狀態設為 false
+          setIsLoading(false);
         }
       };
 
@@ -105,7 +101,7 @@ const AdvancedSmartAnalysis: React.FC = () => {
           {!showDialogue ? (
             <SmartHTML chartHTML={chartHTML} />
           ) : (
-            chartId && <SmartDialogue aiSuggestion={aiSuggestion} chartId={Number(chartId)} isLoading={isLoading} />
+            chartId && <SmartDialogue aiAnalysisData={aiAnalysisData} chartId={Number(chartId)} isLoading={isLoading}  aiAnalysisId={aiAnalysisId} />
           )}
 
           <Draggable
@@ -124,7 +120,7 @@ const AdvancedSmartAnalysis: React.FC = () => {
       ) : (
         <>
           <SmartHTML chartHTML={chartHTML} />
-          {chartId && <SmartDialogue aiSuggestion={aiSuggestion} chartId={Number(chartId)} isLoading={isLoading} />}
+          {chartId && <SmartDialogue aiAnalysisData={aiAnalysisData} chartId={Number(chartId)} isLoading={isLoading}  aiAnalysisId={aiAnalysisId} />}
         </>
       )}
     </div>

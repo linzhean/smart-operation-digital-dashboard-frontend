@@ -6,16 +6,18 @@ import ChartService from '../../services/ChartService';
 import ReactMarkdown from 'react-markdown';
 
 interface SmartDialogueProps {
-  aiSuggestion: string;
+  aiAnalysisData: { id: number; content: string; generator: string }[]; 
   chartId: number;
   isLoading: boolean;
+  aiAnalysisId: number | null;
 }
 
-const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, isLoading }) => {
+const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiAnalysisData, chartId, isLoading, aiAnalysisId }) => {
   const [messages, setMessages] = useState<{ id: number; role: 'user' | 'ai'; content: string }[]>([]);
   const [input, setInput] = useState('');
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [nextId, setNextId] = useState(0);
+  const [latestMessageId, setLatestMessageId] = useState<number | null>(aiAnalysisId);
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
@@ -29,7 +31,7 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
 
   useEffect(() => {
     console.log('Received chartId in SmartDialogue:', chartId);
-  }, [chartId]);  
+  }, [chartId]);
 
   useEffect(() => {
     console.log('Messages updated:', messages);
@@ -39,28 +41,33 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
   }, [messages]);
 
   useEffect(() => {
-    if (aiSuggestion) {
-      setMessages((prev) => [...prev, { id: nextId, role: 'ai', content: aiSuggestion }]);
-      setNextId(nextId + 1);
+    if (aiAnalysisData.length > 0) {
+      aiAnalysisData.forEach((data) => {
+        const role = data.generator === 'user' ? 'user' : 'ai';  // 根據 generator 設置 role
+        setMessages((prev) => [
+          ...prev,
+          { id: nextId, role: role, content: data.content }  // 根據角色加入訊息
+        ]);
+        setNextId(nextId + 1);
+        setLatestMessageId(data.id);  // 每次收到新AI訊息更新最新的 messageId
+      });
     }
-  }, [aiSuggestion]);
+  }, [aiAnalysisData]);
 
-  useEffect(() => {
+   useEffect(() => {
     if (isLoading) {
-      // 如果正在加載，顯示 "AI 建議正在生成中"
       setMessages((prev) => [...prev, { id: nextId, role: 'ai', content: 'AI 建議正在生成中' }]);
       setNextId((prevId) => prevId + 1);
     } else {
-      // 如果不再加載，移除 "AI 建議正在生成中" 消息
       setMessages((prev) => prev.filter((msg) => msg.content !== 'AI 建議正在生成中'));
     }
-  }, [isLoading]);  
-
+  }, [isLoading]);
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
       const userMessage = input;
-      const userMessageId = nextId;
+      const userMessageId = nextId; 
       setMessages((prev) => [
         ...prev,
         { id: userMessageId, role: 'user', content: userMessage },
@@ -70,26 +77,34 @@ const SmartDialogue: React.FC<SmartDialogueProps> = ({ aiSuggestion, chartId, is
       setNextId(nextId + 2);
 
       try {
+        // 確保 latestMessageId 有值
+        if (latestMessageId !== null) {
+          const response = await ChartService.sendMessage({
+            chartId: chartId,
+            content: userMessage,
+            messageId: latestMessageId, // 傳送上一條訊息的 ID
+          });
 
-        const lastMessageId = userMessageId;
+          const newChat = response.data.data.newChat;
+          setMessages((prev) => [
+            ...prev.slice(0, -1),
+            { id: nextId, role: 'ai', content: newChat }
+          ]);
 
-        const response = await ChartService.sendMessage({
-          chartId: chartId,
-          content: userMessage,
-          messageId: lastMessageId,
-        });
-
-
-        const newChat = response.data.data.newChat;
-        setMessages((prev) => [
-          ...prev.slice(0, -1),
-          { id: nextId, role: 'ai', content: newChat }
-        ]);
+          // 更新最新的 messageId
+          setLatestMessageId(response.data.data.id);
+        } else {
+          console.error('latestMessageId 為 null，無法發送訊息。');
+          setMessages((prev) => [
+            ...prev.slice(0, -1),
+            { id: nextId, role: 'ai', content: '無法發送訊息，因為 AI 分析 ID 為 null。' }
+          ]);
+        }
       } catch (error) {
         console.error('Failed to send message:', error);
         setMessages((prev) => [
           ...prev.slice(0, -1),
-          { id: nextId, role: 'ai', content: 'Error occurred. Please try again.' }
+          { id: nextId, role: 'ai', content: '發生錯誤，請稍後再試。' }
         ]);
       }
     }
