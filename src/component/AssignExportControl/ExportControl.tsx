@@ -93,6 +93,7 @@ const ExportControl: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [charts, setCharts] = useState<Chart[]>([]);
   const [selectedUsersMap, setSelectedUsersMap] = useState<{ [key: number]: string[] }>({});
+  const [userNamesMap, setUserNamesMap] = useState<{ [key: number]: string[] }>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,29 +110,33 @@ const ExportControl: React.FC = () => {
           console.error('fetchAllUsers 返回的數據不是數組：', userData);
           setUsers([]);
         }
-
+    
         const chartResponse = await fetchAllCharts();
         if (chartResponse.data) {
           setCharts(chartResponse.data);
-
+    
           const permissionsMap: { [key: number]: string[] } = {};
+          const userNamesMap: { [key: number]: string[] } = {}; // New map to store names
           for (const chart of chartResponse.data) {
             try {
               const permissionResponse = await getExportPermission(chart.id);
               if (permissionResponse.result && permissionResponse.data) {
-                const selectedUserIds = permissionResponse.data.exporterList || [];
-                permissionsMap[chart.id] = selectedUserIds;
+                const exporterList = permissionResponse.data.map((exporter: any) => exporter.exporter);
+                const exporterNames = permissionResponse.data.map((exporter: any) => exporter.exporterName);
+                permissionsMap[chart.id] = exporterList;
+                userNamesMap[chart.id] = exporterNames; // Store the names
               }
             } catch (error) {
               console.error('Error fetching export permissions', error);
             }
           }
           setSelectedUsersMap(permissionsMap);
+          setUserNamesMap(userNamesMap); // Set names in state
         }
       } catch (error) {
         console.error('Error fetching data', error);
       }
-    };
+    };    
 
     fetchData();
   }, []);
@@ -147,18 +152,18 @@ const ExportControl: React.FC = () => {
 
   const handleSubmit = (selectedUsers: User[]) => {
     const selectedUserIds = selectedUsers.map(user => user.id);
-
+  
     setSelectedUsersMap(prev => ({
       ...prev,
       [currentChart]: selectedUserIds,
     }));
-
+  
     const listDTO = {
       sponsorList: [],
-      exporterList: selectedUserIds,
+      exporterList: selectedUserIds, // Use the selected user IDs here
       dashboardCharts: [],
     };
-
+  
     setExportPermission(currentChart, listDTO)
       .then((response) => {
         console.log('成功提交:', response.message);
@@ -166,14 +171,16 @@ const ExportControl: React.FC = () => {
       .catch((error) => {
         console.error('提交失败', error);
       });
-
+  
     setDialogOpen(false);
-  };
+  };  
 
   const getSelectedUserNames = (chartId: number) => {
-    const selectedUserIds = selectedUsersMap[chartId] || [];
-    const count = selectedUserIds.length;
-    return count > 0 ? `擁有權限者：共 ${count} 人` : '設置匯出權限';
+    const selectedUserNames = userNamesMap[chartId] || [];
+    const count = selectedUserNames.length;
+    return count > 0 
+      ? `擁有權限者：${selectedUserNames.join(', ')}` // Show names instead of just count
+      : '設置匯出權限';
   };
 
   return (

@@ -186,7 +186,7 @@ const AssignTaskControl: React.FC = () => {
       defaultAuditor: defaultAuditorId,
       available: true,
     };
-  
+
     if (chartId) {
       updateAssignedTask(chartId, requestData)
         .then(response => {
@@ -200,7 +200,46 @@ const AssignTaskControl: React.FC = () => {
     } else {
       console.error('Chart ID is not available for updating');
     }
-  };  
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // 獲取所有的圖表
+        const chartResponse = await fetchAllCharts();
+        if (chartResponse.data) {
+          setCharts(chartResponse.data);
+
+          // 初始化選定用戶映射
+          const usersMap: { [key: number]: User[] } = {};
+
+          // 遍歷每個圖表，獲取每個圖表的贊助人信息
+          for (const chart of chartResponse.data) {
+            try {
+              const sponsorResponse = await getAssignedTaskSponsors(chart.id);
+              if (sponsorResponse && sponsorResponse.data) {
+                const sponsorList = sponsorResponse.data.map((sponsor: any) => sponsor.sponsorId);
+                const assignedUsers = sponsorList.map((userId: string) => ({
+                  userId,
+                  userName: sponsorResponse.data?.find((sponsor: any) => sponsor.sponsorId === userId)?.sponsorName || 'Unknown',
+                }));
+                usersMap[chart.id] = assignedUsers;
+              }
+            } catch (error) {
+              console.error(`Error fetching assigned task sponsors for chart ${chart.id}`, error);
+            }
+          }
+
+          // 設置選定用戶
+          setSelectedUsersMap(usersMap);
+        }
+      } catch (error) {
+        console.error('Error fetching charts or sponsors', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     fetchAllCharts()
@@ -222,22 +261,22 @@ const AssignTaskControl: React.FC = () => {
         userData.forEach(user => {
           userMap[user.userId] = user.userName;
         });
-  
+
         getAllAssignedTasks(currentChart).then((response) => {
           console.log('Assigned tasks response:', response.data);
-  
+
           const taskData = response.data as unknown as AssignedTaskResponse;
-  
+
           if (taskData) {
             setUpperLimit(taskData.upperLimit);
             setLowerLimit(taskData.lowerLimit);
-  
+
             const defaultProcessorId = taskData.defaultProcessor;
             const defaultAuditorId = taskData.defaultAuditor;
-  
+
             const defaultProcessorName = userMap[defaultProcessorId] || 'Unknown Processor';
             const defaultAuditorName = userMap[defaultAuditorId] || 'Unknown Auditor';
-  
+
             setDefaultProcessorId(defaultProcessorId);
             setDefaultAuditorId(defaultAuditorId);
             setDefaultProcessorName(defaultProcessorName);
@@ -263,27 +302,16 @@ const AssignTaskControl: React.FC = () => {
     setDialogOpen(false);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (selectedUsers: User[]) => {
     if (!currentChart) {
       console.error('No chart selected');
       return;
     }
 
+    // Prepare request data for updating the assigned task
     const processorId = selectedProcessor?.userId || defaultProcessorId;
     const auditorId = selectedAuditor?.userId || defaultAuditorId;
-
-    const requestData = {
-      sponsorList: [processorId],
-      exporterList: [],
-      dashboardCharts: [],
-      upperLimit,
-      lowerLimit,
-      defaultAuditor: auditorId,
-      defaultProcessor: processorId
-    };
-
-    // 更新交辦事項
-    updateAssignedTask(currentChart, {
+    const updateAssignedTaskRequest = {
       chartId: currentChart,
       name: currentChartName || '',
       defaultProcessor: processorId || '',
@@ -291,7 +319,10 @@ const AssignTaskControl: React.FC = () => {
       available: true,
       upperLimit: upperLimit !== null ? upperLimit : undefined,
       lowerLimit: lowerLimit !== null ? lowerLimit : undefined,
-    })
+    };
+
+    // Update assigned task logic
+    updateAssignedTask(currentChart, updateAssignedTaskRequest)
       .then(response => {
         console.log('Successfully updated assigned task', response);
       })
@@ -299,14 +330,32 @@ const AssignTaskControl: React.FC = () => {
         console.error('Failed to update assigned task', error);
       });
 
+    // Prepare request data for setting assigned task sponsors
+    const sponsorList = selectedUsers.map(user => user.userId);
+    const setAssignedTaskSponsorsRequest = {
+      sponsorList,
+      exporterList: [], // Assuming exporterList is empty for now
+      dashboardCharts: [currentChart] // Assume the current chart is the one being set
+    };
+
+    // Set assigned task sponsors
+    setAssignedTaskSponsorsForDashboard(currentChart, setAssignedTaskSponsorsRequest)
+      .then(response => {
+        console.log('Successfully set assigned task sponsors', response);
+      })
+      .catch(error => {
+        console.error('Failed to set assigned task sponsors', error);
+      });
+
+    // Close the dialog
     setDialogOpen(false);
   };
 
   const getSelectedUserNames = (chartId: number) => {
-    const selectedUsers = selectedUsersMap[chartId] || [];
-    const taskCount = assignedTasks[chartId]?.length || 0;
-    return selectedUsers.length > 0
-      ? `擁有權限者：共 ${selectedUsers.length} 人`
+    const selectedUserNames = selectedUsersMap[chartId]?.map(user => user.userName) || [];
+    const count = selectedUserNames.length;
+    return count > 0
+      ? `擁有權限者：${selectedUserNames.join(', ')}`
       : '設置交辦權限';
   };
 
