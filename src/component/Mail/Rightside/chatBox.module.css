@@ -185,6 +185,7 @@
 }
 
 .todayMsg {
+  width: 68px !important;
   background-color: #aaaaaa70;
   color: #1e1e1e;
   border-radius: 15px;
@@ -204,17 +205,17 @@
   content: "";
   position: absolute;
   top: 50%;
-  width: 115px;
+  width: 100px;
   height: 1px;
   background-color: #aaaaaa70;
   transform: translateY(-50%);
 }
 
 .todayMsg::before {
-  left: -115px;
+  left: -100px;
 }
 
 
 .todayMsg::after {
-  right: -115px;
+  right: -100px;
 }

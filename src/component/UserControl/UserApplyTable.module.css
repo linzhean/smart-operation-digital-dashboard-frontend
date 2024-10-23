@@ -78,12 +78,13 @@
 }
 
 .disapproveButton {
-  margin-left: 5px;
+  margin-left: 10px;
   background-color: #d9534f;
   color: #fff;
   border: none;
-  padding: 5px 10px;
+  padding: 3px 12px;
   cursor: pointer;
+  font-weight: 500;
   border-radius: 5px;
   transition: background-color 0.3s;
 }
@@ -93,18 +94,18 @@
 }
 
 .approveButton {
-  margin-left: 5px;
-  background-color: #94C546;
+  background-color: #1E90FF;
   color: #fff;
+  font-weight: 500;
   border: none;
-  padding: 5px 10px;
+  padding: 3px 12px;
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s;
 }
 
 .approveButton:hover {
-  background-color: #6E8B30;
+  background-color: #145290;
 }
 
 .endMsg {

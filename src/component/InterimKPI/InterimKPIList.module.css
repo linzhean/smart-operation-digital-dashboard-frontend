@@ -38,6 +38,7 @@
   text-align: center;
   border-bottom: 1px solid #444;
   color: #e1e1e1db;
+  white-space: nowrap;
 }
 
 .thePermissionList th {

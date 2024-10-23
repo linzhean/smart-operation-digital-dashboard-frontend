@@ -137,7 +137,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, emailName, sendNewChatMessag
 
             return (
               <>
-                {isFirstTodayMessage && <div className={styles.todayMsg}>今日</div>}
+                {isFirstTodayMessage && <div className={styles.todayMsg}>今天</div>}
                 <div key={message.messageId} className={`${styles.chatMessage} ${user?.id === message.createId ? styles.myMessage : ''}`}>
                   <div className={styles.messageContent}>
                     {user?.id !== message.createId && (
