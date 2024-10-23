@@ -74,7 +74,6 @@
   display: none;
 }
 
-/* 手機樣式 */
 @media (max-width: 767.9px) {
   .navbarNavItemImg {
     display: none;

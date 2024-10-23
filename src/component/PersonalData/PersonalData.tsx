@@ -205,7 +205,6 @@ const Pdata: React.FC = () => {
                 className="form-control"
                 id="gmail"
                 value={state.formData.gmail}
-                // value={user?.email}
                 required
                 disabled={!state.editable}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}
@@ -245,7 +244,6 @@ const Pdata: React.FC = () => {
                 className="form-control"
                 id="position"
                 value={state.formData.position}
-                // value={user?.role}
                 required
                 disabled={!state.editable}
                 onChange={(e) => handleInputChange(e.target.id, e.target.value)}

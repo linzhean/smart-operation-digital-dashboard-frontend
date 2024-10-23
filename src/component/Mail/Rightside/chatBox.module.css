@@ -17,6 +17,14 @@
   padding-bottom: 10px;
 }
 
+
+@media (max-width: 767.99px) {
+  .theTitle {
+    font-size: 1.1rem;
+    margin-left: 50px;
+  }
+}
+
 .mailTitle .deleteButton {
   background-color: transparent;
   color: #fff;
@@ -177,11 +185,11 @@
 }
 
 .todayMsg {
-  background-color: #aaa;
+  background-color: #aaaaaa70;
   color: #1e1e1e;
   border-radius: 15px;
   margin-top: 15px;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   align-self: center;
   justify-self: center;
   font-weight: bolder;
@@ -198,15 +206,15 @@
   top: 50%;
   width: 115px;
   height: 1px;
-  background-color: #aaa;
+  background-color: #aaaaaa70;
   transform: translateY(-50%);
 }
 
 .todayMsg::before {
-  left: -100px;
+  left: -115px;
 }
 
 
 .todayMsg::after {
-  right: -100px;
+  right: -115px;
 }

@@ -1,4 +1,3 @@
-//src\component\Login\LoginForm.tsx
 import React from 'react';
 import styles from './LoginForm.module.css';
 import GoogleLoginButton from './GoogleLoginButton';

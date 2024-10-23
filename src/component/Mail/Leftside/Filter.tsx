@@ -18,7 +18,7 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setSelectedStatus(value);
-    onFilterChange([value]); // Call the onFilterChange with the selected value in an array
+    onFilterChange([value]); 
   };
 
 

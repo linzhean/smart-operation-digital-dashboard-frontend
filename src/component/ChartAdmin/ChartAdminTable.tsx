@@ -71,7 +71,7 @@ const IOSSwitch = styled(Switch)(({ theme }) => ({
 const ChartAdminTable: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isViewFormOpen, setIsViewFormOpen] = useState(false);
-  const [viewFormData, setViewFormData] = useState({ chartId: 0,chartName: '', chartCodeFile: '', chartImage: '', showcaseImage: '' });
+  const [viewFormData, setViewFormData] = useState({ chartId: 0, chartName: '', chartCodeFile: '', chartImage: '', showcaseImage: '' });
   const [charts, setCharts] = useState<any[]>([]);
   const [openStatus, setOpenStatus] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState('篩選狀態');
@@ -89,8 +89,8 @@ const ChartAdminTable: React.FC = () => {
   };
 
   const handleCloseViewForm = () => {
-  setIsViewFormOpen(false);
-};
+    setIsViewFormOpen(false);
+  };
 
   const fetchCharts = async (available: boolean | null) => {
     const actualAvailable = available !== null ? available : true;
@@ -264,7 +264,7 @@ const ChartAdminTable: React.FC = () => {
       {/* {isFormOpen && (
         <NewChartForm onSubmit={handleFormSubmit} onClose={handleCloseForm} />
       )} */}
-{/* 
+      {/* 
       {isViewFormOpen && (
         <ViewChartForm
           chartId={viewFormData.chartId}
