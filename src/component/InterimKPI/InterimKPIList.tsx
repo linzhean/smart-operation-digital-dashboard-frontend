@@ -163,13 +163,13 @@ const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatu
                             onClick={() => {
                               console.log("Delete button clicked");
                               if (app.id) {
-                                handleDelete(app.id);
+                               handleClose(app.id);
                               } else {
                                 console.error("app.id is undefined", app);
                               }
                             }}
                           >
-                            刪除
+                            關閉
                           </button>
                         </>
                       ) : selectedStatus === '正在啓用' ? (
