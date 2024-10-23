@@ -175,3 +175,38 @@
   justify-items: center;
   justify-content: center;
 }
+
+.todayMsg {
+  background-color: #aaa;
+  color: #1e1e1e;
+  border-radius: 15px;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  align-self: center;
+  justify-self: center;
+  font-weight: bolder;
+  position: relative;
+  text-align: center;
+  padding: 0px 20px;
+}
+
+
+.todayMsg::before,
+.todayMsg::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 115px;
+  height: 1px;
+  background-color: #aaa;
+  transform: translateY(-50%);
+}
+
+.todayMsg::before {
+  left: -100px;
+}
+
+
+.todayMsg::after {
+  right: -100px;
+}

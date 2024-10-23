@@ -118,6 +118,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, emailName, sendNewChatMessag
     return formattedTime;
   };
 
+
   return (
     <div className={styles.chatContainer}>
       <div className={styles.mailTitle}>
@@ -126,21 +127,29 @@ const ChatBox: React.FC<ChatBoxProps> = ({ emailId, emailName, sendNewChatMessag
 
       <div className={styles.chatBox}>
         {messages.length > 0 ? (
-          messages.map((message) => (
-            <div
-              key={message.messageId}
-              className={`${styles.chatMessage} ${user?.id === message.createId ? styles.myMessage : ''
-                }`}
-            >
-              <div className={styles.messageContent}>
-                {user?.id !== message.createId && (
-                  <span className={styles.sender}>{message.createId}</span>
-                )}
-                <span className={styles.content}>{message.content}</span>
-              </div>
-              <span className={styles.timestamp}>{resetTimestamp(message.createDate)}</span>
-            </div>
-          ))
+          messages.map((message, index) => {
+            const messageDate = new Date(message.createDate).toLocaleDateString();
+            const isToday = messageDate === new Date().toLocaleDateString();
+
+            const isFirstTodayMessage =
+              isToday &&
+              (index === 0 || new Date(messages[index - 1].createDate).toLocaleDateString() !== messageDate);
+
+            return (
+              <>
+                {isFirstTodayMessage && <div className={styles.todayMsg}>今日</div>}
+                <div key={message.messageId} className={`${styles.chatMessage} ${user?.id === message.createId ? styles.myMessage : ''}`}>
+                  <div className={styles.messageContent}>
+                    {user?.id !== message.createId && (
+                      <span className={styles.sender}>{message.createId}</span>
+                    )}
+                    <span className={styles.content}>{message.content}</span>
+                  </div>
+                  <span className={styles.timestamp}>{resetTimestamp(message.createDate)}</span>
+                </div>
+              </>
+            );
+          })
         ) : (
           <p className={styles.emptyAlert}>尚無訊息</p>
         )}
