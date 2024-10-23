@@ -19,7 +19,7 @@ const AdvancedSmartAnalysis: React.FC = () => {
   const [aiAnalysisData, setAiAnalysisData] = useState<any[]>([]); 
 
   useEffect(() => {
-    if (chartId && dashboardId) {
+    if (chartId) {
       const fetchChartData = async () => {
         try {
           console.log('AdvancedSmartAnalysis chartId:', chartId);
@@ -34,6 +34,21 @@ const AdvancedSmartAnalysis: React.FC = () => {
         }
       };
 
+      // 首次加载时获取数据
+      fetchChartData();
+
+      // 每10分钟刷新 SmartHTML
+      const intervalId = setInterval(() => {
+        fetchChartData();
+      }, 10 * 60 * 1000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [chartId]);
+
+  // 只在首次加载时获取 SmartDialogue 的 useEffect
+  useEffect(() => {
+    if (chartId && dashboardId) {
       const fetchAIAnalysisAndSuggestion = async () => {
         try {
           setIsLoading(true);
@@ -53,15 +68,8 @@ const AdvancedSmartAnalysis: React.FC = () => {
         }
       };
 
-      fetchChartData();
+      // 只在首次加载时获取数据
       fetchAIAnalysisAndSuggestion();
-
-      const intervalId = setInterval(() => {
-        fetchChartData();
-        fetchAIAnalysisAndSuggestion();
-      }, 10 * 60 * 1000);
-
-      return () => clearInterval(intervalId);
     }
   }, [chartId, dashboardId]);
 

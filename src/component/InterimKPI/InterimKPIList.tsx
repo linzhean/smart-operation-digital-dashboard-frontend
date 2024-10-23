@@ -10,10 +10,10 @@ interface InterimKPIListProps {
 }
 
 const statusMap: { [key: string]: number } = {
-  '已關閉': 0,
+  '正在啓用': 3,
   '申請未通過': 1,
   '申請已通過': 2,
-  '正在啓用': 3,
+  '已關閉': 0
 };
 
 const InterimKPIList: React.FC<InterimKPIListProps> = ({ selectedStatus, onStatusChange }) => {
