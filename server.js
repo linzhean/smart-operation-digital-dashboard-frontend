@@ -4,20 +4,10 @@ const helmet = require('helmet');
 const app = express();
 const port = 3000;
 
-// 使用 helmet 设置默认的安全头
+// Use helmet to set security headers
 app.use(helmet());
 
-// 设置 CSP 头，允许 base64 编码的图片
-app.use(helmet.contentSecurityPolicy({
-    useDefaults: true,
-    directives: {
-        'img-src': ["'self'", 'data:'],
-    },
-}));
-
-// 提供静态文件
-app.use(express.static(path.join(__dirname, 'src/data')));
-
+// Serve API routes first
 app.get('/api/bar-chart', (req, res) => {
     res.sendFile(path.join(__dirname, 'src/component/data', 'BarChart.html'));
 });
@@ -28,6 +18,14 @@ app.get('/api/circle-chart', (req, res) => {
 
 app.get('/api/revenue', (req, res) => {
     res.sendFile(path.join(__dirname, 'src/component/data', 'Revenue.html'));
+});
+
+// Serve static files from React app
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Catch-all route to serve `index.html` for React Router
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.listen(port, () => {
