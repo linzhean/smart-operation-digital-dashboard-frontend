@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import closearrow from '../../assets/icon/close-arrow.svg';
 import styles from './InterimKPISidebar.module.css';
 
@@ -60,10 +61,10 @@ const Sidebar: React.FC<SidebarProps> = ({ onStatusChange, selectedStatus }) => 
           <ul className={`${styles.siderbar_menu} mostly-customized-scrollbar`}>
             {Object.keys(statusMap).map(status => (
               <li key={status} className={selectedStatus === status ? styles.active : ''}>
-                <a href="#" onClick={() => handleMenuItemClick(status)}>
-                  <div className={styles.title}>{status}</div>
-                </a>
-              </li>
+              <Link to={`/InterimKPIControl/${status}`} onClick={() => handleMenuItemClick(status)}>
+                <div className={styles.title}>{status}</div>
+              </Link>
+            </li>
             ))}
           </ul>
         </div>
