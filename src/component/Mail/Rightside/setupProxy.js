@@ -4,9 +4,9 @@ module.exports = function(app) {
   app.use(
     '/webSocket',
     createProxyMiddleware({
-      target: 'https://smart-digital-dashboard.ntubimdbric.tw/backend',
+      target: 'https://smart-digital-dashboard.ntubimdbirc.tw/backend',
       changeOrigin: true,
-      ws: true, // 為 WebSocket 啟用代理
+      ws: true, 
       secure: false,
     })
   );

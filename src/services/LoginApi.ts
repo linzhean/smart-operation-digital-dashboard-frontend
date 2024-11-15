@@ -1,5 +1,5 @@
 // src/services/LoginApi.ts
-export const backendApiUrl = "https://smart-digital-dashboard.ntubimdbric.tw/backend";
+export const backendApiUrl = "https://smart-digital-dashboard.ntubimdbirc.tw/backend";
 export const clientId = "629445899576-8mdmcg0etm5r7i28dk088fas2o3tjpm0.apps.googleusercontent.com";
 
 // src/services/fetchWithAuth.ts

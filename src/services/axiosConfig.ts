@@ -1,7 +1,7 @@
 //src\services\axiosConfig.ts
 import axios from 'axios';
 
-const API_BASE_URL = 'https://smart-digital-dashboard.ntubimdbric.tw/backend'; // 後端 API 基本 URL
+const API_BASE_URL = 'https://smart-digital-dashboard.ntubimdbirc.tw/backend'; 
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
