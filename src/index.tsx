@@ -1,7 +1,7 @@
 // src/index.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './component/Bootstrap/css/bootstrap.min.css';
 import { UserProvider } from './context/UserContext';
 import { ChartProvider } from './context/ChartContext';
