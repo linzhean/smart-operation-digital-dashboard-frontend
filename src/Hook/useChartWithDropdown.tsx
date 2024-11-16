@@ -275,7 +275,7 @@ export function useChartWithDropdown(
         setInteractiveCharts(chartsWithData);
 
         // 確保使用 ChartWithDropdown 中的正確 chartId
-        const url = `/advanced-analysis?dashboardId=${dashboardId}&chartId=${chartId}`;
+        const url = `/#/advanced-analysis?dashboardId=${dashboardId}&chartId=${chartId}`;
         window.open(url, '_blank');
         console.log('Navigating to:', url); 
       } else {

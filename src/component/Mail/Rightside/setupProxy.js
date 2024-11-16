@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/webSocket',
     createProxyMiddleware({
-      target: 'https://smart-digital-dashboard.ntubimdbirc.tw/backend',
+      target: 'http://140.131.115.153:8080',
       changeOrigin: true,
       ws: true, 
       secure: false,
